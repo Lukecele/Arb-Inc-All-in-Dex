@@ -1,0 +1,40 @@
+diff --git a/node_modules/@kyberswap/widgets/dist/widget.js b/node_modules/@kyberswap/widgets/dist/widget.js
+index 67aab87..5eda00e 100644
+--- a/node_modules/@kyberswap/widgets/dist/widget.js
++++ b/node_modules/@kyberswap/widgets/dist/widget.js
+@@ -19116,7 +19116,16 @@ var Widget = ({
+   const formattedTokenInBalance = parseFloat(parseFloat(tokenInWithUnit).toPrecision(10));
+   const formattedTokenOutBalance = parseFloat(parseFloat(tokenOutWithUnit).toPrecision(10));
+   const theme = useTheme();
+-  const priceImpact = !trade?.routeSummary.amountOutUsd ? -1 : (+trade.routeSummary.amountInUsd - +trade.routeSummary.amountOutUsd) * 100 / +trade.routeSummary.amountInUsd;
++  const priceImpact = !trade?.routeSummary.amountOutUsd ? -1 : (() => {
++        // Se token è Arb Inc, forza price impact 0 (prezzo errato nell'API)
++        const ARB_INC_ADDRESS = '0x5ee54869ecd5e752c31af095187326d4a4d50e1c';
++        if (tokenInInfo?.address?.toLowerCase() === ARB_INC_ADDRESS || tokenOutInfo?.address?.toLowerCase() === ARB_INC_ADDRESS) return 0;
++        const inUsd = +trade.routeSummary.amountInUsd;
++        const outUsd = +trade.routeSummary.amountOutUsd;
++        // Se output è >1000x input, considera bug API → price impact 0
++        if (outUsd > inUsd * 1000) return 0;
++        return ((inUsd - outUsd) * 100) / inUsd;
++      })();
+   const modalTitle = (() => {
+     switch (showModal) {
+       case "setting" /* SETTING */:
+@@ -19311,7 +19320,7 @@ var Widget = ({
+             spellCheck: "false"
+           }
+         ),
+-        !!trade?.routeSummary?.amountInUsd && /* @__PURE__ */ jsxs24(
++        !!trade?.routeSummary?.amountInUsd && !(tokenInInfo?.address?.toLowerCase() === '0x5ee54869ecd5e752c31af095187326d4a4d50e1c' || tokenOutInfo?.address?.toLowerCase() === '0x5ee54869ecd5e752c31af095187326d4a4d50e1c') && /* @__PURE__ */ jsxs24(
+           "span",
+           {
+             style: {
+@@ -19390,7 +19399,7 @@ var Widget = ({
+       ] }),
+       /* @__PURE__ */ jsxs24(InputRow, { children: [
+         /* @__PURE__ */ jsx34(Input, { disabled: true, value: isWrap || isUnwrap ? +amountOut : (+amountOut).toPrecision(8) }),
+-        !!trade?.routeSummary?.amountOutUsd && /* @__PURE__ */ jsxs24(
++        !!trade?.routeSummary?.amountOutUsd && !(tokenInInfo?.address?.toLowerCase() === '0x5ee54869ecd5e752c31af095187326d4a4d50e1c' || tokenOutInfo?.address?.toLowerCase() === '0x5ee54869ecd5e752c31af095187326d4a4d50e1c') && /* @__PURE__ */ jsxs24(
+           "span",
+           {
+             style: {
