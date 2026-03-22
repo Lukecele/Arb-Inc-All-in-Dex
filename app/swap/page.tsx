@@ -248,6 +248,10 @@ const SwapSection = styled.section`
   padding: 30px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 16px;
+  }
 `
 
 const Footer = styled.footer`

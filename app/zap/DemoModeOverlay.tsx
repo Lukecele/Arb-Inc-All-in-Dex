@@ -14,6 +14,9 @@ const DemoCard = styled.div`
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing.lg};
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `
 
 const DemoTitle = styled.div`
@@ -24,6 +27,10 @@ const DemoTitle = styled.div`
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
+  @media (max-width: 480px) {
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
 `
 
 const DemoDot = styled.span`
@@ -43,6 +50,10 @@ const DemoStats = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: ${theme.spacing.md};
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
 `
 
 const DemoStat = styled.div`
