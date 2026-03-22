@@ -127,9 +127,15 @@ const WidgetContainer = styled.div`
   width: 100%;
   min-height: 550px;
   @media (max-width: 768px) {
-    padding: 20px;
-    min-height: 500px;
+    transform: scale(0.6);
+    transform-origin: top left;
+    margin-left: -80px;
+    margin-right: -80px;
+    padding: 15px;
+    min-height: 600px;
     border-radius: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 `
 

@@ -224,10 +224,12 @@ const SwapSection = styled.section`
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   @media (max-width: 480px) {
-    transform: scale(0.85);
-    transform-origin: top center;
-    margin-left: -20px;
-    margin-right: -20px;
+    transform: scale(0.7);
+    transform-origin: top left;
+    margin-left: -60px;
+    margin-right: -60px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 `
 
