@@ -135,34 +135,24 @@ const MainContent = styled.main`
 `
 
 const WidgetWrapper = styled.div`
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  margin-right: -20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 10px 20px 20px;
+  width: 100%;
   background: ${theme.colors.glass.light};
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 2px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #8B5CF6;
-    border-radius: 2px;
+  padding: 20px;
+  overflow: hidden;
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 `
 
-const WidgetScroller = styled.div`
-  display: inline-block;
+const WidgetScroller = styled.div<{ $scale?: number }>`
+  transform: scale(${props => props.$scale || 1});
+  transform-origin: top center;
+  width: 100%;
 `
 
 const WidgetContainer = styled.div`
-  min-width: 420px;
   min-height: 500px;
 `
 
@@ -300,7 +290,7 @@ export default function ZapPageClient() {
                 </div>
                 
                 <WidgetWrapper>
-                  <WidgetScroller>
+                  <WidgetScroller $scale={0.8}>
                     <WidgetContainer style={{ position: 'relative' }}>
                       {address ? (
                         <LiquidityWidget
@@ -344,7 +334,7 @@ export default function ZapPageClient() {
               </>
             ) : (
             <WidgetWrapper>
-              <WidgetScroller>
+              <WidgetScroller $scale={0.8}>
                 <WidgetContainer style={{ padding: '0' }}>
                   <ZapOutClient 
                     poolAddress={selectedPool.address}
