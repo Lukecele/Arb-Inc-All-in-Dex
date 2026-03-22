@@ -39,9 +39,16 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
-// Token list - il widget usa SOLO questi, quindi includiamo solo i token extra
-// BNB e WBNB sono già inclusi di default dal widget
+// Token list - includes custom tokens plus WBNB for wrap/unwrap functionality
 const customTokens = [
+  {
+    chainId: 56,
+    address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    symbol: 'WBNB',
+    name: 'Wrapped BNB',
+    decimals: 18,
+    logoURI: 'https://tokens.icons.1001.org/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png',
+  },
   {
     chainId: 56,
     address: '0x55d398326f99059fF775485246999027B3197955',
@@ -237,20 +244,32 @@ const MainContent = styled.main`
 
 const SwapWrapper = styled.div`
   width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
   background: ${theme.colors.glass.light};
   border-radius: ${theme.borderRadius.lg};
   border: 1px solid ${theme.colors.border.DEFAULT};
-  padding: 20px;
-  overflow: hidden;
+  padding: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   @media (max-width: 480px) {
-    padding: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    max-width: calc(100vw - 32px);
   }
 `
 
 const SwapScroller = styled.div<{ $scale?: number }>`
+  width: 100%;
+  min-width: 340px;
   transform: scale(${props => props.$scale || 1});
   transform-origin: top center;
-  width: 100%;
+  @media (max-width: 400px) {
+    transform: scale(0.75);
+  }
+  @media (min-width: 401px) and (max-width: 480px) {
+    transform: scale(0.85);
+  }
 `
 
 const SwapSection = styled.section`
