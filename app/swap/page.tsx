@@ -224,18 +224,25 @@ const SwapWrapper = styled.div`
   max-width: 450px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #8B5CF6;
+    border-radius: 2px;
+  }
 `
 
 const SwapSection = styled.section`
   width: 100%;
   min-width: 360px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
   padding: 15px;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 `
 
 const Footer = styled.footer`

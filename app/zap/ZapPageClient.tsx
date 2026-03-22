@@ -139,16 +139,26 @@ const WidgetWrapper = styled.div`
   max-width: 800px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #8B5CF6;
+    border-radius: 2px;
+  }
 `
 
 const WidgetContainer = styled.div`
   background: ${theme.colors.glass.light};
-  border-radius: ${theme.borderRadius.xl};
-  padding: 30px;
+  border-radius: 24px;
+  padding: 20px;
   backdrop-filter: blur(20px);
-  border: 1px solid ${theme.colors.border.DEFAULT};
   display: flex;
   justify-content: center;
   align-items: flex-start;
