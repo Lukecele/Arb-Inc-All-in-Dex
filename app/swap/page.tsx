@@ -38,18 +38,9 @@ init({
 const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
-const NATIVE_TOKEN_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
-// Aggiungiamo native BNB e Arb Inc ai token built-in
+// Solo Arb Inc - il widget gestisce nativamente BNB/WBNB per wrap/unwrap
 const customTokens = [
-  {
-    chainId: 56,
-    address: NATIVE_TOKEN_ADDRESS,
-    symbol: 'BNB',
-    name: 'BNB',
-    decimals: 18,
-    logoURI: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png',
-  },
   {
     chainId: 56,
     address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
