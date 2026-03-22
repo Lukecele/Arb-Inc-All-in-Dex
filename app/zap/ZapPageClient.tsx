@@ -77,17 +77,24 @@ const LogoSection = styled.div`
 `
 
 const Logo = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  @media (min-width: 769px) {
+    width: 60px;
+    height: 60px;
+  }
 `
 
 const Title = styled.h1`
-  font-size: 28px;
+  font-size: 18px;
   font-weight: 700;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 28px;
+  }
 `
 
 const Nav = styled.nav`
@@ -117,10 +124,10 @@ const MainContent = styled.main`
 `
 
 const SectionTitle = styled.h2`
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -132,16 +139,21 @@ const SectionTitle = styled.h2`
 
 const WidgetContainer = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 10px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 400px;
+  align-items: flex-start;
+  min-height: 350px;
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  & > * {
+    min-width: 300px;
+    max-width: 100%;
+  }
   @media (min-width: 769px) {
     border-radius: 24px;
     padding: 40px;
@@ -152,10 +164,14 @@ const WidgetContainer = styled.div`
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 40px 0;
+  padding: 20px 0;
   text-align: center;
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
+  @media (min-width: 769px) {
+    padding: 40px 0;
+    font-size: 14px;
+  }
 `
 
 const TabButton = styled.button<{ $active?: boolean }>`
@@ -245,18 +261,18 @@ export default function ZapPageClient() {
             onPoolChange={setSelectedPool}
           />
           
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '15px', flexWrap: 'wrap' }}>
             <TabButton
               $active={activeTab === 'zap-in'}
               onClick={() => setActiveTab('zap-in')}
             >
-              Zap In (Add Liquidity)
+              Zap In
             </TabButton>
             <TabButton
               $active={activeTab === 'zap-out'}
               onClick={() => setActiveTab('zap-out')}
             >
-              Zap Out (Remove Liquidity)
+              Zap Out
             </TabButton>
           </div>
 
@@ -265,14 +281,14 @@ export default function ZapPageClient() {
                 <div style={{
                   maxWidth: '600px',
                   width: '100%',
-                  marginBottom: '20px',
-                  padding: '12px',
+                  marginBottom: '15px',
+                  padding: '10px',
                   background: 'rgba(255, 152, 0, 0.1)',
                   border: '1px solid rgba(255, 152, 0, 0.3)',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   color: '#FF9901',
-                  fontSize: '13px',
-                  lineHeight: '1.5',
+                  fontSize: '11px',
+                  lineHeight: '1.4',
                 }}>
                   <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, select "Degen Mode" in settings with high slippage (5% or more) to ensure successful transactions.
                 </div>
