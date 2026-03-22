@@ -288,7 +288,8 @@ export default function ZapPageClient() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap</NavLink>
+            <NavLink href="/swap">Swap (Custom)</NavLink>
+            <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
           </Nav>
           <WalletSection>

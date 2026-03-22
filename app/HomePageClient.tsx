@@ -605,7 +605,8 @@ export default function HomePageClient() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap</NavLink>
+            <NavLink href="/swap">Swap (Custom)</NavLink>
+            <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
           </Nav>
         </Header>
