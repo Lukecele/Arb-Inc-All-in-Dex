@@ -219,13 +219,15 @@ const SwapSection = styled.section`
   width: 100%;
   max-width: 450px;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
-  padding: 30px;
+  border-radius: 16px;
+  padding: 15px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   @media (max-width: 480px) {
-    padding: 15px;
-    border-radius: 16px;
+    transform: scale(0.85);
+    transform-origin: top center;
+    margin-left: -20px;
+    margin-right: -20px;
   }
 `
 

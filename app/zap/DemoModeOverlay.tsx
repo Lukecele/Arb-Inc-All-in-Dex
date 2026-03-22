@@ -15,7 +15,7 @@ const DemoCard = styled.div`
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing.lg};
   @media (max-width: 480px) {
-    padding: 12px;
+    padding: 10px;
   }
 `
 
@@ -28,8 +28,9 @@ const DemoTitle = styled.div`
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
   @media (max-width: 480px) {
-    font-size: 11px;
+    font-size: 10px;
     flex-wrap: wrap;
+    gap: 4px;
   }
 `
 
@@ -52,7 +53,7 @@ const DemoStats = styled.div`
   gap: ${theme.spacing.md};
   @media (max-width: 480px) {
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 4px;
   }
 `
 
