@@ -60,32 +60,48 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 const LogoSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 `
 
 const Logo = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  @media (min-width: 769px) {
+    width: 60px;
+    height: 60px;
+  }
 `
 
 const Title = styled.h1`
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 28px;
+  }
 `
 
 const Nav = styled.nav`
   display: flex;
-  gap: 20px;
+  gap: 15px;
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
 `
 
 const NavLink = styled.a`
