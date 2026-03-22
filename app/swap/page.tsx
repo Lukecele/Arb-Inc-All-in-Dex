@@ -221,34 +221,24 @@ const MainContent = styled.main`
 
 const SwapWrapper = styled.div`
   width: 100%;
-  max-width: 450px;
-  overflow: hidden;
+  background: ${theme.colors.glass.light};
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
+  padding: 20px;
+  overflow: hidden;
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `
 
-const SwapScroller = styled.div`
+const SwapScroller = styled.div<{ $scale?: number }>`
+  transform: scale(${props => props.$scale || 1});
+  transform-origin: top center;
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 2px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #8B5CF6;
-    border-radius: 2px;
-  }
 `
 
 const SwapSection = styled.section`
   width: 100%;
-  min-width: 400px;
-  padding: 15px;
 `
 
 const Footer = styled.footer`
@@ -364,7 +354,7 @@ export default function SwapPage() {
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
           <SwapWrapper>
-            <SwapScroller>
+            <SwapScroller $scale={0.85}>
               <SwapSection style={{ position: 'relative' }}>
                 <Widget
                   client="arbitrage-inception"
