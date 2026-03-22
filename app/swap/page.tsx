@@ -39,8 +39,32 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
-// Solo Arb Inc - il widget gestisce nativamente BNB/WBNB per wrap/unwrap
+// Token list - il widget usa SOLO questi, quindi includiamo tutto il necessario
 const customTokens = [
+  {
+    chainId: 56,
+    address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    symbol: 'WBNB',
+    name: 'Wrapped BNB',
+    decimals: 18,
+    logoURI: 'https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png',
+  },
+  {
+    chainId: 56,
+    address: '0x55d398326f99059fF775485246999027B3197955',
+    symbol: 'USDT',
+    name: 'Tether USD',
+    decimals: 18,
+    logoURI: 'https://coin.top/production/logo/usdtlogo.png',
+  },
+  {
+    chainId: 56,
+    address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+    symbol: 'USDC',
+    name: 'USD Coin',
+    decimals: 18,
+    logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
+  },
   {
     chainId: 56,
     address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
