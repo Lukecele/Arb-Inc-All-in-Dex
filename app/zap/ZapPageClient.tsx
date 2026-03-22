@@ -135,18 +135,15 @@ const MainContent = styled.main`
 `
 
 const WidgetWrapper = styled.div`
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  overflow: hidden;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-`
-
-const WidgetScroller = styled.div`
-  width: 100%;
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  margin-right: -20px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0 20px;
+  padding: 10px 20px 20px;
+  background: ${theme.colors.glass.light};
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   &::-webkit-scrollbar {
     height: 4px;
   }
@@ -160,17 +157,13 @@ const WidgetScroller = styled.div`
   }
 `
 
+const WidgetScroller = styled.div`
+  display: inline-block;
+`
+
 const WidgetContainer = styled.div`
-  background: ${theme.colors.glass.light};
-  border-radius: 24px;
-  padding: 20px;
-  backdrop-filter: blur(20px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   min-width: 420px;
   min-height: 500px;
-  margin: 0 auto;
 `
 
 const SectionTitle = styled.h2`
