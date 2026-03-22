@@ -207,27 +207,30 @@ const DisconnectButton = styled.button`
 const MainContent = styled.main`
   flex: 1;
   width: 100%;
-  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding: 40px 0;
+  gap: 20px;
+  padding: 20px 0;
+`
+
+const SwapWrapper = styled.div`
+  width: 100%;
+  max-width: 450px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 `
 
 const SwapSection = styled.section`
   width: 100%;
-  max-width: 450px;
-  min-width: 350px;
+  min-width: 360px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
   padding: 15px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 `
 
 const Footer = styled.footer`
@@ -342,30 +345,32 @@ export default function SwapPage() {
           }}>
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
-          <SwapSection style={{ position: 'relative' }}>
-            <Widget
-              client="arbitrage-inception"
-              theme={darkTheme}
-              tokenList={customTokens}
-              rpcUrl="https://bsc.publicnode.com"
-              chainId={BSC_CHAIN_ID}
-              connectedAccount={{
-                address: walletAddress || '',
-                chainId: BSC_CHAIN_ID,
-              }}
-              onSubmitTx={handleSubmitTx}
-              onSwitchChain={handleSwitchChain}
-              enableRoute={true}
-              feeSetting={{
-                feeAmount: 10,
-                feeReceiver: FEE_RECEIVER,
-                chargeFeeBy: 'currency_out',
-                isInBps: true,
-              }}
-              title="Swap on BSC"
-            />
-            {!walletAddress && <DemoModeOverlay />}
-          </SwapSection>
+          <SwapWrapper>
+            <SwapSection style={{ position: 'relative' }}>
+              <Widget
+                client="arbitrage-inception"
+                theme={darkTheme}
+                tokenList={customTokens}
+                rpcUrl="https://bsc.publicnode.com"
+                chainId={BSC_CHAIN_ID}
+                connectedAccount={{
+                  address: walletAddress || '',
+                  chainId: BSC_CHAIN_ID,
+                }}
+                onSubmitTx={handleSubmitTx}
+                onSwitchChain={handleSwitchChain}
+                enableRoute={true}
+                feeSetting={{
+                  feeAmount: 10,
+                  feeReceiver: FEE_RECEIVER,
+                  chargeFeeBy: 'currency_out',
+                  isInBps: true,
+                }}
+                title="Swap on BSC"
+              />
+              {!walletAddress && <DemoModeOverlay />}
+            </SwapSection>
+          </SwapWrapper>
         </MainContent>
 
         <Footer>

@@ -98,13 +98,19 @@ const NavLink = styled.a`
 const MainContent = styled.main`
   flex: 1;
   width: 100%;
-  max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 40px 0;
+  gap: 20px;
+  padding: 20px 0;
+`
+
+const WidgetWrapper = styled.div`
+  width: 100%;
+  max-width: 800px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 `
 
 const WidgetContainer = styled.div`
@@ -117,17 +123,15 @@ const WidgetContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  min-width: 350px;
-  min-height: 550px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  min-width: 360px;
+  min-height: 500px;
 `
 
 const SectionTitle = styled.h2`
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -256,30 +260,14 @@ export default function ZapPageClient() {
                   <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, select "Degen Mode" in settings with high slippage (5% or more) to ensure successful transactions.
                 </div>
                 
-                <WidgetContainer style={{ position: 'relative' }}>
-                  {address ? (
-                    <LiquidityWidget
-                      chainId={chainId as ChainId.Bsc}
-                      poolType={PoolType.DEX_PANCAKESWAPV2}
-                      poolAddress={selectedPool.address}
-                      connectedAccount={{ address, chainId }}
-                      source="arbitrage-inception"
-                      feeConfig={{
-                        feePcm: FEE_PCM,
-                        feeAddress: FEE_RECEIVER,
-                      }}
-                      onClose={() => {}}
-                      onConnectWallet={handleConnectWallet}
-                      onSwitchChain={handleSwitchChain}
-                      onSubmitTx={handleSubmitTx}
-                    />
-                  ) : (
-                    <>
+                <WidgetWrapper>
+                  <WidgetContainer style={{ position: 'relative' }}>
+                    {address ? (
                       <LiquidityWidget
                         chainId={chainId as ChainId.Bsc}
                         poolType={PoolType.DEX_PANCAKESWAPV2}
                         poolAddress={selectedPool.address}
-                        connectedAccount={{ address: address || '', chainId }}
+                        connectedAccount={{ address, chainId }}
                         source="arbitrage-inception"
                         feeConfig={{
                           feePcm: FEE_PCM,
@@ -290,22 +278,42 @@ export default function ZapPageClient() {
                         onSwitchChain={handleSwitchChain}
                         onSubmitTx={handleSubmitTx}
                       />
-                      <DemoModeOverlay pool={selectedPool} />
-                    </>
-                  )}
-                </WidgetContainer>
+                    ) : (
+                      <>
+                        <LiquidityWidget
+                          chainId={chainId as ChainId.Bsc}
+                          poolType={PoolType.DEX_PANCAKESWAPV2}
+                          poolAddress={selectedPool.address}
+                          connectedAccount={{ address: address || '', chainId }}
+                          source="arbitrage-inception"
+                          feeConfig={{
+                            feePcm: FEE_PCM,
+                            feeAddress: FEE_RECEIVER,
+                          }}
+                          onClose={() => {}}
+                          onConnectWallet={handleConnectWallet}
+                          onSwitchChain={handleSwitchChain}
+                          onSubmitTx={handleSubmitTx}
+                        />
+                        <DemoModeOverlay pool={selectedPool} />
+                      </>
+                    )}
+                  </WidgetContainer>
+                </WidgetWrapper>
               </>
             ) : (
-            <WidgetContainer style={{ padding: '0' }}>
-              <ZapOutClient 
-                poolAddress={selectedPool.address}
-                poolType={selectedPool.poolType}
-                token0Address={selectedPool.token0.address}
-                token0Symbol={selectedPool.token0.symbol}
-                token1Address={selectedPool.token1.address}
-                token1Symbol={selectedPool.token1.symbol}
-              />
-            </WidgetContainer>
+            <WidgetWrapper>
+              <WidgetContainer style={{ padding: '0' }}>
+                <ZapOutClient 
+                  poolAddress={selectedPool.address}
+                  poolType={selectedPool.poolType}
+                  token0Address={selectedPool.token0.address}
+                  token0Symbol={selectedPool.token0.symbol}
+                  token1Address={selectedPool.token1.address}
+                  token1Symbol={selectedPool.token1.symbol}
+                />
+              </WidgetContainer>
+            </WidgetWrapper>
           )}
 
         </MainContent>

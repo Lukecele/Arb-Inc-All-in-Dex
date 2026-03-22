@@ -92,8 +92,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 20px 15px;
   background: transparent;
+  @media (min-width: 769px) {
+    padding: 40px 20px;
+  }
 `
 
 const Header = styled.header`
@@ -102,33 +105,49 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  @media (min-width: 769px) {
+    padding: 20px 0;
+  }
 `
 
 const LogoSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
+  @media (min-width: 769px) {
+    gap: 15px;
+  }
 `
 
 const Logo = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   animation: ${glow} 3s infinite;
+  @media (min-width: 769px) {
+    width: 60px;
+    height: 60px;
+  }
 `
 
 const Title = styled.h1`
-  font-size: 28px;
+  font-size: 18px;
   font-weight: 700;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 28px;
+  }
 `
 
 const Nav = styled.nav`
-  display: flex;
-  gap: 20px;
+  display: none;
+  @media (min-width: 769px) {
+    display: flex;
+    gap: 20px;
+  }
 `
 
 const NavLink = styled.a`
@@ -147,36 +166,43 @@ const MainContent = styled.main`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  padding: 60px 0;
+  gap: 30px;
+  padding: 20px 0;
+  @media (min-width: 769px) {
+    gap: 60px;
+    padding: 40px 0;
+  }
 `
 
 const HeroSection = styled.section`
   text-align: center;
-  padding: 60px 20px;
+  padding: 20px 10px;
+  @media (min-width: 769px) {
+    padding: 40px 20px;
+  }
 `
 
 const HeroTitle = styled.h2`
-  font-size: 56px;
+  font-size: 28px;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899, #06B6D4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
-  @media (max-width: 768px) {
-    font-size: 40px;
-    margin-bottom: 15px;
+  @media (min-width: 769px) {
+    font-size: 48px;
+    margin-bottom: 20px;
   }
 `
 
 const HeroSubtitle = styled.p`
-  font-size: 20px;
+  font-size: 14px;
   color: #A9A9A9;
-  line-height: 1.6;
+  line-height: 1.5;
   max-width: 800px;
-  margin: 0 auto 40px;
-  @media (max-width: 768px) {
+  margin: 0 auto 20px;
+  @media (min-width: 769px) {
     font-size: 18px;
     margin-bottom: 30px;
   }
@@ -380,28 +406,28 @@ const TimelineDescription = styled.p`
 
 const Section = styled.section`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
-  padding: 60px 40px;
+  border-radius: 16px;
+  padding: 20px 15px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 40px 0;
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-    margin: 20px 0;
-    border-radius: 16px;
+  margin: 15px 0;
+  @media (min-width: 769px) {
+    padding: 40px 30px;
+    margin: 30px 0;
+    border-radius: 24px;
   }
 `
 
 const SectionTitle = styled.h2`
-  font-size: 36px;
+  font-size: 22px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  @media (max-width: 768px) {
-    font-size: 28px;
+  @media (min-width: 769px) {
+    font-size: 32px;
     margin-bottom: 30px;
   }
 `
