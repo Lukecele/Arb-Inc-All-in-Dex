@@ -147,9 +147,11 @@ const Title = styled.h1`
 `
 
 const Nav = styled.nav`
-  display: none;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
   @media (min-width: 769px) {
-    display: flex;
     gap: 24px;
   }
 `
@@ -158,10 +160,13 @@ const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   transition: ${theme.transitions.fast};
   &:hover {
     color: ${theme.colors.primary.DEFAULT};
+  }
+  @media (min-width: 769px) {
+    font-size: 14px;
   }
 `
 
