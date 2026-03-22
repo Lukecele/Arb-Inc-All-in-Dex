@@ -346,8 +346,6 @@ export default function SwapPage() {
                 <Widget
                   client="arbitrage-inception"
                   theme={darkTheme}
-                  defaultTokenIn="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-                  defaultTokenOut="0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
                   rpcUrl="https://bsc.publicnode.com"
                   chainId={BSC_CHAIN_ID}
                   connectedAccount={{
