@@ -35,7 +35,7 @@ init({
 
 const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
-const FEE_PCM = 100
+const FEE_PCM = 10 // 0.1% fee
 
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
