@@ -376,7 +376,7 @@ export default function SwapPage() {
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
           <SwapWrapper>
-            <SwapScroller $scale={0.85}>
+            <SwapScroller $scale={0.75}>
               <SwapSection style={{ position: 'relative' }}>
                 <Widget
                   client="arbitrage-inception"

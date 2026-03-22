@@ -18,16 +18,16 @@ const DemoCard = styled.div`
   background: linear-gradient(to top, rgba(15, 15, 26, 0.98) 0%, rgba(15, 15, 26, 0.95) 100%);
   backdrop-filter: blur(10px);
   border-top: 1px solid ${theme.colors.border.DEFAULT};
-  padding: ${theme.spacing[3]} ${theme.spacing[4]};
+  padding: ${theme.spacing[2]} ${theme.spacing[3]};
 `
 
 const DemoTitle = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing[1]};
-  margin-bottom: ${theme.spacing[2]};
+  margin-bottom: ${theme.spacing[1]};
   color: ${theme.colors.text.secondary};
-  font-size: 11px;
+  font-size: 10px;
 `
 
 const DemoDot = styled.span`
