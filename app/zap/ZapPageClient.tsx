@@ -117,6 +117,38 @@ const Nav = styled.nav`
   }
 `
 
+const WalletSection = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`
+
+const ConnectButton = styled.button`
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  background: ${theme.colors.primary.gradient};
+  color: #fff;
+  border: none;
+  border-radius: ${theme.borderRadius.full};
+  font-weight: 600;
+  transition: ${theme.transitions.fast};
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${theme.shadows.glow};
+  }
+`
+
+const DisconnectButton = styled.button`
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  background: ${theme.colors.status.error};
+  color: white;
+  border: none;
+  border-radius: ${theme.borderRadius.sm};
+`
+
 const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
@@ -205,7 +237,7 @@ const TabButton = styled.button<{ $active?: boolean }>`
 `
 
 export default function ZapPageClient() {
-  const [{ wallet }, connect] = useConnectWallet()
+  const [{ wallet }, connect, disconnect] = useConnectWallet()
   const [, setChain] = useSetChain()
   
   const [address, setAddress] = useState<string | undefined>()
@@ -262,6 +294,22 @@ export default function ZapPageClient() {
             <NavLink href="/swap">Swap</NavLink>
             <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
           </Nav>
+          <WalletSection>
+            {address ? (
+              <>
+                <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                  {address.slice(0, 6)}...{address.slice(-4)}
+                </span>
+                <DisconnectButton onClick={() => wallet && disconnect(wallet)}>
+                  Disconnect
+                </DisconnectButton>
+              </>
+            ) : (
+              <ConnectButton onClick={handleConnectWallet}>
+                Connect Wallet
+              </ConnectButton>
+            )}
+          </WalletSection>
         </Header>
 
         <MainContent>
