@@ -100,8 +100,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Work Sans', sans-serif;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    font-family: ${theme.typography.fontFamily};
+    background: linear-gradient(135deg, ${theme.colors.background.primary} 0%, #1a1a3e 50%, ${theme.colors.background.secondary} 100%);
     color: #FFFFFF;
     min-height: 100vh;
   }
@@ -118,10 +118,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 20px 15px;
   background: ${theme.colors.background.primary};
-  @media (max-width: 768px) {
-    padding: 10px;
+  @media (min-width: 769px) {
+    padding: 40px 20px;
   }
 `
 
@@ -133,10 +133,10 @@ const Header = styled.header`
   align-items: center;
   padding: 15px 0;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
   border-bottom: 1px solid ${theme.colors.border.DEFAULT};
-  @media (max-width: 768px) {
-    justify-content: center;
+  @media (min-width: 769px) {
+    padding: 20px 0;
   }
 `
 
@@ -147,35 +147,55 @@ const LogoSection = styled.div`
 `
 
 const Logo = styled.img`
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: ${theme.borderRadius.full};
   box-shadow: ${theme.shadows.glow};
+  @media (min-width: 769px) {
+    width: 60px;
+    height: 60px;
+  }
 `
 
 const Title = styled.h1`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  background: linear-gradient(90deg, #28E0B9, #00D4FF);
+  background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   @media (min-width: 769px) {
-    font-size: 24px;
+    font-size: 28px;
   }
 `
 
 const Nav = styled.nav`
   display: flex;
-  gap: 15px;
+  gap: 12px;
+  background: ${theme.colors.glass.medium};
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid ${theme.colors.border.DEFAULT};
+  @media (max-width: 768px) {
+    gap: 8px;
+    padding: 8px 16px;
+  }
 `
 
 const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
   transition: ${theme.transitions.fast};
   &:hover {
-    color: ${theme.colors.accent.DEFAULT};
+    color: ${theme.colors.text.primary};
+    background: ${theme.colors.glass.heavy};
+  }
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 6px 12px;
   }
 `
 
@@ -189,14 +209,15 @@ const ConnectButton = styled.button`
   padding: 10px 20px;
   font-size: 14px;
   cursor: pointer;
-  background: linear-gradient(90deg, #28E0B9, #00D4FF);
-  color: #000;
+  background: ${theme.colors.primary.gradient};
+  color: #fff;
   border: none;
-  border-radius: 20px;
+  border-radius: ${theme.borderRadius.full};
   font-weight: 600;
-  transition: transform 0.2s;
+  transition: ${theme.transitions.fast};
   &:hover {
     transform: translateY(-2px);
+    box-shadow: ${theme.shadows.glow};
   }
 `
 
@@ -223,8 +244,8 @@ const MainContent = styled.main`
 const SwapWrapper = styled.div`
   width: 100%;
   background: ${theme.colors.glass.light};
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: ${theme.borderRadius.lg};
+  border: 1px solid ${theme.colors.border.DEFAULT};
   padding: 20px;
   overflow: hidden;
   @media (max-width: 480px) {
@@ -247,7 +268,7 @@ const Footer = styled.footer`
   max-width: 1200px;
   padding: 40px 0;
   text-align: center;
-  color: #666;
+  color: ${theme.colors.text.muted};
   font-size: 14px;
 `
 
@@ -318,7 +339,7 @@ export default function SwapPage() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap" style={{ color: '#28E0B9' }}>Swap</NavLink>
+            <NavLink href="/swap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Swap</NavLink>
             <NavLink href="/zap">Zap</NavLink>
           </Nav>
           <WalletSection>

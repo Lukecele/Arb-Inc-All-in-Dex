@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(-45deg, #0f0f1a, #1a1a3e, #0f172a, #1a0a2e);
+    background: linear-gradient(135deg, ${theme.colors.background.primary} 0%, #1a1a3e 50%, ${theme.colors.background.secondary} 100%);
     background-size: 400% 400%;
     animation: gradientBackground 15s ease infinite;
     color: #FFFFFF;
@@ -170,8 +170,8 @@ const NavLink = styled.a`
   border-radius: 20px;
   transition: ${theme.transitions.fast};
   &:hover {
-    color: #fff;
-    background: rgba(139, 92, 246, 0.3);
+    color: ${theme.colors.text.primary};
+    background: ${theme.colors.glass.heavy};
   }
   @media (min-width: 769px) {
     font-size: 14px;
@@ -551,7 +551,7 @@ const Footer = styled.footer`
   max-width: 1200px;
   padding: 40px 0;
   text-align: center;
-  color: #666;
+  color: ${theme.colors.text.muted};
   font-size: 14px;
 `
 

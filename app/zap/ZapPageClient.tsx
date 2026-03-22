@@ -92,7 +92,7 @@ const Logo = styled.img`
 `
 
 const Title = styled.h1`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
@@ -104,25 +104,35 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 15px;
+  gap: 12px;
+  background: ${theme.colors.glass.medium};
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid ${theme.colors.border.DEFAULT};
   @media (max-width: 768px) {
     width: 100%;
     justify-content: center;
-  }
-  a {
-    color: ${theme.colors.text.secondary};
-    transition: ${theme.transitions.fast};
-    &:hover {
-      color: ${theme.colors.primary.DEFAULT};
-    }
+    gap: 8px;
+    padding: 8px 16px;
   }
 `
 
 const NavLink = styled.a`
-  color: #A9A9A9;
+  color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  &:hover { color: #8B5CF6; }
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: ${theme.transitions.fast};
+  &:hover {
+    color: ${theme.colors.text.primary};
+    background: ${theme.colors.glass.heavy};
+  }
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 `
 
 const MainContent = styled.main`
@@ -137,8 +147,8 @@ const MainContent = styled.main`
 const WidgetWrapper = styled.div`
   width: 100%;
   background: ${theme.colors.glass.light};
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: ${theme.borderRadius.lg};
+  border: 1px solid ${theme.colors.border.DEFAULT};
   padding: 20px;
   overflow: hidden;
   @media (max-width: 480px) {
@@ -157,13 +167,17 @@ const WidgetContainer = styled.div`
 `
 
 const SectionTitle = styled.h2`
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   text-align: center;
   margin-bottom: 20px;
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
 `
 
 const Footer = styled.footer`
@@ -171,7 +185,7 @@ const Footer = styled.footer`
   max-width: 1200px;
   padding: 40px 0;
   text-align: center;
-  color: #666;
+  color: ${theme.colors.text.muted};
   font-size: 14px;
 `
 
@@ -179,13 +193,14 @@ const TabButton = styled.button<{ $active?: boolean }>`
   padding: 12px 32px;
   font-size: 16px;
   font-weight: 600;
-  color: ${props => props.$active ? '#000' : '#A9A9A9'};
-  background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.05)'};
+  color: ${props => props.$active ? '#fff' : theme.colors.text.secondary};
+  background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.medium};
   border: none;
-  border-radius: 12px;
+  border-radius: ${theme.borderRadius.md};
   cursor: pointer;
+  transition: ${theme.transitions.fast};
   &:hover {
-    background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.1)'};
+    background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.heavy};
   }
 `
 
@@ -245,7 +260,7 @@ export default function ZapPageClient() {
           <Nav>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swap">Swap</NavLink>
-            <NavLink href="/zap" style={{ color: '#8B5CF6' }}>Zap</NavLink>
+            <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
           </Nav>
         </Header>
 

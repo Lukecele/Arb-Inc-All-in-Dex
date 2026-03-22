@@ -5,7 +5,13 @@ import theme from '../styles/theme'
 import type { PoolInfo } from '../pools'
 
 const Overlay = styled.div`
-  margin-top: ${theme.spacing[4]};
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 500px;
+  z-index: 10;
 `
 
 const DemoCard = styled.div`
@@ -14,9 +20,6 @@ const DemoCard = styled.div`
   border: 1px solid ${theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing[4]};
-  @media (max-width: 480px) {
-    padding: 10px;
-  }
 `
 
 const DemoTitle = styled.div`
@@ -27,18 +30,13 @@ const DemoTitle = styled.div`
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
-  @media (max-width: 480px) {
-    font-size: 10px;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
 `
 
 const DemoDot = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${theme.colors.accent.DEFAULT};
+  background: ${theme.colors.primary.DEFAULT};
   animation: pulse 2s infinite;
   
   @keyframes pulse {
@@ -53,16 +51,14 @@ const DemoStats = styled.div`
   gap: ${theme.spacing[4]};
   @media (max-width: 480px) {
     grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
+    gap: ${theme.spacing[2]};
   }
 `
 
 const DemoStat = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
+  gap: 2px;
 `
 
 const DemoLabel = styled.span`
@@ -71,9 +67,9 @@ const DemoLabel = styled.span`
 `
 
 const DemoValue = styled.span`
-  font-size: ${theme.typography.sizes.md};
+  font-size: ${theme.typography.sizes.sm};
   color: ${theme.colors.text.primary};
-  font-weight: ${theme.typography.weights.semibold};
+  font-weight: ${theme.typography.weights.medium};
 `
 
 interface DemoModeOverlayProps {
