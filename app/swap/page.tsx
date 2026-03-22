@@ -126,7 +126,12 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 15px;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 const Nav = styled.nav`
@@ -140,20 +145,6 @@ const Title = styled.h1`
   background: linear-gradient(90deg, #28E0B9, #00D4FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-`
-
-const Header = styled.header`
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  flex-wrap: wrap;
-  gap: 15px;
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
 `
 
 const LogoSection = styled.div`
