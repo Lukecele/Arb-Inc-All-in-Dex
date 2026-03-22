@@ -559,7 +559,7 @@ const tokenData = {
   price: 0.000004402,
   marketCap: 4402,
   liquidity: 3970,
-  volume24h: 70,
+  volume24h: 128,
   poolCount: 34,
   contract: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
 }
