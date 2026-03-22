@@ -135,18 +135,18 @@ const MainContent = styled.main`
 `
 
 const WidgetWrapper = styled.div`
-  width: 100%;
-  max-width: 800px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   overflow: hidden;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
 `
 
 const WidgetScroller = styled.div`
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  padding: 0 20px;
   &::-webkit-scrollbar {
     height: 4px;
   }
@@ -168,8 +168,9 @@ const WidgetContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-width: 450px;
+  min-width: 420px;
   min-height: 500px;
+  margin: 0 auto;
 `
 
 const SectionTitle = styled.h2`
