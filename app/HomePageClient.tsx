@@ -560,7 +560,7 @@ const tokenData = {
   marketCap: 4402,
   liquidity: 3970,
   volume24h: 70,
-  poolCount: 15,
+  poolCount: 34,
   contract: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
 }
 
@@ -698,7 +698,13 @@ export default function HomePageClient() {
               {[
                 { label: "Current Price", value: `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
                 { label: "Market Cap", value: `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
-                { label: "Liquidity", value: `$${tokenData.liquidity.toLocaleString()}`, sublabel: `across over ${tokenData.poolCount} pools`, icon: <FaWater /> },
+                { 
+                  label: "Liquidity", 
+                  value: `$${tokenData.liquidity.toLocaleString()}`, 
+                  sublabel: `across over ${tokenData.poolCount} pools`,
+                  zapLink: true,
+                  icon: <FaWater /> 
+                },
                 { label: "24h Volume", value: `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
               ].map((stat, index) => (
                 <StatCard
@@ -714,6 +720,23 @@ export default function HomePageClient() {
                   <StatLabel>{stat.label}</StatLabel>
                   <StatValue>{stat.value}</StatValue>
                   {stat.sublabel && <StatSubLabel>{stat.sublabel}</StatSubLabel>}
+                  {stat.zapLink && (
+                    <Link href="/zap" passHref style={{ marginTop: '12px', display: 'inline-block' }}>
+                      <span style={{
+                        padding: '8px 16px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: '#fff',
+                        background: 'linear-gradient(90deg, #28E0B9, #00D4FF)',
+                        borderRadius: '20px',
+                        textDecoration: 'none',
+                        transition: 'transform 0.2s',
+                        display: 'inline-block',
+                      }}>
+                        ⚡ Use Zap
+                      </span>
+                    </Link>
+                  )}
                 </StatCard>
               ))}
             </StatsGrid>
