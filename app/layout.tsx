@@ -1,10 +1,14 @@
+import type { Metadata } from 'next'
 import './globals.css'
 import StyledComponentsRegistry from '../lib/registry'
 import { Analytics } from '@vercel/analytics/next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Arbitrage Inc | Swap Widget',
   description: 'Swap tokens with the best rates using KyberSwap. Powered by Arbitrage Inc.',
+  verification: {
+    google: '2b040ac83f9d76c4',
+  },
   openGraph: {
     title: 'Arbitrage Inc | Swap Widget',
     description: 'Swap tokens with the best rates using KyberSwap. Powered by Arbitrage Inc.',
