@@ -39,24 +39,9 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
-// Token list - il widget usa SOLO questi, quindi includiamo tutto il necessario
+// Token list - il widget usa SOLO questi, quindi includiamo solo i token extra
+// BNB e WBNB sono già inclusi di default dal widget
 const customTokens = [
-  {
-    chainId: 56,
-    address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-    symbol: 'BNB',
-    name: 'BNB',
-    decimals: 18,
-    logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
-  },
-  {
-    chainId: 56,
-    address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    symbol: 'WBNB',
-    name: 'Wrapped BNB',
-    decimals: 18,
-    logoURI: 'https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png',
-  },
   {
     chainId: 56,
     address: '0x55d398326f99059fF775485246999027B3197955',
