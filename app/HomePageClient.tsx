@@ -148,25 +148,34 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 16px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   @media (min-width: 769px) {
-    gap: 24px;
+    gap: 12px;
+    padding: 10px 20px;
   }
 `
 
 const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
   transition: ${theme.transitions.fast};
   &:hover {
-    color: ${theme.colors.primary.DEFAULT};
+    color: #fff;
+    background: rgba(139, 92, 246, 0.3);
   }
   @media (min-width: 769px) {
     font-size: 14px;
+    padding: 10px 20px;
   }
 `
 
