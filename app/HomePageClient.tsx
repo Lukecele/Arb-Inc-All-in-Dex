@@ -94,9 +94,6 @@ const Container = styled.div`
   align-items: center;
   padding: 40px 20px;
   background: transparent;
-  @media (max-width: 768px) {
-    padding: 20px 15px;
-  }
 `
 
 const Header = styled.header`
@@ -152,10 +149,6 @@ const MainContent = styled.main`
   flex-direction: column;
   gap: 80px;
   padding: 60px 0;
-  @media (max-width: 768px) {
-    gap: 40px;
-    padding: 20px 0;
-  }
 `
 
 const HeroSection = styled.section`
@@ -191,43 +184,43 @@ const HeroSubtitle = styled.p`
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  margin: 40px 0;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 25px 0;
 `
 
 const FeatureCard = styled.div`
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 16px;
+  padding: 20px;
   text-align: center;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
     border-color: rgba(139, 92, 246, 0.3);
   }
 `
 
 const FeatureIcon = styled.div`
-  font-size: 48px;
-  margin-bottom: 20px;
+  font-size: 36px;
+  margin-bottom: 12px;
   animation: ${float} 3s ease-in-out infinite;
 `
 
 const FeatureTitle = styled.h3`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #8B5CF6;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 `
 
 const FeatureDescription = styled.p`
-  font-size: 16px;
+  font-size: 13px;
   color: #A9A9A9;
-  line-height: 1.5;
+  line-height: 1.4;
 `
 
 const TokenomicsContainer = styled.div`
@@ -457,6 +450,12 @@ const StatValue = styled.div`
   color: #8B5CF6;
 `
 
+const StatSubLabel = styled.div`
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+`
+
 const CTAButton = styled.div`
   display: inline-block;
   padding: 16px 40px;
@@ -516,6 +515,7 @@ const tokenData = {
   marketCap: 4402,
   liquidity: 3970,
   volume24h: 70,
+  poolCount: 15,
   contract: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
 }
 
@@ -653,7 +653,7 @@ export default function HomePageClient() {
               {[
                 { label: "Current Price", value: `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
                 { label: "Market Cap", value: `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
-                { label: "Liquidity", value: `$${tokenData.liquidity.toLocaleString()}`, icon: <FaWater /> },
+                { label: "Liquidity", value: `$${tokenData.liquidity.toLocaleString()}`, sublabel: `across over ${tokenData.poolCount} pools`, icon: <FaWater /> },
                 { label: "24h Volume", value: `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
               ].map((stat, index) => (
                 <StatCard
@@ -668,6 +668,7 @@ export default function HomePageClient() {
                   <StatIcon>{stat.icon}</StatIcon>
                   <StatLabel>{stat.label}</StatLabel>
                   <StatValue>{stat.value}</StatValue>
+                  {stat.sublabel && <StatSubLabel>{stat.sublabel}</StatSubLabel>}
                 </StatCard>
               ))}
             </StatsGrid>
@@ -786,9 +787,12 @@ export default function HomePageClient() {
               <p>
                 Ready to experience the future of DeFi? Connect your wallet and start trading today.
               </p>
-              <div style={{ marginTop: '30px' }}>
+              <div style={{ marginTop: '30px', display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Link href="/swap" passHref>
                   <CTAButton>Go to Swap Page</CTAButton>
+                </Link>
+                <Link href="/zap" passHref>
+                  <CTAButton style={{ background: 'linear-gradient(90deg, #28E0B9, #00D4FF)' }}>Go to Zap Page</CTAButton>
                 </Link>
               </div>
             </AboutContent>

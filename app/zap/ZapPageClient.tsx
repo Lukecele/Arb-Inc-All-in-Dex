@@ -51,10 +51,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 15px;
-  @media (min-width: 769px) {
-    padding: 40px 20px;
-  }
+  padding: 40px 20px;
 `
 
 const Header = styled.header`
@@ -63,11 +60,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 15px;
-  }
+  padding: 20px 0;
 `
 
 const LogoSection = styled.div`
@@ -77,24 +70,17 @@ const LogoSection = styled.div`
 `
 
 const Logo = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  @media (min-width: 769px) {
-    width: 60px;
-    height: 60px;
-  }
 `
 
 const Title = styled.h1`
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 700;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) {
-    font-size: 28px;
-  }
 `
 
 const Nav = styled.nav`
@@ -115,81 +101,58 @@ const MainContent = styled.main`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  padding: 20px 0;
-  @media (min-width: 769px) {
-    gap: 40px;
-    padding: 40px 0;
-  }
+  gap: 40px;
+  padding: 40px 0;
 `
 
 const SectionTitle = styled.h2`
-  font-size: 20px;
+  font-size: 36px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) {
-    font-size: 36px;
-    margin-bottom: 40px;
-  }
 `
 
 const WidgetContainer = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 24px;
+  padding: 30px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 350px;
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  & > * {
-    min-width: 300px;
-    max-width: 100%;
-  }
-  @media (min-width: 769px) {
-    border-radius: 24px;
-    padding: 40px;
+  min-height: 550px;
+  @media (max-width: 768px) {
+    padding: 20px;
     min-height: 500px;
+    border-radius: 16px;
   }
 `
 
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 20px 0;
+  padding: 40px 0;
   text-align: center;
   color: #666;
-  font-size: 12px;
-  @media (min-width: 769px) {
-    padding: 40px 0;
-    font-size: 14px;
-  }
+  font-size: 14px;
 `
 
 const TabButton = styled.button<{ $active?: boolean }>`
-  padding: 10px 20px;
-  font-size: 14px;
+  padding: 12px 32px;
+  font-size: 16px;
   font-weight: 600;
   color: ${props => props.$active ? '#000' : '#A9A9A9'};
   background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.05)'};
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  white-space: nowrap;
   &:hover {
     background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.1)'};
-  }
-  @media (min-width: 769px) {
-    padding: 12px 32px;
-    font-size: 16px;
   }
 `
 
@@ -249,7 +212,7 @@ export default function ZapPageClient() {
           <Nav>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swap">Swap</NavLink>
-            <NavLink href="/zap">Zap</NavLink>
+            <NavLink href="/zap" style={{ color: '#8B5CF6' }}>Zap</NavLink>
           </Nav>
         </Header>
 
@@ -261,7 +224,7 @@ export default function ZapPageClient() {
             onPoolChange={setSelectedPool}
           />
           
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '15px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '25px' }}>
             <TabButton
               $active={activeTab === 'zap-in'}
               onClick={() => setActiveTab('zap-in')}
@@ -281,14 +244,14 @@ export default function ZapPageClient() {
                 <div style={{
                   maxWidth: '600px',
                   width: '100%',
-                  marginBottom: '15px',
-                  padding: '10px',
+                  marginBottom: '20px',
+                  padding: '16px',
                   background: 'rgba(255, 152, 0, 0.1)',
                   border: '1px solid rgba(255, 152, 0, 0.3)',
-                  borderRadius: '8px',
+                  borderRadius: '12px',
                   color: '#FF9901',
-                  fontSize: '11px',
-                  lineHeight: '1.4',
+                  fontSize: '14px',
+                  lineHeight: '1.5',
                 }}>
                   <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, select "Degen Mode" in settings with high slippage (5% or more) to ensure successful transactions.
                 </div>

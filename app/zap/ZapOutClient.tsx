@@ -11,45 +11,33 @@ const Container = styled.div`
 
 const Card = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px 15px;
+  border-radius: 24px;
+  padding: 60px 40px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  @media (min-width: 769px) {
-    border-radius: 24px;
-    padding: 60px 40px;
-  }
 `
 
 const Title = styled.h3`
-  font-size: 16px;
+  font-size: 24px;
   color: #FFFFFF;
-  margin-bottom: 10px;
-  @media (min-width: 769px) {
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
+  margin-bottom: 16px;
 `
 
 const Description = styled.p`
   color: #A9A9A9;
-  font-size: 12px;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  @media (min-width: 769px) {
-    font-size: 16px;
-    margin-bottom: 30px;
-  }
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 30px;
 `
 
 const LinkButton = styled.a`
   display: inline-block;
-  padding: 10px 20px;
+  padding: 16px 40px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   color: white;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -57,30 +45,16 @@ const LinkButton = styled.a`
   &:hover {
     opacity: 0.9;
   }
-  @media (min-width: 769px) {
-    padding: 16px 40px;
-    font-size: 18px;
-    border-radius: 12px;
-  }
 `
 
 const Features = styled.ul`
   text-align: left;
   color: #A9A9A9;
-  margin: 15px 0;
-  padding-left: 15px;
-  font-size: 12px;
+  margin: 30px 0;
+  padding-left: 20px;
   li {
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
-  @media (min-width: 769px) {
-    margin: 30px 0;
-    padding-left: 20px;
-    font-size: 14px;
-    li {
-      margin-bottom: 10px;
-    }
+    margin-bottom: 10px;
+    line-height: 1.5;
   }
 `
 
@@ -117,7 +91,7 @@ export default function ZapOutClient({ poolAddress, poolType, token0Address, tok
           Go to My Positions
         </LinkButton>
         
-        <p style={{ marginTop: '15px', color: '#666', fontSize: '11px' }}>
+        <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
           You will be redirected to PancakeSwap's official interface to manage your liquidity positions
         </p>
       </Card>

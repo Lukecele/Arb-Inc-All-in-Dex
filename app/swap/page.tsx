@@ -116,11 +116,30 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px;
+  padding: 20px;
   background: transparent;
-  @media (min-width: 769px) {
-    padding: 20px;
-  }
+`
+
+const Header = styled.header`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+`
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 20px;
+`
+
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #28E0B9, #00D4FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `
 
 const Header = styled.header`
@@ -217,40 +236,27 @@ const MainContent = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px 0;
-  @media (min-width: 769px) {
-    gap: 40px;
-    padding: 40px 0;
-  }
+  gap: 40px;
+  padding: 40px 0;
 `
 
 const SwapSection = styled.section`
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
-  padding: 15px;
+  border-radius: 24px;
+  padding: 30px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-x: auto;
-  @media (min-width: 769px) {
-    border-radius: 24px;
-    padding: 30px;
-  }
 `
 
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 20px 0;
+  padding: 40px 0;
   text-align: center;
   color: #666;
-  font-size: 12px;
-  @media (min-width: 769px) {
-    padding: 40px 0;
-    font-size: 14px;
-  }
+  font-size: 14px;
 `
 
 export default function SwapPage() {
@@ -320,7 +326,8 @@ export default function SwapPage() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap</NavLink>
+            <NavLink href="/swap" style={{ color: '#28E0B9' }}>Swap</NavLink>
+            <NavLink href="/zap">Zap</NavLink>
           </Nav>
           <WalletSection>
             {walletAddress ? (
@@ -344,14 +351,14 @@ export default function SwapPage() {
           <div style={{
             maxWidth: '400px',
             width: '100%',
-            marginBottom: '10px',
-            padding: '12px',
+            marginBottom: '0px',
+            padding: '10px',
             background: 'rgba(255, 152, 0, 0.1)',
             border: '1px solid rgba(255, 152, 0, 0.3)',
             borderRadius: '12px',
             color: '#FF9901',
-            fontSize: '13px',
-            lineHeight: '1.5',
+            fontSize: '12px',
+            lineHeight: '1.4',
           }}>
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
