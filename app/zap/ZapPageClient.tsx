@@ -137,10 +137,16 @@ const MainContent = styled.main`
 const WidgetWrapper = styled.div`
   width: 100%;
   max-width: 800px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+`
+
+const WidgetScroller = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     height: 4px;
   }
@@ -162,8 +168,7 @@ const WidgetContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  width: 100%;
-  min-width: 360px;
+  min-width: 450px;
   min-height: 500px;
 `
 
@@ -301,30 +306,14 @@ export default function ZapPageClient() {
                 </div>
                 
                 <WidgetWrapper>
-                  <WidgetContainer style={{ position: 'relative' }}>
-                    {address ? (
-                      <LiquidityWidget
-                        chainId={chainId as ChainId.Bsc}
-                        poolType={PoolType.DEX_PANCAKESWAPV2}
-                        poolAddress={selectedPool.address}
-                        connectedAccount={{ address, chainId }}
-                        source="arbitrage-inception"
-                        feeConfig={{
-                          feePcm: FEE_PCM,
-                          feeAddress: FEE_RECEIVER,
-                        }}
-                        onClose={() => {}}
-                        onConnectWallet={handleConnectWallet}
-                        onSwitchChain={handleSwitchChain}
-                        onSubmitTx={handleSubmitTx}
-                      />
-                    ) : (
-                      <>
+                  <WidgetScroller>
+                    <WidgetContainer style={{ position: 'relative' }}>
+                      {address ? (
                         <LiquidityWidget
                           chainId={chainId as ChainId.Bsc}
                           poolType={PoolType.DEX_PANCAKESWAPV2}
                           poolAddress={selectedPool.address}
-                          connectedAccount={{ address: address || '', chainId }}
+                          connectedAccount={{ address, chainId }}
                           source="arbitrage-inception"
                           feeConfig={{
                             feePcm: FEE_PCM,
@@ -335,24 +324,44 @@ export default function ZapPageClient() {
                           onSwitchChain={handleSwitchChain}
                           onSubmitTx={handleSubmitTx}
                         />
-                        <DemoModeOverlay pool={selectedPool} />
-                      </>
-                    )}
-                  </WidgetContainer>
+                      ) : (
+                        <>
+                          <LiquidityWidget
+                            chainId={chainId as ChainId.Bsc}
+                            poolType={PoolType.DEX_PANCAKESWAPV2}
+                            poolAddress={selectedPool.address}
+                            connectedAccount={{ address: address || '', chainId }}
+                            source="arbitrage-inception"
+                            feeConfig={{
+                              feePcm: FEE_PCM,
+                              feeAddress: FEE_RECEIVER,
+                            }}
+                            onClose={() => {}}
+                            onConnectWallet={handleConnectWallet}
+                            onSwitchChain={handleSwitchChain}
+                            onSubmitTx={handleSubmitTx}
+                          />
+                          <DemoModeOverlay pool={selectedPool} />
+                        </>
+                      )}
+                    </WidgetContainer>
+                  </WidgetScroller>
                 </WidgetWrapper>
               </>
             ) : (
             <WidgetWrapper>
-              <WidgetContainer style={{ padding: '0' }}>
-                <ZapOutClient 
-                  poolAddress={selectedPool.address}
-                  poolType={selectedPool.poolType}
-                  token0Address={selectedPool.token0.address}
-                  token0Symbol={selectedPool.token0.symbol}
-                  token1Address={selectedPool.token1.address}
-                  token1Symbol={selectedPool.token1.symbol}
-                />
-              </WidgetContainer>
+              <WidgetScroller>
+                <WidgetContainer style={{ padding: '0' }}>
+                  <ZapOutClient 
+                    poolAddress={selectedPool.address}
+                    poolType={selectedPool.poolType}
+                    token0Address={selectedPool.token0.address}
+                    token0Symbol={selectedPool.token0.symbol}
+                    token1Address={selectedPool.token1.address}
+                    token1Symbol={selectedPool.token1.symbol}
+                  />
+                </WidgetContainer>
+              </WidgetScroller>
             </WidgetWrapper>
           )}
 

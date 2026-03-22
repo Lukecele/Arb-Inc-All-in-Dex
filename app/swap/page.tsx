@@ -222,10 +222,16 @@ const MainContent = styled.main`
 const SwapWrapper = styled.div`
   width: 100%;
   max-width: 450px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+`
+
+const SwapScroller = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     height: 4px;
   }
@@ -241,7 +247,7 @@ const SwapWrapper = styled.div`
 
 const SwapSection = styled.section`
   width: 100%;
-  min-width: 360px;
+  min-width: 400px;
   padding: 15px;
 `
 
@@ -358,30 +364,32 @@ export default function SwapPage() {
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
           <SwapWrapper>
-            <SwapSection style={{ position: 'relative' }}>
-              <Widget
-                client="arbitrage-inception"
-                theme={darkTheme}
-                tokenList={customTokens}
-                rpcUrl="https://bsc.publicnode.com"
-                chainId={BSC_CHAIN_ID}
-                connectedAccount={{
-                  address: walletAddress || '',
-                  chainId: BSC_CHAIN_ID,
-                }}
-                onSubmitTx={handleSubmitTx}
-                onSwitchChain={handleSwitchChain}
-                enableRoute={true}
-                feeSetting={{
-                  feeAmount: 10,
-                  feeReceiver: FEE_RECEIVER,
-                  chargeFeeBy: 'currency_out',
-                  isInBps: true,
-                }}
-                title="Swap on BSC"
-              />
-              {!walletAddress && <DemoModeOverlay />}
-            </SwapSection>
+            <SwapScroller>
+              <SwapSection style={{ position: 'relative' }}>
+                <Widget
+                  client="arbitrage-inception"
+                  theme={darkTheme}
+                  tokenList={customTokens}
+                  rpcUrl="https://bsc.publicnode.com"
+                  chainId={BSC_CHAIN_ID}
+                  connectedAccount={{
+                    address: walletAddress || '',
+                    chainId: BSC_CHAIN_ID,
+                  }}
+                  onSubmitTx={handleSubmitTx}
+                  onSwitchChain={handleSwitchChain}
+                  enableRoute={true}
+                  feeSetting={{
+                    feeAmount: 10,
+                    feeReceiver: FEE_RECEIVER,
+                    chargeFeeBy: 'currency_out',
+                    isInBps: true,
+                  }}
+                  title="Swap on BSC"
+                />
+                {!walletAddress && <DemoModeOverlay />}
+              </SwapSection>
+            </SwapScroller>
           </SwapWrapper>
         </MainContent>
 
