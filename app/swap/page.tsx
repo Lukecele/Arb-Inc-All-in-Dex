@@ -392,7 +392,7 @@ export default function SwapPage() {
                   onSwitchChain={handleSwitchChain}
                   enableRoute={true}
                   feeSetting={{
-                    feeAmount: 10,
+                    feeAmount: FEE_PCM,
                     feeReceiver: FEE_RECEIVER,
                     chargeFeeBy: 'currency_out',
                     isInBps: true,
