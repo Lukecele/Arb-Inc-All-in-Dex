@@ -5,11 +5,11 @@ import theme from '../styles/theme'
 
 const Overlay = styled.div`
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 500px;
+  width: calc(100% - 20px);
+  max-width: 480px;
   z-index: 10;
 `
 
@@ -18,17 +18,17 @@ const DemoCard = styled.div`
   backdrop-filter: blur(20px);
   border: 1px solid ${theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing[4]};
+  padding: ${theme.spacing[3]};
 `
 
 const DemoTitle = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing[2]};
-  margin-bottom: ${theme.spacing[4]};
+  margin-bottom: ${theme.spacing[2]};
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
-  font-size: ${theme.typography.sizes.sm};
+  font-size: ${theme.typography.sizes.xs};
 `
 
 const DemoDot = styled.span`
@@ -62,7 +62,7 @@ const DemoLabel = styled.span`
 `
 
 const DemoValue = styled.span`
-  font-size: ${theme.typography.sizes.sm};
+  font-size: ${theme.typography.sizes.xs};
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.medium};
 `
