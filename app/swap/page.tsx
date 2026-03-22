@@ -252,23 +252,31 @@ const SwapWrapper = styled.div`
   padding: 16px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(40, 224, 185, 0.3);
+    border-radius: 4px;
+  }
   @media (max-width: 480px) {
-    padding: 12px;
+    padding: 8px;
     border-radius: 12px;
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - 16px);
   }
 `
 
 const SwapScroller = styled.div<{ $scale?: number }>`
-  width: 100%;
-  min-width: 340px;
+  width: 400px;
   transform: scale(${props => props.$scale || 1});
-  transform-origin: top center;
-  @media (max-width: 400px) {
-    transform: scale(0.75);
+  transform-origin: top left;
+  @media (max-width: 480px) {
+    width: 480px;
+    transform: scale(0.78);
   }
-  @media (min-width: 401px) and (max-width: 480px) {
-    transform: scale(0.85);
+  @media (min-width: 481px) {
+    width: 100%;
   }
 `
 
