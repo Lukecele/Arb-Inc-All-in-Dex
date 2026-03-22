@@ -43,6 +43,14 @@ const FEE_PCM = 10 // 0.1% fee
 const customTokens = [
   {
     chainId: 56,
+    address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    symbol: 'BNB',
+    name: 'BNB',
+    decimals: 18,
+    logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
+  },
+  {
+    chainId: 56,
     address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     symbol: 'WBNB',
     name: 'Wrapped BNB',
@@ -379,27 +387,29 @@ export default function SwapPage() {
           <SwapWrapper>
             <SwapScroller>
               <SwapSection style={{ position: 'relative' }}>
-                <Widget
-                  client="arbitrage-inception"
-                  theme={darkTheme}
-                  tokenList={customTokens}
-                  rpcUrl="https://bsc.publicnode.com"
-                  chainId={BSC_CHAIN_ID}
-                  connectedAccount={{
-                    address: walletAddress || '',
-                    chainId: BSC_CHAIN_ID,
-                  }}
-                  onSubmitTx={handleSubmitTx}
-                  onSwitchChain={handleSwitchChain}
-                  enableRoute={true}
-                  feeSetting={{
-                    feeAmount: FEE_PCM,
-                    feeReceiver: FEE_RECEIVER,
-                    chargeFeeBy: 'currency_out',
-                    isInBps: true,
-                  }}
-                  title="Swap on BSC"
-                />
+                 <Widget
+                   client="arbitrage-inception"
+                   theme={darkTheme}
+                   tokenList={customTokens}
+                   defaultTokenIn="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+                   defaultTokenOut="0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+                   rpcUrl="https://bsc.publicnode.com"
+                   chainId={BSC_CHAIN_ID}
+                   connectedAccount={{
+                     address: walletAddress || '',
+                     chainId: BSC_CHAIN_ID,
+                   }}
+                   onSubmitTx={handleSubmitTx}
+                   onSwitchChain={handleSwitchChain}
+                   enableRoute={true}
+                   feeSetting={{
+                     feeAmount: FEE_PCM,
+                     feeReceiver: FEE_RECEIVER,
+                     chargeFeeBy: 'currency_out',
+                     isInBps: true,
+                   }}
+                   title="Swap on BSC"
+                 />
                 {!walletAddress && <DemoModeOverlay />}
               </SwapSection>
             </SwapScroller>
