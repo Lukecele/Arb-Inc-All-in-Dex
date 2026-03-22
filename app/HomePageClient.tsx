@@ -646,7 +646,9 @@ export default function HomePageClient() {
                 <span>Arb Inc</span>
               </SwapButton>
               <Link href="/swap" passHref>
-                <CTAButton href="/swap-all">All Tokens</CTAButton>
+                <Link href="/swap-all" passHref>
+                  <CTAButton>All Tokens</CTAButton>
+                </Link>
               </Link>
             </motion.div>
           </HeroSection>
