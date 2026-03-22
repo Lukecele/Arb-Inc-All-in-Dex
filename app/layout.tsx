@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inc',
     images: [
       {
-        url: '/og-image.svg',
+        url: 'https://arbitrage-inc.exchange/og-image.svg',
         width: 1200,
         height: 630,
         alt: 'Arbitrage Inc Swap Widget',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Arbitrage Inc | Swap Widget',
     description: 'Swap tokens with the best rates using KyberSwap. Powered by Arbitrage Inc.',
-    images: ['/og-image.svg'],
+    images: ['https://arbitrage-inc.exchange/og-image.svg'],
   },
 }
 
