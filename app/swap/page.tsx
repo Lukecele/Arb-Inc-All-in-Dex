@@ -10,7 +10,8 @@ import {
 import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import { ethers } from 'ethers'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import DemoModeOverlay from './DemoModeOverlay'
 import theme from '../styles/theme'
@@ -22,6 +23,9 @@ const WBNB_ABI = [
   'function balanceOf(address) view returns (uint256)',
 ]
 const NATIVE_TOKEN_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
+const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955'
 
 const injected = injectedModule()
 const walletConnect = walletConnectModule({
@@ -47,32 +51,7 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
-// Token list - includes custom tokens plus WBNB for wrap/unwrap functionality
 const customTokens = [
-  {
-    chainId: 56,
-    address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    symbol: 'WBNB',
-    name: 'Wrapped BNB',
-    decimals: 18,
-    logoURI: 'https://tokens.icons.1001.org/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png',
-  },
-  {
-    chainId: 56,
-    address: '0x55d398326f99059fF775485246999027B3197955',
-    symbol: 'USDT',
-    name: 'Tether USD',
-    decimals: 18,
-    logoURI: 'https://coin.top/production/logo/usdtlogo.png',
-  },
-  {
-    chainId: 56,
-    address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-    symbol: 'USDC',
-    name: 'USD Coin',
-    decimals: 18,
-    logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
-  },
   {
     chainId: 56,
     address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
@@ -80,6 +59,22 @@ const customTokens = [
     name: 'Arbitrage Inception',
     decimals: 9,
     logoURI: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
+  },
+  {
+    chainId: 56,
+    address: '0x55d398326f99059fF775485246999027B3197955',
+    symbol: 'USDT',
+    name: 'Tether USD',
+    decimals: 18,
+    logoURI: 'https://tokens.icons.1001.org/0x55d398326f99059ff775485246999027b3197955.png',
+  },
+  {
+    chainId: 56,
+    address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+    symbol: 'USDC',
+    name: 'USD Coin',
+    decimals: 18,
+    logoURI: 'https://tokens.icons.1001.org/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d.png',
   },
 ]
 
@@ -341,7 +336,24 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
-export default function SwapPage() {
+function getTokenAddress(symbol: string | null): string | undefined {
+  if (!symbol) return undefined
+  const s = symbol.toUpperCase()
+  if (s === 'BNB') return NATIVE_TOKEN_ADDRESS
+  if (s === 'WBNB') return WBNB_ADDRESS
+  if (s === 'USDT') return USDT_ADDRESS
+  if (s === 'ARBINc') return ARB_INC_ADDRESS
+  if (s === 'ARBITRAGE INC' || s === 'ARBITRAGEINCEPTION') return ARB_INC_ADDRESS
+  return undefined
+}
+
+function SwapPageContent() {
+  const searchParams = useSearchParams()
+  const tokenInParam = searchParams.get('tokenIn')
+  const tokenOutParam = searchParams.get('tokenOut')
+  
+  const defaultTokenIn = getTokenAddress(tokenInParam) || USDT_ADDRESS
+  const defaultTokenOut = getTokenAddress(tokenOutParam) || ARB_INC_ADDRESS
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [, setChain] = useSetChain()
   const connectedWallets = useWallets()
@@ -521,8 +533,8 @@ export default function SwapPage() {
                    client="arbitrage-inception"
                    theme={darkTheme}
                    tokenList={customTokens}
-                   defaultTokenIn="0x55d398326f99059fF775485246999027B3197955"
-                   defaultTokenOut="0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c"
+                   defaultTokenIn={defaultTokenIn}
+                   defaultTokenOut={defaultTokenOut}
                    rpcUrl="https://bsc.publicnode.com"
                    chainId={BSC_CHAIN_ID}
                    connectedAccount={{
@@ -551,5 +563,13 @@ export default function SwapPage() {
         </Footer>
       </Container>
     </>
+  )
+}
+
+export default function SwapPage() {
+  return (
+    <Suspense fallback={<div style={{ color: '#fff', textAlign: 'center', padding: '100px' }}>Loading...</div>}>
+      <SwapPageContent />
+    </Suspense>
   )
 }

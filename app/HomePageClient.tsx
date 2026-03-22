@@ -523,6 +523,30 @@ const CTAButton = styled.div`
   }
 `
 
+const SwapButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #28E0B9 0%, #189470 100%);
+  border: none;
+  border-radius: 30px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 224, 185, 0.3);
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(40, 224, 185, 0.5);
+  }
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+`
+
 const SocialLinks = styled.div`
   display: flex;
   justify-content: center;
@@ -613,9 +637,15 @@ export default function HomePageClient() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
+              style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}
             >
+              <SwapButton href="/swap?tokenIn=BNB&tokenOut=ARBINc">
+                <span>BNB</span>
+                <span style={{ fontSize: '14px', opacity: 0.8 }}>→</span>
+                <span>Arb Inc</span>
+              </SwapButton>
               <Link href="/swap" passHref>
-                <CTAButton>Start Trading Now</CTAButton>
+                <CTAButton>All Tokens</CTAButton>
               </Link>
             </motion.div>
           </HeroSection>
