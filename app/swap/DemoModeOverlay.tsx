@@ -5,35 +5,34 @@ import theme from '../styles/theme'
 
 const Overlay = styled.div`
   position: absolute;
-  bottom: 10px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 20px);
-  max-width: 480px;
+  width: 100%;
+  max-width: 450px;
   z-index: 10;
+  padding: 0 10px;
 `
 
 const DemoCard = styled.div`
-  background: ${theme.colors.glass.medium};
-  backdrop-filter: blur(20px);
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing[3]};
+  background: linear-gradient(to top, rgba(15, 15, 26, 0.98) 0%, rgba(15, 15, 26, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid ${theme.colors.border.DEFAULT};
+  padding: ${theme.spacing[3]} ${theme.spacing[4]};
 `
 
 const DemoTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing[2]};
+  gap: ${theme.spacing[1]};
   margin-bottom: ${theme.spacing[2]};
-  color: ${theme.colors.text.primary};
-  font-weight: ${theme.typography.weights.semibold};
-  font-size: ${theme.typography.sizes.xs};
+  color: ${theme.colors.text.secondary};
+  font-size: 11px;
 `
 
 const DemoDot = styled.span`
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: ${theme.colors.primary.DEFAULT};
   animation: pulse 2s infinite;
@@ -46,19 +45,21 @@ const DemoDot = styled.span`
 
 const DemoStats = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: ${theme.spacing[2]};
 `
 
 const DemoStat = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 `
 
 const DemoLabel = styled.span`
-  font-size: ${theme.typography.sizes.xs};
-  color: ${theme.colors.text.secondary};
+  font-size: 10px;
+  color: ${theme.colors.text.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `
 
 const DemoValue = styled.span`
