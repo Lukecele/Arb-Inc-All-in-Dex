@@ -15,6 +15,14 @@ import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import DemoModeOverlay from './DemoModeOverlay'
 import theme from '../styles/theme'
 
+const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+const WBNB_ABI = [
+  'function deposit() payable',
+  'function withdraw(uint256 wad)',
+  'function balanceOf(address) view returns (uint256)',
+]
+const NATIVE_TOKEN_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
 const injected = injectedModule()
 const walletConnect = walletConnectModule({
   projectId: 'b03ed6d8451c1e05022897815db0ad0b',
@@ -279,6 +287,51 @@ const SwapSection = styled.section`
   width: 100%;
 `
 
+const WrapUnwrapSection = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+`
+
+const WrapUnwrapButton = styled.button<{ $variant: 'wrap' | 'unwrap' }>`
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  background: ${props => props.$variant === 'wrap' 
+    ? 'linear-gradient(135deg, #28E0B9 0%, #189470 100%)' 
+    : 'linear-gradient(135deg, #FF9901 0%, #cc7a00 100%)'};
+  color: #fff;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+`
+
+const WrapUnwrapInput = styled.input`
+  width: 120px;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid ${theme.colors.border.DEFAULT};
+  border-radius: 8px;
+  background: ${theme.colors.glass.medium};
+  color: #fff;
+  text-align: center;
+  &::placeholder {
+    color: ${theme.colors.text.muted};
+  }
+`
+
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
@@ -295,6 +348,10 @@ export default function SwapPage() {
 
   const [ethersProvider, setEthersProvider] = useState<ethers.providers.Web3Provider | null>(null)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  const [wrapAmount, setWrapAmount] = useState('')
+  const [unwrapAmount, setUnwrapAmount] = useState('')
+  const [wrapLoading, setWrapLoading] = useState(false)
+  const [unwrapLoading, setUnwrapLoading] = useState(false)
 
   useEffect(() => {
     if (wallet && wallet.provider) {
@@ -344,6 +401,40 @@ export default function SwapPage() {
     return tx.hash
   }, [ethersProvider])
 
+  const handleWrap = useCallback(async () => {
+    if (!ethersProvider || !walletAddress || !wrapAmount) return
+    setWrapLoading(true)
+    try {
+      const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, ethersProvider.getSigner())
+      const value = ethers.utils.parseEther(wrapAmount)
+      const tx = await wbnb.deposit({ value })
+      await tx.wait()
+      setWrapAmount('')
+      alert(`Successfully wrapped ${wrapAmount} BNB to WBNB!`)
+    } catch (err: any) {
+      alert(`Wrap failed: ${err.message}`)
+    } finally {
+      setWrapLoading(false)
+    }
+  }, [ethersProvider, walletAddress, wrapAmount])
+
+  const handleUnwrap = useCallback(async () => {
+    if (!ethersProvider || !walletAddress || !unwrapAmount) return
+    setUnwrapLoading(true)
+    try {
+      const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, ethersProvider.getSigner())
+      const value = ethers.utils.parseEther(unwrapAmount)
+      const tx = await wbnb.withdraw(value)
+      await tx.wait()
+      setUnwrapAmount('')
+      alert(`Successfully unwrapped ${unwrapAmount} WBNB to BNB!`)
+    } catch (err: any) {
+      alert(`Unwrap failed: ${err.message}`)
+    } finally {
+      setUnwrapLoading(false)
+    }
+  }, [ethersProvider, walletAddress, unwrapAmount])
+
   return (
     <>
       <GlobalStyle />
@@ -391,6 +482,38 @@ export default function SwapPage() {
           }}>
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
           </div>
+          
+          {walletAddress && (
+            <WrapUnwrapSection>
+              <WrapUnwrapInput
+                type="text"
+                placeholder="Amount BNB"
+                value={wrapAmount}
+                onChange={e => setWrapAmount(e.target.value)}
+              />
+              <WrapUnwrapButton 
+                $variant="wrap" 
+                onClick={handleWrap}
+                disabled={wrapLoading || !wrapAmount}
+              >
+                {wrapLoading ? 'Wrapping...' : 'Wrap BNB → WBNB'}
+              </WrapUnwrapButton>
+              <WrapUnwrapInput
+                type="text"
+                placeholder="Amount WBNB"
+                value={unwrapAmount}
+                onChange={e => setUnwrapAmount(e.target.value)}
+              />
+              <WrapUnwrapButton 
+                $variant="unwrap" 
+                onClick={handleUnwrap}
+                disabled={unwrapLoading || !unwrapAmount}
+              >
+                {unwrapLoading ? 'Unwrapping...' : 'Unwrap WBNB → BNB'}
+              </WrapUnwrapButton>
+            </WrapUnwrapSection>
+          )}
+          
           <SwapWrapper>
             <SwapScroller>
               <SwapSection style={{ position: 'relative' }}>
@@ -398,8 +521,8 @@ export default function SwapPage() {
                    client="arbitrage-inception"
                    theme={darkTheme}
                    tokenList={customTokens}
-                   defaultTokenIn="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-                   defaultTokenOut="0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+                   defaultTokenIn="0x55d398326f99059fF775485246999027B3197955"
+                   defaultTokenOut="0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c"
                    rpcUrl="https://bsc.publicnode.com"
                    chainId={BSC_CHAIN_ID}
                    connectedAccount={{
