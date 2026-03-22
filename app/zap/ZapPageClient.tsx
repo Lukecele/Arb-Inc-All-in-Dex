@@ -103,16 +103,8 @@ const MainContent = styled.main`
   flex-direction: column;
   gap: 40px;
   padding: 40px 0;
-`
-
-const SectionTitle = styled.h2`
-  font-size: 36px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 40px;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `
 
 const WidgetContainer = styled.div`
@@ -125,18 +117,20 @@ const WidgetContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 100%;
+  min-width: 350px;
   min-height: 550px;
-  @media (max-width: 768px) {
-    transform: scale(0.6);
-    transform-origin: top left;
-    margin-left: -80px;
-    margin-right: -80px;
-    padding: 15px;
-    min-height: 600px;
-    border-radius: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+`
+
+const SectionTitle = styled.h2`
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `
 
 const Footer = styled.footer`

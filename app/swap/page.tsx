@@ -213,24 +213,21 @@ const MainContent = styled.main`
   align-items: center;
   gap: 40px;
   padding: 40px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `
 
 const SwapSection = styled.section`
   width: 100%;
   max-width: 450px;
+  min-width: 350px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
   padding: 15px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  @media (max-width: 480px) {
-    transform: scale(0.7);
-    transform-origin: top left;
-    margin-left: -60px;
-    margin-right: -60px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `
 
 const Footer = styled.footer`
