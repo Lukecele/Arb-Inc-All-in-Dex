@@ -51,7 +51,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 20px 15px;
+  @media (min-width: 769px) {
+    padding: 40px 20px;
+  }
 `
 
 const Header = styled.header`
@@ -60,7 +63,11 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+  }
 `
 
 const LogoSection = styled.div`
@@ -101,30 +108,45 @@ const MainContent = styled.main`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 40px 0;
+  gap: 30px;
+  padding: 20px 0;
+  @media (min-width: 769px) {
+    gap: 40px;
+    padding: 40px 0;
+  }
 `
 
 const SectionTitle = styled.h2`
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 36px;
+    margin-bottom: 40px;
+  }
 `
 
 const WidgetContainer = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
-  padding: 40px;
+  border-radius: 16px;
+  padding: 20px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 500px;
+  min-height: 400px;
+  width: 100%;
+  overflow-x: auto;
+  @media (min-width: 769px) {
+    border-radius: 24px;
+    padding: 40px;
+    min-height: 500px;
+  }
 `
 
 const Footer = styled.footer`
@@ -137,16 +159,21 @@ const Footer = styled.footer`
 `
 
 const TabButton = styled.button<{ $active?: boolean }>`
-  padding: 12px 32px;
-  font-size: 16px;
+  padding: 10px 20px;
+  font-size: 14px;
   font-weight: 600;
   color: ${props => props.$active ? '#000' : '#A9A9A9'};
   background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.05)'};
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  white-space: nowrap;
   &:hover {
     background: ${props => props.$active ? 'linear-gradient(90deg, #8B5CF6, #EC4899)' : 'rgba(255, 255, 255, 0.1)'};
+  }
+  @media (min-width: 769px) {
+    padding: 12px 32px;
+    font-size: 16px;
   }
 `
 
@@ -218,7 +245,7 @@ export default function ZapPageClient() {
             onPoolChange={setSelectedPool}
           />
           
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
             <TabButton
               $active={activeTab === 'zap-in'}
               onClick={() => setActiveTab('zap-in')}
@@ -239,12 +266,12 @@ export default function ZapPageClient() {
                   maxWidth: '600px',
                   width: '100%',
                   marginBottom: '20px',
-                  padding: '16px',
+                  padding: '12px',
                   background: 'rgba(255, 152, 0, 0.1)',
                   border: '1px solid rgba(255, 152, 0, 0.3)',
                   borderRadius: '12px',
                   color: '#FF9901',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   lineHeight: '1.5',
                 }}>
                   <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, select "Degen Mode" in settings with high slippage (5% or more) to ensure successful transactions.

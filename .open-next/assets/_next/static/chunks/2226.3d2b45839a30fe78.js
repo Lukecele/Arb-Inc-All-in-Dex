@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[2226],{2226:(e,i,n)=>{n.d(i,{defineChain:()=>r.x,extractChain:()=>t});var r=n(23656);function t({chains:e,id:i}){return e.find(e=>e.id===i)}},23656:(e,i,n)=>{n.d(i,{x:()=>r});function r(e){return{formatters:void 0,fees:void 0,serializers:void 0,...e}}}}]);

@@ -11,39 +11,55 @@ const Container = styled.div`
 
 const Card = styled.div`
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
-  padding: 60px 40px;
+  border-radius: 16px;
+  padding: 30px 20px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  @media (min-width: 769px) {
+    border-radius: 24px;
+    padding: 60px 40px;
+  }
 `
 
 const Title = styled.h3`
-  font-size: 24px;
+  font-size: 20px;
   color: #FFFFFF;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  @media (min-width: 769px) {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
 `
 
 const Description = styled.p`
   color: #A9A9A9;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  @media (min-width: 769px) {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
 `
 
 const LinkButton = styled.a`
   display: inline-block;
-  padding: 16px 40px;
+  padding: 14px 30px;
   background: linear-gradient(90deg, #8B5CF6, #EC4899);
   border: none;
   border-radius: 12px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s;
   &:hover {
     opacity: 0.9;
+  }
+  @media (min-width: 769px) {
+    padding: 16px 40px;
+    font-size: 18px;
   }
 `
 

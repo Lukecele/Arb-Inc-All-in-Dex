@@ -116,8 +116,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 15px;
   background: transparent;
+  @media (min-width: 769px) {
+    padding: 20px;
+  }
 `
 
 const Header = styled.header`
@@ -126,7 +129,12 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 15px;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 const LogoSection = styled.div`
@@ -143,16 +151,22 @@ const Logo = styled.img`
 `
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   background: linear-gradient(90deg, #28E0B9, #00D4FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 24px;
+  }
 `
 
 const Nav = styled.nav`
   display: flex;
-  gap: 20px;
+  gap: 15px;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const NavLink = styled.a`
@@ -203,27 +217,40 @@ const MainContent = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding: 40px 0;
+  gap: 20px;
+  padding: 20px 0;
+  @media (min-width: 769px) {
+    gap: 40px;
+    padding: 40px 0;
+  }
 `
 
 const SwapSection = styled.section`
   width: 100%;
   max-width: 400px;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
-  padding: 30px;
+  border-radius: 16px;
+  padding: 15px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  @media (min-width: 769px) {
+    border-radius: 24px;
+    padding: 30px;
+  }
 `
 
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 40px 0;
+  padding: 20px 0;
   text-align: center;
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
+  @media (min-width: 769px) {
+    padding: 40px 0;
+    font-size: 14px;
+  }
 `
 
 export default function SwapPage() {
@@ -317,13 +344,13 @@ export default function SwapPage() {
           <div style={{
             maxWidth: '400px',
             width: '100%',
-            marginBottom: '20px',
-            padding: '16px',
+            marginBottom: '10px',
+            padding: '12px',
             background: 'rgba(255, 152, 0, 0.1)',
             border: '1px solid rgba(255, 152, 0, 0.3)',
             borderRadius: '12px',
             color: '#FF9901',
-            fontSize: '14px',
+            fontSize: '13px',
             lineHeight: '1.5',
           }}>
             <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
