@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import StyledComponentsRegistry from '../lib/registry'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: 'Arbitrage Inc | Swap Widget',
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body style={{ margin: 0, padding: 0 }}>
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
