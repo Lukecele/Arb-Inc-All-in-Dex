@@ -134,19 +134,6 @@ const Header = styled.header`
   }
 `
 
-const Nav = styled.nav`
-  display: flex;
-  gap: 20px;
-`
-
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  background: linear-gradient(90deg, #28E0B9, #00D4FF);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`
-
 const LogoSection = styled.div`
   display: flex;
   align-items: center;
@@ -174,9 +161,6 @@ const Title = styled.h1`
 const Nav = styled.nav`
   display: flex;
   gap: 15px;
-  @media (max-width: 768px) {
-    display: none;
-  }
 `
 
 const NavLink = styled.a`
