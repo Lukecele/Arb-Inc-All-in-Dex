@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0d12"/>
+      <stop offset="100%" style="stop-color:#1a1a24"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7B61FF"/>
+      <stop offset="100%" style="stop-color:#9B85FF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#7B61FF" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="300" fill="#7B61FF" opacity="0.08"/>
+  
+  <!-- Logo/Icon placeholder -->
+  <rect x="540" y="120" width="120" height="120" rx="24" fill="url(#accent)"/>
+  <text x="600" y="200" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle">AI</text>
+  
+  <!-- Title -->
+  <text x="600" y="340" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">Arbitrage Inc</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="410" font-family="Arial, sans-serif" font-size="32" fill="#A0A0B8" text-anchor="middle">Swap Widget</text>
+  
+  <!-- Divider -->
+  <rect x="500" y="450" width="200" height="4" rx="2" fill="url(#accent)"/>
+  
+  <!-- Description -->
+  <text x="600" y="510" font-family="Arial, sans-serif" font-size="24" fill="#A0A0B8" text-anchor="middle">Powered by KyberSwap</text>
+  
+  <!-- URL -->
+  <text x="600" y="580" font-family="Arial, sans-serif" font-size="18" fill="#494664" text-anchor="middle">arbitrage-inc.exchange</text>
+</svg>
