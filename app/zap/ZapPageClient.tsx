@@ -69,9 +69,6 @@ const Header = styled.header`
   flex-wrap: wrap;
   gap: 10px;
   border-bottom: 1px solid ${theme.colors.border.DEFAULT};
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
 `
 
 const LogoSection = styled.div`
@@ -92,7 +89,7 @@ const Logo = styled.img`
 `
 
 const Title = styled.h1`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
