@@ -4,6 +4,7 @@ import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaLightbulb, FaCoins, FaChartPie, FaRoad, FaUsers, FaClock, FaCheckCircle, FaDollarSign, FaWater, FaPercent } from 'react-icons/fa'
+import theme from './styles/theme'
 
 const GlobalStyle = createGlobalStyle`
   @keyframes gradientBackground {
@@ -93,7 +94,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px 15px;
-  background: transparent;
+  background: ${theme.colors.background.primary};
   @media (min-width: 769px) {
     padding: 40px 20px;
   }
@@ -106,6 +107,9 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   @media (min-width: 769px) {
     padding: 20px 0;
   }
@@ -123,8 +127,8 @@ const LogoSection = styled.div`
 const Logo = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  animation: ${glow} 3s infinite;
+  border-radius: ${theme.borderRadius.full};
+  box-shadow: ${theme.shadows.glow};
   @media (min-width: 769px) {
     width: 60px;
     height: 60px;
@@ -134,7 +138,7 @@ const Logo = styled.img`
 const Title = styled.h1`
   font-size: 18px;
   font-weight: 700;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   @media (min-width: 769px) {
@@ -146,17 +150,18 @@ const Nav = styled.nav`
   display: none;
   @media (min-width: 769px) {
     display: flex;
-    gap: 20px;
+    gap: 24px;
   }
 `
 
 const NavLink = styled.a`
-  color: #A9A9A9;
+  color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
+  font-size: 14px;
+  transition: ${theme.transitions.fast};
   &:hover {
-    color: #8B5CF6;
+    color: ${theme.colors.primary.DEFAULT};
   }
 `
 
@@ -186,10 +191,10 @@ const HeroTitle = styled.h2`
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 15px;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899, #06B6D4);
+  background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: 1.2;
+  line-height: ${theme.typography.lineHeights.tight};
   @media (min-width: 769px) {
     font-size: 48px;
     margin-bottom: 20px;
@@ -198,8 +203,8 @@ const HeroTitle = styled.h2`
 
 const HeroSubtitle = styled.p`
   font-size: 14px;
-  color: #A9A9A9;
-  line-height: 1.5;
+  color: ${theme.colors.text.secondary};
+  line-height: ${theme.typography.lineHeights.normal};
   max-width: 800px;
   margin: 0 auto 20px;
   @media (min-width: 769px) {

@@ -17,6 +17,7 @@ import PoolSelector from './PoolSelector'
 import DemoModeOverlay from './DemoModeOverlay'
 import { pools, pcsV3Pools } from '../pools'
 import type { PoolInfo } from '../pools'
+import theme from '../styles/theme'
 
 const injected = injectedModule()
 
@@ -52,6 +53,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
+  background: ${theme.colors.background.primary};
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 `
 
 const Header = styled.header`
@@ -63,6 +68,7 @@ const Header = styled.header`
   padding: 15px 0;
   flex-wrap: wrap;
   gap: 10px;
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   @media (max-width: 768px) {
     justify-content: center;
   }
@@ -77,7 +83,8 @@ const LogoSection = styled.div`
 const Logo = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: ${theme.borderRadius.full};
+  box-shadow: ${theme.shadows.glow};
   @media (min-width: 769px) {
     width: 60px;
     height: 60px;
@@ -87,7 +94,7 @@ const Logo = styled.img`
 const Title = styled.h1`
   font-size: 20px;
   font-weight: 700;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   @media (min-width: 769px) {
@@ -101,6 +108,13 @@ const Nav = styled.nav`
   @media (max-width: 768px) {
     width: 100%;
     justify-content: center;
+  }
+  a {
+    color: ${theme.colors.text.secondary};
+    transition: ${theme.transitions.fast};
+    &:hover {
+      color: ${theme.colors.primary.DEFAULT};
+    }
   }
 `
 
@@ -130,11 +144,11 @@ const WidgetWrapper = styled.div`
 `
 
 const WidgetContainer = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 24px;
+  background: ${theme.colors.glass.light};
+  border-radius: ${theme.borderRadius.xl};
   padding: 30px;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${theme.colors.border.DEFAULT};
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -148,7 +162,7 @@ const SectionTitle = styled.h2`
   font-weight: 700;
   text-align: center;
   margin-bottom: 20px;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `

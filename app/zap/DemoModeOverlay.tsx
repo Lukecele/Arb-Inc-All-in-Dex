@@ -1,19 +1,19 @@
 'use client'
 
 import styled from 'styled-components'
-import { theme } from '../styles/theme'
+import theme from '../styles/theme'
 import type { PoolInfo } from '../pools'
 
 const Overlay = styled.div`
-  margin-top: ${theme.spacing.lg};
+  margin-top: ${theme.spacing[4]};
 `
 
 const DemoCard = styled.div`
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: ${theme.colors.glass.medium};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing.lg};
+  padding: ${theme.spacing[4]};
   @media (max-width: 480px) {
     padding: 10px;
   }
@@ -22,8 +22,8 @@ const DemoCard = styled.div`
 const DemoTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.md};
+  gap: ${theme.spacing[2]};
+  margin-bottom: ${theme.spacing[4]};
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
@@ -38,7 +38,7 @@ const DemoDot = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${theme.colors.accent};
+  background: ${theme.colors.accent.DEFAULT};
   animation: pulse 2s infinite;
   
   @keyframes pulse {
@@ -50,7 +50,7 @@ const DemoDot = styled.span`
 const DemoStats = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${theme.spacing.md};
+  gap: ${theme.spacing[4]};
   @media (max-width: 480px) {
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;

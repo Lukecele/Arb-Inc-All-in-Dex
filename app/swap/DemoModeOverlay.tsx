@@ -1,7 +1,7 @@
 'use client'
 
 import styled from 'styled-components'
-import { theme } from '../styles/theme'
+import theme from '../styles/theme'
 
 const Overlay = styled.div`
   position: absolute;
@@ -14,18 +14,18 @@ const Overlay = styled.div`
 `
 
 const DemoCard = styled.div`
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: ${theme.colors.glass.medium};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing.lg};
+  padding: ${theme.spacing[4]};
 `
 
 const DemoTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.md};
+  gap: ${theme.spacing[2]};
+  margin-bottom: ${theme.spacing[4]};
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
@@ -35,7 +35,7 @@ const DemoDot = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${theme.colors.primary};
+  background: ${theme.colors.primary.DEFAULT};
   animation: pulse 2s infinite;
   
   @keyframes pulse {
@@ -47,7 +47,7 @@ const DemoDot = styled.span`
 const DemoStats = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: ${theme.spacing.sm};
+  gap: ${theme.spacing[2]};
 `
 
 const DemoStat = styled.div`

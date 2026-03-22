@@ -13,6 +13,7 @@ import { ethers } from 'ethers'
 import { useState, useEffect, useCallback } from 'react'
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import DemoModeOverlay from './DemoModeOverlay'
+import theme from '../styles/theme'
 
 const injected = injectedModule()
 const walletConnect = walletConnectModule({
@@ -117,7 +118,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background: transparent;
+  background: ${theme.colors.background.primary};
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `
 
 const Header = styled.header`
@@ -129,6 +133,7 @@ const Header = styled.header`
   padding: 15px 0;
   flex-wrap: wrap;
   gap: 15px;
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   @media (max-width: 768px) {
     justify-content: center;
   }
@@ -137,14 +142,14 @@ const Header = styled.header`
 const LogoSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 `
 
 const Logo = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  animation: ${glow} 3s infinite;
+  width: 45px;
+  height: 45px;
+  border-radius: ${theme.borderRadius.full};
+  box-shadow: ${theme.shadows.glow};
 `
 
 const Title = styled.h1`
@@ -164,12 +169,12 @@ const Nav = styled.nav`
 `
 
 const NavLink = styled.a`
-  color: #A9A9A9;
+  color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: ${theme.transitions.fast};
   &:hover {
-    color: #28E0B9;
+    color: ${theme.colors.accent.DEFAULT};
   }
 `
 
