@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaLightbulb, FaCoins, FaChartPie, FaRoad, FaUsers, FaClock, FaCheckCircle, FaDollarSign, FaWater, FaPercent } from 'react-icons/fa'
 import theme from './styles/theme'
+import { useState, useEffect } from 'react'
 
 const GlobalStyle = createGlobalStyle`
   @keyframes gradientBackground {
@@ -579,7 +580,19 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
-const tokenData = {
+const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB'
+const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+
+interface TokenStats {
+  price: number
+  marketCap: number
+  liquidity: number
+  volume24h: number
+  poolCount: number
+  contract: string
+}
+
+const defaultTokenData: TokenStats = {
   price: 0.000004402,
   marketCap: 4402,
   liquidity: 3970,
@@ -589,6 +602,54 @@ const tokenData = {
 }
 
 export default function HomePageClient() {
+  const [tokenData, setTokenData] = useState<TokenStats>(defaultTokenData)
+  const [loading, setLoading] = useState(true)
+
+  const fetchTokenStats = async () => {
+    try {
+      const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
+      if (!response.ok) throw new Error('Failed to fetch')
+      
+      const data = await response.json()
+      
+      if (data.pairs && data.pairs.length > 0) {
+        let totalLiquidity = 0
+        let totalVolume24h = 0
+        
+        data.pairs.forEach((pair: any) => {
+          totalLiquidity += parseFloat(pair.liquidity?.usd || 0)
+          totalVolume24h += parseFloat(pair.volume?.h24 || 0)
+        })
+
+        const mainPair = data.pairs.reduce((a: any, b: any) => 
+          (parseFloat(a.liquidity?.usd || 0) > parseFloat(b.liquidity?.usd || 0)) ? a : b
+        )
+
+        const price = parseFloat(mainPair.priceUsd || 0)
+        const marketCap = price * 1000000000
+
+        setTokenData({
+          price,
+          marketCap: Math.round(marketCap),
+          liquidity: Math.round(totalLiquidity),
+          volume24h: Math.round(totalVolume24h),
+          poolCount: data.pairs.length,
+          contract: TOKEN_ADDRESS
+        })
+      }
+    } catch (error) {
+      console.error('Error fetching token stats:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTokenStats()
+    const interval = setInterval(fetchTokenStats, 30000)
+    
+    return () => clearInterval(interval)
+  }, [])
   return (
     <>
       <GlobalStyle />
@@ -774,9 +835,24 @@ export default function HomePageClient() {
               ))}
             </StatsGrid>
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
-              <Link href="/swap" passHref>
+              <a href={DEXSCREENER_WATCHLIST_URL} target="_blank" rel="noopener noreferrer">
                 <CTAButton>View Live Chart on DexScreener</CTAButton>
-              </Link>
+              </a>
+              <div style={{ marginTop: '15px' }}>
+                <a 
+                  href={DEXSCREENER_WATCHLIST_URL} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: '14px',
+                    color: '#28E0B9',
+                    textDecoration: 'underline',
+                    fontWeight: 500
+                  }}
+                >
+                  View all pools
+                </a>
+              </div>
             </div>
           </Section>
 
