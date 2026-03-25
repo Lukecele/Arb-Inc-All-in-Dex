@@ -14,6 +14,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import DemoModeOverlay from './DemoModeOverlay'
+import ArbIncSwap from './ArbIncSwap'
 import theme from '../styles/theme'
 
 const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
@@ -530,7 +531,18 @@ function SwapPageContent() {
           <SwapWrapper>
             <SwapScroller>
               <SwapSection style={{ position: 'relative' }}>
-                 <Widget
+                 {/* Show custom swap interface when selling ARB Inc */}
+                 {defaultTokenIn === ARB_INC_ADDRESS ? (
+                   <ArbIncSwap
+                     ethersProvider={ethersProvider}
+                     walletAddress={walletAddress}
+                     onSuccess={() => {
+                       // Refresh page or show success message
+                       alert('ARB Inc swap successful!')
+                     }}
+                   />
+                 ) : (
+                   <Widget
                    client="arbitrage-inception"
                    theme={darkTheme}
                    tokenList={customTokens}
@@ -551,7 +563,8 @@ function SwapPageContent() {
                     showDetail={true}
                     onError={(e) => console.log('Widget error:', e)}
                     title="Swap on BSC"
-                 />
+                  />
+                 )}
                 {!walletAddress && <DemoModeOverlay />}
               </SwapSection>
             </SwapScroller>
