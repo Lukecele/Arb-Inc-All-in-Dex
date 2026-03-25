@@ -220,7 +220,7 @@ export default function ContactPage() {
               For general inquiries, technical support, or partnership requests, email us at:
             </p>
             <p style={{ fontSize: '1.2rem', marginTop: '10px' }}>
-              <a href="mailto:support@arbitrage-inc.exchange">support@arbitrage-inc.exchange</a>
+              <a href="mailto:luca.celebrano1@gmail.com">luca.celebrano1@gmail.com</a>
             </p>
           </ContactCard>
 
@@ -235,9 +235,6 @@ export default function ContactPage() {
               </SocialLink>
               <SocialLink href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">
                 📱 Telegram
-              </SocialLink>
-              <SocialLink href="https://discord.gg/ArbitrageInception" target="_blank" rel="noopener noreferrer">
-                💬 Discord
               </SocialLink>
             </SocialLinks>
           </ContactCard>
