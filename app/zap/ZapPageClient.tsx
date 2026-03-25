@@ -412,6 +412,22 @@ export default function ZapPageClient() {
 
         </MainContent>
 
+        <section style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif' }}>
+          <h2 style={{ color: '#f3ba2f' }}>Simplify Liquidity Provision with Zap Technology</h2>
+          <p>
+            The <strong>Arbitrage Inception Zap</strong> feature is designed for efficiency and ease of use. Providing liquidity in DeFi usually requires multiple manual steps and multiple transactions. Our <strong>Zap smart contract</strong> bundles these actions into a single-click experience.
+          </p>
+          <p>
+            By using Zap, you can instantly convert a single asset into <strong>Liquidity Provider (LP) tokens</strong> or exit a pool directly back into your preferred currency. This significantly reduces <strong>gas fees</strong> and saves time, making it the perfect tool for active yield farmers and long-term holders looking to strengthen the arbitrage pools.
+          </p>
+          <h3 style={{ color: '#f3ba2f', fontSize: '1.2rem' }}>Key Benefits of Zap:</h3>
+          <ul style={{ listStyleType: 'square', paddingLeft: '20px' }}>
+            <li><strong>One-Click Entry:</strong> Skip the manual 50/50 split of assets.</li>
+            <li><strong>Efficiency:</strong> Reduced interaction with the blockchain means lower overall fees.</li>
+            <li><strong>Liquidity Depth:</strong> Helps maintain stable arbitrage pairs across the protocol.</li>
+          </ul>
+        </section>
+
         <Footer>
           © 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap
         </Footer>
