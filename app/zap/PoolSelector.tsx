@@ -49,7 +49,7 @@ const Select = styled.select`
 
 const PoolDetails = styled.div`
   margin-top: 8px;
-  padding: 8px;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   font-size: 13px;
@@ -60,16 +60,26 @@ const PoolInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `
 
 const Badge = styled.span<{ $isArbitrage: boolean }>`
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
   background: ${props => props.$isArbitrage ? 'rgba(139, 92, 246, 0.2)' : 'rgba(40, 224, 185, 0.2)'};
   color: ${props => props.$isArbitrage ? '#8B5CF6' : '#28E0B9'};
+`
+
+const PoolTypeBadge = styled.span`
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 152, 0, 0.15);
+  color: #FF9900;
+  margin-left: 8px;
 `
 
 interface PoolSelectorProps {
@@ -122,9 +132,14 @@ export default function PoolSelector({ selectedPoolId, onPoolChange }: PoolSelec
               {selectedPool.token0.symbol} / {selectedPool.token1.symbol}
             </div>
           </div>
-          <Badge $isArbitrage={selectedPool.isArbitrageInception}>
-            {selectedPool.dex}
-          </Badge>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Badge $isArbitrage={selectedPool.isArbitrageInception}>
+              {selectedPool.dex}
+            </Badge>
+            <PoolTypeBadge>
+              {selectedPool.poolType.replace('DEX_', '')}
+            </PoolTypeBadge>
+          </div>
         </PoolInfo>
         <div style={{ fontSize: '12px' }}>
           Pool: {selectedPool.address.slice(0, 6)}...{selectedPool.address.slice(-4)}

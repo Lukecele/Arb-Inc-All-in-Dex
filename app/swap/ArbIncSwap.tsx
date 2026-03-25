@@ -67,6 +67,14 @@ const Select = styled.select`
   &:focus {
     border-color: ${theme.colors.accent.DEFAULT};
   }
+  option {
+    background: ${theme.colors.glass.heavy};
+    color: ${theme.colors.text.primary};
+    padding: 12px;
+  }
+  &:hover option {
+    background: ${theme.colors.glass.medium};
+  }
 `
 
 const SwapButton = styled.button<{ $disabled?: boolean }>`
