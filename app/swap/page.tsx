@@ -582,7 +582,7 @@ function SwapPageContent() {
                     feeSetting={{
                       feeAmount: FEE_PCM,
                       feeReceiver: FEE_RECEIVER,
-                      chargeFeeBy: 'currency_out',
+                      chargeFeeBy: 'currency_in',
                       isInBps: true,
                     }}
                     title="Swap on BSC"
