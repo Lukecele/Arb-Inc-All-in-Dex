@@ -259,8 +259,7 @@ export default function ContactPage() {
             </p>
             <ul style={{ listStyle: 'none', padding: 0, marginTop: '10px' }}>
               <li style={{ marginBottom: '8px' }}>• <a href="https://docs.kyberswap.com/" target="_blank" rel="noopener noreferrer">KyberSwap Documentation</a></li>
-              <li style={{ marginBottom: '8px' }}>• <a href="https://www.coingecko.com/en/coins/arbitrage-inception" target="_blank" rel="noopener noreferrer">CoinGecko - ARBINc</a></li>
-              <li>• <a href="https://dexscreener.com/bsc/arbinc" target="_blank" rel="noopener noreferrer">DexScreener - ARBINc</a></li>
+              <li>• <a href="https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB" target="_blank" rel="noopener noreferrer">DexScreener - Watchlist</a></li>
             </ul>
           </ContactCard>
 
