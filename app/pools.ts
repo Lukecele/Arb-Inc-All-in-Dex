@@ -316,7 +316,7 @@ export const pools: PoolInfo[] = [
       address: '0xF671f96F7763e88EA92FF7Db79D57C0ee3c7FffF',
       decimals: 18,
     },
-    poolType: 'DEX_SUSHISWAP',
+    poolType: 'DEX_SUSHISWAPV2',
     liquidityUSD: 227.71,
     apr: '~0.25% fee',
     dex: 'SushiSwap',

@@ -37,6 +37,23 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
+// Map string poolType to PoolType enum
+const mapStringToPoolType = (poolTypeString: string): PoolType => {
+  switch (poolTypeString) {
+    case 'DEX_PANCAKESWAPV2':
+      return PoolType.DEX_PANCAKESWAPV2;
+    case 'DEX_PANCAKESWAPV3':
+      return PoolType.DEX_PANCAKESWAPV3;
+    case 'DEX_SUSHISWAPV2':
+      return PoolType.DEX_SUSHISWAPV2;
+    case 'DEX_SUSHISWAPV3':
+      return PoolType.DEX_SUSHISWAPV3;
+    default:
+      // Default to PancakeSwap V2 if unknown
+      return PoolType.DEX_PANCAKESWAPV2;
+  }
+};
+
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -356,7 +373,7 @@ export default function ZapPageClient() {
                       {address ? (
                         <LiquidityWidget
                           chainId={chainId as ChainId.Bsc}
-                          poolType={PoolType.DEX_PANCAKESWAPV2}
+                          poolType={mapStringToPoolType(selectedPool.poolType)}
                           poolAddress={selectedPool.address}
                           connectedAccount={{ address, chainId }}
                           source="arbitrage-inception"
@@ -373,7 +390,7 @@ export default function ZapPageClient() {
                         <>
                           <LiquidityWidget
                             chainId={chainId as ChainId.Bsc}
-                            poolType={PoolType.DEX_PANCAKESWAPV2}
+                            poolType={mapStringToPoolType(selectedPool.poolType)}
                             poolAddress={selectedPool.address}
                             connectedAccount={{ address: address || '', chainId }}
                             source="arbitrage-inception"
