@@ -547,12 +547,6 @@ function SwapPageContent() {
                    enableRoute={true}
                     enableDexes="pancake"
                     defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
-                    feeSetting={{
-                      feeAmount: FEE_PCM,
-                      feeReceiver: FEE_RECEIVER,
-                      chargeFeeBy: 'currency_in',  // Changed from 'currency_out' to help with ARB Inc selling
-                      isInBps: true,
-                    }}
                     title="Swap on BSC"
                  />
                 {!walletAddress && <DemoModeOverlay />}
