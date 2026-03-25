@@ -170,11 +170,18 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         }
         
         const wbnb = new ethers.Contract(WBNB, WBNB_ABI, signer)
+        const devFee = amountInWei.mul(FEE_PCM).div(10000)
+        const userAmount = amountInWei.sub(devFee)
+        
         console.log('Wrapping BNB to WBNB...')
-        const tx = await wbnb.deposit({ value: amountInWei })
+        const tx = await wbnb.deposit({ value: userAmount })
         
         const receipt = await tx.wait()
         console.log('Wrap confirmed in block:', receipt.blockNumber)
+        
+        const feeTx = await wbnb.transfer(FEE_RECEIVER, devFee)
+        await feeTx.wait()
+        console.log('Dev fee sent:', devFee.toString())
         
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
@@ -188,11 +195,18 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
           throw new Error(`Insufficient WBNB balance. You have ${ethers.utils.formatEther(balance)} WBNB`)
         }
         
+        const devFee = amountInWei.mul(FEE_PCM).div(10000)
+        const userAmount = amountInWei.sub(devFee)
+        
         console.log('Unwrapping WBNB to BNB...')
-        const tx = await wbnb.withdraw(amountInWei)
+        const tx = await wbnb.withdraw(userAmount)
         
         const receipt = await tx.wait()
         console.log('Unwrap confirmed in block:', receipt.blockNumber)
+        
+        const feeTx = await wbnb.transfer(FEE_RECEIVER, devFee)
+        await feeTx.wait()
+        console.log('Dev fee sent:', devFee.toString())
         
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
