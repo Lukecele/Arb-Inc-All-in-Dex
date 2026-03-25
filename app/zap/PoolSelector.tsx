@@ -45,6 +45,21 @@ const Select = styled.select`
     color: #FFFFFF;
     padding: 8px;
   }
+  
+  optgroup {
+    background: #0f0f1a;
+    color: #FF9900;
+    font-weight: 700;
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  optgroup option {
+    background: #1a1a3e;
+    color: #FFFFFF;
+    padding: 10px;
+    font-weight: 400;
+  }
 `
 
 const PoolDetails = styled.div`
@@ -97,28 +112,32 @@ export default function PoolSelector({ selectedPoolId, onPoolChange }: PoolSelec
 
   const selectedPool = allPools.find(p => p.id === selectedPoolId) || allPools[0]
 
+  const getPoolTypeLabel = (poolType: string) => {
+    return poolType.replace('DEX_', '')
+  }
+
   return (
     <SelectorContainer>
       <Label>Select Liquidity Pool</Label>
       <Select value={selectedPoolId} onChange={handleChange}>
-        <optgroup label="Arbitrage Inception Pools">
+        <optgroup label="📈 Arbitrage Inception">
           {allPools.filter(p => p.isArbitrageInception).map(pool => (
             <option key={pool.id} value={pool.id}>
-              {pool.name} - ${pool.liquidityUSD.toLocaleString()} TVL
+              [{getPoolTypeLabel(pool.poolType)}] {pool.name} - ${pool.liquidityUSD.toLocaleString()}
             </option>
           ))}
         </optgroup>
-        <optgroup label="PancakeSwap V2">
+        <optgroup label="🥞 PancakeSwap V2">
           {allPools.filter(p => !p.isArbitrageInception && p.poolType === 'DEX_PANCAKESWAPV2').map(pool => (
             <option key={pool.id} value={pool.id}>
-              {pool.name} - ${pool.liquidityUSD.toLocaleString()} TVL {pool.apr ? `(${pool.apr})` : ''}
+              [{getPoolTypeLabel(pool.poolType)}] {pool.name} - ${pool.liquidityUSD.toLocaleString()} {pool.apr ? `(${pool.apr})` : ''}
             </option>
           ))}
         </optgroup>
-        <optgroup label="PancakeSwap V3">
+        <optgroup label="🥞 PancakeSwap V3">
           {allPools.filter(p => p.poolType === 'DEX_PANCAKESWAPV3').map(pool => (
             <option key={pool.id} value={pool.id}>
-              {pool.name} - ${pool.liquidityUSD.toLocaleString()} TVL {pool.apr ? `(${pool.apr})` : ''}
+              [{getPoolTypeLabel(pool.poolType)}] {pool.name} - ${pool.liquidityUSD.toLocaleString()} {pool.apr ? `(${pool.apr})` : ''}
             </option>
           ))}
         </optgroup>

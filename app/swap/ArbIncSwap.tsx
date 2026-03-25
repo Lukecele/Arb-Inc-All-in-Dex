@@ -68,12 +68,16 @@ const Select = styled.select`
     border-color: ${theme.colors.accent.DEFAULT};
   }
   option {
-    background: ${theme.colors.glass.heavy};
-    color: ${theme.colors.text.primary};
+    background: #1a1a3e !important;
+    color: #ffffff !important;
     padding: 12px;
+    display: block;
   }
-  &:hover option {
-    background: ${theme.colors.glass.medium};
+  optgroup {
+    background: #0f0f1a;
+    color: #28E0B9;
+    font-weight: 600;
+    padding: 8px;
   }
 `
 
