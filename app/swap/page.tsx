@@ -264,37 +264,19 @@ function SwapPageContent() {
         </Header>
 
         <MainContent>
-          <div style={{
-            maxWidth: '400px',
-            width: '100%',
-            marginBottom: '0px',
-            padding: '10px',
-            background: 'rgba(255, 152, 0, 0.1)',
-            border: '1px solid rgba(255, 152, 0, 0.3)',
-            borderRadius: '12px',
-            color: '#FF9901',
-            fontSize: '12px',
-            lineHeight: '1.4',
-          }}>
-            <strong>⚠️ Tax Token Notice:</strong> Arbitrage Inception has a 4% transfer tax. The custom swap interface accounts for this automatically.
-          </div>
-          
           <ArbIncSwap
             ethersProvider={ethersProvider}
             walletAddress={walletAddress}
           />
           
-          <section style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif' }}>
-            <h2 style={{ color: '#f3ba2f' }}>Arbitrage Inception Direct Swap</h2>
+          <section style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif', fontSize: '14px' }}>
             <p>
-              This swap interface uses <strong>PancakeSwap V2 Router directly</strong> to handle ARB Inc's 4% transfer tax properly. 
-              Unlike aggregator widgets that struggle with Fee-on-Transfer tokens, this direct approach ensures reliable swaps.
+              <strong>Custom Swap</strong> uses PancakeSwap V2 Router directly with support for wrap/unwrap and tax token handling.
             </p>
-            <ul style={{ listStyleType: 'square', paddingLeft: '20px', marginTop: '15px' }}>
-              <li><strong>Direct Routing:</strong> Bypasses aggregator issues with taxed tokens</li>
-              <li><strong>Tax-Aware:</strong> Uses SupportingFeeOnTransferTokens function</li>
-              <li><strong>3% Slippage:</strong> Accounts for the 4% tax automatically</li>
-              <li><strong>For Other Tokens:</strong> Use <a href="/swap-all" style={{ color: '#f3ba2f' }}>Swap All</a> for non-taxed tokens</li>
+            <ul style={{ listStyleType: 'square', paddingLeft: '20px', marginTop: '10px' }}>
+              <li><strong>BNB ↔ WBNB:</strong> Wrap or unwrap BNB instantly</li>
+              <li><strong>ARB Inc ↔ BNB:</strong> Direct swap with 4% tax accounted for</li>
+              <li><strong>For Other Tokens:</strong> Use <a href="/swap-all" style={{ color: '#f3ba2f' }}>Swap All</a></li>
             </ul>
           </section>
         </MainContent>

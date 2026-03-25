@@ -11,9 +11,19 @@ const WBNB = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 // Router ABI (minimal required functions)
 const ROUTER_ABI = [
   'function swapExactTokensForTokensSupportingFeeOnTransferTokens(uint256 amountIn, uint256 amountOutMin, address[] path, address to, uint256 deadline)',
+  'function swapExactETHForTokensSupportingFeeOnTransferTokens(uint256 amountOutMin, address[] path, address to, uint256 deadline) payable',
+  'function swapExactTokensForETHSupportingFeeOnTransferTokens(uint256 amountIn, uint256 amountOutMin, address[] path, address to, uint256 deadline)',
   'function getAmountsOut(uint256 amountIn, address[] path) view returns (uint256[] amounts)',
+  'function getAmountsIn(uint256 amountOut, address[] path) view returns (uint256[] amounts)',
   'function factory() view returns (address)',
   'function WETH() view returns (address)'
+]
+
+// WBNB ABI for wrap/unwrap
+const WBNB_ABI = [
+  'function deposit() payable',
+  'function withdraw(uint256 wad)',
+  'function balanceOf(address account) view returns (uint256)'
 ]
 
 // ERC20 ABI
@@ -24,6 +34,24 @@ const ERC20_ABI = [
   'function balanceOf(address account) view returns (uint256)'
 ]
 
+// Swap types
+export type SwapType = 'ARB_INC_TO_BNB' | 'BNB_TO_ARB_INC' | 'BNB_TO_WBNB' | 'WBNB_TO_BNB'
+
+export interface SwapToken {
+  symbol: string
+  name: string
+  address: string | null // null for native BNB
+  decimals: number
+  isNative: boolean
+  isTaxToken: boolean
+}
+
+export const SWAP_TOKENS: SwapToken[] = [
+  { symbol: 'BNB', name: 'BNB', address: null, decimals: 18, isNative: true, isTaxToken: false },
+  { symbol: 'WBNB', name: 'Wrapped BNB', address: WBNB, decimals: 18, isNative: false, isTaxToken: false },
+  { symbol: 'ARB_INC', name: 'Arbitrage Inception', address: ARB_INC, decimals: 9, isNative: false, isTaxToken: true },
+]
+
 interface SwapState {
   loading: boolean
   error: string | null
@@ -32,8 +60,9 @@ interface SwapState {
 }
 
 interface UseArbIncSwapReturn extends SwapState {
-  swap: (signer: ethers.Signer, amountIn: string, slippagePercent?: number) => Promise<ethers.ContractTransaction | null>
-  getEstimatedOutput: (provider: ethers.providers.JsonRpcProvider, amountIn: string) => Promise<string | null>
+  swap: (signer: ethers.Signer, amountIn: string, swapType: SwapType, slippagePercent?: number) => Promise<ethers.ContractTransaction | null>
+  getEstimatedOutput: (provider: ethers.providers.JsonRpcProvider, amountIn: string, swapType: SwapType) => Promise<string | null>
+  getBalance: (provider: ethers.providers.JsonRpcProvider, address: string, swapType: SwapType) => Promise<string>
 }
 
 export function useArbIncSwap(): UseArbIncSwapReturn {
@@ -44,25 +73,69 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
     estimatedOutput: null
   })
 
+  const getBalance = useCallback(async (
+    provider: ethers.providers.JsonRpcProvider,
+    address: string,
+    swapType: SwapType
+  ): Promise<string> => {
+    try {
+      if (swapType === 'BNB_TO_WBNB') {
+        const balance = await provider.getBalance(address)
+        return ethers.utils.formatEther(balance)
+      } else if (swapType === 'WBNB_TO_BNB') {
+        const wbnb = new ethers.Contract(WBNB, WBNB_ABI, provider)
+        const balance = await wbnb.balanceOf(address)
+        return ethers.utils.formatEther(balance)
+      } else if (swapType === 'ARB_INC_TO_BNB') {
+        const token = new ethers.Contract(ARB_INC, ERC20_ABI, provider)
+        const balance = await token.balanceOf(address)
+        return ethers.utils.formatUnits(balance, 9)
+      } else if (swapType === 'BNB_TO_ARB_INC') {
+        const balance = await provider.getBalance(address)
+        return ethers.utils.formatEther(balance)
+      }
+      return '0'
+    } catch (err) {
+      console.error('Error getting balance:', err)
+      return '0'
+    }
+  }, [])
+
   const getEstimatedOutput = useCallback(async (
     provider: ethers.providers.JsonRpcProvider,
-    amountIn: string
+    amountIn: string,
+    swapType: SwapType
   ): Promise<string | null> => {
     try {
+      const amountNum = parseFloat(amountIn)
+      if (amountNum <= 0) return null
+
+      if (swapType === 'BNB_TO_WBNB' || swapType === 'WBNB_TO_BNB') {
+        setState(prev => ({ ...prev, estimatedOutput: amountIn }))
+        return amountIn
+      }
+
       const router = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, provider)
-      const token = new ethers.Contract(ARB_INC, ERC20_ABI, provider)
-      
-      const decimals = await token.decimals()
-      const amountInWei = ethers.utils.parseUnits(amountIn, decimals)
-      
-      const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
-      const expectedOutput = ethers.utils.formatUnits(amounts[1], 18)
-      
-      // Account for 4% tax on ARB Inc
-      const afterTax = parseFloat(expectedOutput) * 0.96
-      
-      setState(prev => ({ ...prev, estimatedOutput: afterTax.toFixed(6) }))
-      return afterTax.toFixed(6)
+
+      if (swapType === 'ARB_INC_TO_BNB') {
+        const token = new ethers.Contract(ARB_INC, ERC20_ABI, provider)
+        const decimals = await token.decimals()
+        const amountInWei = ethers.utils.parseUnits(amountIn, decimals)
+        const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
+        const expectedOutput = ethers.utils.formatUnits(amounts[1], 18)
+        const afterTax = parseFloat(expectedOutput) * 0.96
+        setState(prev => ({ ...prev, estimatedOutput: afterTax.toFixed(6) }))
+        return afterTax.toFixed(6)
+      } else if (swapType === 'BNB_TO_ARB_INC') {
+        const amountInWei = ethers.utils.parseEther(amountIn)
+        const amounts = await router.getAmountsOut(amountInWei, [WBNB, ARB_INC])
+        const expectedOutput = ethers.utils.formatUnits(amounts[1], 9)
+        const afterTax = parseFloat(expectedOutput) * 0.96
+        setState(prev => ({ ...prev, estimatedOutput: afterTax.toFixed(6) }))
+        return afterTax.toFixed(6)
+      }
+
+      return null
     } catch (err: any) {
       console.error('Error estimating output:', err)
       return null
@@ -72,6 +145,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
   const swap = useCallback(async (
     signer: ethers.Signer,
     amountIn: string,
+    swapType: SwapType,
     slippagePercent: number = 3
   ): Promise<ethers.ContractTransaction | null> => {
     setState({ loading: true, error: null, txHash: null, estimatedOutput: null })
@@ -79,75 +153,123 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
     try {
       const provider = signer.provider!
       const router = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
-      const token = new ethers.Contract(ARB_INC, ERC20_ABI, signer)
       const owner = await signer.getAddress()
-      
-      // Get token decimals
-      const decimals = await token.decimals()
-      const amountInWei = ethers.utils.parseUnits(amountIn, decimals)
-      
-      // Check balance
-      const balance = await token.balanceOf(owner)
-      if (balance.lt(amountInWei)) {
-        throw new Error(`Insufficient ARB Inc balance. You have ${ethers.utils.formatUnits(balance, decimals)} ARB Inc`)
+      const deadline = Math.floor(Date.now() / 1000) + 60 * 10
+
+      if (swapType === 'BNB_TO_WBNB') {
+        const amountInWei = ethers.utils.parseEther(amountIn)
+        const balance = await provider.getBalance(owner)
+        if (balance.lt(amountInWei)) {
+          throw new Error(`Insufficient BNB balance. You have ${ethers.utils.formatEther(balance)} BNB`)
+        }
+        
+        const wbnb = new ethers.Contract(WBNB, WBNB_ABI, signer)
+        console.log('Wrapping BNB to WBNB...')
+        const tx = await wbnb.deposit({ value: amountInWei })
+        
+        const receipt = await tx.wait()
+        console.log('Wrap confirmed in block:', receipt.blockNumber)
+        
+        setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
+        return tx
       }
-      
-      // Step 1: Get expected output amount
-      const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
-      const expectedOutput = amounts[1]
-      
-      // Account for 4% tax: actual output will be ~96% of expected
-      const afterTax = expectedOutput.mul(96).div(100)
-      
-      // Apply slippage tolerance
-      const amountOutMin = afterTax.mul(10000 - slippagePercent * 100).div(10000)
-      
-      console.log(`Expected output: ${ethers.utils.formatUnits(expectedOutput, 18)} WBNB`)
-      console.log(`After 4% tax: ${ethers.utils.formatUnits(afterTax, 18)} WBNB`)
-      console.log(`Minimum with ${slippagePercent}% slippage: ${ethers.utils.formatUnits(amountOutMin, 18)} WBNB`)
-      
-      // Step 2: Ensure token approval
-      const currentAllowance = await token.allowance(owner, ROUTER_ADDRESS)
-      if (currentAllowance.lt(amountInWei)) {
-        console.log('Approving ARB Inc for swap...')
-        const approveTx = await token.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256)
-        await approveTx.wait()
-        console.log('ARB Inc approved:', approveTx.hash)
+
+      if (swapType === 'WBNB_TO_BNB') {
+        const amountInWei = ethers.utils.parseEther(amountIn)
+        const wbnb = new ethers.Contract(WBNB, WBNB_ABI, signer)
+        const balance = await wbnb.balanceOf(owner)
+        if (balance.lt(amountInWei)) {
+          throw new Error(`Insufficient WBNB balance. You have ${ethers.utils.formatEther(balance)} WBNB`)
+        }
+        
+        console.log('Unwrapping WBNB to BNB...')
+        const tx = await wbnb.withdraw(amountInWei)
+        
+        const receipt = await tx.wait()
+        console.log('Unwrap confirmed in block:', receipt.blockNumber)
+        
+        setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
+        return tx
       }
-      
-      // Step 3: Execute the swap with deadline
-      const deadline = Math.floor(Date.now() / 1000) + 60 * 10 // 10 minutes
-      
-      // CRITICAL: Use SupportingFeeOnTransferTokens for ARB Inc's 4% tax
-      console.log('Executing swap ARB Inc -> WBNB...')
-      const tx = await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        amountInWei,
-        amountOutMin,
-        [ARB_INC, WBNB],
-        owner,
-        deadline
-      )
-      
-      console.log('Swap transaction submitted:', tx.hash)
-      
-      // Wait for confirmation
-      const receipt = await tx.wait()
-      console.log('Swap confirmed in block:', receipt.blockNumber)
-      
-      setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
-      return tx
+
+      if (swapType === 'ARB_INC_TO_BNB') {
+        const token = new ethers.Contract(ARB_INC, ERC20_ABI, signer)
+        const decimals = 9
+        const amountInWei = ethers.utils.parseUnits(amountIn, decimals)
+        
+        const balance = await token.balanceOf(owner)
+        if (balance.lt(amountInWei)) {
+          throw new Error(`Insufficient ARB Inc balance. You have ${ethers.utils.formatUnits(balance, decimals)} ARB Inc`)
+        }
+        
+        const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
+        const expectedOutput = amounts[1]
+        const afterTax = expectedOutput.mul(96).div(100)
+        const amountOutMin = afterTax.mul(10000 - slippagePercent * 100).div(10000)
+        
+        const currentAllowance = await token.allowance(owner, ROUTER_ADDRESS)
+        if (currentAllowance.lt(amountInWei)) {
+          console.log('Approving ARB Inc for swap...')
+          const approveTx = await token.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256)
+          await approveTx.wait()
+        }
+        
+        console.log('Executing swap ARB Inc -> BNB...')
+        const tx = await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+          amountInWei,
+          amountOutMin,
+          [ARB_INC, WBNB],
+          owner,
+          deadline
+        )
+        
+        const receipt = await tx.wait()
+        console.log('Swap confirmed in block:', receipt.blockNumber)
+        
+        setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
+        return tx
+      }
+
+      if (swapType === 'BNB_TO_ARB_INC') {
+        const amountInWei = ethers.utils.parseEther(amountIn)
+        const balance = await provider.getBalance(owner)
+        if (balance.lt(amountInWei)) {
+          throw new Error(`Insufficient BNB balance. You have ${ethers.utils.formatEther(balance)} BNB`)
+        }
+        
+        const amounts = await router.getAmountsOut(amountInWei, [WBNB, ARB_INC])
+        const expectedOutput = amounts[1]
+        const afterTax = expectedOutput.mul(96).div(100)
+        const amountOutMin = afterTax.mul(10000 - slippagePercent * 100).div(10000)
+        
+        console.log('Executing swap BNB -> ARB Inc...')
+        const tx = await router.swapExactETHForTokensSupportingFeeOnTransferTokens(
+          amountOutMin,
+          [WBNB, ARB_INC],
+          owner,
+          deadline,
+          { value: amountInWei }
+        )
+        
+        const receipt = await tx.wait()
+        console.log('Swap confirmed in block:', receipt.blockNumber)
+        
+        setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
+        return tx
+      }
+
+      throw new Error('Unknown swap type')
     } catch (err: any) {
       console.error('Swap error:', err)
-      let errorMessage = err.message
+      let errorMessage = err.message || 'Unknown error'
       
-      // Provide more user-friendly error messages
-      if (err.message.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {
+      if (err.message?.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {
         errorMessage = 'Insufficient output amount. Try increasing slippage tolerance.'
-      } else if (err.message.includes('TRANSFER_FAILED')) {
-        errorMessage = 'Token transfer failed. Check your ARB Inc balance and approve the token.'
-      } else if (err.message.includes('INSUFFICIENT_LIQUIDITY')) {
+      } else if (err.message?.includes('TRANSFER_FAILED')) {
+        errorMessage = 'Token transfer failed.'
+      } else if (err.message?.includes('INSUFFICIENT_LIQUIDITY')) {
         errorMessage = 'Insufficient liquidity in the pool.'
-      } else if (err.message.includes('user rejected')) {
+      } else if (err.message?.includes('user rejected')) {
         errorMessage = 'Transaction rejected by user.'
       }
       
@@ -156,7 +278,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
     }
   }, [])
 
-  return { ...state, swap, getEstimatedOutput }
+  return { ...state, swap, getEstimatedOutput, getBalance }
 }
 
 export default useArbIncSwap

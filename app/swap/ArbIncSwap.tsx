@@ -3,11 +3,8 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import useArbIncSwap from './useArbIncSwap'
+import useArbIncSwap, { SwapType, SWAP_TOKENS, SwapToken } from './useArbIncSwap'
 import theme from '../styles/theme'
-
-const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
-const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 
 interface ArbIncSwapProps {
   ethersProvider: ethers.providers.Web3Provider | null
@@ -52,6 +49,21 @@ const Input = styled.input`
   border-radius: 8px;
   color: ${theme.colors.text.primary};
   outline: none;
+  &:focus {
+    border-color: ${theme.colors.accent.DEFAULT};
+  }
+`
+
+const Select = styled.select`
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  background: ${theme.colors.glass.medium};
+  border: 1px solid ${theme.colors.border.DEFAULT};
+  border-radius: 8px;
+  color: ${theme.colors.text.primary};
+  outline: none;
+  cursor: pointer;
   &:focus {
     border-color: ${theme.colors.accent.DEFAULT};
   }
@@ -112,12 +124,73 @@ const InfoRow = styled.div`
   margin-top: 8px;
 `
 
+const BalanceRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 4px;
+`
+
+const BalanceLink = styled.span`
+  color: ${theme.colors.accent.DEFAULT};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
+const SwapDirection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -8px 0;
+  position: relative;
+  z-index: 1;
+`
+
+const ArrowButton = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: ${theme.colors.glass.medium};
+  border: 1px solid ${theme.colors.border.DEFAULT};
+  color: ${theme.colors.text.primary};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: ${theme.transitions.fast};
+  &:hover {
+    background: ${theme.colors.glass.heavy};
+    transform: rotate(180deg);
+  }
+`
+
+const TaxNotice = styled.div`
+  font-size: 11px;
+  color: #FF9901;
+  margin-top: 4px;
+`
+
+const SWAP_OPTIONS: { from: SwapToken; to: SwapToken; type: SwapType }[] = [
+  { from: SWAP_TOKENS[2], to: SWAP_TOKENS[0], type: 'ARB_INC_TO_BNB' },
+  { from: SWAP_TOKENS[0], to: SWAP_TOKENS[2], type: 'BNB_TO_ARB_INC' },
+  { from: SWAP_TOKENS[0], to: SWAP_TOKENS[1], type: 'BNB_TO_WBNB' },
+  { from: SWAP_TOKENS[1], to: SWAP_TOKENS[0], type: 'WBNB_TO_BNB' },
+]
+
 export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }: ArbIncSwapProps) {
+  const [fromTokenIdx, setFromTokenIdx] = useState(0)
   const [amount, setAmount] = useState('')
   const [estimatedOutput, setEstimatedOutput] = useState<string | null>(null)
-  const { loading, error, txHash, swap, getEstimatedOutput } = useArbIncSwap()
+  const [balance, setBalance] = useState<string>('0')
+  const { loading, error, txHash, swap, getEstimatedOutput, getBalance } = useArbIncSwap()
 
-  // Update estimation when amount changes
+  const currentSwap = SWAP_OPTIONS[fromTokenIdx]
+  const fromToken = currentSwap.from
+  const toToken = currentSwap.to
+  const swapType = currentSwap.type
+
   useEffect(() => {
     const updateEstimation = async () => {
       if (!ethersProvider || !amount || parseFloat(amount) <= 0) {
@@ -125,68 +198,175 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
         return
       }
       
-      const output = await getEstimatedOutput(ethersProvider, amount)
+      const output = await getEstimatedOutput(ethersProvider, amount, swapType)
       setEstimatedOutput(output)
     }
     
     const debounceTimer = setTimeout(updateEstimation, 500)
     return () => clearTimeout(debounceTimer)
-  }, [amount, ethersProvider, getEstimatedOutput])
+  }, [amount, ethersProvider, swapType, getEstimatedOutput])
+
+  useEffect(() => {
+    const updateBalance = async () => {
+      if (!ethersProvider || !walletAddress) {
+        setBalance('0')
+        return
+      }
+      
+      const bal = await getBalance(ethersProvider, walletAddress, swapType)
+      setBalance(bal)
+    }
+    
+    updateBalance()
+  }, [ethersProvider, walletAddress, swapType, getBalance])
+
+  const handleSwapDirection = () => {
+    const reverseIdx = SWAP_OPTIONS.findIndex(o => o.type === swapType && 
+      o.from.symbol === toToken.symbol && o.to.symbol === fromToken.symbol)
+    if (reverseIdx >= 0) {
+      setFromTokenIdx(reverseIdx)
+      setAmount('')
+      setEstimatedOutput(null)
+    }
+  }
 
   const handleSwap = async () => {
     if (!ethersProvider || !walletAddress || !amount) return
     
     try {
       const signer = ethersProvider.getSigner()
-      await swap(signer, amount, 3) // 3% slippage for tax token
+      await swap(signer, amount, swapType, 3)
       
       if (onSuccess) onSuccess()
       
-      // Clear input after successful swap
       setAmount('')
       setEstimatedOutput(null)
+      
+      const bal = await getBalance(ethersProvider, walletAddress, swapType)
+      setBalance(bal)
     } catch (err) {
       console.error('Swap failed:', err)
     }
   }
 
+  const setMaxAmount = () => {
+    setAmount(balance)
+  }
+
+  const getOutputLabel = () => {
+    if (swapType === 'BNB_TO_WBNB' || swapType === 'WBNB_TO_BNB') {
+      return `Estimated ${toToken.symbol} output:`
+    }
+    if (swapType === 'ARB_INC_TO_BNB') {
+      return `Estimated BNB output:`
+    }
+    return `Estimated ${toToken.symbol} output:`
+  }
+
+  const getOutputSuffix = () => {
+    if (swapType === 'ARB_INC_TO_BNB') {
+      return '(after 4% tax)'
+    }
+    if (swapType === 'BNB_TO_ARB_INC') {
+      return '(after 4% tax)'
+    }
+    return ''
+  }
+
+  const getSwapButtonLabel = () => {
+    if (loading) return 'Processing...'
+    if (swapType === 'BNB_TO_WBNB') return 'Wrap BNB → WBNB'
+    if (swapType === 'WBNB_TO_BNB') return 'Unwrap WBNB → BNB'
+    if (swapType === 'ARB_INC_TO_BNB') return 'Swap ARB Inc → BNB'
+    if (swapType === 'BNB_TO_ARB_INC') return 'Swap BNB → ARB Inc'
+    return 'Swap'
+  }
+
   if (!ethersProvider || !walletAddress) {
     return (
       <Container>
-        <Title>ARB Inc → BNB Swap (Direct)</Title>
-        <Status $type="info">Please connect your wallet to swap ARB Inc</Status>
+        <Title>Custom Swap</Title>
+        <Status $type="info">Please connect your wallet to swap tokens</Status>
       </Container>
     )
   }
 
   return (
     <Container>
-      <Title>ARB Inc → BNB Swap (Direct PancakeSwap)</Title>
+      <Title>Custom Swap</Title>
       
       <InputGroup>
-        <Label>ARB Inc Amount</Label>
-        <Input
-          type="number"
-          placeholder="0.0"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          min="0"
-          step="any"
-        />
+        <Label>From</Label>
+        <Select 
+          value={fromTokenIdx} 
+          onChange={(e) => {
+            setFromTokenIdx(Number(e.target.value))
+            setAmount('')
+            setEstimatedOutput(null)
+          }}
+        >
+          {SWAP_OPTIONS.map((opt, idx) => (
+            <option key={opt.type} value={idx}>
+              {opt.from.symbol} → {opt.to.symbol}
+            </option>
+          ))}
+        </Select>
+      </InputGroup>
+
+      <SwapDirection>
+        <ArrowButton onClick={handleSwapDirection} title="Swap direction">
+          ↓
+        </ArrowButton>
+      </SwapDirection>
+      
+      <InputGroup>
+        <Label>Amount</Label>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Input
+            type="number"
+            placeholder="0.0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            min="0"
+            step="any"
+            style={{ flex: 1 }}
+          />
+          <button 
+            onClick={setMaxAmount}
+            style={{
+              padding: '8px 12px',
+              background: theme.colors.glass.medium,
+              border: `1px solid ${theme.colors.border.DEFAULT}`,
+              borderRadius: '8px',
+              color: theme.colors.accent.DEFAULT,
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 600
+            }}
+          >
+            MAX
+          </button>
+        </div>
+        <BalanceRow>
+          <span style={{ color: theme.colors.text.secondary, fontSize: '12px' }}>
+            Balance: {parseFloat(balance).toFixed(6)}
+          </span>
+          <BalanceLink onClick={setMaxAmount}>Use max</BalanceLink>
+        </BalanceRow>
       </InputGroup>
       
       {estimatedOutput && (
         <InfoRow>
-          <span>Estimated BNB output:</span>
-          <span>{estimatedOutput} BNB (after 4% tax)</span>
+          <span>{getOutputLabel()}</span>
+          <span>{estimatedOutput} {toToken.symbol} {getOutputSuffix()}</span>
         </InfoRow>
       )}
       
       <SwapButton 
         onClick={handleSwap}
-        $disabled={loading || !amount || parseFloat(amount) <= 0}
+        $disabled={loading || !amount || parseFloat(amount) <= 0 || parseFloat(amount) > parseFloat(balance)}
       >
-        {loading ? 'Swapping...' : 'Swap ARB Inc → BNB'}
+        {getSwapButtonLabel()}
       </SwapButton>
       
       {error && (
@@ -208,13 +388,12 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
       )}
       
       <InfoRow>
-        <span>Slippage tolerance:</span>
-        <span>3% (accounts for 4% tax)</span>
+        <span>Slippage:</span>
+        <span>3%</span>
       </InfoRow>
-      <InfoRow>
-        <span>Router:</span>
-        <span>PancakeSwap V2 (direct)</span>
-      </InfoRow>
+      {(swapType === 'ARB_INC_TO_BNB' || swapType === 'BNB_TO_ARB_INC') && (
+        <TaxNotice>4% transfer tax automatically accounted for</TaxNotice>
+      )}
     </Container>
   )
 }
