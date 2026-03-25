@@ -386,8 +386,8 @@ function SwapPageContent() {
   const tokenInParam = searchParams.get('tokenIn')
   const tokenOutParam = searchParams.get('tokenOut')
   
-  const defaultTokenIn = getTokenAddress(tokenInParam) || USDT_ADDRESS
-  const defaultTokenOut = getTokenAddress(tokenOutParam) || ARB_INC_ADDRESS
+  const defaultTokenIn = getTokenAddress(tokenInParam) || ARB_INC_ADDRESS
+  const defaultTokenOut = getTokenAddress(tokenOutParam) || NATIVE_TOKEN_ADDRESS
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [, setChain] = useSetChain()
   const connectedWallets = useWallets()
@@ -565,28 +565,29 @@ function SwapPageContent() {
             <SwapScroller>
               <SwapSection style={{ position: 'relative' }}>
                  <Widget
-                   client="arbitrage-inception"
-                   theme={darkTheme}
-                   tokenList={customTokens}
-                   defaultTokenIn={defaultTokenIn}
-                   defaultTokenOut={defaultTokenOut}
-                   rpcUrl="https://bsc.publicnode.com"
-                   chainId={BSC_CHAIN_ID}
-                   connectedAccount={{
-                     address: walletAddress || '',
-                     chainId: BSC_CHAIN_ID,
-                   }}
-                   onSubmitTx={handleSubmitTx}
-                   onSwitchChain={handleSwitchChain}
-                   enableRoute={true}
-                   feeSetting={{
-                     feeAmount: FEE_PCM,
-                     feeReceiver: FEE_RECEIVER,
-                     chargeFeeBy: 'currency_out',
-                     isInBps: true,
-                   }}
-                   title="Swap on BSC"
-                 />
+                    client="arbitrage-inception"
+                    theme={darkTheme}
+                    tokenList={customTokens}
+                    defaultTokenIn={defaultTokenIn}
+                    defaultTokenOut={defaultTokenOut}
+                    rpcUrl="https://bsc.publicnode.com"
+                    chainId={BSC_CHAIN_ID}
+                    provider={ethersProvider}
+                    connectedAccount={{
+                      address: walletAddress || undefined,
+                      chainId: BSC_CHAIN_ID,
+                    }}
+                    onSubmitTx={handleSubmitTx}
+                    onSwitchChain={handleSwitchChain}
+                    enableRoute={true}
+                    feeSetting={{
+                      feeAmount: FEE_PCM,
+                      feeReceiver: FEE_RECEIVER,
+                      chargeFeeBy: 'currency_out',
+                      isInBps: true,
+                    }}
+                    title="Swap on BSC"
+                  />
                 {!walletAddress && <DemoModeOverlay />}
               </SwapSection>
             </SwapScroller>
