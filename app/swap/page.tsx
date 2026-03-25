@@ -549,6 +549,7 @@ function SwapPageContent() {
                     defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
                     showRate={true}
                     showDetail={true}
+                    onError={(e) => console.log('Widget error:', e)}
                     title="Swap on BSC"
                  />
                 {!walletAddress && <DemoModeOverlay />}
