@@ -337,6 +337,7 @@ export default function ZapPageClient() {
             <NavLink href="/swap">Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
           </Nav>
           <WalletSection>
             {address ? (

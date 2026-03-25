@@ -344,6 +344,7 @@ function SwapAllContent() {
             <NavLink href="/swap">Swap (Custom)</NavLink>
             <NavLink href="/swap-all" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
           </Nav>
           <WalletSection>
             {walletAddress ? (
