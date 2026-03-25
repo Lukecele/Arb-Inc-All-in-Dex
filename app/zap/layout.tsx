@@ -1,16 +1,15 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Zap Liquidity BSC | Arbitrage Inception',
-  description:
-    'Aggiungi o rimuovi liquidità in modo semplice sulla BNB Smart Chain. Zap in/out da pool di liquidità con un singolo click.',
+  title: 'Zap Liquidity | Add/Remove Liquidity | Arbitrage Inception',
+  description: 'Add or remove liquidity from BSC pools with a single click. Zap in/out from PancakeSwap and SushiSwap pools easily.',
+  keywords: ['zap liquidity', 'add liquidity', 'remove liquidity', 'BSC liquidity', 'PancakeSwap liquidity', 'SushiSwap liquidity', 'yield farming', 'LP tokens'],
   alternates: {
     canonical: 'https://arbitrage-inc.exchange/zap',
   },
   openGraph: {
-    title: 'Zap Liquidity BSC | Arbitrage Inception',
-    description:
-      'Aggiungi o rimuovi liquidità in modo semplice sulla BNB Smart Chain.',
+    title: 'Zap Liquidity | Add/Remove Liquidity | Arbitrage Inception',
+    description: 'Add or remove liquidity from BSC pools with a single click.',
     url: 'https://arbitrage-inc.exchange/zap',
     siteName: 'Arbitrage Inception',
     images: [
@@ -24,9 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zap Liquidity BSC | Arbitrage Inception',
-    description:
-      'Aggiungi o rimuovi liquidità in modo semplice sulla BNB Smart Chain.',
+    title: 'Zap Liquidity | Add/Remove Liquidity | Arbitrage Inception',
+    description: 'Add or remove liquidity from BSC pools with a single click.',
     images: [
       'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
     ],

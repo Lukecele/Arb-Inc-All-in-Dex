@@ -1,16 +1,15 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Swap Token BSC | Arbitrage Inception',
-  description:
-    'Scambia token sulla BNB Smart Chain con le migliori tariffe tramite KyberSwap. Aggregazione multi-DEX, esecuzione ottimizzata, dev fee trasparente.',
+  title: 'Swap ARB Inc | Custom Token Swap | Arbitrage Inception',
+  description: 'Swap ARB Inc and BNB directly via PancakeSwap V2. Supports wrap/unwrap BNB-WBNB with 0.1% dev fee. Fast, secure, tax-token optimized.',
+  keywords: ['ARB Inc swap', 'BNB swap', 'WBNB wrap', 'PancakeSwap', 'tax token swap', 'BSC swap', 'custom swap'],
   alternates: {
     canonical: 'https://arbitrage-inc.exchange/swap',
   },
   openGraph: {
-    title: 'Swap Token BSC | Arbitrage Inception',
-    description:
-      'Scambia token sulla BNB Smart Chain con le migliori tariffe tramite KyberSwap.',
+    title: 'Swap ARB Inc | Custom Token Swap | Arbitrage Inception',
+    description: 'Swap ARB Inc and BNB directly via PancakeSwap V2.',
     url: 'https://arbitrage-inc.exchange/swap',
     siteName: 'Arbitrage Inception',
     images: [
@@ -24,9 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Swap Token BSC | Arbitrage Inception',
-    description:
-      'Scambia token sulla BNB Smart Chain con le migliori tariffe tramite KyberSwap.',
+    title: 'Swap ARB Inc | Custom Token Swap | Arbitrage Inception',
+    description: 'Swap ARB Inc and BNB directly via PancakeSwap V2.',
     images: [
       'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
     ],
