@@ -256,17 +256,6 @@ const Disclaimer = styled.div`
   line-height: 1.5;
 `
 
-const TokenBadge = styled.span<{ $variant: 'custom' | 'default' }>`
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 10px;
-  font-weight: 600;
-  border-radius: 4px;
-  margin-left: 8px;
-  background: ${props => props.$variant === 'custom' ? 'rgba(40, 224, 185, 0.2)' : 'rgba(139, 92, 246, 0.2)'};
-  color: ${props => props.$variant === 'custom' ? '#28E0B9' : '#8B5CF6'};
-`
-
 function SwapAllContent() {
   const searchParams = useSearchParams()
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()

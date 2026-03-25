@@ -3,7 +3,7 @@
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaLightbulb, FaCoins, FaChartPie, FaRoad, FaUsers, FaClock, FaCheckCircle, FaDollarSign, FaWater, FaPercent } from 'react-icons/fa'
+import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaCoins, FaClock, FaDollarSign, FaWater } from 'react-icons/fa'
 import theme from './styles/theme'
 import { useState, useEffect } from 'react'
 
@@ -44,12 +44,6 @@ const GlobalStyle = createGlobalStyle`
     background: #8B5CF6;
     color: white;
   }
-`
-
-const glow = keyframes`
-  0% { box-shadow: 0 0 5px #8B5CF6, 0 0 10px #8B5CF6, 0 0 15px #8B5CF6; }
-  50% { box-shadow: 0 0 10px #06B6D4, 0 0 20px #06B6D4, 0 0 30px #06B6D4; }
-  100% { box-shadow: 0 0 5px #8B5CF6, 0 0 10px #8B5CF6, 0 0 15px #8B5CF6; }
 `
 
 const float = keyframes`
