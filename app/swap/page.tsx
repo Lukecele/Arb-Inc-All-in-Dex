@@ -188,6 +188,23 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
+const FooterLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  
+  a {
+    color: ${theme.colors.text.secondary};
+    text-decoration: none;
+    font-size: 13px;
+    &:hover {
+      color: ${theme.colors.accent.DEFAULT};
+    }
+  }
+`
+
 const Disclaimer = styled.div`
   max-width: 600px;
   margin: 0 auto 20px;
@@ -282,6 +299,12 @@ function SwapPageContent() {
         </MainContent>
 
         <Footer>
+          <FooterLinks>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/terms-of-service">Terms of Service</a>
+            <a href="/cookie-policy">Cookie Policy</a>
+            <a href="/contact">Contact</a>
+          </FooterLinks>
           <Disclaimer>
             <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap V2 Router and is not responsible for any financial losses. Please trade responsibly.
           </Disclaimer>

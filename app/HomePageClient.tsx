@@ -580,6 +580,36 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
+const FooterLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  
+  a {
+    color: ${theme.colors.text.secondary};
+    text-decoration: none;
+    font-size: 13px;
+    transition: ${theme.transitions.fast};
+    &:hover {
+      color: ${theme.colors.accent.DEFAULT};
+    }
+  }
+`
+
+const Disclaimer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 8px;
+  color: #FF9900;
+  font-size: 12px;
+  line-height: 1.5;
+`
+
 const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB'
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 
@@ -1025,7 +1055,16 @@ export default function HomePageClient() {
         </MainContent>
 
         <Footer>
-          © 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap
+          <FooterLinks>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/terms-of-service">Terms of Service</a>
+            <a href="/cookie-policy">Cookie Policy</a>
+            <a href="/contact">Contact</a>
+          </FooterLinks>
+          <Disclaimer>
+            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap & KyberSwap and is not responsible for any financial losses. Please trade responsibly.
+          </Disclaimer>
+          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap & KyberSwap</p>
         </Footer>
       </Container>
     </>
