@@ -572,7 +572,6 @@ function SwapPageContent() {
                     defaultTokenOut={defaultTokenOut}
                     rpcUrl="https://bsc.publicnode.com"
                     chainId={BSC_CHAIN_ID}
-                    provider={ethersProvider}
                     connectedAccount={{
                       address: walletAddress || undefined,
                       chainId: BSC_CHAIN_ID,
