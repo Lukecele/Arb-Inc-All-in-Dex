@@ -1017,7 +1017,7 @@ export default function HomePageClient() {
               }}
             >
               {[
-                { href: "https://dexscreener.com/bsc/0x630b9c39d46314a3268d75bb25fd79df4581d1af", icon: <FaChartLine size={20} />, label: "DexScreener" },
+                { href: "https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB", icon: <FaChartLine size={20} />, label: "DexScreener" },
                 { href: "https://x.com/Arbitrageincept", icon: <FaTwitter size={20} />, label: "Twitter" },
                 { href: "https://t.me/ArbitrageInception", icon: <FaTelegram size={20} />, label: "Telegram" },
                 { href: "https://revshare.dev/token/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c", icon: <FaChartLine size={20} />, label: "RevShare" },
