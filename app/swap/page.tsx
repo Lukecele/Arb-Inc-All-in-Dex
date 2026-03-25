@@ -547,6 +547,8 @@ function SwapPageContent() {
                    enableRoute={true}
                     enableDexes="pancake"
                     defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
+                    showRate={true}
+                    showDetail={true}
                     title="Swap on BSC"
                  />
                 {!walletAddress && <DemoModeOverlay />}
