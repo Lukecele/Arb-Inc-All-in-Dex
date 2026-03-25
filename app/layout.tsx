@@ -49,13 +49,47 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Arbitrage Inception',
+  description: 'Swap, zap, and provide liquidity on BSC with the best rates. Features custom ARB Inc swaps, liquidity pools, and cross-DEX aggregation.',
+  url: 'https://arbitrage-inc.exchange/',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://arbitrage-inc.exchange/swap?search={search_term_string}'
+    },
+    'query-input': 'required name=search_term_string'
+  },
+  sameAs: [
+    'https://twitter.com/ArbitrageInception',
+    'https://t.me/ArbitrageInception'
+  ],
+  publisher: {
+    '@type': 'Organization',
+    name: 'Arbitrage Inception',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://arbitrage-inc.exchange/og-image.svg'
+    }
+  }
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en-US">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body style={{ margin: 0, padding: 0 }}>
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         <Analytics />
