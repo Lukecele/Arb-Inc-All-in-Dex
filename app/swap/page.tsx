@@ -543,9 +543,10 @@ function SwapPageContent() {
                      chainId: BSC_CHAIN_ID,
                    }}
                     onSubmitTx={handleSubmitTx}
-                    onSwitchChain={handleSwitchChain}
-                    enableRoute={true}
-                    enableDexes="pancake"
+                   onSwitchChain={handleSwitchChain}
+                   enableRoute={true}
+                   enableDexes="pancake"
+                   defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
                    feeSetting={{
                      feeAmount: FEE_PCM,
                      feeReceiver: FEE_RECEIVER,
