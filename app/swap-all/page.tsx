@@ -380,6 +380,21 @@ function SwapAllContent() {
           </SwapWrapper>
         </MainContent>
 
+        <section style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif' }}>
+          <h2 style={{ color: '#f3ba2f' }}>Advanced Token Swap Protocol on BNB Smart Chain</h2>
+          <p>
+            The <strong>Arbitrage Inception Swap</strong> interface provides a seamless gateway to the decentralized finance (DeFi) ecosystem on the <strong>BNB Smart Chain (BSC)</strong>. By leveraging deep liquidity pools and optimized routing, our swap mechanism ensures users receive the best possible rates with minimal slippage.
+          </p>
+          <p>
+            Every transaction executed through this widget contributes to the <strong>Arbitrage Inception ecosystem</strong>. A portion of the volume is strategically used to strengthen liquidity and generate <strong>consistent BNB rewards</strong> for token holders. Whether you are trading $ARBINc or other BEP-20 tokens, our platform prioritizes security, speed, and low gas fees.
+          </p>
+          <ul style={{ listStyleType: 'square', paddingLeft: '20px' }}>
+            <li><strong>Optimized Routing:</strong> Integrated with PancakeSwap and major DEX aggregators.</li>
+            <li><strong>Reward Driven:</strong> Volume-based rewards distributed automatically to holders.</li>
+            <li><strong>Transparent Execution:</strong> All swaps are verifiable on-chain via BscScan.</li>
+          </ul>
+        </section>
+
         <Footer>
           © 2026 Arbitrage Inception. All rights reserved. | Powered by KyberSwap
         </Footer>
