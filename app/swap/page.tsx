@@ -1,32 +1,19 @@
 'use client'
 
-import { Widget } from '@kyberswap/widgets'
 import {
   init,
   useConnectWallet,
   useSetChain,
-  useWallets,
 } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import { ethers } from 'ethers'
-import { useState, useEffect, useCallback, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
-import styled, { createGlobalStyle, keyframes } from 'styled-components'
-import DemoModeOverlay from './DemoModeOverlay'
+import { useState, useEffect, Suspense } from 'react'
+import styled, { createGlobalStyle } from 'styled-components'
 import ArbIncSwap from './ArbIncSwap'
 import theme from '../styles/theme'
 
-const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-const WBNB_ABI = [
-  'function deposit() payable',
-  'function withdraw(uint256 wad)',
-  'function balanceOf(address) view returns (uint256)',
-]
-const NATIVE_TOKEN_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-
 const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
-const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955'
 
 const injected = injectedModule()
 const walletConnect = walletConnectModule({
@@ -49,55 +36,7 @@ init({
 })
 
 const BSC_CHAIN_ID = 56
-const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
-const FEE_PCM = 10 // 0.1% fee
 
-const customTokens = [
-  {
-    chainId: 56,
-    address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
-    symbol: 'Arb Inc',
-    name: 'Arbitrage Inception',
-    decimals: 9,
-    logoURI: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
-  },
-  {
-    chainId: 56,
-    address: '0x55d398326f99059fF775485246999027B3197955',
-    symbol: 'USDT',
-    name: 'Tether USD',
-    decimals: 18,
-    logoURI: 'https://tokens.icons.1001.org/0x55d398326f99059ff775485246999027b3197955.png',
-  },
-  {
-    chainId: 56,
-    address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-    symbol: 'USDC',
-    name: 'USD Coin',
-    decimals: 18,
-    logoURI: 'https://tokens.icons.1001.org/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d.png',
-  },
-]
-
-const darkTheme = {
-  text: '#FFFFFF',
-  subText: '#A9A9A9',
-  primary: '#1C1C1C',
-  dialog: '#313131',
-  secondary: '#0F0F0F',
-  interactive: '#292929',
-  stroke: '#505050',
-  accent: '#28E0B9',
-  success: '#189470',
-  warning: '#FF9901',
-  error: '#FF537B',
-  fontFamily: 'Work Sans',
-  borderRadius: '16px',
-  buttonRadius: '999px',
-  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.04)',
-}
-
-// Styled Components
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -110,12 +49,6 @@ const GlobalStyle = createGlobalStyle`
     color: #FFFFFF;
     min-height: 100vh;
   }
-`
-
-const glow = keyframes`
-  0% { box-shadow: 0 0 5px #28E0B9, 0 0 10px #28E0B9, 0 0 15px #28E0B9; }
-  50% { box-shadow: 0 0 10px #28E0B9, 0 0 20px #28E0B9, 0 0 30px #28E0B9; }
-  100% { box-shadow: 0 0 5px #28E0B9, 0 0 10px #28E0B9, 0 0 15px #28E0B9; }
 `
 
 const Container = styled.div`
@@ -246,88 +179,6 @@ const MainContent = styled.main`
   padding: 20px 0;
 `
 
-const SwapWrapper = styled.div`
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  background: ${theme.colors.glass.light};
-  border-radius: ${theme.borderRadius.lg};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  padding: 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(40, 224, 185, 0.3) transparent;
-  @media (max-width: 480px) {
-    padding: 8px;
-    border-radius: 12px;
-    max-width: calc(100vw - 16px);
-  }
-`
-
-const SwapScroller = styled.div<{ $scale?: number }>`
-  display: inline-block;
-  width: 400px;
-  transform-origin: top left;
-  @media (max-width: 480px) {
-    width: 480px;
-    transform: scale(0.75);
-  }
-  @media (min-width: 481px) {
-    width: 100%;
-    transform: scale(${props => props.$scale || 1});
-  }
-`
-
-const SwapSection = styled.section`
-  width: 100%;
-`
-
-const WrapUnwrapSection = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-`
-
-const WrapUnwrapButton = styled.button<{ $variant: 'wrap' | 'unwrap' }>`
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  background: ${props => props.$variant === 'wrap' 
-    ? 'linear-gradient(135deg, #28E0B9 0%, #189470 100%)' 
-    : 'linear-gradient(135deg, #FF9901 0%, #cc7a00 100%)'};
-  color: #fff;
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-`
-
-const WrapUnwrapInput = styled.input`
-  width: 120px;
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: 8px;
-  background: ${theme.colors.glass.medium};
-  color: #fff;
-  text-align: center;
-  &::placeholder {
-    color: ${theme.colors.text.muted};
-  }
-`
-
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
@@ -337,34 +188,24 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
-function getTokenAddress(symbol: string | null): string | undefined {
-  if (!symbol) return undefined
-  const s = symbol.toUpperCase()
-  if (s === 'BNB') return NATIVE_TOKEN_ADDRESS
-  if (s === 'WBNB') return WBNB_ADDRESS
-  if (s === 'USDT') return USDT_ADDRESS
-  if (s === 'ARBINc') return ARB_INC_ADDRESS
-  if (s === 'ARBITRAGE INC' || s === 'ARBITRAGEINCEPTION') return ARB_INC_ADDRESS
-  return undefined
-}
+const Disclaimer = styled.div`
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding: 15px;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 8px;
+  color: #FF9901;
+  font-size: 12px;
+  line-height: 1.5;
+`
 
 function SwapPageContent() {
-  const searchParams = useSearchParams()
-  const tokenInParam = searchParams.get('tokenIn')
-  const tokenOutParam = searchParams.get('tokenOut')
-  
-  const defaultTokenIn = getTokenAddress(tokenInParam) || USDT_ADDRESS
-  const defaultTokenOut = getTokenAddress(tokenOutParam) || ARB_INC_ADDRESS
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [, setChain] = useSetChain()
-  const connectedWallets = useWallets()
 
   const [ethersProvider, setEthersProvider] = useState<ethers.providers.Web3Provider | null>(null)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
-  const [wrapAmount, setWrapAmount] = useState('')
-  const [unwrapAmount, setUnwrapAmount] = useState('')
-  const [wrapLoading, setWrapLoading] = useState(false)
-  const [unwrapLoading, setUnwrapLoading] = useState(false)
 
   useEffect(() => {
     if (wallet && wallet.provider) {
@@ -378,12 +219,6 @@ function SwapPageContent() {
   }, [wallet])
 
   useEffect(() => {
-    if (!connectedWallets.length) return
-    const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label)
-    window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray))
-  }, [connectedWallets, wallet])
-
-  useEffect(() => {
     const previouslyConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') || '[]')
     async function setWalletFromLocalStorage() {
       if (previouslyConnectedWallets?.length && !wallet) {
@@ -394,59 +229,6 @@ function SwapPageContent() {
       setWalletFromLocalStorage()
     }
   }, [connect, wallet])
-
-  const handleSwitchChain = useCallback(() => {
-    if (wallet) {
-      setChain({ chainId: BSC_CHAIN_ID.toString() })
-    }
-  }, [wallet, setChain])
-
-  const handleSubmitTx = useCallback(async (txData: {
-    from: string
-    to: string
-    value: string
-    data: string
-    gasLimit: string
-  }): Promise<string> => {
-    if (!ethersProvider) throw new Error('No wallet')
-    const signer = ethersProvider.getSigner()
-    const tx = await signer.sendTransaction(txData)
-    return tx.hash
-  }, [ethersProvider])
-
-  const handleWrap = useCallback(async () => {
-    if (!ethersProvider || !walletAddress || !wrapAmount) return
-    setWrapLoading(true)
-    try {
-      const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, ethersProvider.getSigner())
-      const value = ethers.utils.parseEther(wrapAmount)
-      const tx = await wbnb.deposit({ value })
-      await tx.wait()
-      setWrapAmount('')
-      alert(`Successfully wrapped ${wrapAmount} BNB to WBNB!`)
-    } catch (err: any) {
-      alert(`Wrap failed: ${err.message}`)
-    } finally {
-      setWrapLoading(false)
-    }
-  }, [ethersProvider, walletAddress, wrapAmount])
-
-  const handleUnwrap = useCallback(async () => {
-    if (!ethersProvider || !walletAddress || !unwrapAmount) return
-    setUnwrapLoading(true)
-    try {
-      const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, ethersProvider.getSigner())
-      const value = ethers.utils.parseEther(unwrapAmount)
-      const tx = await wbnb.withdraw(value)
-      await tx.wait()
-      setUnwrapAmount('')
-      alert(`Successfully unwrapped ${unwrapAmount} WBNB to BNB!`)
-    } catch (err: any) {
-      alert(`Unwrap failed: ${err.message}`)
-    } finally {
-      setUnwrapLoading(false)
-    }
-  }, [ethersProvider, walletAddress, unwrapAmount])
 
   return (
     <>
@@ -494,85 +276,34 @@ function SwapPageContent() {
             fontSize: '12px',
             lineHeight: '1.4',
           }}>
-            <strong>⚠️ Tax Token Notice:</strong> For tax tokens like Arbitrage Inception, set slippage to 5% or higher in settings to ensure successful transactions.
+            <strong>⚠️ Tax Token Notice:</strong> Arbitrage Inception has a 4% transfer tax. The custom swap interface accounts for this automatically.
           </div>
           
-          {walletAddress && (
-            <WrapUnwrapSection>
-              <WrapUnwrapInput
-                type="text"
-                placeholder="Amount BNB"
-                value={wrapAmount}
-                onChange={e => setWrapAmount(e.target.value)}
-              />
-              <WrapUnwrapButton 
-                $variant="wrap" 
-                onClick={handleWrap}
-                disabled={wrapLoading || !wrapAmount}
-              >
-                {wrapLoading ? 'Wrapping...' : 'Wrap BNB → WBNB'}
-              </WrapUnwrapButton>
-              <WrapUnwrapInput
-                type="text"
-                placeholder="Amount WBNB"
-                value={unwrapAmount}
-                onChange={e => setUnwrapAmount(e.target.value)}
-              />
-              <WrapUnwrapButton 
-                $variant="unwrap" 
-                onClick={handleUnwrap}
-                disabled={unwrapLoading || !unwrapAmount}
-              >
-                {unwrapLoading ? 'Unwrapping...' : 'Unwrap WBNB → BNB'}
-              </WrapUnwrapButton>
-            </WrapUnwrapSection>
-          )}
+          <ArbIncSwap
+            ethersProvider={ethersProvider}
+            walletAddress={walletAddress}
+          />
           
-          <SwapWrapper>
-            <SwapScroller>
-              <SwapSection style={{ position: 'relative' }}>
-                 {/* Show custom swap interface when selling ARB Inc */}
-                 {defaultTokenIn === ARB_INC_ADDRESS ? (
-                   <ArbIncSwap
-                     ethersProvider={ethersProvider}
-                     walletAddress={walletAddress}
-                     onSuccess={() => {
-                       // Refresh page or show success message
-                       alert('ARB Inc swap successful!')
-                     }}
-                   />
-                 ) : (
-                   <Widget
-                   client="arbitrage-inception"
-                   theme={darkTheme}
-                   tokenList={customTokens}
-                   defaultTokenIn={defaultTokenIn}
-                   defaultTokenOut={defaultTokenOut}
-                   rpcUrl="https://bsc.publicnode.com"
-                   chainId={BSC_CHAIN_ID}
-                   connectedAccount={{
-                     address: walletAddress || '',
-                     chainId: BSC_CHAIN_ID,
-                   }}
-                    onSubmitTx={handleSubmitTx}
-                   onSwitchChain={handleSwitchChain}
-                   enableRoute={true}
-                    enableDexes="pancake"
-                    defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
-                    showRate={true}
-                    showDetail={true}
-                    onError={(e) => console.log('Widget error:', e)}
-                    title="Swap on BSC"
-                  />
-                 )}
-                {!walletAddress && <DemoModeOverlay />}
-              </SwapSection>
-            </SwapScroller>
-          </SwapWrapper>
+          <section style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif' }}>
+            <h2 style={{ color: '#f3ba2f' }}>Arbitrage Inception Direct Swap</h2>
+            <p>
+              This swap interface uses <strong>PancakeSwap V2 Router directly</strong> to handle ARB Inc's 4% transfer tax properly. 
+              Unlike aggregator widgets that struggle with Fee-on-Transfer tokens, this direct approach ensures reliable swaps.
+            </p>
+            <ul style={{ listStyleType: 'square', paddingLeft: '20px', marginTop: '15px' }}>
+              <li><strong>Direct Routing:</strong> Bypasses aggregator issues with taxed tokens</li>
+              <li><strong>Tax-Aware:</strong> Uses SupportingFeeOnTransferTokens function</li>
+              <li><strong>3% Slippage:</strong> Accounts for the 4% tax automatically</li>
+              <li><strong>For Other Tokens:</strong> Use <a href="/swap-all" style={{ color: '#f3ba2f' }}>Swap All</a> for non-taxed tokens</li>
+            </ul>
+          </section>
         </MainContent>
 
         <Footer>
-          © 2026 Arbitrage Inception. All rights reserved. | Powered by KyberSwap
+          <Disclaimer>
+            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap V2 Router and is not responsible for any financial losses. Please trade responsibly.
+          </Disclaimer>
+          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved.</p>
         </Footer>
       </Container>
     </>
