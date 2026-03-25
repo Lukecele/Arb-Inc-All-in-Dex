@@ -8,6 +8,10 @@ const ROUTER_ADDRESS = '0x10ED43C718714eb63d5aA57B78B54704E256024E' // PancakeSw
 const ARB_INC = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 const WBNB = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 
+// Dev fee configuration
+const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
+const FEE_PCM = 10 // 0.1%
+
 // Router ABI (minimal required functions)
 const ROUTER_ABI = [
   'function swapExactTokensForTokensSupportingFeeOnTransferTokens(uint256 amountIn, uint256 amountOutMin, address[] path, address to, uint256 deadline)',
@@ -124,15 +128,17 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
         const expectedOutput = ethers.utils.formatUnits(amounts[1], 18)
         const afterTax = parseFloat(expectedOutput) * 0.96
-        setState(prev => ({ ...prev, estimatedOutput: afterTax.toFixed(6) }))
-        return afterTax.toFixed(6)
+        const afterDevFee = afterTax * (1 - FEE_PCM / 10000)
+        setState(prev => ({ ...prev, estimatedOutput: afterDevFee.toFixed(6) }))
+        return afterDevFee.toFixed(6)
       } else if (swapType === 'BNB_TO_ARB_INC') {
         const amountInWei = ethers.utils.parseEther(amountIn)
         const amounts = await router.getAmountsOut(amountInWei, [WBNB, ARB_INC])
         const expectedOutput = ethers.utils.formatUnits(amounts[1], 9)
         const afterTax = parseFloat(expectedOutput) * 0.96
-        setState(prev => ({ ...prev, estimatedOutput: afterTax.toFixed(6) }))
-        return afterTax.toFixed(6)
+        const afterDevFee = afterTax * (1 - FEE_PCM / 10000)
+        setState(prev => ({ ...prev, estimatedOutput: afterDevFee.toFixed(6) }))
+        return afterDevFee.toFixed(6)
       }
 
       return null
@@ -194,6 +200,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
 
       if (swapType === 'ARB_INC_TO_BNB') {
         const token = new ethers.Contract(ARB_INC, ERC20_ABI, signer)
+        const wbnb = new ethers.Contract(WBNB, WBNB_ABI, signer)
         const decimals = 9
         const amountInWei = ethers.utils.parseUnits(amountIn, decimals)
         
@@ -205,7 +212,10 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         const amounts = await router.getAmountsOut(amountInWei, [ARB_INC, WBNB])
         const expectedOutput = amounts[1]
         const afterTax = expectedOutput.mul(96).div(100)
-        const amountOutMin = afterTax.mul(10000 - slippagePercent * 100).div(10000)
+        
+        const devFee = afterTax.mul(FEE_PCM).div(10000)
+        const userOutput = afterTax.sub(devFee)
+        const amountOutMin = userOutput.mul(10000 - slippagePercent * 100).div(10000)
         
         const currentAllowance = await token.allowance(owner, ROUTER_ADDRESS)
         if (currentAllowance.lt(amountInWei)) {
@@ -226,11 +236,17 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         const receipt = await tx.wait()
         console.log('Swap confirmed in block:', receipt.blockNumber)
         
+        const wbnbBalance = await wbnb.balanceOf(owner)
+        const feeTx = await wbnb.transfer(FEE_RECEIVER, devFee)
+        await feeTx.wait()
+        console.log('Dev fee sent:', devFee.toString())
+        
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
       }
 
       if (swapType === 'BNB_TO_ARB_INC') {
+        const token = new ethers.Contract(ARB_INC, ERC20_ABI, signer)
         const amountInWei = ethers.utils.parseEther(amountIn)
         const balance = await provider.getBalance(owner)
         if (balance.lt(amountInWei)) {
@@ -240,7 +256,10 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         const amounts = await router.getAmountsOut(amountInWei, [WBNB, ARB_INC])
         const expectedOutput = amounts[1]
         const afterTax = expectedOutput.mul(96).div(100)
-        const amountOutMin = afterTax.mul(10000 - slippagePercent * 100).div(10000)
+        
+        const devFee = afterTax.mul(FEE_PCM).div(10000)
+        const userOutput = afterTax.sub(devFee)
+        const amountOutMin = userOutput.mul(10000 - slippagePercent * 100).div(10000)
         
         console.log('Executing swap BNB -> ARB Inc...')
         const tx = await router.swapExactETHForTokensSupportingFeeOnTransferTokens(
@@ -253,6 +272,11 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         
         const receipt = await tx.wait()
         console.log('Swap confirmed in block:', receipt.blockNumber)
+        
+        const tokenBalance = await token.balanceOf(owner)
+        const feeTx = await token.transfer(FEE_RECEIVER, devFee)
+        await feeTx.wait()
+        console.log('Dev fee sent:', devFee.toString())
         
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
