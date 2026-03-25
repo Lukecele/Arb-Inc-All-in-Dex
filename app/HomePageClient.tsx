@@ -587,6 +587,15 @@ const FooterLinks = styled.div`
   }
 `
 
+const Footer = styled.footer`
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px 0;
+  text-align: center;
+  color: ${theme.colors.text.muted};
+  font-size: 14px;
+`
+
 const Disclaimer = styled.div`
   max-width: 600px;
   margin: 0 auto 20px;
