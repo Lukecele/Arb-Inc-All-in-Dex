@@ -282,21 +282,35 @@ function SwapPageContent() {
         </Header>
 
         <MainContent>
+          <section style={{ 
+            maxWidth: '800px', 
+            width: '100%', 
+            marginBottom: '20px',
+            padding: '20px',
+            background: 'rgba(40, 224, 185, 0.1)',
+            border: '1px solid rgba(40, 224, 185, 0.3)',
+            borderRadius: '12px',
+          }}>
+            <h2 style={{ color: '#28E0B9', marginBottom: '10px' }}>Custom Token Swap on BSC</h2>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
+              Swap <strong>ARB Inc</strong> token directly via PancakeSwap V2 Router. Our custom interface handles 
+              Fee-on-Transfer (FOT) tokens with 4% tax automatically, ensuring accurate slippage and successful transactions.
+            </p>
+            <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
+              <li><strong>BNB ↔ WBNB:</strong> Instant wrap/unwrap with 0.1% dev fee</li>
+              <li><strong>ARB Inc → BNB:</strong> Sell ARB Inc with 4% tax handled automatically</li>
+              <li><strong>BNB → ARB Inc:</strong> Buy ARB Inc with real-time price calculation</li>
+              <li><strong>Direct Routing:</strong> Bypasses aggregators for tax token compatibility</li>
+            </ul>
+            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
+              For tokens other than ARB Inc, use our <a href="/swap-all" style={{ color: '#28E0B9' }}>Swap All</a> feature with KyberSwap aggregator.
+            </p>
+          </section>
+          
           <ArbIncSwap
             ethersProvider={ethersProvider}
             walletAddress={walletAddress}
           />
-          
-          <section style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', color: '#ffffff', lineHeight: '1.6', fontFamily: 'sans-serif', fontSize: '14px' }}>
-            <p>
-              <strong>Custom Swap</strong> uses PancakeSwap V2 Router directly with support for wrap/unwrap and tax token handling.
-            </p>
-            <ul style={{ listStyleType: 'square', paddingLeft: '20px', marginTop: '10px' }}>
-              <li><strong>BNB ↔ WBNB:</strong> Wrap or unwrap BNB instantly</li>
-              <li><strong>ARB Inc ↔ BNB:</strong> Direct swap with 4% tax accounted for</li>
-              <li><strong>For Other Tokens:</strong> Use <a href="/swap-all" style={{ color: '#f3ba2f' }}>Swap All</a></li>
-            </ul>
-          </section>
         </MainContent>
 
         <Footer>

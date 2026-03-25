@@ -360,6 +360,32 @@ export default function ZapPageClient() {
         <MainContent>
           <SectionTitle>Liquidity Zap</SectionTitle>
           
+          <section style={{ 
+            maxWidth: '800px', 
+            width: '100%', 
+            marginBottom: '20px',
+            padding: '20px',
+            background: 'rgba(255, 152, 0, 0.1)',
+            border: '1px solid rgba(255, 152, 0, 0.3)',
+            borderRadius: '12px',
+          }}>
+            <h2 style={{ color: '#FF9900', marginBottom: '10px' }}>Add/Remove Liquidity with One Click</h2>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
+              Zap in or out of <strong>liquidity pools</strong> on BNB Smart Chain with a single transaction. 
+              Our Zap feature supports both <strong>PancakeSwap V2/V3</strong> and <strong>SushiSwap</strong> pools, 
+              making it easy to manage your liquidity positions.
+            </p>
+            <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
+              <li><strong>Zap In:</strong> Add liquidity with any token in one click</li>
+              <li><strong>Zap Out:</strong> Remove liquidity and receive single token</li>
+              <li><strong>Multiple DEXs:</strong> PancakeSwap V2, V3, and SushiSwap support</li>
+              <li><strong>ARB Inc Pools:</strong> Special pools for ARB Inception liquidity</li>
+            </ul>
+            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
+              Zap automatically calculates optimal token ratios and handles all intermediate swaps.
+            </p>
+          </section>
+          
           <PoolSelector
             selectedPoolId={selectedPool.id}
             onPoolChange={setSelectedPool}

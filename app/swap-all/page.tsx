@@ -354,6 +354,32 @@ function SwapAllContent() {
         </Header>
 
         <MainContent>
+          <section style={{ 
+            maxWidth: '800px', 
+            width: '100%', 
+            marginBottom: '20px',
+            padding: '20px',
+            background: 'rgba(139, 92, 246, 0.1)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: '12px',
+          }}>
+            <h2 style={{ color: '#8B5CF6', marginBottom: '10px' }}>DEX Aggregator - Best Swap Rates</h2>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
+              Swap any token on <strong>BNB Smart Chain</strong> with the best rates through our KyberSwap integration. 
+              Our DEX aggregator compares liquidity across <strong>PancakeSwap</strong>, <strong>Uniswap V3</strong>, and other 
+              major DEXs to find you the optimal price.
+            </p>
+            <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
+              <li><strong>Best Rates:</strong> Aggregates liquidity from multiple DEXs</li>
+              <li><strong>Low Fees:</strong> Only 0.1% dev fee on all swaps</li>
+              <li><strong>Fast Execution:</strong> Optimized routing for speed</li>
+              <li><strong>All Tokens:</strong> Trade any BEP-20 token pair</li>
+            </ul>
+            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
+              For ARB Inc token swaps, use our <a href="/swap" style={{ color: '#8B5CF6' }}>Custom Swap</a> with direct PancakeSwap V2 routing.
+            </p>
+          </section>
+          
           <div style={{
             maxWidth: '400px',
             width: '100%',
