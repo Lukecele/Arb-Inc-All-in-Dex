@@ -545,15 +545,10 @@ function SwapPageContent() {
                     onSubmitTx={handleSubmitTx}
                    onSwitchChain={handleSwitchChain}
                    enableRoute={true}
-                   enableDexes="pancake"
-                   defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
-                   feeSetting={{
-                     feeAmount: FEE_PCM,
-                     feeReceiver: FEE_RECEIVER,
-                     chargeFeeBy: 'currency_out',
-                     isInBps: true,
-                   }}
-                   title="Swap on BSC"
+                    enableDexes="pancake"
+                    defaultSlippage={500}  // 5% slippage for FOT token (4% tax + buffer)
+                    // feeSetting removed temporarily to test if it helps with routing
+                    title="Swap on BSC"
                  />
                 {!walletAddress && <DemoModeOverlay />}
               </SwapSection>
