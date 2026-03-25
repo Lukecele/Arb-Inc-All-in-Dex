@@ -542,9 +542,10 @@ function SwapPageContent() {
                      address: walletAddress || '',
                      chainId: BSC_CHAIN_ID,
                    }}
-                   onSubmitTx={handleSubmitTx}
-                   onSwitchChain={handleSwitchChain}
-                   enableRoute={true}
+                    onSubmitTx={handleSubmitTx}
+                    onSwitchChain={handleSwitchChain}
+                    enableRoute={true}
+                    enableDexes="pancake"
                    feeSetting={{
                      feeAmount: FEE_PCM,
                      feeReceiver: FEE_RECEIVER,
