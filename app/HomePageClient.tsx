@@ -1015,7 +1015,7 @@ export default function HomePageClient() {
                 { href: "https://x.com/Arbitrageincept", icon: <FaTwitter size={20} />, label: "Twitter" },
                 { href: "https://t.me/ArbitrageInception", icon: <FaTelegram size={20} />, label: "Telegram" },
                 { href: "https://revshare.dev/token/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c", icon: <FaChartLine size={20} />, label: "RevShare" },
-                { href: "https://arbitageinception.luca-celebrano1.workers.dev/", icon: <FaGlobe size={20} />, label: "Website" }
+                { href: "https://arbitrage-inc.exchange/", icon: <FaGlobe size={20} />, label: "Website" }
               ].map((social, index) => (
                 <SocialLink
                   as={motion.a}

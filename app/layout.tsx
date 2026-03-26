@@ -64,7 +64,7 @@ const jsonLd = {
     'query-input': 'required name=search_term_string'
   },
   sameAs: [
-    'https://twitter.com/ArbitrageInception',
+    'https://x.com/Arbitrageincept',
     'https://t.me/ArbitrageInception'
   ],
   publisher: {

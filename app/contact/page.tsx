@@ -231,7 +231,7 @@ export default function ContactPage() {
               Follow us for updates, announcements, and community discussions:
             </p>
             <SocialLinks>
-              <SocialLink href="https://twitter.com/ArbitrageInception" target="_blank" rel="noopener noreferrer">
+              <SocialLink href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer">
                 𝕏 Twitter
               </SocialLink>
               <SocialLink href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">
