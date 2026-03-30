@@ -262,6 +262,7 @@ function SwapPageContent() {
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
             <NavLink href="/limit-orders">Limit Orders</NavLink>
+            <NavLink href="/bridge">Bridge</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
           <WalletSection>
