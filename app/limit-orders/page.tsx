@@ -11,13 +11,6 @@ import {
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import { ethers } from 'ethers';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Limit Order | Arbitrage Inception',
-  description: 'Place limit orders on BSC with the best rates. Set your price and trade automatically when the market reaches your target. Powered by KyberSwap.',
-  keywords: ['DeFi', 'BSC', 'Limit Order', 'Crypto Trading', 'KyberSwap', 'ARB Inc', 'DEX Aggregator'],
-};
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule({
