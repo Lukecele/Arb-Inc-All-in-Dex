@@ -279,10 +279,12 @@ export class LimitOrderMaker {
     const params: any = {
       chainId: this.client.getChainId().toString(),
       maker: makerAddress,
+      status: 'active',
     };
 
     if (options?.makerAsset) params.makerAsset = options.makerAsset;
     if (options?.takerAsset) params.takerAsset = options.takerAsset;
+    if (options?.statuses && options.statuses.length > 0) params.status = options.statuses[0];
     if (options?.page) params.page = options.page;
     if (options?.size) params.size = options.size;
 
