@@ -37,304 +37,10 @@ init({
 
 const BSC_CHAIN_ID = 56;
 
-const Container = styled.div`
-  min-height: 100vh;
-  background: ${theme.colors.background.primary};
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-`;
-
-const PageHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const Title = styled.h1`
-  font-family: ${theme.typography.displayFont};
-  font-size: ${theme.typography.sizes['2xl']};
-  font-weight: ${theme.typography.weights.bold};
-  color: ${theme.colors.text.primary};
-`;
-
-const NetworkBadge = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: ${theme.colors.background.secondary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.full};
-  color: ${theme.colors.text.secondary};
-  font-size: ${theme.typography.sizes.sm};
-`;
-
-const MainGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 24px;
-  
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const Card = styled.div`
-  background: ${theme.colors.background.secondary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.lg};
-  padding: 24px;
-`;
-
-const CardTitle = styled.h2`
-  font-size: ${theme.typography.sizes.lg};
-  font-weight: ${theme.typography.weights.semibold};
-  color: ${theme.colors.text.primary};
-  margin-bottom: 20px;
-`;
-
-const TokenInputGroup = styled.div`
-  margin-bottom: 16px;
-`;
-
-const TokenInputLabel = styled.div`
-  font-size: ${theme.typography.sizes.sm};
-  color: ${theme.colors.text.secondary};
-  margin-bottom: 8px;
-`;
-
-const TokenInputRow = styled.div`
-  display: flex;
-  align-items: center;
-  background: ${theme.colors.background.tertiary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.md};
-  padding: 12px 16px;
-  transition: border-color ${theme.transitions.fast};
-  
-  &:focus-within {
-    border-color: #20B8CD;
-  }
-`;
-
-const TokenInput = styled.input`
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: ${theme.colors.text.primary};
-  font-size: ${theme.typography.sizes.xl};
-  font-weight: ${theme.typography.weights.semibold};
-  outline: none;
-  
-  &::placeholder {
-    color: ${theme.colors.text.muted};
-  }
-`;
-
-const TokenSelect = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: ${theme.colors.background.secondary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.md};
-  color: ${theme.colors.text.primary};
-  font-size: ${theme.typography.sizes.md};
-  font-weight: ${theme.typography.weights.medium};
-  cursor: pointer;
-  transition: all ${theme.transitions.fast};
-  
-  &:hover {
-    border-color: #20B8CD;
-  }
-`;
-
-const BalanceText = styled.div`
-  font-size: ${theme.typography.sizes.xs};
-  color: ${theme.colors.text.muted};
-  margin-top: 4px;
-  text-align: right;
-`;
-
-const RateSection = styled.div`
-  margin: 20px 0;
-  padding: 16px;
-  background: ${theme.colors.background.tertiary};
-  border-radius: ${theme.borderRadius.md};
-`;
-
-const RateLabel = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: ${theme.typography.sizes.sm};
-  color: ${theme.colors.text.secondary};
-  margin-bottom: 12px;
-`;
-
-const RateInputRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const RateInput = styled.input`
-  flex: 1;
-  background: ${theme.colors.background.secondary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.sm};
-  padding: 10px 12px;
-  color: ${theme.colors.text.primary};
-  font-size: ${theme.typography.sizes.md};
-  outline: none;
-  
-  &:focus {
-    border-color: #20B8CD;
-  }
-`;
-
-const MarketButton = styled.button`
-  padding: 10px 16px;
-  background: #20B8CD;
-  border: none;
-  border-radius: ${theme.borderRadius.sm};
-  color: white;
-  font-size: ${theme.typography.sizes.sm};
-  font-weight: ${theme.typography.weights.semibold};
-  cursor: pointer;
-  transition: opacity ${theme.transitions.fast};
-  
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const EstPriceRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  font-size: ${theme.typography.sizes.sm};
-  color: ${theme.colors.text.secondary};
-`;
-
-const FlipButton = styled.button`
-  background: transparent;
-  border: none;
-  color: #20B8CD;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const ExpirySelect = styled.select`
-  width: 100%;
-  padding: 12px 16px;
-  background: ${theme.colors.background.tertiary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.md};
-  color: ${theme.colors.text.primary};
-  font-size: ${theme.typography.sizes.md};
-  cursor: pointer;
-  margin-top: 16px;
-  
-  &:focus {
-    outline: none;
-    border-color: #20B8CD;
-  }
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  padding: 16px;
-  background: #20B8CD;
-  border: none;
-  border-radius: ${theme.borderRadius.md};
-  color: white;
-  font-size: ${theme.typography.sizes.md};
-  font-weight: ${theme.typography.weights.semibold};
-  cursor: pointer;
-  margin-top: 24px;
-  transition: all ${theme.transitions.fast};
-  
-  &:hover:not(:disabled) {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const ConnectMessage = styled.div`
-  text-align: center;
-  padding: 60px 24px;
-`;
-
-const ConnectButton = styled.button`
-  padding: 14px 32px;
-  background: #20B8CD;
-  border: none;
-  border-radius: ${theme.borderRadius.md};
-  color: white;
-  font-size: ${theme.typography.sizes.md};
-  font-weight: ${theme.typography.weights.semibold};
-  cursor: pointer;
-  margin-top: 16px;
-  
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const WalletInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: ${theme.colors.background.tertiary};
-  border-radius: ${theme.borderRadius.md};
-  color: ${theme.colors.text.secondary};
-  font-size: ${theme.typography.sizes.sm};
-`;
-
-const TabsContainer = styled.div`
-  display: flex;
-  gap: 4px;
-  margin-bottom: 20px;
-`;
-
-const Tab = styled.button<{ $active: boolean }>`
-  padding: 10px 20px;
-  background: ${({ $active }) => $active ? theme.colors.background.tertiary : 'transparent'};
-  border: none;
-  border-radius: ${theme.borderRadius.sm};
-  color: ${({ $active }) => $active ? theme.colors.text.primary : theme.colors.text.secondary};
-  font-size: ${theme.typography.sizes.sm};
-  font-weight: ${theme.typography.weights.medium};
-  cursor: pointer;
-  transition: all ${theme.transitions.fast};
-  
-  &:hover {
-    background: ${theme.colors.background.tertiary};
-  }
-`;
-
 interface Token {
   address: string;
   symbol: string;
   decimals: number;
-  icon?: string;
 }
 
 const BSC_TOKENS: Token[] = [
@@ -349,6 +55,409 @@ const BSC_TOKENS: Token[] = [
   { address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c', symbol: 'ARB', decimals: 18 },
 ];
 
+const ERC20_ABI = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)',
+];
+
+const Container = styled.div`
+  min-height: 100vh;
+  background: #000;
+  padding: 16px;
+  
+  @media (min-width: 768px) {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+`;
+
+const PageHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+`;
+
+const Title = styled.h1`
+  font-family: ${theme.typography.displayFont};
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+`;
+
+const HeaderActions = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+const NetworkBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 20px;
+  color: #a1a1aa;
+  font-size: 13px;
+`;
+
+const WalletInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #27272a;
+  border-radius: 8px;
+  color: #a1a1aa;
+  font-size: 13px;
+`;
+
+const MainGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+`;
+
+const Card = styled.div`
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 16px;
+`;
+
+const CardTitle = styled.h2`
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+`;
+
+const TokenRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #27272a;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  
+  &:hover {
+    background: #3f3f46;
+  }
+`;
+
+const TokenInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const TokenIcon = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+`;
+
+const TokenName = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+`;
+
+const TokenBalance = styled.div`
+  font-size: 13px;
+  color: #a1a1aa;
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+`;
+
+const ModalContent = styled.div`
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow: auto;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #27272a;
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+`;
+
+const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  
+  &:hover {
+    color: #fff;
+  }
+`;
+
+const TokenInputGroup = styled.div`
+  margin-bottom: 12px;
+`;
+
+const TokenInputLabel = styled.div`
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-bottom: 6px;
+`;
+
+const TokenInputRow = styled.div`
+  display: flex;
+  align-items: center;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 12px;
+  padding: 12px;
+  
+  &:focus-within {
+    border-color: #20B8CD;
+  }
+`;
+
+const TokenInput = styled.input`
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  outline: none;
+  
+  &::placeholder {
+    color: #52525b;
+  }
+`;
+
+const TokenSelect = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: #20B8CD;
+  }
+`;
+
+const SwapButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 50%;
+  color: #20B8CD;
+  cursor: pointer;
+  margin: -8px auto;
+  position: relative;
+  z-index: 1;
+  
+  &:hover {
+    background: #3f3f46;
+  }
+`;
+
+const RateSection = styled.div`
+  margin: 12px 0;
+  padding: 12px;
+  background: #27272a;
+  border-radius: 12px;
+`;
+
+const RateLabel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+`;
+
+const RateInputRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const RateInput = styled.input`
+  flex: 1;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  
+  &:focus {
+    border-color: #20B8CD;
+  }
+`;
+
+const MarketButton = styled.button`
+  padding: 10px 14px;
+  background: #20B8CD;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const EstPriceRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #a1a1aa;
+`;
+
+const ExpirySelect = styled.select`
+  width: 100%;
+  padding: 12px 14px;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+  
+  &:focus {
+    outline: none;
+    border-color: #20B8CD;
+  }
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  background: #20B8CD;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ConnectMessage = styled.div`
+  text-align: center;
+  padding: 40px 16px;
+`;
+
+const ConnectButton = styled.button`
+  padding: 12px 28px;
+  background: #20B8CD;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const TabsContainer = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+`;
+
+const Tab = styled.button<{ $active: boolean }>`
+  padding: 8px 16px;
+  background: ${({ $active }) => $active ? '#27272a' : 'transparent'};
+  border: none;
+  border-radius: 8px;
+  color: ${({ $active }) => $active ? '#fff' : '#a1a1aa'};
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  
+  &:hover {
+    background: #27272a;
+  }
+`;
+
 const TOKEN_PRICES: Record<string, number> = {
   '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 680,
   '0x55d398326f99059fF775485246999027B3197955': 1,
@@ -361,6 +470,28 @@ const TOKEN_PRICES: Record<string, number> = {
   '0x96F7b5C223E1CbB1C3B3C26FBf55d5ea94e815F': 2.5,
 };
 
+async function fetchTokenBalance(
+  tokenAddress: string,
+  walletAddress: string,
+  provider: any
+): Promise<string> {
+  try {
+    if (tokenAddress === '0x0000000000000000000000000000000000000000') {
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const balance = await ethersProvider.getBalance(walletAddress);
+      return ethers.utils.formatEther(balance);
+    } else {
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const contract = new ethers.Contract(tokenAddress, ERC20_ABI, ethersProvider);
+      const balance = await contract.balanceOf(walletAddress);
+      return ethers.utils.formatEther(balance);
+    }
+  } catch (error) {
+    console.error('Error fetching balance:', error);
+    return '0';
+  }
+}
+
 export default function LimitOrdersPage() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [chain, setChain] = useSetChain();
@@ -369,6 +500,10 @@ export default function LimitOrdersPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'open' | 'my'>('open');
+  
+  const [balances, setBalances] = useState<Record<string, string>>({});
+  
+  const [showTokenModal, setShowTokenModal] = useState<'sell' | 'buy' | null>(null);
   
   const walletAddress = wallet?.accounts?.[0]?.address;
   const provider = wallet?.provider;
@@ -393,6 +528,25 @@ export default function LimitOrdersPage() {
       setMaker(null);
     }
   }, [provider, walletAddress]);
+
+  const fetchBalances = useCallback(async () => {
+    if (!walletAddress || !provider) return;
+    
+    const newBalances: Record<string, string> = {};
+    
+    for (const token of BSC_TOKENS) {
+      const balance = await fetchTokenBalance(token.address, walletAddress, provider);
+      newBalances[token.address] = balance;
+    }
+    
+    setBalances(newBalances);
+  }, [walletAddress, provider]);
+
+  useEffect(() => {
+    if (walletAddress && provider) {
+      fetchBalances();
+    }
+  }, [walletAddress, provider, fetchBalances]);
 
   const fetchOrders = useCallback(async () => {
     if (!maker || !walletAddress) return;
@@ -440,7 +594,7 @@ export default function LimitOrdersPage() {
   const handleRateChange = (value: string) => {
     setRate(value);
     setUseMarketRate(false);
-    if (sellAmount && value && sellToken && buyToken) {
+    if (sellAmount && value) {
       const parsedRate = parseFloat(value);
       if (parsedRate > 0) {
         setBuyAmount((parseFloat(sellAmount) * parsedRate).toFixed(6));
@@ -459,7 +613,7 @@ export default function LimitOrdersPage() {
 
   const handleSellAmountChange = (value: string) => {
     setSellAmount(value);
-    if (value && rate && sellToken && buyToken) {
+    if (value && rate) {
       const parsedRate = parseFloat(rate);
       if (parsedRate > 0) {
         setBuyAmount((parseFloat(value) * parsedRate).toFixed(6));
@@ -479,8 +633,50 @@ export default function LimitOrdersPage() {
     setRate('');
   };
 
-  const handleCreateOrder = () => {
-    window.location.href = '/limit-orders/create';
+  const handleCreateOrder = async () => {
+    if (!wallet || !provider || !sellAmount || !rate) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const signer = await ethersProvider.getSigner();
+      
+      const client = getDefaultClient();
+      const maker = createLimitOrderMaker(client);
+      
+      const expiredAt = expiry > 0 
+        ? Math.floor(Date.now() / 1000) + expiry 
+        : Math.floor(Date.now() / 1000) + 86400 * 365;
+      
+      const order = await maker.createOrder(signer, {
+        chainId: BSC_CHAIN_ID.toString(),
+        makerAsset: sellToken.address,
+        takerAsset: buyToken.address,
+        makingAmount: ethers.utils.parseUnits(sellAmount, sellToken.decimals).toString(),
+        takingAmount: ethers.utils.parseUnits((parseFloat(sellAmount) * parseFloat(rate)).toFixed(buyToken.decimals), buyToken.decimals).toString(),
+        expiredAt,
+      });
+      
+      alert(`Order created! ID: ${order.id}`);
+      fetchOrders();
+      setSellAmount('');
+      setBuyAmount('');
+      setRate('');
+    } catch (err: any) {
+      console.error('Failed to create order:', err);
+      alert(err.message || 'Failed to create order');
+    }
+  };
+
+  const selectToken = (token: Token) => {
+    if (showTokenModal === 'sell') {
+      setSellToken(token);
+    } else if (showTokenModal === 'buy') {
+      setBuyToken(token);
+    }
+    setShowTokenModal(null);
   };
 
   if (!wallet) {
@@ -489,11 +685,12 @@ export default function LimitOrdersPage() {
         <PageHeader>
           <Title>Limit Order</Title>
         </PageHeader>
+        
         <MainGrid>
           <Card>
             <CardTitle>Place Limit Order</CardTitle>
             <ConnectMessage>
-              <p style={{ color: theme.colors.text.secondary, marginBottom: '16px' }}>
+              <p style={{ color: '#a1a1aa', marginBottom: '12px', fontSize: '14px' }}>
                 Connect your wallet to start trading
               </p>
               <ConnectButton onClick={() => connect()} disabled={connecting}>
@@ -501,6 +698,7 @@ export default function LimitOrdersPage() {
               </ConnectButton>
             </ConnectMessage>
           </Card>
+          
           <Card>
             <CardTitle>Open Orders</CardTitle>
             <TabsContainer>
@@ -511,7 +709,7 @@ export default function LimitOrdersPage() {
                 My Orders
               </Tab>
             </TabsContainer>
-            <div style={{ color: theme.colors.text.muted, textAlign: 'center', padding: '40px' }}>
+            <div style={{ color: '#71717a', textAlign: 'center', padding: '40px', fontSize: '14px' }}>
               Connect wallet to view orders
             </div>
           </Card>
@@ -524,14 +722,14 @@ export default function LimitOrdersPage() {
     <Container>
       <PageHeader>
         <Title>Limit Order</Title>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <HeaderActions>
           <NetworkBadge>
-            <span>BNB Chain</span>
+            <span style={{ color: '#20B8CD' }}>●</span> BNB Chain
           </NetworkBadge>
           <WalletInfo>
             {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
           </WalletInfo>
-        </div>
+        </HeaderActions>
       </PageHeader>
       
       <MainGrid>
@@ -547,29 +745,13 @@ export default function LimitOrdersPage() {
                 value={sellAmount}
                 onChange={(e) => handleSellAmountChange(e.target.value)}
               />
-              <TokenSelect>{sellToken.symbol}</TokenSelect>
+              <TokenSelect onClick={() => setShowTokenModal('sell')}>
+                {sellToken.symbol} ▼
+              </TokenSelect>
             </TokenInputRow>
           </TokenInputGroup>
           
-          <RateSection>
-            <RateLabel>
-              <span>Sell {sellToken.symbol} at rate</span>
-              <FlipButton onClick={handleFlipTokens}>⇅</FlipButton>
-            </RateLabel>
-            <RateInputRow>
-              <RateInput
-                type="number"
-                placeholder="0.0"
-                value={rate}
-                onChange={(e) => handleRateChange(e.target.value)}
-              />
-              <MarketButton onClick={() => setUseMarketRate(true)}>Market</MarketButton>
-            </RateInputRow>
-            <EstPriceRow>
-              <span>Est. Market Price</span>
-              <span>1 {sellToken.symbol} = {getMarketRate()} {buyToken.symbol}</span>
-            </EstPriceRow>
-          </RateSection>
+          <SwapButton onClick={handleFlipTokens}>⇅</SwapButton>
           
           <TokenInputGroup>
             <TokenInputLabel>You Buy</TokenInputLabel>
@@ -580,9 +762,30 @@ export default function LimitOrdersPage() {
                 value={buyAmount}
                 readOnly
               />
-              <TokenSelect>{buyToken.symbol}</TokenSelect>
+              <TokenSelect onClick={() => setShowTokenModal('buy')}>
+                {buyToken.symbol} ▼
+              </TokenSelect>
             </TokenInputRow>
           </TokenInputGroup>
+          
+          <RateSection>
+            <RateLabel>
+              <span>Sell {sellToken.symbol} at rate</span>
+            </RateLabel>
+            <RateInputRow>
+              <RateInput
+                type="number"
+                placeholder="0.0"
+                value={rate}
+                onChange={(e) => handleRateChange(e.target.value)}
+              />
+              <MarketButton onClick={handleMarketRateClick}>Market</MarketButton>
+            </RateInputRow>
+            <EstPriceRow>
+              <span>Est. Market Price</span>
+              <span>1 {sellToken.symbol} = {getMarketRate()} {buyToken.symbol}</span>
+            </EstPriceRow>
+          </RateSection>
           
           <ExpirySelect value={expiry} onChange={(e) => setExpiry(Number(e.target.value))}>
             <option value={0}>Never expire</option>
@@ -612,11 +815,12 @@ export default function LimitOrdersPage() {
           
           {error && (
             <div style={{ 
-              color: theme.colors.status.error, 
+              color: '#ef4444', 
               padding: '12px', 
               marginBottom: '16px',
               background: 'rgba(239, 68, 68, 0.1)',
               borderRadius: '8px',
+              fontSize: '13px',
             }}>
               Error: {error}
             </div>
@@ -636,6 +840,36 @@ export default function LimitOrdersPage() {
           />
         </Card>
       </MainGrid>
+
+      {showTokenModal && (
+        <ModalOverlay onClick={() => setShowTokenModal(null)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalHeader>
+              <ModalTitle>Select Token</ModalTitle>
+              <CloseButton onClick={() => setShowTokenModal(null)}>×</CloseButton>
+            </ModalHeader>
+            {BSC_TOKENS.map((token) => (
+              <TokenRow 
+                key={token.address} 
+                onClick={() => selectToken(token)}
+                style={{
+                  border: (showTokenModal === 'sell' ? sellToken.address : buyToken.address) === token.address 
+                    ? '1px solid #20B8CD' 
+                    : '1px solid transparent'
+                }}
+              >
+                <TokenInfo>
+                  <TokenIcon>{token.symbol.slice(0, 2)}</TokenIcon>
+                  <TokenName>{token.symbol}</TokenName>
+                </TokenInfo>
+                <TokenBalance>
+                  {balances[token.address] ? parseFloat(balances[token.address]).toFixed(4) : '...'}
+                </TokenBalance>
+              </TokenRow>
+            ))}
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Container>
   );
 }
