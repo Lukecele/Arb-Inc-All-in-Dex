@@ -9,7 +9,9 @@ const nextConfig = {
       ...config.resolve.alias,
       '@bigmi/react': false,
       '@mysten/dapp-kit': false,
+      '@mysten/sui': false,
       '@solana/wallet-adapter-react': false,
+      '@solana/wallet-adapter-base': false,
       'svelte/store': false,
       'svelte-i18n': false,
     };
