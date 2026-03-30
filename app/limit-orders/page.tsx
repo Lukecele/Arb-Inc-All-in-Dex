@@ -461,7 +461,9 @@ export default function LimitOrdersPage() {
     if (!maker || !walletAddress) return;
     setLoading(true);
     try {
+      console.log('Loading orders for:', walletAddress);
       const res = await maker.getMakerOrders(walletAddress, { page: 1, size: 50 });
+      console.log('Orders response:', res);
       setOrders((res.orders || []).map((o: any) => ({
         id: o.id,
         makerAsset: o.makerAsset,
@@ -470,7 +472,10 @@ export default function LimitOrdersPage() {
         takingAmount: ethers.utils.formatEther(o.takingAmount),
         status: o.status || 'active',
       })));
-    } catch { setOrders([]); }
+    } catch (e) { 
+      console.error('Failed to load orders:', e);
+      setOrders([]); 
+    }
     finally { setLoading(false); }
   }, [maker, walletAddress]);
 
