@@ -35,18 +35,20 @@ interface Token {
   address: string;
   symbol: string;
   decimals: number;
+  logoUrl?: string;
 }
 
 const NATIVE_BNB_ADDRESS = '0x0000000000000000000000000000000000000000';
 const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
 
+// Token logos from Coingecko CDN
 const BSC_TOKENS: Token[] = [
-  { address: NATIVE_BNB_ADDRESS, symbol: 'BNB', decimals: 18 },
-  { address: WBNB_ADDRESS, symbol: 'WBNB', decimals: 18 },
-  { address: USDT_ADDRESS, symbol: 'USDT', decimals: 18 },
-  { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18 },
-  { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18 },
-  { address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82', symbol: 'CAKE', decimals: 18 },
+  { address: NATIVE_BNB_ADDRESS, symbol: 'BNB', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
+  { address: WBNB_ADDRESS, symbol: 'WBNB', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
+  { address: USDT_ADDRESS, symbol: 'USDT', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/325/small/Tether.png' },
+  { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/9576/small/busd_3.png' },
+  { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png' },
+  { address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82', symbol: 'CAKE', decimals: 18, logoUrl: 'https://assets.coingecko.com/coins/images/12632/small/pancakeswap-cake-logo_%281%29.png' },
 ];
 
 const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 amount) returns (bool)', 'function allowance(address owner, address spender) view returns (uint256)'];
@@ -223,6 +225,12 @@ const AmountInput = styled.input`
   font-weight: 600;
   outline: none;
   &::placeholder { color: #52525b; }
+`;
+
+const TokenIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 `;
 
 const TokenButton = styled.button`
@@ -701,9 +709,12 @@ export default function LimitOrdersPage() {
                 {walletAddress ? (balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : '...') : 'Connect wallet'}
               </span>
             </InputLabel>
-            <InputRow>
+              <InputRow>
               <AmountInput type="number" placeholder="0.0" value={sellAmount} onChange={e=>handleSell(e.target.value)} />
-              <TokenButton onClick={()=>setShowTokenModal('sell')}>{sellToken.symbol} ▼</TokenButton>
+              <TokenButton onClick={()=>setShowTokenModal('sell')}>
+                {sellToken.logoUrl && <TokenIcon src={sellToken.logoUrl} />}
+                {sellToken.symbol} ▼
+              </TokenButton>
             </InputRow>
             {sellAmount && (
               <div style={{fontSize:12,color:'#a1a1aa',marginTop:4}}>
@@ -720,7 +731,10 @@ export default function LimitOrdersPage() {
             </InputLabel>
             <InputRow>
               <AmountInput type="text" placeholder="0.0" value={buyAmount} readOnly />
-              <TokenButton onClick={()=>setShowTokenModal('buy')}>{buyToken.symbol} ▼</TokenButton>
+              <TokenButton onClick={()=>setShowTokenModal('buy')}>
+                {buyToken.logoUrl && <TokenIcon src={buyToken.logoUrl} />}
+                {buyToken.symbol} ▼
+              </TokenButton>
             </InputRow>
             {buyAmount && (
               <div style={{fontSize:12,color:'#a1a1aa',marginTop:4}}>
