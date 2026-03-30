@@ -693,6 +693,7 @@ export default function HomePageClient() {
             <NavLink href="/swap">Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
+            <NavLink href="/limit-orders">Limit Orders</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
         </Header>
@@ -950,9 +951,9 @@ export default function HomePageClient() {
                   description: "Zap feature for adding/removing liquidity live."
                 },
                 {
-                  status: "coming",
+                  status: "done",
                   title: "Limit Orders",
-                  description: "Limit orders coming soon."
+                  description: "Limit orders are now live! Create, cancel, and fill limit orders with KyberSwap integration."
                 },
                 {
                   status: "coming",
