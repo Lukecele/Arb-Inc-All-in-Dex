@@ -625,8 +625,8 @@ export default function LimitOrdersPage() {
       
       await mk.createOrder(signer, {
         chainId: BSC_CHAIN_ID.toString(),
-        makerAsset: sellToken.address,
-        takerAsset: buyToken.address,
+        makerAsset: getApiTokenAddress(sellToken.address),
+        takerAsset: getApiTokenAddress(buyToken.address),
         makingAmount: makingAmount.toString(),
         takingAmount: takingAmount.toString(),
         expiredAt: exp,
