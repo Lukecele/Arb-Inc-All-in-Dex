@@ -122,16 +122,26 @@ const Container = styled.div`
 
 const NavTabs = styled.div`
   display: flex;
-  gap: 16px;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 24px;
   font-size: 14px;
+  flex-wrap: wrap;
 `;
 
 const NavLink = styled.a<{ $active?: boolean }>`
-  color: ${p => p.$active ? '#20B8CD' : '#71717a'};
+  color: #71717a;
   text-decoration: none;
   font-weight: 500;
-  &:hover { color: #20B8CD; }
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;
+  &:hover { color: #fff; background: #1e293b; }
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 `;
 
 const Header = styled.div`
@@ -706,8 +716,12 @@ export default function LimitOrdersPage() {
   return (
     <Container>
       <NavTabs>
-        <NavLink href="/swap">Swap</NavLink>
-        <NavLink href="/limit-orders" $active>Limit Order</NavLink>
+        <NavLink href="/">Home</NavLink>
+        <NavLink href="/swap" style={{color:'#20B8CD',background:'#1e293b'}}>Swap (Custom)</NavLink>
+        <NavLink href="/swap-all">Swap All</NavLink>
+        <NavLink href="/zap">Zap</NavLink>
+        <NavLink href="/limit-orders" $active>Limit Orders</NavLink>
+        <NavLink href="/contact">Contact</NavLink>
       </NavTabs>
       <Header>
         <Title>Limit Order</Title>
