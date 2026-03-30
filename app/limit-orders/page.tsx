@@ -1,11 +1,45 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import OrderList from '../../components/limit-orders/OrderList';
 import { createLimitOrderMaker } from '../../lib/limit-order/maker';
 import { getDefaultClient } from '../../lib/limit-order/api-client';
+import {
+  init,
+  useConnectWallet,
+  useSetChain,
+} from '@web3-onboard/react';
+import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
+import { ethers, providers } from 'ethers';
+
+// ============================================
+// Web3-Onboard Initialization
+// ============================================
+
+const injected = injectedModule();
+const walletConnect = walletConnectModule({
+  projectId: 'b03ed6d8451c1e05022897815db0ad0b',
+  requiredChains: [56],
+  optionalChains: [1, 137, 42161, 8453, 10],
+  dappUrl: 'https://arbitrage-inc.exchange',
+});
+
+init({
+  wallets: [injected, walletConnect],
+  chains: [
+    {
+      id: '0x38',
+      token: 'BNB',
+      label: 'BNB Smart Chain',
+      rpcUrl: 'https://bsc.publicnode.com',
+    },
+  ],
+});
+
+const BSC_CHAIN_ID = 56;
 
 // ============================================
 // Styled Components
@@ -81,84 +115,121 @@ const ConnectButton = styled.button`
   }
 `;
 
-// ============================================
-// Mock Data
-// ============================================
-
-const MOCK_ORDERS = [
-  {
-    id: '1',
-    makerAsset: 'WBNB',
-    takerAsset: 'USDT',
-    makingAmount: '1.0',
-    takingAmount: '300.0',
-    status: 'active' as const,
-    createdAt: Math.floor(Date.now() / 1000) - 3600,
-    expiredAt: Math.floor(Date.now() / 1000) + 86400,
-    maker: '0x1234567890123456789012345678901234567890',
-  },
-  {
-    id: '2',
-    makerAsset: 'ARB INC',
-    takerAsset: 'WBNB',
-    makingAmount: '100.0',
-    takingAmount: '0.5',
-    status: 'filled' as const,
-    createdAt: Math.floor(Date.now() / 1000) - 7200,
-    expiredAt: Math.floor(Date.now() / 1000) + 86400,
-    maker: '0x1234567890123456789012345678901234567890',
-  },
-  {
-    id: '3',
-    makerAsset: 'USDT',
-    takerAsset: 'ARB INC',
-    makingAmount: '50.0',
-    takingAmount: '200.0',
-    status: 'cancelled' as const,
-    createdAt: Math.floor(Date.now() / 1000) - 10800,
-    expiredAt: Math.floor(Date.now() / 1000) + 86400,
-    maker: '0x1234567890123456789012345678901234567890',
-  },
-];
+const WalletInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing[2]};
+  padding: ${theme.spacing[2]} ${theme.spacing[4]};
+  background: ${theme.colors.background.tertiary};
+  border-radius: ${theme.borderRadius.md};
+  color: ${theme.colors.text.secondary};
+  font-size: ${theme.typography.sizes.sm};
+`;
 
 // ============================================
 // Page Component
 // ============================================
 
 export default function LimitOrdersPage() {
-  const [orders, setOrders] = useState(MOCK_ORDERS);
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [chain, setChain] = useSetChain();
+  
+  const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  const walletAddress = wallet?.accounts?.[0]?.address;
+  const provider = wallet?.provider;
+  
+  const [maker, setMaker] = useState<any>(null);
+  
+  useEffect(() => {
+    if (provider && walletAddress) {
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const signer = ethersProvider.getSigner();
+      const client = getDefaultClient();
+      const limitOrderMaker = createLimitOrderMaker(client);
+      setMaker(limitOrderMaker);
+    } else {
+      setMaker(null);
+    }
+  }, [provider, walletAddress]);
 
-  // Mock wallet connection
-  const handleConnectWallet = () => {
-    setIsConnected(true);
-    setWalletAddress('0x1234567890123456789012345678901234567890');
-  };
+  const fetchOrders = useCallback(async () => {
+    if (!maker || !walletAddress) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const result = await maker.getMakerOrders(walletAddress, {
+        page: 1,
+        size: 50,
+      });
+      
+      const mappedOrders = result.orders.map((order: any) => ({
+        id: order.id,
+        makerAsset: order.makerAsset,
+        takerAsset: order.takerAsset,
+        makingAmount: ethers.utils.formatEther(order.makingAmount),
+        takingAmount: ethers.utils.formatEther(order.takingAmount),
+        status: order.status,
+        createdAt: order.createdAt,
+        expiredAt: order.expiredAt,
+        maker: order.maker,
+      }));
+      
+      setOrders(mappedOrders);
+    } catch (err: any) {
+      console.error('Failed to fetch orders:', err);
+      setError(err.message || 'Failed to fetch orders');
+      setOrders([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [maker, walletAddress]);
+
+  useEffect(() => {
+    if (walletAddress && maker) {
+      fetchOrders();
+    }
+  }, [walletAddress, maker, fetchOrders]);
 
   const handleRefresh = () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setOrders([...MOCK_ORDERS]);
+    fetchOrders();
+  };
+
+  const handleCancel = async (orderId: string) => {
+    if (!maker) return;
+    
+    try {
+      setIsLoading(true);
+      alert(`Cancelling order ${orderId} (gasless cancel) - Real implementation would call maker.cancelOrders()`);
+      await fetchOrders();
+    } catch (err: any) {
+      console.error('Failed to cancel order:', err);
+      alert(`Error: ${err.message}`);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
-  const handleCancel = (orderId: string) => {
-    console.log('Cancelling order:', orderId);
-    // In real implementation, call gasless cancel
-    alert(`Cancelling order ${orderId} (gasless cancel)`);
+  const handleFill = async (orderId: string) => {
+    if (!maker) return;
+    
+    try {
+      setIsLoading(true);
+      alert(`Filling order ${orderId} - Real implementation would call fill order API`);
+      await fetchOrders();
+    } catch (err: any) {
+      console.error('Failed to fill order:', err);
+      alert(`Error: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleFill = (orderId: string) => {
-    console.log('Filling order:', orderId);
-    // In real implementation, call fill order
-    alert(`Filling order ${orderId}`);
-  };
-
-  if (!isConnected) {
+  if (!wallet) {
     return (
       <Container>
         <ConnectWalletMessage>
@@ -166,8 +237,11 @@ export default function LimitOrdersPage() {
           <p style={{ color: theme.colors.text.secondary, marginBottom: '24px' }}>
             Connect your wallet to view and manage your limit orders.
           </p>
-          <ConnectButton onClick={handleConnectWallet}>
-            Connect Wallet
+          <ConnectButton 
+            onClick={() => connect()} 
+            disabled={connecting}
+          >
+            {connecting ? 'Connecting...' : 'Connect Wallet'}
           </ConnectButton>
         </ConnectWalletMessage>
       </Container>
@@ -178,10 +252,29 @@ export default function LimitOrdersPage() {
     <Container>
       <Header>
         <Title>My Limit Orders</Title>
-        <CreateButton onClick={() => window.location.href = '/limit-orders/create'}>
-          Create Order
-        </CreateButton>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <WalletInfo>
+            {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
+          </WalletInfo>
+          <CreateButton onClick={() => window.location.href = '/limit-orders/create'}>
+            Create Order
+          </CreateButton>
+        </div>
       </Header>
+      
+      {error && (
+        <div style={{ 
+          color: theme.colors.status.error, 
+          padding: '12px', 
+          marginBottom: '16px',
+          background: 'rgba(239, 68, 68, 0.1)',
+          borderRadius: '8px',
+          maxWidth: '800px',
+          margin: '0 auto 16px'
+        }}>
+          Error: {error}
+        </div>
+      )}
       
       <OrderList
         orders={orders}

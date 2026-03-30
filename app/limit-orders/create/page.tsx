@@ -3,9 +3,43 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
-import LimitOrderForm from '../../../components/limit-orders/LimitOrderForm';
+import LimitOrderForm, { OrderFormData } from '../../../components/limit-orders/LimitOrderForm';
 import { createLimitOrderMaker } from '../../../lib/limit-order/maker';
 import { getDefaultClient } from '../../../lib/limit-order/api-client';
+import {
+  init,
+  useConnectWallet,
+  useSetChain,
+} from '@web3-onboard/react';
+import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
+import { ethers, providers } from 'ethers';
+
+// ============================================
+// Web3-Onboard Initialization
+// ============================================
+
+const injected = injectedModule();
+const walletConnect = walletConnectModule({
+  projectId: 'b03ed6d8451c1e05022897815db0ad0b',
+  requiredChains: [56],
+  optionalChains: [1, 137, 42161, 8453, 10],
+  dappUrl: 'https://arbitrage-inc.exchange',
+});
+
+init({
+  wallets: [injected, walletConnect],
+  chains: [
+    {
+      id: '0x38',
+      token: 'BNB',
+      label: 'BNB Smart Chain',
+      rpcUrl: 'https://bsc.publicnode.com',
+    },
+  ],
+});
+
+const BSC_CHAIN_ID = 56;
 
 // ============================================
 // Styled Components
@@ -60,12 +94,17 @@ const ErrorMessage = styled.div`
 // ============================================
 
 export default function CreateLimitOrderPage() {
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [chain, setChain] = useSetChain();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createdOrder, setCreatedOrder] = useState<any>(null);
 
-  // Mock tokens for demo
+  const walletAddress = wallet?.accounts?.[0]?.address;
+  const provider = wallet?.provider;
+
   const availableTokens = [
     {
       address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -84,31 +123,36 @@ export default function CreateLimitOrderPage() {
     },
   ];
 
-  const handleCreateOrder = async (orderData: any) => {
+  const handleCreateOrder = async (orderData: OrderFormData) => {
+    if (!wallet || !provider) {
+      setError('Please connect your wallet first');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setSuccess(false);
     
     try {
-      // In a real implementation, you would:
-      // 1. Get the wallet signer from your Web3 provider
-      // 2. Call the LimitOrderMaker.createOrder function
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const signer = await ethersProvider.getSigner();
       
-      // For demo, we'll simulate the order creation
-      console.log('Creating order with data:', orderData);
+      const client = getDefaultClient();
+      const maker = createLimitOrderMaker(client);
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const selectedMakerToken = availableTokens.find(t => t.address === orderData.makerAsset);
+      const selectedTakerToken = availableTokens.find(t => t.address === orderData.takerAsset);
       
-      // Mock successful order creation
-      const mockOrder = {
-        id: Math.random().toString(36).substr(2, 9),
-        ...orderData,
-        status: 'active',
-        createdAt: Math.floor(Date.now() / 1000),
-      };
+      const order = await maker.createOrder(signer, {
+        chainId: BSC_CHAIN_ID.toString(),
+        makerAsset: orderData.makerAsset,
+        takerAsset: orderData.takerAsset,
+        makingAmount: ethers.utils.parseUnits(orderData.makingAmount, selectedMakerToken?.decimals || 18).toString(),
+        takingAmount: ethers.utils.parseUnits(orderData.takingAmount, selectedTakerToken?.decimals || 18).toString(),
+        expiredAt: orderData.expiredAt,
+      });
       
-      setCreatedOrder(mockOrder);
+      setCreatedOrder(order);
       setSuccess(true);
       
     } catch (err: any) {
@@ -124,6 +168,50 @@ export default function CreateLimitOrderPage() {
     setError(null);
     setCreatedOrder(null);
   };
+
+  if (!wallet) {
+    return (
+      <Container>
+        <Header>
+          <Title>Create Limit Order</Title>
+          <Subtitle>
+            Set your desired price and let the market come to you. 
+            Your order will be filled when the market price reaches your limit.
+          </Subtitle>
+        </Header>
+        
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '40px',
+          background: theme.colors.background.secondary,
+          borderRadius: theme.borderRadius.lg,
+          maxWidth: '480px',
+          margin: '0 auto'
+        }}>
+          <p style={{ color: theme.colors.text.secondary, marginBottom: '24px' }}>
+            Connect your wallet to create limit orders.
+          </p>
+          <button
+            type="button"
+            onClick={() => connect()}
+            disabled={connecting}
+            style={{
+              padding: '12px 24px',
+              background: theme.colors.primary.gradient,
+              border: 'none',
+              borderRadius: theme.borderRadius.md,
+              color: 'white',
+              fontSize: theme.typography.sizes.md,
+              fontWeight: theme.typography.weights.semibold,
+              cursor: 'pointer',
+            }}
+          >
+            {connecting ? 'Connecting...' : 'Connect Wallet'}
+          </button>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container>
