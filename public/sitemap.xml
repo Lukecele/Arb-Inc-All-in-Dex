@@ -31,6 +31,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://arbitrage-inc.exchange/bridge</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://arbitrage-inc.exchange/contact</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
