@@ -606,20 +606,39 @@ export default function LimitOrdersPage() {
         <Card>
           <CardTitle>Place Limit Order</CardTitle>
           
-          <InputGroup><InputLabel>You Sell</InputLabel>
+          <InputGroup>
+            <InputLabel>
+              <span>You Sell</span>
+              <span style={{color:'#a1a1aa',float:'right',fontSize:12}}>
+                Balance: {balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : '...'}
+              </span>
+            </InputLabel>
             <InputRow>
               <AmountInput type="number" placeholder="0.0" value={sellAmount} onChange={e=>handleSell(e.target.value)} />
               <TokenButton onClick={()=>setShowTokenModal('sell')}>{sellToken.symbol} ▼</TokenButton>
             </InputRow>
+            {sellAmount && (
+              <div style={{fontSize:12,color:'#a1a1aa',marginTop:4}}>
+                ~${sellAmount && tokenPrices[sellToken.address] ? (parseFloat(sellAmount) * tokenPrices[sellToken.address]).toFixed(2) : '0.00'} USD
+              </div>
+            )}
           </InputGroup>
           
           <SwapIcon onClick={handleFlip}>⇅</SwapIcon>
           
-          <InputGroup><InputLabel>You Buy</InputLabel>
+          <InputGroup>
+            <InputLabel>
+              <span>You Buy</span>
+            </InputLabel>
             <InputRow>
               <AmountInput type="text" placeholder="0.0" value={buyAmount} readOnly />
               <TokenButton onClick={()=>setShowTokenModal('buy')}>{buyToken.symbol} ▼</TokenButton>
             </InputRow>
+            {buyAmount && (
+              <div style={{fontSize:12,color:'#a1a1aa',marginTop:4}}>
+                ~${buyAmount && tokenPrices[buyToken.address] ? (parseFloat(buyAmount) * tokenPrices[buyToken.address]).toFixed(2) : '0.00'} USD
+              </div>
+            )}
           </InputGroup>
           
           <RateBox>
@@ -631,12 +650,15 @@ export default function LimitOrdersPage() {
             <RateRow><span>Est. Market Price</span><span>1 {sellToken.symbol} = {Object.keys(tokenPrices).length ? getMarketRate() : '...'} {buyToken.symbol}</span></RateRow>
           </RateBox>
           
-          <ExpirySelect value={expiry} onChange={e=>setExpiry(Number(e.target.value))}>
-            <option value={0}>Never expire</option>
-            <option value={3600}>1 hour</option>
-            <option value={86400}>1 day</option>
-            <option value={604800}>7 days</option>
-          </ExpirySelect>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:12}}>
+            <span style={{fontSize:13,color:'#a1a1aa'}}>Expires in</span>
+            <ExpirySelect value={expiry} onChange={e=>setExpiry(Number(e.target.value))}>
+              <option value={0}>Forever</option>
+              <option value={3600}>1 hour</option>
+              <option value={86400}>1 day</option>
+              <option value={604800}>7 days</option>
+            </ExpirySelect>
+          </div>
           
                     {sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() && (
             <SubmitBtn onClick={handleWrap} disabled={wrapLoading} style={{background:'#22c55e', marginBottom:8}}>
