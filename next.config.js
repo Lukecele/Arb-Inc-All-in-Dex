@@ -1,8 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@kyberswap/liquidity-widgets'],
+  transpilePackages: ['@kyberswap/liquidity-widgets', '@lifi/widget', '@lifi/wallet-management'],
   compiler: {
     styledComponents: true,
+  },
+  webpack: (config, { isServer }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@bigmi/react': false,
+      '@mysten/dapp-kit': false,
+      '@solana/wallet-adapter-react': false,
+      'svelte/store': false,
+      'svelte-i18n': false,
+    };
+    return config;
   },
 }
  
