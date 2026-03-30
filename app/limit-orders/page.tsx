@@ -484,24 +484,40 @@ export default function LimitOrdersPage() {
   };
 
   const handleCreate = async () => {
-    if (!wallet || !provider || !sellAmount || !rate) return;
+    if (!wallet || !provider || !sellAmount || !rate) {
+      alert('Please enter amount and rate');
+      return;
+    }
+    
+    const makingAmount = ethers.utils.parseUnits(sellAmount, sellToken.decimals);
+    const takingAmountNum = parseFloat(sellAmount) * parseFloat(rate);
+    const takingAmount = ethers.utils.parseUnits(takingAmountNum.toFixed(buyToken.decimals), buyToken.decimals);
+    
+    if (makingAmount.lte(0) || takingAmount.lte(0)) {
+      alert('Amount must be greater than 0');
+      return;
+    }
+    
     try {
       const prov = new ethers.providers.Web3Provider(provider);
       const signer = await prov.getSigner();
       const mk = createLimitOrderMaker(getDefaultClient());
       const exp = expiry > 0 ? Math.floor(Date.now()/1000)+expiry : Math.floor(Date.now()/1000)+86400*365;
+      
       await mk.createOrder(signer, {
         chainId: BSC_CHAIN_ID.toString(),
         makerAsset: sellToken.address,
         takerAsset: buyToken.address,
-        makingAmount: ethers.utils.parseUnits(sellAmount, sellToken.decimals).toString(),
-        takingAmount: ethers.utils.parseUnits((parseFloat(sellAmount)*parseFloat(rate)).toFixed(buyToken.decimals), buyToken.decimals).toString(),
+        makingAmount: makingAmount.toString(),
+        takingAmount: takingAmount.toString(),
         expiredAt: exp,
       });
+      
       alert('Order created!');
       loadOrders();
       setSellAmount(''); setBuyAmount(''); setRate('');
     } catch (e: any) {
+      console.error('Order error:', e);
       alert(e.message || 'Error creating order');
     }
   };
