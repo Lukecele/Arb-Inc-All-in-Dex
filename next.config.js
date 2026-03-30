@@ -12,6 +12,11 @@ const nextConfig = {
       '@mysten/sui': false,
       '@solana/wallet-adapter-react': false,
       '@solana/wallet-adapter-base': false,
+      '@coinbase/wallet-sdk': false,
+      '@metamask/sdk': false,
+      '@base-org/account': false,
+      'porto': false,
+      'porto/internal': false,
       'svelte/store': false,
       'svelte-i18n': false,
     };
