@@ -37,7 +37,7 @@ interface Token {
 }
 
 const BSC_TOKENS: Token[] = [
-  { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'BNB', decimals: 18 },
+  { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'WBNB', decimals: 18 },
   { address: USDT_ADDRESS, symbol: 'USDT', decimals: 18 },
   { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18 },
   { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18 },
@@ -489,14 +489,30 @@ export default function LimitOrdersPage() {
       return;
     }
     
-    const makingAmount = ethers.utils.parseUnits(sellAmount, sellToken.decimals);
-    const takingAmountNum = parseFloat(sellAmount) * parseFloat(rate);
-    const takingAmount = ethers.utils.parseUnits(takingAmountNum.toFixed(buyToken.decimals), buyToken.decimals);
+    const sellFloat = parseFloat(sellAmount);
+    const rateFloat = parseFloat(rate);
     
-    if (makingAmount.lte(0) || takingAmount.lte(0)) {
-      alert('Amount must be greater than 0');
+    if (isNaN(sellFloat) || isNaN(rateFloat) || sellFloat <= 0 || rateFloat <= 0) {
+      alert('Invalid amount or rate');
       return;
     }
+    
+    if (sellFloat < 0.001) {
+      alert('Minimum amount is 0.001');
+      return;
+    }
+    
+    const makingAmount = ethers.utils.parseUnits(sellFloat.toString(), sellToken.decimals);
+    const takingAmountNum = sellFloat * rateFloat;
+    const takingAmount = ethers.utils.parseUnits(takingAmountNum.toString(), buyToken.decimals);
+    
+    console.log('Creating order:', {
+      makingAmount: makingAmount.toString(),
+      takingAmount: takingAmount.toString(),
+      sellFloat,
+      rateFloat,
+      decimals: sellToken.decimals
+    });
     
     try {
       const prov = new ethers.providers.Web3Provider(provider);
