@@ -68,8 +68,6 @@ const Container = styled.div`
   
   @media (min-width: 768px) {
     padding: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
   }
 `;
 
@@ -458,17 +456,34 @@ const Tab = styled.button<{ $active: boolean }>`
   }
 `;
 
-const TOKEN_PRICES: Record<string, number> = {
-  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 680,
-  '0x55d398326f99059fF775485246999027B3197955': 1,
-  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': 1,
-  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': 1,
-  '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c': 0.02,
-  '0x2170Ed0880ac9A755fd29B2688956BD959F933F8': 3200,
-  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1CD3De553': 68000,
-  '0x1AF3F329e8BEe154C83207CC8C12f31e9343F1F3': 1,
-  '0x96F7b5C223E1CbB1C3B3C26FBf55d5ea94e815F': 2.5,
-};
+const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
+
+async function fetchTokenPrices(): Promise<Record<string, number>> {
+  const prices: Record<string, number> = {};
+  
+  for (const token of BSC_TOKENS) {
+    if (token.address.toLowerCase() === USDT_ADDRESS.toLowerCase()) {
+      prices[token.address] = 1;
+      continue;
+    }
+    
+    try {
+      const response = await fetch(
+        `https://aggregator-api.kyberswap.com/bsc/route?tokenIn=${token.address}&tokenOut=${USDT_ADDRESS}&amountIn=1`
+      );
+      const data = await response.json();
+      if (data.amountOut) {
+        prices[token.address] = parseFloat(data.amountOut);
+      } else {
+        prices[token.address] = 1;
+      }
+    } catch (error) {
+      prices[token.address] = 1;
+    }
+  }
+  
+  return prices;
+}
 
 async function fetchTokenBalance(
   tokenAddress: string,
@@ -517,6 +532,7 @@ export default function LimitOrdersPage() {
   const [rate, setRate] = useState('');
   const [expiry, setExpiry] = useState(0);
   const [useMarketRate, setUseMarketRate] = useState(false);
+  const [tokenPrices, setTokenPrices] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (provider && walletAddress) {
@@ -528,6 +544,10 @@ export default function LimitOrdersPage() {
       setMaker(null);
     }
   }, [provider, walletAddress]);
+
+  useEffect(() => {
+    fetchTokenPrices().then(setTokenPrices).catch(() => {});
+  }, []);
 
   const fetchBalances = useCallback(async () => {
     if (!walletAddress || !provider) return;
@@ -555,15 +575,18 @@ export default function LimitOrdersPage() {
     setError(null);
     
     try {
-      const result = await maker.getMakerOrders(walletAddress);
+      const result = await maker.getMakerOrders(walletAddress, {
+        page: 1,
+        size: 50,
+      });
       
-      const mappedOrders = result.orders.map((order: any) => ({
+      const mappedOrders = (result.orders || []).map((order: any) => ({
         id: order.id,
         makerAsset: order.makerAsset,
         takerAsset: order.takerAsset,
         makingAmount: ethers.utils.formatEther(order.makingAmount),
         takingAmount: ethers.utils.formatEther(order.takingAmount),
-        status: order.status,
+        status: order.status || 'active',
         createdAt: order.createdAt,
         expiredAt: order.expiredAt,
         maker: order.maker,
@@ -572,7 +595,7 @@ export default function LimitOrdersPage() {
       setOrders(mappedOrders);
     } catch (err: any) {
       console.error('Failed to fetch orders:', err);
-      setError(err.message || 'Failed to fetch orders');
+      // Don't show error to user, just set empty orders
       setOrders([]);
     } finally {
       setIsLoading(false);
@@ -586,8 +609,8 @@ export default function LimitOrdersPage() {
   }, [walletAddress, maker, fetchOrders]);
 
   const getMarketRate = () => {
-    const sellPrice = TOKEN_PRICES[sellToken.address] || 1;
-    const buyPrice = TOKEN_PRICES[buyToken.address] || 1;
+    const sellPrice = tokenPrices[sellToken.address] || 1;
+    const buyPrice = tokenPrices[buyToken.address] || 1;
     return (sellPrice / buyPrice).toFixed(6);
   };
 
@@ -783,7 +806,7 @@ export default function LimitOrdersPage() {
             </RateInputRow>
             <EstPriceRow>
               <span>Est. Market Price</span>
-              <span>1 {sellToken.symbol} = {getMarketRate()} {buyToken.symbol}</span>
+              <span>1 {sellToken.symbol} = {Object.keys(tokenPrices).length > 0 ? getMarketRate() : '...'} {buyToken.symbol}</span>
             </EstPriceRow>
           </RateSection>
           
