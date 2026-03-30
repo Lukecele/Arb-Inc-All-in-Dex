@@ -53,6 +53,14 @@ const BSC_TOKENS: Token[] = [
 const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)'];
 const WBNB_ABI = ['function deposit() payable', 'function withdraw(uint256 wad)', 'function balanceOf(address) view returns (uint256)'];
 
+// Map native BNB to WBNB address for API calls
+const getApiTokenAddress = (addr: string) => {
+  if (addr.toLowerCase() === NATIVE_BNB_ADDRESS.toLowerCase()) {
+    return WBNB_ADDRESS;
+  }
+  return addr;
+};
+
 async function fetchTokenPrices(): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
   
@@ -62,8 +70,9 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
       return;
     }
     try {
+      const apiToken = getApiTokenAddress(token.address);
       const res = await fetch(
-        `https://aggregator-api.kyberswap.com/bsc/api/v1/routes?tokenIn=${token.address}&tokenOut=${USDT_ADDRESS}&amountIn=1000000000000000000`,
+        `https://aggregator-api.kyberswap.com/bsc/api/v1/routes?tokenIn=${apiToken}&tokenOut=${USDT_ADDRESS}&amountIn=1000000000000000000`,
         { headers: { 'x-client-id': 'arb-inc' } }
       );
       const data = await res.json();
@@ -651,7 +660,7 @@ export default function LimitOrdersPage() {
             </ExpirySelect>
           </div>
           
-                    {sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() && (
+                    { (sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() || sellToken.address.toLowerCase() === NATIVE_BNB_ADDRESS.toLowerCase()) && (
             <SubmitBtn onClick={handleWrap} disabled={wrapLoading} style={{background:'#22c55e', marginBottom:8}}>
               {wrapLoading ? 'Wrapping...' : 'Wrap BNB'}
             </SubmitBtn>
