@@ -29,6 +29,7 @@ init({
 
 const BSC_CHAIN_ID = 56;
 const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
+const LIMIT_ORDER_CONTRACT = '0xcab2FA2eeab7065B45CBcF6E3936dDE2506b4f6C';
 
 interface Token {
   address: string;
@@ -50,8 +51,15 @@ const BSC_TOKENS: Token[] = [
   { address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c', symbol: 'ARB', decimals: 18 },
 ];
 
-const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)'];
+const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 amount) returns (bool)', 'function allowance(address owner, address spender) view returns (uint256)'];
 const WBNB_ABI = ['function deposit() payable', 'function withdraw(uint256 wad)', 'function balanceOf(address) view returns (uint256)'];
+
+const getTokenAddressForContract = (addr: string) => {
+  if (addr.toLowerCase() === NATIVE_BNB_ADDRESS.toLowerCase()) {
+    return WBNB_ADDRESS;
+  }
+  return addr;
+};
 
 // Map native BNB to WBNB address for API calls
 const getApiTokenAddress = (addr: string) => {
@@ -417,6 +425,9 @@ export default function LimitOrdersPage() {
   const [expiry, setExpiry] = useState(0);
   const [useMarketRate, setUseMarketRate] = useState(false);
   const [wrapLoading, setWrapLoading] = useState(false);
+  const [approvalNeeded, setApprovalNeeded] = useState(false);
+  const [approving, setApproving] = useState(false);
+  const [activeMakingAmount, setActiveMakingAmount] = useState<string>('0');
 
   useEffect(() => {
     fetchTokenPrices().then(setTokenPrices).catch(() => {});
@@ -467,6 +478,44 @@ export default function LimitOrdersPage() {
     if (walletAddress && maker) loadOrders();
   }, [walletAddress, maker, loadOrders]);
 
+  const checkApproval = useCallback(async () => {
+    if (!walletAddress || !provider || !maker) return;
+    try {
+      const tokenAddr = getTokenAddressForContract(sellToken.address);
+      const res = await maker.getMakerActiveAmount(walletAddress, tokenAddr);
+      const currentAmount = ethers.BigNumber.from(res.activeMakingAmount || '0');
+      const newAmount = ethers.utils.parseUnits(sellAmount || '0', sellToken.decimals);
+      const totalNeeded = currentAmount.add(newAmount);
+      const prov = new ethers.providers.Web3Provider(provider);
+      const tokenContract = new ethers.Contract(tokenAddr, ERC20_ABI, prov);
+      const allowance = await tokenContract.allowance(walletAddress, LIMIT_ORDER_CONTRACT);
+      setActiveMakingAmount(res.activeMakingAmount || '0');
+      setApprovalNeeded(allowance.lt(totalNeeded));
+    } catch (e) {
+      console.error('Approval check error:', e);
+      setApprovalNeeded(true);
+    }
+  }, [walletAddress, provider, maker, sellToken, sellAmount]);
+
+  const handleApprove = async () => {
+    if (!provider || !walletAddress || !sellAmount) return;
+    setApproving(true);
+    try {
+      const prov = new ethers.providers.Web3Provider(provider);
+      const signer = await prov.getSigner();
+      const tokenAddr = getTokenAddressForContract(sellToken.address);
+      const tokenContract = new ethers.Contract(tokenAddr, ERC20_ABI, signer);
+      const amount = ethers.utils.parseUnits(sellAmount, sellToken.decimals).add(ethers.utils.parseUnits(activeMakingAmount || '0', 18));
+      const tx = await tokenContract.approve(LIMIT_ORDER_CONTRACT, amount);
+      await tx.wait();
+      setApprovalNeeded(false);
+      alert('Approval successful!');
+    } catch (e: any) {
+      alert(e.message || 'Approval failed');
+    }
+    setApproving(false);
+  };
+
   const getMarketRate = () => {
     const sp = tokenPrices[sellToken.address] || 1;
     const bp = tokenPrices[buyToken.address] || 1;
@@ -505,9 +554,21 @@ export default function LimitOrdersPage() {
     window.location.href = '/swap?mode=wrap';
   };
 
+  useEffect(() => {
+    if (walletAddress && provider && sellAmount) {
+      checkApproval();
+    }
+  }, [walletAddress, provider, sellAmount, checkApproval]);
+
   const handleCreate = async () => {
     if (!wallet || !provider || !sellAmount || !rate) {
       alert('Please enter amount and rate');
+      return;
+    }
+    
+    await checkApproval();
+    if (approvalNeeded) {
+      alert('Please approve the token first');
       return;
     }
     
@@ -663,6 +724,11 @@ export default function LimitOrdersPage() {
                     { (sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() || sellToken.address.toLowerCase() === NATIVE_BNB_ADDRESS.toLowerCase()) && (
             <SubmitBtn onClick={handleWrap} disabled={wrapLoading} style={{background:'#22c55e', marginBottom:8}}>
               {wrapLoading ? 'Wrapping...' : 'Wrap BNB'}
+            </SubmitBtn>
+          )}
+          {approvalNeeded && sellAmount && (
+            <SubmitBtn onClick={handleApprove} disabled={approving} style={{background:'#f59e0b', marginBottom:8}}>
+              {approving ? 'Approving...' : `Approve ${sellToken.symbol}`}
             </SubmitBtn>
           )}
           <SubmitBtn onClick={handleCreate}>Create Order</SubmitBtn>
