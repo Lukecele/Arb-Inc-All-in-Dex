@@ -3,7 +3,7 @@
 import { LiFiWidget } from '@lifi/widget';
 
 const widgetConfig = {
-  integrator: 'Arbitrage Inception',
+  integrator: '081a94df-4e42-4367-90df-64c86a9a0419.3cc7b9d9-c559-4a38-98f7-b7a4cce0cd3c',
   fee: 0.001,
   showFeePercentage: true,
   theme: {
