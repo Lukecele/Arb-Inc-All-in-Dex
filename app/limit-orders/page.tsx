@@ -46,7 +46,6 @@ const BSC_TOKENS: Token[] = [
   { address: USDT_ADDRESS, symbol: 'USDT', decimals: 18 },
   { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18 },
   { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18 },
-  { address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', symbol: 'ETH', decimals: 18 },
   { address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82', symbol: 'CAKE', decimals: 18 },
 ];
 
@@ -71,8 +70,6 @@ const getApiTokenAddress = (addr: string) => {
 async function fetchTokenPrices(): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
   
-  console.log('Fetching prices for tokens:', BSC_TOKENS.map(t => t.symbol));
-  
   const promises = BSC_TOKENS.map(async (token) => {
     if (token.address.toLowerCase() === USDT_ADDRESS.toLowerCase()) {
       prices[token.address] = 1;
@@ -85,7 +82,6 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
         { headers: { 'x-client-id': 'arb-inc' } }
       );
       const data = await res.json();
-      console.log('Price response for', token.symbol, ':', data.data?.routeSummary?.amountOutUsd || 'FAILED');
       if (data.data?.routeSummary?.amountOutUsd) {
         prices[token.address] = parseFloat(data.data.routeSummary.amountOutUsd);
       } else if (data.data?.routeSummary?.amountOut) {
@@ -93,8 +89,7 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
       } else {
         prices[token.address] = 1;
       }
-    } catch (e) {
-      console.error('Price fetch error for', token.symbol, e);
+    } catch {
       prices[token.address] = 1;
     }
   });
@@ -548,7 +543,6 @@ export default function LimitOrdersPage() {
   const getMarketRate = () => {
     const sp = tokenPrices[sellToken.address] || 1;
     const bp = tokenPrices[buyToken.address] || 1;
-    console.log('getMarketRate:', sellToken.symbol, '=', sp, '/', buyToken.symbol, '=', bp, '=', (sp / bp).toFixed(6));
     return (sp / bp).toFixed(6);
   };
 
