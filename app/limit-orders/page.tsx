@@ -274,6 +274,41 @@ const SwapIcon = styled.button`
   &:hover { background: #3f3f46; }
 `;
 
+const Footer = styled.footer`
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px 0;
+  text-align: center;
+  color: #71717a;
+  font-size: 14px;
+`;
+
+const FooterLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  a {
+    color: #71717a;
+    text-decoration: none;
+    font-size: 13px;
+    &:hover { color: #20B8CD; }
+  }
+`;
+
+const Disclaimer = styled.div`
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding: 15px;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 8px;
+  color: #FF9901;
+  font-size: 12px;
+  line-height: 1.5;
+`;
+
 const RateBox = styled.div`
   background: #27272a;
   border-radius: 12px;
@@ -837,6 +872,19 @@ export default function LimitOrdersPage() {
           </ModalInner>
         </Modal>
       )}
+      
+      <Footer>
+        <FooterLinks>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms-of-service">Terms of Service</a>
+          <a href="/cookie-policy">Cookie Policy</a>
+          <a href="/contact">Contact</a>
+        </FooterLinks>
+        <Disclaimer>
+          <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by KyberSwap Limit Order and is not responsible for any financial losses. Please trade responsibly.
+        </Disclaimer>
+        <p style={{marginTop:'10px'}}>© 2026 Arbitrage Inception. All rights reserved.</p>
+      </Footer>
     </Container>
   );
 }
