@@ -147,6 +147,17 @@ const Title = styled.h1`
   color: #fff;
 `;
 
+const DescriptionCard = styled.div`
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #a1a1aa;
+  font-size: 14px;
+  line-height: 1.5;
+`;
+
 const HeaderRight = styled.div`
   display: flex;
   gap: 12px;
@@ -698,6 +709,9 @@ export default function LimitOrdersPage() {
           </WalletBadge>
         </HeaderRight>
       </Header>
+      <DescriptionCard>
+        Place limit orders on BSC with the best rates. Set your price and trade automatically when the market reaches your target. Powered by <strong>KyberSwap</strong>.
+      </DescriptionCard>
       <MainGrid>
         <Card>
           <CardTitle>Place Limit Order</CardTitle>
