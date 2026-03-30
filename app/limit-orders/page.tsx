@@ -637,7 +637,8 @@ export default function LimitOrdersPage() {
       setSellAmount(''); setBuyAmount(''); setRate('');
     } catch (e: any) {
       console.error('Order error:', e);
-      alert(e.message || 'Error creating order');
+      const msg = e?.response?.data?.message || e?.message || 'Error creating order';
+      alert(msg);
     }
   };
 
