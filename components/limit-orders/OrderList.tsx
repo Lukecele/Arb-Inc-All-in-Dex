@@ -4,82 +4,55 @@ import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../app/styles/theme';
 
-// ============================================
-// Styled Components
-// ============================================
-
 const Container = styled.div`
-  background: ${theme.colors.background.secondary};
-  border: 1px solid ${theme.colors.border.DEFAULT};
-  border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing[6]};
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${theme.spacing[6]};
-`;
-
-const Title = styled.h2`
-  font-family: ${theme.typography.displayFont};
-  font-size: ${theme.typography.sizes.xl};
-  font-weight: ${theme.typography.weights.bold};
-  color: ${theme.colors.text.primary};
-`;
-
-const FilterGroup = styled.div`
-  display: flex;
-  gap: ${theme.spacing[2]};
-`;
-
-const FilterButton = styled.button<{ active: boolean }>`
-  padding: ${theme.spacing[2]} ${theme.spacing[4]};
-  background: ${({ active }) => 
-    active ? theme.colors.primary.DEFAULT : theme.colors.background.tertiary};
-  border: 1px solid ${({ active }) => 
-    active ? theme.colors.primary.light : theme.colors.border.DEFAULT};
+  background: ${theme.colors.background.tertiary};
   border-radius: ${theme.borderRadius.md};
-  color: ${({ active }) => 
-    active ? 'white' : theme.colors.text.secondary};
-  font-size: ${theme.typography.sizes.sm};
-  cursor: pointer;
-  transition: all ${theme.transitions.fast};
-  
-  &:hover {
-    border-color: ${theme.colors.primary.light};
-    color: ${active => active ? 'white' : theme.colors.text.primary};
-  }
+  overflow: hidden;
 `;
 
-const OrderTable = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing[3]};
+const TableHeader = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 100px;
+  gap: 16px;
+  padding: 12px 16px;
+  background: ${theme.colors.background.secondary};
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
+  font-size: ${theme.typography.sizes.xs};
+  font-weight: ${theme.typography.weights.semibold};
+  color: ${theme.colors.text.secondary};
+  text-transform: uppercase;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const OrderRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 120px;
-  gap: ${theme.spacing[4]};
-  padding: ${theme.spacing[4]};
-  background: ${theme.colors.background.tertiary};
-  border-radius: ${theme.borderRadius.md};
+  grid-template-columns: 1fr 1fr 1fr 1fr 100px;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   align-items: center;
+  transition: background ${theme.transitions.fast};
+  
+  &:hover {
+    background: ${theme.colors.background.secondary};
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing[2]};
   }
 `;
 
-const TokenPair = styled.div`
+const TokenInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing[1]};
+  gap: 2px;
 `;
 
 const TokenSymbol = styled.span`
@@ -93,52 +66,65 @@ const TokenAmount = styled.span`
   color: ${theme.colors.text.secondary};
 `;
 
-const Price = styled.div`
+const Rate = styled.div`
   font-size: ${theme.typography.sizes.md};
-  color: ${theme.colors.text.primary};
+  color: #F472B6;
   font-weight: ${theme.typography.weights.medium};
 `;
 
 const StatusBadge = styled.span<{ status: string }>`
-  padding: ${theme.spacing[1]} ${theme.spacing[2]};
-  background: ${({ status }) => {
-    switch (status) {
-      case 'active': return theme.colors.status.success;
-      case 'filled': return theme.colors.status.info;
-      case 'cancelled': return theme.colors.status.error;
-      case 'expired': return theme.colors.status.warning;
-      default: return theme.colors.text.muted;
-    }
-  }};
+  display: inline-block;
+  padding: 4px 10px;
   border-radius: ${theme.borderRadius.full};
   font-size: ${theme.typography.sizes.xs};
   font-weight: ${theme.typography.weights.medium};
-  color: white;
   text-transform: uppercase;
+  
+  ${({ status }) => {
+    switch (status) {
+      case 'active':
+        return `
+          background: rgba(32, 184, 205, 0.15);
+          color: #20B8CD;
+        `;
+      case 'filled':
+        return `
+          background: rgba(59, 130, 246, 0.15);
+          color: #3B82F6;
+        `;
+      case 'cancelled':
+      case 'expired':
+        return `
+          background: rgba(239, 68, 68, 0.15);
+          color: #EF4444;
+        `;
+      default:
+        return `
+          background: ${theme.colors.background.tertiary};
+          color: ${theme.colors.text.secondary};
+        `;
+    }
+  }}
 `;
 
 const Actions = styled.div`
   display: flex;
-  gap: ${theme.spacing[2]};
+  gap: 8px;
 `;
 
-const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
-  padding: ${theme.spacing[2]} ${theme.spacing[3]};
-  background: ${({ variant }) => 
-    variant === 'primary' ? theme.colors.primary.DEFAULT : theme.colors.background.secondary};
-  border: 1px solid ${({ variant }) => 
-    variant === 'primary' ? theme.colors.primary.light : theme.colors.border.DEFAULT};
+const ActionButton = styled.button<{ $variant?: 'primary' }>`
+  padding: 6px 12px;
+  background: ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.background.secondary};
+  border: 1px solid ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.sm};
-  color: ${({ variant }) => 
-    variant === 'primary' ? 'white' : theme.colors.text.secondary};
-  font-size: ${theme.typography.sizes.sm};
+  color: ${({ $variant }) => $variant === 'primary' ? 'white' : theme.colors.text.secondary};
+  font-size: ${theme.typography.sizes.xs};
   cursor: pointer;
   transition: all ${theme.transitions.fast};
   
   &:hover {
-    border-color: ${theme.colors.primary.light};
-    color: ${({ variant }) => 
-      variant === 'primary' ? 'white' : theme.colors.text.primary};
+    opacity: 0.8;
+    border-color: ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.border.hover};
   }
   
   &:disabled {
@@ -147,15 +133,34 @@ const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   }
 `;
 
-const EmptyState = styled.div`
-  text-align: center;
-  padding: ${theme.spacing[10]};
-  color: ${theme.colors.text.muted};
+const RefreshButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 16px;
+  background: transparent;
+  border: 1px solid ${theme.colors.border.DEFAULT};
+  border-radius: ${theme.borderRadius.sm};
+  color: ${theme.colors.text.secondary};
+  font-size: ${theme.typography.sizes.sm};
+  cursor: pointer;
+  transition: all ${theme.transitions.fast};
+  
+  &:hover {
+    background: ${theme.colors.background.tertiary};
+    border-color: #20B8CD;
+    color: #20B8CD;
+  }
 `;
 
-// ============================================
-// Types
-// ============================================
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 40px;
+  color: ${theme.colors.text.muted};
+`;
 
 interface Order {
   id: string;
@@ -177,9 +182,16 @@ interface OrderListProps {
   isLoading?: boolean;
 }
 
-// ============================================
-// Component
-// ============================================
+const getTokenSymbol = (address: string): string => {
+  const tokenMap: Record<string, string> = {
+    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 'BNB',
+    '0x55d398326f99059fF775485246999027B3197955': 'USDT',
+    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': 'BUSD',
+    '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': 'USDC',
+    '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c': 'ARB',
+  };
+  return tokenMap[address] || address.slice(0, 6) + '...';
+};
 
 export const OrderList: React.FC<OrderListProps> = ({
   orders,
@@ -188,115 +200,84 @@ export const OrderList: React.FC<OrderListProps> = ({
   onFill,
   isLoading = false,
 }) => {
-  const [filter, setFilter] = React.useState<string>('all');
-  
-  const filteredOrders = React.useMemo(() => {
-    if (filter === 'all') return orders;
-    return orders.filter(order => order.status === filter);
-  }, [orders, filter]);
-  
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString();
-  };
-  
-  const calculatePrice = (makingAmount: string, takingAmount: string) => {
+  const calculateRate = (makingAmount: string, takingAmount: string) => {
     const making = parseFloat(makingAmount);
     const taking = parseFloat(takingAmount);
     if (making === 0) return '0';
     return (taking / making).toFixed(6);
   };
-  
-  const truncateAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
 
-  return (
-    <Container>
-      <Header>
-        <Title>Limit Orders</Title>
-        <FilterGroup>
-          <FilterButton 
-            active={filter === 'all'} 
-            onClick={() => setFilter('all')}
-          >
-            All
-          </FilterButton>
-          <FilterButton 
-            active={filter === 'active'} 
-            onClick={() => setFilter('active')}
-          >
-            Active
-          </FilterButton>
-          <FilterButton 
-            active={filter === 'filled'} 
-            onClick={() => setFilter('filled')}
-          >
-            Filled
-          </FilterButton>
-          <FilterButton 
-            active={filter === 'cancelled'} 
-            onClick={() => setFilter('cancelled')}
-          >
-            Cancelled
-          </FilterButton>
-        </FilterGroup>
-      </Header>
-      
-      {filteredOrders.length === 0 ? (
+  if (orders.length === 0) {
+    return (
+      <Container>
+        <TableHeader>
+          <span>Pair</span>
+          <span>Rate</span>
+          <span>Amount</span>
+          <span>Status</span>
+          <span></span>
+        </TableHeader>
         <EmptyState>
           No orders found
         </EmptyState>
-      ) : (
-        <OrderTable>
-          {filteredOrders.map((order) => (
-            <OrderRow key={order.id}>
-              <TokenPair>
-                <TokenSymbol>{order.makerAsset}</TokenSymbol>
-                <TokenAmount>{order.makingAmount}</TokenAmount>
-              </TokenPair>
-              
-              <TokenPair>
-                <TokenSymbol>{order.takerAsset}</TokenSymbol>
-                <TokenAmount>{order.takingAmount}</TokenAmount>
-              </TokenPair>
-              
-              <Price>
-                {calculatePrice(order.makingAmount, order.takingAmount)}
-              </Price>
-              
-              <StatusBadge status={order.status}>
-                {order.status}
-              </StatusBadge>
-              
-              <Actions>
-                {order.status === 'active' && onCancel && (
-                  <ActionButton 
-                    onClick={() => onCancel(order.id)}
-                    disabled={isLoading}
-                  >
-                    Cancel
-                  </ActionButton>
-                )}
-                {order.status === 'active' && onFill && (
-                  <ActionButton 
-                    variant="primary"
-                    onClick={() => onFill(order.id)}
-                    disabled={isLoading}
-                  >
-                    Fill
-                  </ActionButton>
-                )}
-              </Actions>
-            </OrderRow>
-          ))}
-        </OrderTable>
-      )}
+        <RefreshButton onClick={onRefresh} disabled={isLoading}>
+          {isLoading ? 'Refreshing...' : 'Refresh'}
+        </RefreshButton>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <TableHeader>
+        <span>Pair</span>
+        <span>Rate</span>
+        <span>Amount</span>
+        <span>Status</span>
+        <span></span>
+      </TableHeader>
       
-      <div style={{ marginTop: '24px', textAlign: 'center' }}>
-        <ActionButton onClick={onRefresh} disabled={isLoading}>
-          {isLoading ? 'Refreshing...' : 'Refresh Orders'}
-        </ActionButton>
-      </div>
+      {orders.map((order) => (
+        <OrderRow key={order.id}>
+          <TokenInfo>
+            <TokenSymbol>
+              {getTokenSymbol(order.makerAsset)} → {getTokenSymbol(order.takerAsset)}
+            </TokenSymbol>
+            <TokenAmount>
+              {parseFloat(order.makingAmount).toFixed(4)} {getTokenSymbol(order.makerAsset)}
+            </TokenAmount>
+          </TokenInfo>
+          
+          <Rate>
+            {calculateRate(order.makingAmount, order.takingAmount)} {getTokenSymbol(order.takerAsset)}/{getTokenSymbol(order.makerAsset)}
+          </Rate>
+          
+          <TokenAmount>
+            {parseFloat(order.takingAmount).toFixed(4)} {getTokenSymbol(order.takerAsset)}
+          </TokenAmount>
+          
+          <StatusBadge status={order.status}>
+            {order.status}
+          </StatusBadge>
+          
+          <Actions>
+            {order.status === 'active' && onCancel && (
+              <ActionButton onClick={() => onCancel(order.id)} disabled={isLoading}>
+                Cancel
+              </ActionButton>
+            )}
+            {order.status === 'active' && onFill && (
+              <ActionButton $variant="primary" onClick={() => onFill(order.id)} disabled={isLoading}>
+                Fill
+              </ActionButton>
+            )}
+          </Actions>
+        </OrderRow>
+      ))}
+      
+      <RefreshButton onClick={onRefresh} disabled={isLoading}>
+        {isLoading ? 'Refreshing...' : 'Refresh'}
+      </RefreshButton>
     </Container>
   );
 };
