@@ -83,7 +83,9 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
         { headers: { 'x-client-id': 'arb-inc' } }
       );
       const data = await res.json();
-      if (data.data?.routeSummary?.amountOut) {
+      if (data.data?.routeSummary?.amountOutUsd) {
+        prices[token.address] = parseFloat(data.data.routeSummary.amountOutUsd);
+      } else if (data.data?.routeSummary?.amountOut) {
         prices[token.address] = parseFloat(data.data.routeSummary.amountOut) / 1e18;
       } else {
         prices[token.address] = 1;
