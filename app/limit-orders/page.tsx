@@ -71,6 +71,8 @@ const getApiTokenAddress = (addr: string) => {
 async function fetchTokenPrices(): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
   
+  console.log('Fetching prices for tokens:', BSC_TOKENS.map(t => t.symbol));
+  
   const promises = BSC_TOKENS.map(async (token) => {
     if (token.address.toLowerCase() === USDT_ADDRESS.toLowerCase()) {
       prices[token.address] = 1;
@@ -83,6 +85,7 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
         { headers: { 'x-client-id': 'arb-inc' } }
       );
       const data = await res.json();
+      console.log('Price response for', token.symbol, ':', data.data?.routeSummary?.amountOutUsd || 'FAILED');
       if (data.data?.routeSummary?.amountOutUsd) {
         prices[token.address] = parseFloat(data.data.routeSummary.amountOutUsd);
       } else if (data.data?.routeSummary?.amountOut) {
@@ -90,7 +93,8 @@ async function fetchTokenPrices(): Promise<Record<string, number>> {
       } else {
         prices[token.address] = 1;
       }
-    } catch {
+    } catch (e) {
+      console.error('Price fetch error for', token.symbol, e);
       prices[token.address] = 1;
     }
   });
@@ -544,6 +548,7 @@ export default function LimitOrdersPage() {
   const getMarketRate = () => {
     const sp = tokenPrices[sellToken.address] || 1;
     const bp = tokenPrices[buyToken.address] || 1;
+    console.log('getMarketRate:', sellToken.symbol, '=', sp, '/', buyToken.symbol, '=', bp, '=', (sp / bp).toFixed(6));
     return (sp / bp).toFixed(6);
   };
 
