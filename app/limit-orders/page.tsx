@@ -17,7 +17,7 @@ const walletConnect = walletConnectModule({
   projectId: 'b03ed6d8451c1e05022897815db0ad0b',
   requiredChains: [56],
   optionalChains: [1, 137, 42161, 8453, 10],
-  dappUrl: 'https://arbitrage-inc.exchange',
+  dappUrl: 'http://localhost:3000',
 });
 
 init({
