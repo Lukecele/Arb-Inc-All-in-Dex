@@ -428,6 +428,7 @@ export default function LimitOrdersPage() {
   const [approvalNeeded, setApprovalNeeded] = useState(false);
   const [approving, setApproving] = useState(false);
   const [activeMakingAmount, setActiveMakingAmount] = useState<string>('0');
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTokenPrices().then(setTokenPrices).catch(() => {});
@@ -482,6 +483,24 @@ export default function LimitOrdersPage() {
   useEffect(() => {
     if (walletAddress && maker) loadOrders();
   }, [walletAddress, maker, loadOrders]);
+
+  const handleCancel = async (orderId: string) => {
+    if (!provider || !walletAddress || !maker) return;
+    if (!confirm('Cancel this order?')) return;
+    
+    setCancellingId(orderId);
+    try {
+      const prov = new ethers.providers.Web3Provider(provider);
+      const signer = await prov.getSigner();
+      await maker.cancelOrders(signer, [orderId]);
+      alert('Order cancelled!');
+      loadOrders();
+    } catch (e: any) {
+      console.error('Cancel error:', e);
+      alert(e.message || 'Failed to cancel order');
+    }
+    setCancellingId(null);
+  };
 
   const checkApproval = useCallback(async () => {
     if (!walletAddress || !provider || !maker) return;
@@ -753,9 +772,19 @@ export default function LimitOrdersPage() {
                     <div style={{color:'#fff',fontWeight:500}}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div>
                     <div style={{color:'#a1a1aa',fontSize:13}}>{parseFloat(o.makingAmount).toFixed(4)} {getSym(o.makerAsset)}</div>
                   </div>
-                  <div style={{textAlign:'right'}}>
-                    <div style={{color:'#F472B6',fontWeight:500}}>{(parseFloat(o.takingAmount)/parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div>
-                    <div style={{color:'#20B8CD',fontSize:12}}>{o.status}</div>
+                  <div style={{display:'flex',alignItems:'center',gap:12}}>
+                    <div style={{textAlign:'right'}}>
+                      <div style={{color:'#F472B6',fontWeight:500}}>{(parseFloat(o.takingAmount)/parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div>
+                      <div style={{color:'#20B8CD',fontSize:12}}>{o.status}</div>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => handleCancel(o.id)} 
+                      disabled={cancellingId === o.id}
+                      style={{padding:'6px 12px',background:'#ef4444',border:'none',borderRadius:6,color:'#fff',fontSize:12,cursor:'pointer',opacity: cancellingId === o.id ? 0.5 : 1}}
+                    >
+                      {cancellingId === o.id ? '...' : 'Cancel'}
+                    </button>
                   </div>
                 </div>
               ))}
