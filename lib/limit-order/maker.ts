@@ -283,7 +283,6 @@ export class LimitOrderMaker {
 
     if (options?.makerAsset) params.makerAsset = options.makerAsset;
     if (options?.takerAsset) params.takerAsset = options.takerAsset;
-    if (options?.statuses) params.statuses = options.statuses.join(',');
     if (options?.page) params.page = options.page;
     if (options?.size) params.size = options.size;
 
