@@ -703,32 +703,6 @@ export default function LimitOrdersPage() {
 
   const getSym = (a: string) => BSC_TOKENS.find(t => t.address.toLowerCase() === a.toLowerCase())?.symbol || a.slice(0,6);
 
-  if (!wallet) {
-    return (
-      <Container>
-        <NavTabs>
-          <NavLink href="/swap">Swap</NavLink>
-          <NavLink href="/limit-orders" $active>Limit Order</NavLink>
-        </NavTabs>
-        <Header><Title>Limit Order</Title></Header>
-        <MainGrid>
-          <Card>
-            <CardTitle>Place Limit Order</CardTitle>
-            <EmptyState>
-              <p style={{marginBottom:12}}>Connect your wallet to start trading</p>
-              <SubmitBtn onClick={() => connect()}>{connecting ? 'Connecting...' : 'Connect Wallet'}</SubmitBtn>
-            </EmptyState>
-          </Card>
-          <Card>
-            <CardTitle>Open Orders</CardTitle>
-            <TabsRow><Tab $active={activeTab==='open'} onClick={()=>setActiveTab('open')}>Open Limit Orders</Tab><Tab $active={activeTab==='my'} onClick={()=>setActiveTab('my')}>My Orders</Tab></TabsRow>
-            <EmptyState>Connect wallet to view orders</EmptyState>
-          </Card>
-        </MainGrid>
-      </Container>
-    );
-  }
-
   return (
     <Container>
       <NavTabs>
