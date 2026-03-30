@@ -337,19 +337,17 @@ interface Token {
   icon?: string;
 }
 
-const KNOWN_TOKENS: Record<string, { symbol: string; decimals: number }> = {
-  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': { symbol: 'BNB', decimals: 18 },
-  '0x55d398326f99059fF775485246999027B3197955': { symbol: 'USDT', decimals: 18 },
-  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': { symbol: 'BUSD', decimals: 18 },
-  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': { symbol: 'USDC', decimals: 18 },
-  '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c': { symbol: 'ARB', decimals: 18 },
-  '0x2170Ed0880ac9A755fd29B2688956BD959F933F8': { symbol: 'ETH', decimals: 18 },
-  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1CD3De553': { symbol: 'BTCB', decimals: 18 },
-  '0x1AF3F329e8BEe154C83207CC8C12f31e9343F1F3': { symbol: 'DAI', decimals: 18 },
-  '0x96F7b5C223E1CbB1C3B3C26FBf55d5ea94e815F': { symbol: 'CAKE', decimals: 18 },
-  '0x58F876857a02D6762E0101bb5C46a8c1ED44dc16': { symbol: 'WBNB', decimals: 18 },
-  '0x0eD7e52944161450437e032C102b45D82D4Dac6a': { symbol: 'WBNB', decimals: 18 },
-};
+const BSC_TOKENS: Token[] = [
+  { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'BNB', decimals: 18 },
+  { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', decimals: 18 },
+  { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18 },
+  { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18 },
+  { address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', symbol: 'ETH', decimals: 18 },
+  { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1CD3De553', symbol: 'BTCB', decimals: 18 },
+  { address: '0x1AF3F329e8BEe154C83207CC8C12f31e9343F1F3', symbol: 'DAI', decimals: 18 },
+  { address: '0x96F7b5C223E1CbB1C3B3C26FBf55d5ea94e815F', symbol: 'CAKE', decimals: 18 },
+  { address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c', symbol: 'ARB', decimals: 18 },
+];
 
 const TOKEN_PRICES: Record<string, number> = {
   '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 680,
@@ -363,47 +361,6 @@ const TOKEN_PRICES: Record<string, number> = {
   '0x96F7b5C223E1CbB1C3B3C26FBf55d5ea94e815F': 2.5,
 };
 
-async function fetchSupportedTokens(): Promise<Token[]> {
-  try {
-    const client = getDefaultClient();
-    const response = await client.getSupportedPairs(BSC_CHAIN_ID.toString());
-    const pairs = response.data.pairs;
-    
-    const uniqueTokens = new Map<string, Token>();
-    
-    pairs.forEach((pair: { makerAsset: string; takerAsset: string }) => {
-      if (!uniqueTokens.has(pair.makerAsset.toLowerCase())) {
-        const known = KNOWN_TOKENS[pair.makerAsset.toLowerCase()];
-        uniqueTokens.set(pair.makerAsset.toLowerCase(), {
-          address: pair.makerAsset,
-          symbol: known?.symbol || pair.makerAsset.slice(0, 8) + '...',
-          decimals: known?.decimals || 18,
-        });
-      }
-      if (!uniqueTokens.has(pair.takerAsset.toLowerCase())) {
-        const known = KNOWN_TOKENS[pair.takerAsset.toLowerCase()];
-        uniqueTokens.set(pair.takerAsset.toLowerCase(), {
-          address: pair.takerAsset,
-          symbol: known?.symbol || pair.takerAsset.slice(0, 8) + '...',
-          decimals: known?.decimals || 18,
-        });
-      }
-    });
-    
-    const sortedTokens = Array.from(uniqueTokens.values()).sort((a, b) => 
-      (TOKEN_PRICES[a.address] || 0) > (TOKEN_PRICES[b.address] || 0) ? -1 : 1
-    );
-    
-    return sortedTokens;
-  } catch (error) {
-    console.error('Failed to fetch supported tokens:', error);
-    return Object.entries(KNOWN_TOKENS).map(([address, info]) => ({
-      address,
-      ...info,
-    }));
-  }
-}
-
 export default function LimitOrdersPage() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [chain, setChain] = useSetChain();
@@ -412,35 +369,19 @@ export default function LimitOrdersPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'open' | 'my'>('open');
-  const [availableTokens, setAvailableTokens] = useState<Token[]>([]);
-  const [isLoadingTokens, setIsLoadingTokens] = useState(true);
   
   const walletAddress = wallet?.accounts?.[0]?.address;
   const provider = wallet?.provider;
   
   const [maker, setMaker] = useState<any>(null);
   
-  const [sellToken, setSellToken] = useState<Token | null>(null);
-  const [buyToken, setBuyToken] = useState<Token | null>(null);
+  const [sellToken, setSellToken] = useState<Token>(BSC_TOKENS[0]);
+  const [buyToken, setBuyToken] = useState<Token>(BSC_TOKENS[1]);
   const [sellAmount, setSellAmount] = useState('');
   const [buyAmount, setBuyAmount] = useState('');
   const [rate, setRate] = useState('');
   const [expiry, setExpiry] = useState(0);
   const [useMarketRate, setUseMarketRate] = useState(false);
-
-  useEffect(() => {
-    async function loadTokens() {
-      setIsLoadingTokens(true);
-      const tokens = await fetchSupportedTokens();
-      setAvailableTokens(tokens);
-      if (tokens.length >= 2) {
-        setSellToken(tokens[0]);
-        setBuyToken(tokens[1]);
-      }
-      setIsLoadingTokens(false);
-    }
-    loadTokens();
-  }, []);
 
   useEffect(() => {
     if (provider && walletAddress) {
@@ -491,7 +432,6 @@ export default function LimitOrdersPage() {
   }, [walletAddress, maker, fetchOrders]);
 
   const getMarketRate = () => {
-    if (!sellToken || !buyToken) return '1';
     const sellPrice = TOKEN_PRICES[sellToken.address] || 1;
     const buyPrice = TOKEN_PRICES[buyToken.address] || 1;
     return (sellPrice / buyPrice).toFixed(6);
@@ -606,16 +546,15 @@ export default function LimitOrdersPage() {
                 placeholder="0.0"
                 value={sellAmount}
                 onChange={(e) => handleSellAmountChange(e.target.value)}
-                disabled={isLoadingTokens}
               />
-              <TokenSelect disabled={isLoadingTokens}>{sellToken?.symbol || '...'}</TokenSelect>
+              <TokenSelect>{sellToken.symbol}</TokenSelect>
             </TokenInputRow>
           </TokenInputGroup>
           
           <RateSection>
             <RateLabel>
-              <span>Sell {sellToken?.symbol || '...'} at rate</span>
-              <FlipButton onClick={handleFlipTokens} disabled={isLoadingTokens}>⇅</FlipButton>
+              <span>Sell {sellToken.symbol} at rate</span>
+              <FlipButton onClick={handleFlipTokens}>⇅</FlipButton>
             </RateLabel>
             <RateInputRow>
               <RateInput
@@ -623,13 +562,12 @@ export default function LimitOrdersPage() {
                 placeholder="0.0"
                 value={rate}
                 onChange={(e) => handleRateChange(e.target.value)}
-                disabled={isLoadingTokens}
               />
-              <MarketButton onClick={() => setUseMarketRate(true)} disabled={isLoadingTokens}>Market</MarketButton>
+              <MarketButton onClick={() => setUseMarketRate(true)}>Market</MarketButton>
             </RateInputRow>
             <EstPriceRow>
               <span>Est. Market Price</span>
-              <span>1 {sellToken?.symbol || '...'} = {getMarketRate()} {buyToken?.symbol || '...'}</span>
+              <span>1 {sellToken.symbol} = {getMarketRate()} {buyToken.symbol}</span>
             </EstPriceRow>
           </RateSection>
           
@@ -641,9 +579,8 @@ export default function LimitOrdersPage() {
                 placeholder="0.0"
                 value={buyAmount}
                 readOnly
-                disabled={isLoadingTokens}
               />
-              <TokenSelect disabled={isLoadingTokens}>{buyToken?.symbol || '...'}</TokenSelect>
+              <TokenSelect>{buyToken.symbol}</TokenSelect>
             </TokenInputRow>
           </TokenInputGroup>
           
