@@ -1,6 +1,11 @@
 'use client';
 
-import { LiFiWidget } from '@lifi/widget';
+import dynamic from 'next/dynamic';
+
+const LiFiWidget = dynamic(() => import('@lifi/widget').then(mod => mod.LiFiWidget), {
+  ssr: false,
+  loading: () => <div style={{ height: 600, background: '#18181b', borderRadius: 16 }}>Loading Bridge...</div>
+});
 
 const widgetConfig = {
   fee: 0.001,
