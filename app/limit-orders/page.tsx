@@ -11,6 +11,13 @@ import {
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import { ethers } from 'ethers';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Limit Order | Arbitrage Inception',
+  description: 'Place limit orders on BSC with the best rates. Set your price and trade automatically when the market reaches your target. Powered by KyberSwap.',
+  keywords: ['DeFi', 'BSC', 'Limit Order', 'Crypto Trading', 'KyberSwap', 'ARB Inc', 'DEX Aggregator'],
+};
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule({
@@ -685,7 +692,9 @@ export default function LimitOrdersPage() {
         <Title>Limit Order</Title>
         <HeaderRight>
           <ChainBadge><span style={{color:'#20B8CD'}}>●</span> BNB Chain</ChainBadge>
-          <WalletBadge>{walletAddress?.slice(0,6)}...{walletAddress?.slice(-4)}</WalletBadge>
+          <WalletBadge onClick={() => !walletAddress && connect()} style={{cursor: walletAddress ? 'default' : 'pointer'}}>
+            {walletAddress ? `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}` : 'Connect Wallet'}
+          </WalletBadge>
         </HeaderRight>
       </Header>
       <MainGrid>
@@ -696,7 +705,7 @@ export default function LimitOrdersPage() {
             <InputLabel>
               <span>You Sell</span>
               <span style={{color:'#a1a1aa',float:'right',fontSize:12}}>
-                Balance: {balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : '...'}
+                {walletAddress ? (balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : '...') : 'Connect wallet'}
               </span>
             </InputLabel>
             <InputRow>
