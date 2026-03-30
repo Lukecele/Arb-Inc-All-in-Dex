@@ -693,6 +693,7 @@ export default function HomePageClient() {
             <NavLink href="/swap">Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
+            <NavLink href="/bridge">Bridge</NavLink>
             <NavLink href="/limit-orders">Limit Orders</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
