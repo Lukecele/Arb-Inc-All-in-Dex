@@ -215,7 +215,7 @@ export class LimitOrderMaker {
     const signature = await this.signCreateOrder(
       signer,
       returnedData.domain,
-      { Order: returnedData.types.Order },
+      { CancelOrder: returnedData.types.CancelOrder },
       returnedData.message
     );
 

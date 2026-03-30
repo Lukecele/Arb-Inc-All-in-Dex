@@ -168,7 +168,7 @@ export function createOrderType(): EIP712Type {
  */
 export function createCancelOrderType(): EIP712Type {
   return {
-    Order: [
+    CancelOrder: [
       { name: 'orderIds', type: 'uint256[]' },
       { name: 'maker', type: 'address' },
       { name: 'salt', type: 'uint256' },

@@ -302,7 +302,7 @@ export interface EIP712Domain {
 }
 
 export interface EIP712Type {
-  Order: Array<{
+  [key: string]: Array<{
     name: string;
     type: string;
   }>;
