@@ -36,8 +36,12 @@ interface Token {
   decimals: number;
 }
 
+const NATIVE_BNB_ADDRESS = '0x0000000000000000000000000000000000000000';
+const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+
 const BSC_TOKENS: Token[] = [
-  { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'BNB', decimals: 18 },
+  { address: NATIVE_BNB_ADDRESS, symbol: 'BNB', decimals: 18 },
+  { address: WBNB_ADDRESS, symbol: 'WBNB', decimals: 18 },
   { address: USDT_ADDRESS, symbol: 'USDT', decimals: 18 },
   { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: 18 },
   { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', decimals: 18 },
@@ -47,7 +51,6 @@ const BSC_TOKENS: Token[] = [
 ];
 
 const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)'];
-const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
 const WBNB_ABI = ['function deposit() payable', 'function withdraw(uint256 wad)', 'function balanceOf(address) view returns (uint256)'];
 
 async function fetchTokenPrices(): Promise<Record<string, number>> {
@@ -421,6 +424,9 @@ export default function LimitOrdersPage() {
   const loadBalances = useCallback(async () => {
     if (!walletAddress || !provider) return;
     const bals: Record<string, string> = {};
+    const prov = new ethers.providers.Web3Provider(provider);
+    const nativeBal = await prov.getBalance(walletAddress);
+    bals['0x0000000000000000000000000000000000000000'] = ethers.utils.formatEther(nativeBal);
     for (const t of BSC_TOKENS) {
       bals[t.address] = await fetchBalance(t.address, walletAddress, provider);
     }
@@ -486,23 +492,8 @@ export default function LimitOrdersPage() {
     setRate('');
   };
 
-  const handleWrap = async () => {
-    if (!wallet || !provider || !walletAddress) return;
-    const prov = new ethers.providers.Web3Provider(provider);
-    const signer = await prov.getSigner();
-    const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, signer);
-    const bnbBalance = await prov.getBalance(walletAddress);
-    const wrapAmount = bnbBalance.mul(9999).div(10000);
-    setWrapLoading(true);
-    try {
-      const tx = await wbnb.deposit({ value: wrapAmount });
-      await tx.wait();
-      loadBalances();
-      alert('Wrapped BNB to WBNB!');
-    } catch (e: any) {
-      alert(e.message || 'Wrap failed');
-    }
-    setWrapLoading(false);
+  const handleWrap = () => {
+    window.location.href = '/swap?mode=wrap';
   };
 
   const handleCreate = async () => {
