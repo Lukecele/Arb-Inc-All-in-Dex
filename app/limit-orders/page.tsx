@@ -44,10 +44,11 @@ const BSC_TOKENS: Token[] = [
   { address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', symbol: 'ETH', decimals: 18 },
   { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1CD3De553', symbol: 'BTCB', decimals: 18 },
   { address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c', symbol: 'ARB', decimals: 18 },
-  { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'WBNB', decimals: 18 },
 ];
 
 const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256)'];
+const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+const WBNB_ABI = ['function deposit() payable', 'function withdraw(uint256 wad)', 'function balanceOf(address) view returns (uint256)'];
 
 async function fetchTokenPrices(): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
@@ -403,6 +404,7 @@ export default function LimitOrdersPage() {
   const [rate, setRate] = useState('');
   const [expiry, setExpiry] = useState(0);
   const [useMarketRate, setUseMarketRate] = useState(false);
+  const [wrapLoading, setWrapLoading] = useState(false);
 
   useEffect(() => {
     fetchTokenPrices().then(setTokenPrices).catch(() => {});
@@ -484,6 +486,25 @@ export default function LimitOrdersPage() {
     setRate('');
   };
 
+  const handleWrap = async () => {
+    if (!wallet || !provider || !walletAddress) return;
+    const prov = new ethers.providers.Web3Provider(provider);
+    const signer = await prov.getSigner();
+    const wbnb = new ethers.Contract(WBNB_ADDRESS, WBNB_ABI, signer);
+    const bnbBalance = await prov.getBalance(walletAddress);
+    const wrapAmount = bnbBalance.mul(9999).div(10000);
+    setWrapLoading(true);
+    try {
+      const tx = await wbnb.deposit({ value: wrapAmount });
+      await tx.wait();
+      loadBalances();
+      alert('Wrapped BNB to WBNB!');
+    } catch (e: any) {
+      alert(e.message || 'Wrap failed');
+    }
+    setWrapLoading(false);
+  };
+
   const handleCreate = async () => {
     if (!wallet || !provider || !sellAmount || !rate) {
       alert('Please enter amount and rate');
@@ -495,11 +516,6 @@ export default function LimitOrdersPage() {
     
     if (isNaN(sellFloat) || isNaN(rateFloat) || sellFloat <= 0 || rateFloat <= 0) {
       alert('Invalid amount or rate');
-      return;
-    }
-    
-    if (sellFloat < 0.001) {
-      alert('Minimum amount is 0.001');
       return;
     }
     
@@ -622,6 +638,11 @@ export default function LimitOrdersPage() {
             <option value={604800}>7 days</option>
           </ExpirySelect>
           
+                    {sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() && (
+            <SubmitBtn onClick={handleWrap} disabled={wrapLoading} style={{background:'#22c55e', marginBottom:8}}>
+              {wrapLoading ? 'Wrapping...' : 'Wrap BNB'}
+            </SubmitBtn>
+          )}
           <SubmitBtn onClick={handleCreate}>Create Order</SubmitBtn>
         </Card>
         
