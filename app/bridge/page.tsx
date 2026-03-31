@@ -5,20 +5,29 @@ import { useEffect } from 'react';
 export default function BridgePage() {
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://app.debridge.com/assets/scripts/widget.js';
+    script.src = 'https://api.rango.exchange/widget/iframe.bundle.min.js';
     script.defer = true;
     script.onload = () => {
-      if ((window as any).deBridge) {
-        (window as any).deBridge.widget({
-          element: 'debridge-widget',
-          v: '1',
-          mode: 'deswap',
-          title: '',
-          width: 600,
-          height: 700,
-          theme: 'dark',
-          lang: 'en',
-          r: 'TuoReferralCode',
+      if ((window as any).rangoWidget) {
+        (window as any).rangoWidget.init({
+          container: 'rango-widget',
+          apiKey: 'c6381a79-2817-4602-83bf-6a641a409e32',
+          walletConnectProjectId: 'e24844c5deb5193c1c14840a7af6a40b',
+          theme: {
+            mode: 'dark',
+          },
+          affiliate: {
+            ref: 'Xs80Sv',
+            percent: 0.5,
+          },
+          from: {
+            blockchains: ['SOL', 'BSC', 'ETH', 'ARBITRUM', 'POLYGON', 'BASE'],
+            blockchain: 'SOL',
+          },
+          to: {
+            blockchains: ['SOL', 'BSC', 'ETH', 'ARBITRUM', 'POLYGON', 'BASE'],
+            blockchain: 'BSC',
+          },
         });
       }
     };
@@ -47,20 +56,20 @@ export default function BridgePage() {
         }}>
           Bridge tokens across <strong style={{color:'#fff'}}>30+ blockchains</strong> including 
           <strong style={{color:'#fff'}}> Solana ↔ BNB</strong>. 
-          Powered by <strong style={{color:'#20B8CD'}}>deBridge</strong>.
+          Powered by <strong style={{color:'#F97316'}}>Rango</strong>.
           <br/><br/>
           Supported chains: Solana, Ethereum, BNB Chain, Arbitrum, Polygon, Base, and more.
         </div>
         
         <div 
-          id="debridge-widget" 
+          id="rango-widget" 
           style={{ borderRadius: '16px', minHeight: '600px' }}
         />
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
           <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Best cross-chain rates via deBridge aggregation</li>
+            <li>Best cross-chain rates via Rango aggregation</li>
             <li>Support for 30+ blockchains</li>
             <li>Secure and fast transactions</li>
           </ul>
@@ -85,7 +94,7 @@ export default function BridgePage() {
             fontSize: 12, 
             lineHeight: 1.5 
           }}>
-            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by deBridge and is not responsible for any financial losses. Please bridge responsibly.
+            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by Rango and is not responsible for any financial losses. Please bridge responsibly.
           </div>
           
           <p style={{ color: '#71717a', fontSize: 12, marginTop: 10 }}>© 2026 Arbitrage Inception. All rights reserved.</p>
