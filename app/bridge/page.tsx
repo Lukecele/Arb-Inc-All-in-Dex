@@ -1,9 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { LiFiWidget, WidgetConfig } from '@lifi/widget';
+
+const widgetConfig: WidgetConfig = {
+  integrator: '081a94df-4e42-4367-90df-64c86a9a0419.3cc7b9d9-c559-4a38-98f7-b7a4cce0cd3c',
+  fee: 0.001,
+  appearance: 'dark',
+  theme: {
+    container: {
+      borderRadius: '16px',
+    },
+  },
+};
 
 export default function BridgePage() {
   const [loading, setLoading] = useState(true);
+  const [useWidget, setUseWidget] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
@@ -34,6 +47,10 @@ export default function BridgePage() {
         
         {loading ? (
           <div style={{ color: '#71717a', padding: 100 }}>Loading...</div>
+        ) : useWidget ? (
+          <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 500 }}>
+            <LiFiWidget config={widgetConfig} integrator="arbitrage-inception" />
+          </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <a 
@@ -53,9 +70,24 @@ export default function BridgePage() {
             >
               Open Bridge ↗
             </a>
-            <p style={{ color: '#71717a', fontSize: 14 }}>
-              Click to open in new tab • Powered by Jumper Exchange
-            </p>
+            <button 
+              type="button"
+              onClick={() => setUseWidget(true)}
+              style={{
+                display: 'block',
+                padding: '16px 32px',
+                background: 'transparent',
+                color: '#20B8CD',
+                border: '1px solid #20B8CD',
+                borderRadius: 12,
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: 14,
+                cursor: 'pointer',
+              }}
+            >
+              Or try embedded widget
+            </button>
           </div>
         )}
 
