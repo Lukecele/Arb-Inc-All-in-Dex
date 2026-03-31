@@ -3,7 +3,6 @@
 import { LiFiWidget, WidgetConfig } from '@lifi/widget';
 
 const widgetConfig = {
-  fee: 0.0025,
   theme: {
     container: {
       borderRadius: '16px',
@@ -35,7 +34,7 @@ export default function BridgePage() {
         </div>
         
         <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 600 }}>
-          <LiFiWidget integrator="081a94df-4e42-4367-90df-64c86a9a0419.3cc7b9d9-c559-4a38-98f7-b7a4cce0cd3c" config={widgetConfig} />
+          <LiFiWidget integrator="test" config={widgetConfig} />
         </div>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
