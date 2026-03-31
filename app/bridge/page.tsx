@@ -1,5 +1,6 @@
 'use client';
 
+import type { WidgetConfig } from '@lifi/widget';
 import { LiFiWidget } from '@lifi/widget';
 
 const widgetConfig = {
@@ -9,7 +10,7 @@ const widgetConfig = {
       borderRadius: '16px',
     },
   },
-};
+} as Partial<WidgetConfig>;
 
 export default function BridgePage() {
   return (
