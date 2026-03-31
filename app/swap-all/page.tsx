@@ -123,6 +123,13 @@ const Nav = styled.nav`
   padding: 10px 20px;
   border-radius: 50px;
   border: 1px solid ${theme.colors.border.DEFAULT};
+  @media (max-width: 768px) {
+    gap: 6px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 16px;
+  }
 `
 
 const NavLink = styled.a`
