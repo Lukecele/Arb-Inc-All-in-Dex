@@ -5,6 +5,11 @@ import { LiFiWidget } from '@lifi/widget';
 
 const widgetConfig = {
   appearance: 'dark',
+  sdkConfig: {
+    defaultRouteOptions: {
+      maxPriceImpact: 0.4,
+    },
+  },
   theme: {
     container: {
       borderRadius: '16px',
