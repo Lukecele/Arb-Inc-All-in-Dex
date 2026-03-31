@@ -59,7 +59,7 @@ export default function BridgePage() {
         </div>
         
         <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
-          <LiFiWidget config={widgetConfig} integrator="arbitrage-inc" />
+          <LiFiWidget config={widgetConfig} integrator="nextjs-example" />
         </ClientOnly>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
