@@ -126,8 +126,10 @@ const Nav = styled.nav`
   @media (max-width: 768px) {
     width: 100%;
     justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: 6px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    border-radius: 16px;
   }
 `
 
@@ -337,6 +339,7 @@ export default function ZapPageClient() {
             <NavLink href="/swap">Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
+            <NavLink href="/bridge">Bridge</NavLink>
             <NavLink href="/limit-orders">Limit Orders</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
