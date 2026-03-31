@@ -4,7 +4,6 @@ import { LiFiWidget, WidgetConfig } from '@lifi/widget';
 
 const widgetConfig = {
   fee: 0.0025,
-  appearance: 'dark',
   theme: {
     container: {
       borderRadius: '16px',
