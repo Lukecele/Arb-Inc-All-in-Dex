@@ -2,7 +2,7 @@
 
 import { LiFiWidget, WidgetConfig } from '@lifi/widget';
 
-const widgetConfig: WidgetConfig = {
+const widgetConfig = {
   fee: 0.0025,
   appearance: 'dark',
   theme: {
