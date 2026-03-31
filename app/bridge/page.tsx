@@ -55,7 +55,7 @@ export default function BridgePage() {
         
         <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 600 }}>
           <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
-            <LiFiWidget integrator="Arbitrage Inception" config={widgetConfig} />
+            <LiFiWidget integrator="arbitrage-inc" config={widgetConfig} />
           </ClientOnly>
         </div>
 
