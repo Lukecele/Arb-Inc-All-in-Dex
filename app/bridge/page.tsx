@@ -1,41 +1,33 @@
 'use client';
 
-import type { WidgetConfig } from '@lifi/widget';
-import { LiFiWidget, WidgetSkeleton } from '@lifi/widget';
-import { useSyncExternalStore } from 'react';
-
-function subscribe() {
-  return () => {};
-}
-
-function useHydrated() {
-  return useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-}
-
-function ClientOnly({ children, fallback = null }: { children: React.ReactNode; fallback?: React.ReactNode }) {
-  const hydrated = useHydrated();
-  return hydrated ? children : fallback;
-}
-
-const widgetConfig = {
-  appearance: 'dark',
-  sdkConfig: {
-    defaultRouteOptions: {
-      maxPriceImpact: 0.5,
-    },
-  },
-  theme: {
-    container: {
-      borderRadius: '16px',
-    },
-  },
-} as Partial<WidgetConfig>;
+import { useEffect } from 'react';
 
 export default function BridgePage() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.mayan.finance/widget/1_8_0/main.js';
+    script.integrity = 'sha256-csokBs9wUf3aZCKTR7/XXElwXugjzCQeUygLmN+/Y7Y=';
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+    script.onload = () => {
+      if ((window as any).MayanSwap) {
+        (window as any).MayanSwap.init('mayan-widget-container', {
+          appIdentity: {
+            uri: 'https://arbitrage-inc.exchange',
+            icon: '',
+            name: 'Arbitrage Inception'
+          },
+          setDefaultToken: true
+        });
+      }
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#09090b', padding: '24px 16px' }}>
       <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
@@ -52,15 +44,17 @@ export default function BridgePage() {
           lineHeight: 1.5,
           textAlign: 'left'
         }}>
-          Bridge tokens across <strong style={{color:'#fff'}}>20+ blockchains</strong> with the best rates. 
-          Powered by <strong style={{color:'#20B8CD'}}>Jumper Exchange</strong> (LI.FI).
+          Bridge tokens across <strong style={{color:'#fff'}}>30+ blockchains</strong> including 
+          <strong style={{color:'#fff'}}> Solana ↔ BNB</strong>. 
+          Powered by <strong style={{color:'#20B8CD'}}>Mayan Finance</strong>.
           <br/><br/>
-          Supported chains: BSC, Ethereum, Polygon, Arbitrum, Optimism, Avalanche, Base, and more.
+          Supported chains: Solana, Ethereum, BNB Chain, Arbitrum, Polygon, Base, and more.
         </div>
         
-        <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
-          <LiFiWidget config={widgetConfig} integrator="nextjs-example" />
-        </ClientOnly>
+        <div 
+          id="mayan-widget-container" 
+          style={{ borderRadius: '16px', minHeight: '600px' }}
+        />
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
