@@ -53,11 +53,9 @@ export default function BridgePage() {
           Supported chains: BSC, Ethereum, Polygon, Arbitrum, Optimism, Avalanche, Base, and more.
         </div>
         
-        <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 600 }}>
-          <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
-            <LiFiWidget integrator="arbitrage-inc" config={widgetConfig} />
-          </ClientOnly>
-        </div>
+        <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
+          <LiFiWidget integrator="arbitrage-inc" config={widgetConfig} />
+        </ClientOnly>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
