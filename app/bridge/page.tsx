@@ -18,7 +18,7 @@ export default function BridgePage() {
           height: 700,
           theme: 'dark',
           lang: 'en',
-          r: 'TuoReferralCode',
+          r: '0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7',
         });
       }
     };
