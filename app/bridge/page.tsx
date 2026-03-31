@@ -5,21 +5,20 @@ import { useEffect } from 'react';
 export default function BridgePage() {
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.mayan.finance/widget/1_8_0/main.js';
-    script.integrity = 'sha256-csokBs9wUf3aZCKTR7/XXElwXugjzCQeUygLmN+/Y7Y=';
+    script.src = 'https://app.debridge.com/assets/scripts/widget.js';
     script.defer = true;
-    script.crossOrigin = 'anonymous';
     script.onload = () => {
-      if ((window as any).MayanSwap) {
-        (window as any).MayanSwap.init('mayan-widget-container', {
-          appIdentity: {
-            uri: 'https://arbitrage-inc.exchange',
-            icon: '',
-            name: 'Arbitrage Inception'
-          },
-          setDefaultToken: true,
-          referrer: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hFw2kXrZi',
-          referrerBps: 25
+      if ((window as any).deBridge) {
+        (window as any).deBridge.widget({
+          element: 'debridge-widget',
+          v: '1',
+          mode: 'deswap',
+          title: '',
+          width: 600,
+          height: 700,
+          theme: 'dark',
+          lang: 'en',
+          r: 'TuoReferralCode',
         });
       }
     };
@@ -48,20 +47,20 @@ export default function BridgePage() {
         }}>
           Bridge tokens across <strong style={{color:'#fff'}}>30+ blockchains</strong> including 
           <strong style={{color:'#fff'}}> Solana ↔ BNB</strong>. 
-          Powered by <strong style={{color:'#20B8CD'}}>Mayan Finance</strong>.
+          Powered by <strong style={{color:'#20B8CD'}}>deBridge</strong>.
           <br/><br/>
           Supported chains: Solana, Ethereum, BNB Chain, Arbitrum, Polygon, Base, and more.
         </div>
         
         <div 
-          id="mayan-widget-container" 
+          id="debridge-widget" 
           style={{ borderRadius: '16px', minHeight: '600px' }}
         />
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
           <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Best cross-chain rates via Mayan aggregation</li>
+            <li>Best cross-chain rates via deBridge aggregation</li>
             <li>Support for 30+ blockchains</li>
             <li>Secure and fast transactions</li>
           </ul>
@@ -86,7 +85,7 @@ export default function BridgePage() {
             fontSize: 12, 
             lineHeight: 1.5 
           }}>
-            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by Mayan Finance and is not responsible for any financial losses. Please bridge responsibly.
+            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by deBridge and is not responsible for any financial losses. Please bridge responsibly.
           </div>
           
           <p style={{ color: '#71717a', fontSize: 12, marginTop: 10 }}>© 2026 Arbitrage Inception. All rights reserved.</p>
