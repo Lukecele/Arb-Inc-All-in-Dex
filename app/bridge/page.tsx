@@ -1,14 +1,34 @@
 'use client';
 
-import { LiFiWidget, WidgetConfig } from '@lifi/widget';
+import { useSyncExternalStore } from 'react';
+import type { WidgetConfig } from '@lifi/widget';
+import { LiFiWidget, WidgetSkeleton } from '@lifi/widget';
+
+function subscribe() {
+  return () => {};
+}
+
+function useHydrated() {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+}
+
+function ClientOnly({ children, fallback = null }: { children: React.ReactNode; fallback?: React.ReactNode }) {
+  const hydrated = useHydrated();
+  return hydrated ? children : fallback;
+}
 
 const widgetConfig = {
+  appearance: 'dark',
   theme: {
     container: {
       borderRadius: '16px',
     },
   },
-} as const;
+} as Partial<WidgetConfig>;
 
 export default function BridgePage() {
   return (
@@ -34,7 +54,9 @@ export default function BridgePage() {
         </div>
         
         <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 600 }}>
-          <LiFiWidget integrator="Arbitrage Inception" config={widgetConfig} />
+          <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
+            <LiFiWidget integrator="Arbitrage Inception" config={widgetConfig} />
+          </ClientOnly>
         </div>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
