@@ -1,15 +1,31 @@
 'use client';
 
 import type { WidgetConfig } from '@lifi/widget';
-import { LiFiWidget } from '@lifi/widget';
+import { LiFiWidget, WidgetSkeleton } from '@lifi/widget';
+import { useSyncExternalStore } from 'react';
+
+function subscribe() {
+  return () => {};
+}
+
+function useHydrated() {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+}
+
+function ClientOnly({ children, fallback = null }: { children: React.ReactNode; fallback?: React.ReactNode }) {
+  const hydrated = useHydrated();
+  return hydrated ? children : fallback;
+}
 
 const widgetConfig = {
   appearance: 'dark',
-  fromChain: 1,
-  toChain: 42161,
   sdkConfig: {
     defaultRouteOptions: {
-      maxPriceImpact: 0.4,
+      maxPriceImpact: 0.5,
     },
   },
   theme: {
@@ -42,7 +58,9 @@ export default function BridgePage() {
           Supported chains: BSC, Ethereum, Polygon, Arbitrum, Optimism, Avalanche, Base, and more.
         </div>
         
-        <LiFiWidget integrator="arbitrage-inc" config={widgetConfig} />
+        <ClientOnly fallback={<WidgetSkeleton config={widgetConfig} />}>
+          <LiFiWidget config={widgetConfig} integrator="arbitrage-inc" />
+        </ClientOnly>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
