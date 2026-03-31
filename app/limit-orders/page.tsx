@@ -720,9 +720,8 @@ export default function LimitOrdersPage() {
         <NavLink href="/swap" style={{color:'#20B8CD',background:'#1e293b'}}>Swap (Custom)</NavLink>
         <NavLink href="/swap-all">Swap All</NavLink>
         <NavLink href="/zap">Zap</NavLink>
-            <NavLink href="/bridge">Bridge</NavLink>
-        <NavLink href="/limit-orders">Limit Orders</NavLink>
         <NavLink href="/bridge">Bridge</NavLink>
+        <NavLink href="/limit-orders">Limit Orders</NavLink>
         <NavLink href="/contact">Contact</NavLink>
       </NavTabs>
       <Header>
