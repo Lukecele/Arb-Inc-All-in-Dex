@@ -1,6 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Script from 'next/script';
+
+declare global {
+  interface Window {
+    MayanSwap: {
+      init: (containerId: string, config: Record<string, unknown>) => void;
+    };
+  }
+}
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -12,16 +21,43 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7';
-const REFERRER_BPS = 30; // 0.3% dev fee
+const mayanConfig = {
+  appIdentity: {
+    name: 'Arbitrage Inception',
+    icon: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
+    uri: 'https://arbitrage-inc.exchange',
+  },
+  solanaReferrerAddress: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hFw2kXrZi',
+  evmReferrerAddress: '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7',
+  referrerBps: 30,
+  sourceChains: ['bsc', 'ethereum', 'arbitrum', 'polygon', 'base', 'avalanche', 'solana'],
+  destinationChains: ['solana', 'bsc', 'ethereum', 'arbitrum', 'polygon', 'base', 'avalanche'],
+  defaultFromChain: 'bsc',
+  defaultToChain: 'solana',
+  colors: {
+    mainBox: '#18181b',
+    background: '#09090b',
+    primary: '#8B5CF6',
+    primaryText: '#ffffff',
+    secondary: '#3f3f46',
+    secondaryText: '#a1a1aa',
+    inputBox: '#27272a',
+    statusBar: '#27272a',
+    statusBarText: '#ffffff',
+    twitterHandle: 'ArbitrageInc',
+    modalBackground: '#18181b',
+    buttonBackground: '#8B5CF6',
+    cardBackground: '#27272a',
+    toastBackground: '#27272a',
+    toastText: '#ffffff',
+  },
+};
 
-const MAYAN_URL =
-  `https://swap.mayan.finance/` +
-  `?ref=${FEE_RECEIVER}` +
-  `&referrerBps=${REFERRER_BPS}` +
-  `&defaultFromChain=bsc` +
-  `&defaultToChain=solana` +
-  `&theme=dark`;
+function handleWidgetReady() {
+  if (typeof window !== 'undefined' && window.MayanSwap) {
+    window.MayanSwap.init('mayan_widget', mayanConfig as Record<string, unknown>);
+  }
+}
 
 export default function BridgePage() {
   return (
@@ -114,24 +150,18 @@ export default function BridgePage() {
             Supported chains: Solana, BNB Chain, Ethereum, Arbitrum, Polygon, Base, Avalanche, and more.
           </div>
 
-          {/* Mayan Finance Widget */}
+          {/* Mayan Finance Widget container */}
           <div style={{
             borderRadius: 16,
             overflow: 'hidden',
             border: '1px solid #3f3f46',
             background: '#18181b',
+            minHeight: 500,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-            <iframe
-              src={MAYAN_URL}
-              width="100%"
-              height="660"
-              style={{
-                border: 'none',
-                display: 'block',
-              }}
-              allow="clipboard-write"
-              title="Mayan Finance Bridge"
-            />
+            <div id="mayan_widget" style={{ width: '100%' }} />
           </div>
 
           {/* Why use section */}
@@ -189,6 +219,15 @@ export default function BridgePage() {
           </div>
         </div>
       </div>
+
+      {/* Mayan Finance widget script - v1.8.0 */}
+      <Script
+        src="https://cdn.mayan.finance/widget/1_8_0/main.js"
+        integrity="sha256-csokBs9wUf3aZCKTR7/XXElwXugjzCQeUygLmN+/Y7Y="
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+        onReady={handleWidgetReady}
+      />
     </div>
   );
 }
