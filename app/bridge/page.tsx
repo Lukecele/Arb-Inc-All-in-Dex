@@ -1,6 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/swap', label: 'Swap (Custom)' },
+  { href: '/swap-all', label: 'Swap All' },
+  { href: '/zap', label: 'Zap' },
+  { href: '/bridge', label: 'Bridge', active: true },
+  { href: '/limit-orders', label: 'Limit Orders' },
+  { href: '/contact', label: 'Contact' },
+];
 
 export default function BridgePage() {
   useEffect(() => {
@@ -30,9 +41,54 @@ export default function BridgePage() {
   }, []);
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: '#09090b', padding: '24px 16px' }}>
-      <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-        <h1 style={{ color: '#fff', marginBottom: 16 }}>Bridge</h1>
+    <div style={{ width: '100%', minHeight: '100vh', background: '#09090b' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        padding: '15px 20px',
+        maxWidth: 1200,
+        margin: '0 auto',
+        borderBottom: '1px solid #3f3f46',
+        flexWrap: 'wrap',
+        gap: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img 
+            src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" 
+            alt="Logo" 
+            style={{ width: 40, height: 40, borderRadius: '50%' }} 
+          />
+          <span style={{ fontSize: 18, fontWeight: 700, background: 'linear-gradient(90deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Arbitrage Inception
+          </span>
+        </div>
+        
+        <nav style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: 50, border: '1px solid rgba(255,255,255,0.1)' }}>
+          {navLinks.map((link) => (
+            <Link 
+              key={link.href}
+              href={link.href}
+              style={{ 
+                color: link.active ? '#fff' : '#a1a1aa',
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: 13,
+                padding: '8px 16px',
+                borderRadius: 20,
+                background: link.active ? 'rgba(255,255,255,0.1)' : 'transparent',
+                transition: 'all 0.2s'
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div style={{ padding: '24px 16px' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+          <h1 style={{ color: '#fff', marginBottom: 16 }}>Bridge</h1>
         
         <div style={{ 
           background: '#18181b', 
