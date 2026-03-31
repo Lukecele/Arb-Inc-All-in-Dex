@@ -10,7 +10,7 @@ export default function BridgePage() {
     script.onload = () => {
       if ((window as any).rangoWidget) {
         (window as any).rangoWidget.init({
-          container: 'rango-widget',
+          container: 'rango-widget-container',
           apiKey: 'c6381a79-2817-4602-83bf-6a641a409e32',
           walletConnectProjectId: 'e24844c5deb5193c1c14840a7af6a40b',
           theme: {
@@ -61,10 +61,7 @@ export default function BridgePage() {
           Supported chains: Solana, Ethereum, BNB Chain, Arbitrum, Polygon, Base, and more.
         </div>
         
-        <div 
-          id="rango-widget" 
-          style={{ borderRadius: '16px', minHeight: '600px' }}
-        />
+        <div id="rango-widget-container" style={{ borderRadius: '16px', minHeight: '600px' }}></div>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
