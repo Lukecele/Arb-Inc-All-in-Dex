@@ -3,8 +3,7 @@
 import { LiFiWidget, WidgetConfig } from '@lifi/widget';
 
 const widgetConfig: WidgetConfig = {
-  integrator: '081a94df-4e42-4367-90df-64c86a9a0419.3cc7b9d9-c559-4a38-98f7-b7a4cce0cd3c',
-  fee: 0.001,
+  integrator: 'arbitrage-inception',
   appearance: 'dark',
   theme: {
     container: {
@@ -31,13 +30,13 @@ export default function BridgePage() {
           textAlign: 'left'
         }}>
           Bridge tokens across <strong style={{color:'#fff'}}>20+ blockchains</strong> with the best rates. 
-          Powered by <strong style={{color:'#fff'}}>Jumper Exchange</strong> (LI.FI) with <strong style={{color:'#20B8CD'}}>0.1% dev fee</strong>.
+          Powered by <strong style={{color:'#20B8CD'}}>Jumper Exchange</strong> (LI.FI).
           <br/><br/>
           Supported chains: BSC, Ethereum, Polygon, Arbitrum, Optimism, Avalanche, Base, and more.
         </div>
         
         <div style={{ borderRadius: 16, overflow: 'hidden', minHeight: 600 }}>
-          <LiFiWidget config={widgetConfig} integrator="arbitrage-inception" />
+          <LiFiWidget config={widgetConfig} />
         </div>
 
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
@@ -45,7 +44,6 @@ export default function BridgePage() {
           <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 20, lineHeight: 1.8 }}>
             <li>Best cross-chain rates via LI.FI aggregation</li>
             <li>Support for 20+ blockchains</li>
-            <li>0.1% dev fee supports our platform</li>
             <li>Secure and fast transactions</li>
           </ul>
         </div>
