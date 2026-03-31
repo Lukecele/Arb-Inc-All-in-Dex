@@ -5,6 +5,8 @@ import { LiFiWidget } from '@lifi/widget';
 
 const widgetConfig = {
   appearance: 'dark',
+  fromChain: 1,
+  toChain: 42161,
   sdkConfig: {
     defaultRouteOptions: {
       maxPriceImpact: 0.4,
