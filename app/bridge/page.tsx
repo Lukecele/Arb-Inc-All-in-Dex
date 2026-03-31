@@ -145,5 +145,6 @@ export default function BridgePage() {
         </div>
       </div>
     </div>
+    </div>
   );
 }
