@@ -17,7 +17,9 @@ export default function BridgePage() {
             icon: '',
             name: 'Arbitrage Inception'
           },
-          setDefaultToken: true
+          setDefaultToken: true,
+          referrer: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hFw2kXrZi',
+          referrerBps: 25
         });
       }
     };
@@ -59,8 +61,8 @@ export default function BridgePage() {
         <div style={{ marginTop: 40, padding: 20, background: '#18181b', borderRadius: 12, textAlign: 'left' }}>
           <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
           <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Best cross-chain rates via LI.FI aggregation</li>
-            <li>Support for 20+ blockchains</li>
+            <li>Best cross-chain rates via Mayan aggregation</li>
+            <li>Support for 30+ blockchains</li>
             <li>Secure and fast transactions</li>
           </ul>
         </div>
@@ -84,7 +86,7 @@ export default function BridgePage() {
             fontSize: 12, 
             lineHeight: 1.5 
           }}>
-            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by Jumper Exchange/LI.FI and is not responsible for any financial losses. Please bridge responsibly.
+            <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk. Arbitrage Inception provides a frontend interface powered by Mayan Finance and is not responsible for any financial losses. Please bridge responsibly.
           </div>
           
           <p style={{ color: '#71717a', fontSize: 12, marginTop: 10 }}>© 2026 Arbitrage Inception. All rights reserved.</p>
