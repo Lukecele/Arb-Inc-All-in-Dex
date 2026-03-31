@@ -1,10 +1,17 @@
 'use client';
 
-import { LiFiWidget, WidgetConfig } from '@lifi/widget';
+import { LiFiWidget, WidgetConfig, WidgetFeeConfig } from '@lifi/widget';
+
+const feeConfig: WidgetFeeConfig = {
+  name: 'Arbitrage Inception',
+  fee: 0.0025,
+  showFeePercentage: true,
+  showFeeTooltip: true,
+};
 
 const widgetConfig: WidgetConfig = {
   integrator: '081a94df-4e42-4367-90df-64c86a9a0419.3cc7b9d9-c559-4a38-98f7-b7a4cce0cd3c',
-  fee: 0.0025,
+  feeConfig,
   appearance: 'dark',
   theme: {
     container: {
