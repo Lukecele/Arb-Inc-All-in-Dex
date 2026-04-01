@@ -45,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: ${theme.typography.fontFamily};
-    background: linear-gradient(135deg, ${theme.colors.background.primary} 0%, #1a1a3e 50%, ${theme.colors.background.secondary} 100%);
+    background: ${theme.colors.background.primary};
     color: #FFFFFF;
     min-height: 100vh;
   }
@@ -108,17 +108,18 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 12px;
-  background: ${theme.colors.glass.medium};
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 1px solid ${theme.colors.border.DEFAULT};
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
   @media (max-width: 768px) {
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 3px;
+    padding: 6px 10px;
     flex-wrap: wrap;
     justify-content: center;
-    border-radius: 16px;
+    border-radius: 20px;
   }
 `
 
