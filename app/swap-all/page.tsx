@@ -118,17 +118,18 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 12px;
-  background: ${theme.colors.glass.medium};
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 1px solid ${theme.colors.border.DEFAULT};
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
   @media (max-width: 768px) {
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 3px;
+    padding: 6px 10px;
     flex-wrap: wrap;
     justify-content: center;
-    border-radius: 16px;
+    border-radius: 20px;
   }
 `
 
@@ -136,13 +137,14 @@ const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  font-size: 13px;
+  padding: 7px 13px;
+  border-radius: 100px;
+  white-space: nowrap;
   transition: ${theme.transitions.fast};
   &:hover {
     color: ${theme.colors.text.primary};
-    background: ${theme.colors.glass.heavy};
+    background: rgba(255, 255, 255, 0.08);
   }
 `
 
