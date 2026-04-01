@@ -893,7 +893,7 @@ export default function HomePageClient() {
                 <strong>2. Arbitrage:</strong> Our smart contract identifies price discrepancies across DEXes and executes arbitrage trades, generating profit from market inefficiencies.
               </p>
               <p>
-                <strong>3. Rewards:</strong> A portion of arbitrage profits is converted to BNB and distributed to token holders automatically. Rewards are proportional to holdings and distributed in real-time.
+                <strong>3. Rewards:</strong> A portion of arbitrage profits is converted to BNB and distributed to token holders automatically. Rewards are proportional to holdings and distributed every 12 hours.
               </p>
               <p>
                 <strong>4. Liquidity:</strong> Trading fees and arbitrage profits are used to deepen liquidity pools, ensuring better prices for traders and reducing slippage.
@@ -957,9 +957,14 @@ export default function HomePageClient() {
                   description: "Limit orders are now live! Create, cancel, and fill limit orders with KyberSwap integration."
                 },
                 {
-                  status: "coming",
+                  status: "done",
                   title: "Bridge",
-                  description: "Cross-chain bridge integration coming soon."
+                  description: "Cross-chain bridge live! Powered by Mayan Finance for seamless cross-chain swaps."
+                },
+                {
+                  status: "coming",
+                  title: "Launchpad",
+                  description: "Token launchpad for new projects launching on the Arbitrage Inception ecosystem."
                 },
                 {
                   status: "coming",
