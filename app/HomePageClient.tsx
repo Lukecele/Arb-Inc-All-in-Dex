@@ -77,7 +77,7 @@ const Orb = styled.div<{ $color: string; $size: string; $top: string; $left: str
   background: ${props => props.$color};
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.15;
+  opacity: 0.10;
   top: ${props => props.$top};
   left: ${props => props.$left};
   animation: ${floatOrb} ${props => props.$delay} ease-in-out infinite;
@@ -143,34 +143,36 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 16px;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
   @media (min-width: 769px) {
-    gap: 12px;
-    padding: 10px 20px;
+    gap: 4px;
+    padding: 6px 14px;
   }
 `
 
 const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 13px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 7px 14px;
+  border-radius: 100px;
   transition: ${theme.transitions.fast};
+  white-space: nowrap;
   &:hover {
     color: ${theme.colors.text.primary};
-    background: ${theme.colors.glass.heavy};
+    background: rgba(255,255,255,0.08);
   }
   @media (min-width: 769px) {
-    font-size: 14px;
-    padding: 10px 20px;
+    font-size: 13.5px;
+    padding: 8px 16px;
   }
 `
 
@@ -180,87 +182,92 @@ const MainContent = styled.main`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  padding: 20px 0;
+  gap: 0;
+  padding: 12px 0;
   @media (min-width: 769px) {
-    gap: 60px;
-    padding: 40px 0;
+    padding: 0;
   }
 `
 
 const HeroSection = styled.section`
   text-align: center;
-  padding: 20px 10px;
+  padding: 32px 10px;
   @media (min-width: 769px) {
-    padding: 40px 20px;
+    padding: 72px 20px 56px;
   }
 `
 
 const HeroTitle = styled.h2`
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 15px;
+  font-size: 36px;
+  font-weight: 900;
+  margin-bottom: 16px;
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: ${theme.typography.lineHeights.tight};
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   @media (min-width: 769px) {
-    font-size: 48px;
-    margin-bottom: 20px;
+    font-size: 72px;
+    margin-bottom: 24px;
   }
 `
 
 const HeroSubtitle = styled.p`
-  font-size: 14px;
+  font-size: 16px;
   color: ${theme.colors.text.secondary};
-  line-height: ${theme.typography.lineHeights.normal};
-  max-width: 800px;
-  margin: 0 auto 20px;
+  line-height: 1.7;
+  max-width: 680px;
+  margin: 0 auto 24px;
   @media (min-width: 769px) {
-    font-size: 18px;
-    margin-bottom: 30px;
+    font-size: 19px;
+    margin-bottom: 40px;
   }
 `
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin: 25px 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 `
 
 const FeatureCard = styled.div`
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border-radius: 16px;
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 20px;
+  padding: 28px 24px;
   text-align: center;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.25s ease;
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
-    border-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-4px);
+    background: rgba(139, 92, 246, 0.06);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.22);
   }
 `
 
 const FeatureIcon = styled.div`
-  font-size: 36px;
-  margin-bottom: 12px;
-  animation: ${float} 3s ease-in-out infinite;
+  font-size: 40px;
+  margin-bottom: 16px;
+  line-height: 1;
 `
 
 const FeatureTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  color: #8B5CF6;
-  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #a78bfa;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
 `
 
 const FeatureDescription = styled.p`
-  font-size: 13px;
-  color: #A9A9A9;
-  line-height: 1.4;
+  font-size: 14px;
+  color: #8a8a9a;
+  line-height: 1.6;
 `
 
 const TokenomicsContainer = styled.div`
@@ -275,32 +282,31 @@ const TokenomicsContainer = styled.div`
 `
 
 const TokenomicsChart = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: conic-gradient(
     #10B981 0% 50%,
     #06B6D4 50% 100%
   );
   position: relative;
+  box-shadow: 0 0 40px rgba(16, 185, 129, 0.15);
   &::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     background: #0f0f1a;
     border-radius: 50%;
   }
   @media (max-width: 768px) {
-    width: 150px;
-    height: 150px;
-    &::after {
-      width: 60px;
-      height: 60px;
-    }
+    width: 140px;
+    height: 140px;
+    &::after { width: 56px; height: 56px; }
   }
 `
 
@@ -338,65 +344,49 @@ const TokenomicsPercent = styled.div`
 
 const TimelineContainer = styled.div`
   position: relative;
-  max-width: 800px;
+  max-width: 680px;
   margin: 0 auto;
   &::before {
     content: '';
     position: absolute;
-    top: 0;
+    top: 8px;
     bottom: 0;
-    left: 50%;
+    left: 20px;
     width: 2px;
-    background: linear-gradient(180deg, #8B5CF6, #EC4899);
-    transform: translateX(-50%);
-  }
-  @media (max-width: 768px) {
-    &::before {
-      left: 20px;
-    }
+    background: linear-gradient(180deg, #8B5CF6 0%, #EC4899 60%, rgba(236,72,153,0.2) 100%);
   }
 `
 
 const TimelineItem = styled.div<{ $index: number }>`
   position: relative;
-  margin-bottom: 60px;
+  margin-bottom: 32px;
   display: flex;
-  justify-content: ${props => props.$index % 2 === 0 ? 'flex-start' : 'flex-end'};
+  justify-content: flex-start;
+  padding-left: 56px;
   width: 100%;
-  @media (max-width: 768px) {
-    justify-content: flex-start;
-    padding-left: 50px;
-  }
 `
 
 const TimelineContent = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 14px;
+  padding: 18px 20px;
+  max-width: 100%;
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   position: relative;
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
 `
 
 const TimelineDot = styled.div<{ $status?: 'done' | 'coming' }>`
   position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16px;
-  height: 16px;
+  top: 24px;
+  left: 14px;
+  width: 14px;
+  height: 14px;
   background: ${props => props.$status === 'done' ? '#10B981' : '#8B5CF6'};
   border-radius: 50%;
-  border: 3px solid #0f0f1a;
+  border: 2px solid #0f0f1a;
   z-index: 1;
-  box-shadow: ${props => props.$status === 'done' ? '0 0 8px rgba(16, 185, 129, 0.5)' : 'none'};
-  @media (max-width: 768px) {
-    left: 20px;
-  }
+  box-shadow: ${props => props.$status === 'done' ? '0 0 10px rgba(16, 185, 129, 0.6)' : '0 0 8px rgba(139, 92, 246, 0.4)'};
 `
 
 const TimelineDate = styled.div`
@@ -407,75 +397,91 @@ const TimelineDate = styled.div`
 `
 
 const TimelineTitle = styled.h4`
-  font-size: 18px;
-  color: #FFFFFF;
-  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #f4f4f5;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 `
 
 const TimelineDescription = styled.p`
-  font-size: 14px;
-  color: #A9A9A9;
+  font-size: 13px;
+  color: #71717a;
   line-height: 1.5;
 `
 
 const Section = styled.section`
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
-  padding: 20px 15px;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 15px 0;
+  background: rgba(255, 255, 255, 0.018);
+  border-radius: 20px;
+  padding: 24px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 12px 0;
   @media (min-width: 769px) {
-    padding: 40px 30px;
-    margin: 30px 0;
-    border-radius: 24px;
+    padding: 44px 36px;
+    margin: 24px 0;
+    border-radius: 28px;
   }
 `
 
 const SectionTitle = styled.h2`
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 20px;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, #a78bfa, #f472b6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
   @media (min-width: 769px) {
-    font-size: 32px;
-    margin-bottom: 30px;
+    font-size: 38px;
+    margin-bottom: 36px;
   }
 `
 
 const AboutContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  font-size: 18px;
+  gap: 18px;
+  font-size: 16px;
   line-height: 1.8;
-  color: #A9A9A9;
-  max-width: 900px;
+  color: #8a8a9a;
+  max-width: 820px;
   margin: 0 auto;
 `
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin: 40px 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 `
 
 const StatCard = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 16px;
-  padding: 30px;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 20px;
+  padding: 28px 20px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: border-color 0.25s ease, background 0.25s ease;
+  &:hover {
+    border-color: rgba(139, 92, 246, 0.28);
+    background: rgba(139, 92, 246, 0.04);
+  }
 `
 
 const StatLabel = styled.div`
-  font-size: 16px;
-  color: #A9A9A9;
-  margin-bottom: 12px;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
 `
 
 const StatIcon = styled.div`
@@ -485,60 +491,62 @@ const StatIcon = styled.div`
 `
 
 const StatValue = styled.div`
-  font-size: 32px;
-  font-weight: 700;
-  color: #8B5CF6;
+  font-size: 40px;
+  font-weight: 800;
+  color: #a78bfa;
+  letter-spacing: -0.02em;
+  line-height: 1;
 `
 
 const StatSubLabel = styled.div`
   font-size: 12px;
-  color: #666;
-  margin-top: 4px;
+  color: #52525b;
+  margin-top: 6px;
 `
 
 const CTAButton = styled.div`
   display: inline-block;
-  padding: 16px 40px;
-  font-size: 18px;
+  padding: 14px 36px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
   border: none;
-  border-radius: 30px;
+  border-radius: 100px;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35), inset 0 1px 0 rgba(255,255,255,0.15);
   &:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
   }
   &:active {
-    transform: translateY(-1px) scale(0.98);
+    transform: translateY(0px);
   }
 `
 
 const SwapButton = styled.a`
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 40px;
-  font-size: 18px;
+  gap: 10px;
+  padding: 14px 36px;
+  font-size: 16px;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #28E0B9 0%, #189470 100%);
+  color: #0f0f1a;
+  background: linear-gradient(135deg, #34d399, #10b981);
   border: none;
-  border-radius: 30px;
+  border-radius: 100px;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(40, 224, 185, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
   &:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(40, 224, 185, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
   }
   &:active {
-    transform: translateY(-1px) scale(0.98);
+    transform: translateY(0px);
   }
 `
 
@@ -555,23 +563,30 @@ const SocialLink = styled.a`
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  color: white;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  color: #d4d4d8;
   text-decoration: none;
-  transition: background 0.2s;
+  font-size: 15px;
+  transition: all 0.2s;
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #fff;
+    transform: translateY(-2px);
   }
 `
 
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 40px 0;
+  padding: 48px 0 32px;
   text-align: center;
   color: ${theme.colors.text.muted};
-  font-size: 14px;
+  font-size: 13px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 24px;
 `
 
 const FooterLinks = styled.div`
