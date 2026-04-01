@@ -149,6 +149,8 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
 `;
 
 const Title = styled.h1`
@@ -172,6 +174,7 @@ const HeaderRight = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 const ChainBadge = styled.div`
@@ -245,7 +248,9 @@ const AmountInput = styled.input`
   font-size: 22px;
   font-weight: 600;
   outline: none;
+  min-width: 0;
   &::placeholder { color: #52525b; }
+  @media (max-width: 480px) { font-size: 18px; }
 `;
 
 const TokenIcon = styled.img`
@@ -717,11 +722,11 @@ export default function LimitOrdersPage() {
     <Container>
       <NavTabs>
         <NavLink href="/">Home</NavLink>
-        <NavLink href="/swap" style={{color:'#20B8CD',background:'#1e293b'}}>Swap (Custom)</NavLink>
+        <NavLink href="/swap">Swap (Custom)</NavLink>
         <NavLink href="/swap-all">Swap All</NavLink>
         <NavLink href="/zap">Zap</NavLink>
         <NavLink href="/bridge">Bridge</NavLink>
-        <NavLink href="/limit-orders">Limit Orders</NavLink>
+        <NavLink href="/limit-orders" style={{color:'#20B8CD',background:'#1e293b'}}>Limit Orders</NavLink>
         <NavLink href="/contact">Contact</NavLink>
       </NavTabs>
       <Header>
@@ -790,8 +795,8 @@ export default function LimitOrdersPage() {
             <RateRow><span>Est. Market Price</span><span>1 {sellToken.symbol} = {Object.keys(tokenPrices).length ? getMarketRate() : '...'} {buyToken.symbol}</span></RateRow>
           </RateBox>
           
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:12}}>
-            <span style={{fontSize:13,color:'#a1a1aa'}}>Expires in</span>
+          <div style={{marginTop:12}}>
+            <span style={{fontSize:13,color:'#a1a1aa',display:'block',marginBottom:6}}>Expires in</span>
             <ExpirySelect value={expiry} onChange={e=>setExpiry(Number(e.target.value))}>
               <option value={0}>Forever</option>
               <option value={3600}>1 hour</option>
@@ -822,12 +827,12 @@ export default function LimitOrdersPage() {
           ) : (
             <div>
               {orders.map(o => (
-                <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div>
+                <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px'}}>
+                  <div style={{minWidth:0}}>
                     <div style={{color:'#fff',fontWeight:500}}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div>
                     <div style={{color:'#a1a1aa',fontSize:13}}>{parseFloat(o.makingAmount).toFixed(4)} {getSym(o.makerAsset)}</div>
                   </div>
-                  <div style={{display:'flex',alignItems:'center',gap:12}}>
+                  <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
                     <div style={{textAlign:'right'}}>
                       <div style={{color:'#F472B6',fontWeight:500}}>{(parseFloat(o.takingAmount)/parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div>
                       <div style={{color:'#20B8CD',fontSize:12}}>{o.status}</div>
