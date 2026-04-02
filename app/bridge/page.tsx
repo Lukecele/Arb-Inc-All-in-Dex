@@ -1,9 +1,27 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
 import Script from 'next/script';
+import styled, { keyframes } from 'styled-components';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+
+const shimmer = keyframes`
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+`;
+
+const SkeletonCard = styled.div`
+  width: 100%;
+  max-width: 480px;
+  height: 480px;
+  border-radius: 24px;
+  background: linear-gradient(90deg, #0c0c1e 25%, #121228 50%, #0c0c1e 75%);
+  background-size: 600px 100%;
+  animation: ${shimmer} 1.6s ease-in-out infinite;
+  border: 1px solid rgba(124,58,237,0.1);
+  margin: 0 auto;
+`;
 
 declare global {
   interface Window {
@@ -62,6 +80,7 @@ function handleWidgetReady() {
 }
 
 export default function BridgePage() {
+  const [scriptLoaded, setScriptLoaded] = useState(false);
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#050508' }}>
       <Header activePage="/bridge" />
