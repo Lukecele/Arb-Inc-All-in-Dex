@@ -166,7 +166,7 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
         </FooterSection>
 
         <FooterSection>
-          <FooterSectionTitle>Resources</FooterSection>
+          <FooterSectionTitle>Resources</FooterSectionTitle>
           <ExternalLink href={DEXSCREENER_WATCHLIST_URL} target="_blank" rel="noopener noreferrer">DexScreener</ExternalLink>
           <ExternalLink href="https://pancakeswap.finance" target="_blank" rel="noopener noreferrer">PancakeSwap</ExternalLink>
           <ExternalLink href="https://kyberswap.com" target="_blank" rel="noopener noreferrer">KyberSwap</ExternalLink>
