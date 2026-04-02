@@ -1130,16 +1130,16 @@ export default function HomePageClient() {
               }}
             >
               {[
-                { label: "Current Price", value: `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
-                { label: "Market Cap", value: `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
+                { label: "Current Price", value: loading ? '—' : `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
+                { label: "Market Cap", value: loading ? '—' : `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
                 { 
                   label: "Liquidity", 
-                  value: `$${tokenData.liquidity.toLocaleString()}`, 
-                  sublabel: `across over ${tokenData.poolCount} pools`,
+                  value: loading ? '—' : `$${tokenData.liquidity.toLocaleString()}`, 
+                  sublabel: loading ? '' : `across over ${tokenData.poolCount} pools`,
                   zapLink: true,
                   icon: <FaWater /> 
                 },
-                { label: "24h Volume", value: `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
+                { label: "24h Volume", value: loading ? '—' : `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
               ].map((stat, index) => (
                 <StatCard
                   as={motion.div}
@@ -1161,7 +1161,7 @@ export default function HomePageClient() {
                         fontSize: '12px',
                         fontWeight: 600,
                         color: '#fff',
-                        background: 'linear-gradient(90deg, #2DD4BF, #00D4FF)',
+                        background: 'linear-gradient(90deg, #06B6D4, #7C3AED)',
                         borderRadius: '20px',
                         textDecoration: 'none',
                         transition: 'transform 0.2s',
