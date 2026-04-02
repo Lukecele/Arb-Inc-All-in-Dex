@@ -785,7 +785,7 @@ export default function HomePageClient() {
                 {
                   icon: <FaCoins size={48} color="#8B5CF6" />,
                   title: "BNB Rewards Protocol",
-                  description: "Earn passive income through BNB rewards distributed to holders. Every trade generates rewards proportional to your holdings."
+                  description: "Earn passive BNB rewards every 12 hours. Hold a minimum of 2,000,000 tokens to qualify. 40% of distribution goes to holders and dev, 20% is buybacked and burned forever."
                 },
                 {
                   icon: <FaRocket size={48} color="#EC4899" />,
@@ -795,12 +795,12 @@ export default function HomePageClient() {
                 {
                   icon: <FaCubes size={48} color="#06B6D4" />,
                   title: "Smart Volume Mechanics",
-                  description: "Intelligent volume generation to strengthen liquidity pools. Higher volume means better prices for traders and more rewards for holders."
+                  description: "50% of all DEX revenue is converted to BnB and sent to the distribution wallet. Combined with 20% burn on every distribution, creating a deflationary cycle."
                 },
                 {
                   icon: <FaShieldAlt size={48} color="#10B981" />,
                   title: "Transparency & Innovation",
-                  description: "Fully transparent protocol with cutting-edge DeFi technology. All transactions are verifiable on-chain, and the code is open-source."
+                  description: "Fully transparent protocol with cutting-edge DeFi technology. Minimum 2,000,000 tokens required for rewards. All transactions are verifiable on-chain, and the code is open-source."
                 }
               ].map((feature, index) => (
                 <FeatureCard
@@ -908,7 +908,7 @@ export default function HomePageClient() {
                 <strong>2. Arbitrage:</strong> Our smart contract identifies price discrepancies across DEXes and executes arbitrage trades, generating profit from market inefficiencies.
               </p>
               <p>
-                <strong>3. Rewards:</strong> A portion of arbitrage profits is converted to BNB and distributed to token holders automatically. Rewards are proportional to holdings and distributed every 12 hours.
+                <strong>3. Rewards:</strong> 50% of DEX revenue is converted to BnB and sent to the distribution wallet. Every 12 hours, 40% is distributed as BnB rewards to holders (minimum 2,000,000 tokens required) and dev, while 20% is buybacked and burned forever. Additionally, 20% burn is applied on every distribution.
               </p>
               <p>
                 <strong>4. Liquidity:</strong> Trading fees and arbitrage profits are used to deepen liquidity pools, ensuring better prices for traders and reducing slippage.
@@ -924,8 +924,10 @@ export default function HomePageClient() {
                 {[
                   { label: "Total Supply", percent: "1,000,000,000", color: "#8B5CF6" },
                   { label: "Tax (Buy/Sell)", percent: "4%", color: "#EC4899" },
-                  { label: "BNB Rewards to Holders", percent: "50%", color: "#10B981" },
-                  { label: "Marketing & Development", percent: "50%", color: "#06B6D4" },
+                  { label: "DEX Revenue to BnB", percent: "50%", color: "#F59E0B" },
+                  { label: "Burn on Distribution", percent: "20%", color: "#EF4444" },
+                  { label: "BNB Rewards (12h)", percent: "40%", color: "#10B981" },
+                  { label: "Buyback & Burn (12h)", percent: "20%", color: "#06B6D4" },
                 ].map((item, index) => (
                   <TokenomicsItem key={index}>
                     <TokenomicsColor $color={item.color} />
