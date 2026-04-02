@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import Script from 'next/script';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 declare global {
   interface Window {
@@ -62,73 +64,7 @@ function handleWidgetReady() {
 export default function BridgePage() {
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#050508' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '15px 20px',
-        maxWidth: 1200,
-        margin: '0 auto',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        background: 'rgba(10, 10, 18, 0.75)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-        flexWrap: 'wrap',
-        gap: '10px',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img
-            src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto"
-            alt="Logo"
-            style={{ width: 40, height: 40, borderRadius: '50%', boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}
-          />
-          <span style={{
-            fontSize: 18,
-            fontWeight: 700,
-            background: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #EC4899 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>
-            Arbitrage Inception
-          </span>
-        </div>
-
-        <nav style={{
-          display: 'flex',
-          gap: '4px',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          background: 'rgba(255,255,255,0.03)',
-          padding: '6px 10px',
-          borderRadius: 100,
-          border: '1px solid rgba(255,255,255,0.06)',
-          WebkitBackdropFilter: 'blur(16px)',
-          backdropFilter: 'blur(16px)',
-        }}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              style={{
-                color: link.active ? '#fff' : '#a1a1aa',
-                textDecoration: 'none',
-                fontWeight: 500,
-                fontSize: 13,
-                padding: '7px 14px',
-                borderRadius: 100,
-                background: link.active ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <Header activePage="/bridge" />
 
       {/* Main content */}
       <div style={{ padding: '24px 16px' }}>
@@ -226,43 +162,7 @@ export default function BridgePage() {
             </ul>
           </div>
 
-          {/* Footer */}
-          <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid rgba(255, 255, 255, 0.06)', position: 'relative' }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 20,
-              marginBottom: 20,
-              flexWrap: 'wrap',
-            }}>
-              <a href="/privacy-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Privacy Policy</a>
-              <a href="/terms-of-service" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Terms of Service</a>
-              <a href="/cookie-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Cookie Policy</a>
-              <a href="/contact" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Contact</a>
-            </div>
-
-            <div style={{
-              maxWidth: 600,
-              margin: '0 auto 20px',
-              padding: 15,
-              background: 'rgba(255, 152, 0, 0.06)',
-              border: '1px solid rgba(255, 152, 0, 0.15)',
-              borderRadius: 10,
-              color: '#FFB347',
-              fontSize: 12,
-              lineHeight: 1.6,
-            }}>
-              <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk.
-              Arbitrage Inception provides a frontend interface powered by Mayan Finance and is not
-              responsible for any financial losses. Please bridge responsibly.
-            </div>
-
-            <p style={{ color: '#71717a', fontSize: 12, marginTop: 10 }}>
-              © 2026 Arbitrage Inception. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </div>
+          <Footer />
 
       {/* Mayan Finance widget script - v1.8.0 */}
       <Script

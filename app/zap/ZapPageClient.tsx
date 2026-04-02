@@ -18,6 +18,8 @@ import DemoModeOverlay from './DemoModeOverlay'
 import { pools, pcsV3Pools } from '../pools'
 import type { PoolInfo } from '../pools'
 import theme from '../styles/theme'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 
 const injected = injectedModule()
 
@@ -76,64 +78,6 @@ const Container = styled.div`
   }
 `
 
-const Header = styled.header`
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  flex-wrap: wrap;
-  gap: 10px;
-  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
-`
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`
-
-const Logo = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: ${theme.borderRadius.full};
-  box-shadow: ${theme.shadows.glow};
-  @media (min-width: 769px) {
-    width: 60px;
-    height: 60px;
-  }
-`
-
-const Title = styled.h1`
-  font-size: 16px;
-  font-weight: 700;
-  background: ${theme.colors.primary.gradient};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) {
-    font-size: 28px;
-  }
-`
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  @media (max-width: 768px) {
-    width: 100%;
-    justify-content: center;
-    gap: 3px;
-    padding: 6px 10px;
-    flex-wrap: wrap;
-    border-radius: 20px;
-  }
-`
-
 const WalletSection = styled.div`
   display: flex;
   gap: 10px;
@@ -164,24 +108,6 @@ const DisconnectButton = styled.button`
   color: white;
   border: none;
   border-radius: ${theme.borderRadius.sm};
-`
-
-const NavLink = styled.a`
-  color: ${theme.colors.text.secondary};
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 14px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: ${theme.transitions.fast};
-  &:hover {
-    color: ${theme.colors.text.primary};
-    background: ${theme.colors.glass.heavy};
-  }
-  @media (max-width: 768px) {
-    font-size: 13px;
-    padding: 6px 12px;
-  }
 `
 
 const MainContent = styled.main`
@@ -227,44 +153,6 @@ const SectionTitle = styled.h2`
     font-size: 32px;
     margin-bottom: 30px;
   }
-`
-
-const Footer = styled.footer`
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px 0;
-  text-align: center;
-  color: ${theme.colors.text.muted};
-  font-size: 14px;
-`
-
-const FooterLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  
-  a {
-    color: ${theme.colors.text.secondary};
-    text-decoration: none;
-    font-size: 13px;
-    &:hover {
-      color: ${theme.colors.accent.DEFAULT};
-    }
-  }
-`
-
-const Disclaimer = styled.div`
-  max-width: 600px;
-  margin: 0 auto 20px;
-  padding: 15px;
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.3);
-  border-radius: 8px;
-  color: #FF9900;
-  font-size: 12px;
-  line-height: 1.5;
 `
 
 const TabButton = styled.button<{ $active?: boolean }>`
@@ -330,22 +218,10 @@ export default function ZapPageClient() {
     <>
       <GlobalStyle />
       <Container>
-        <Header>
-          <LogoSection>
-            <Logo src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" alt="Arbitrage Inception" />
-            <Title>Arbitrage Inception Zap</Title>
-          </LogoSection>
-          <Nav>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap (Custom)</NavLink>
-            <NavLink href="/swap-all">Swap All</NavLink>
-            <NavLink href="/zap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Zap</NavLink>
-            <NavLink href="/bridge">Bridge</NavLink>
-            <NavLink href="/limit-orders">Limit Orders</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
-          </Nav>
-          <WalletSection>
-            {address ? (
+        <Header
+          activePage="/zap"
+          walletSection={
+            address ? (
               <>
                 <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
                   {address.slice(0, 6)}...{address.slice(-4)}
@@ -358,9 +234,9 @@ export default function ZapPageClient() {
               <ConnectButton onClick={handleConnectWallet}>
                 Connect Wallet
               </ConnectButton>
-            )}
-          </WalletSection>
-        </Header>
+            )
+          }
+        />
 
         <MainContent>
           <SectionTitle>Liquidity Zap</SectionTitle>
@@ -490,18 +366,7 @@ export default function ZapPageClient() {
 
         </MainContent>
 
-        <Footer>
-          <FooterLinks>
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-service">Terms of Service</a>
-            <a href="/cookie-policy">Cookie Policy</a>
-            <a href="/contact">Contact</a>
-          </FooterLinks>
-          <Disclaimer>
-            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap & KyberSwap and is not responsible for any financial losses. Please trade responsibly.
-          </Disclaimer>
-          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap & KyberSwap</p>
-        </Footer>
+        <Footer />
       </Container>
     </>
   )

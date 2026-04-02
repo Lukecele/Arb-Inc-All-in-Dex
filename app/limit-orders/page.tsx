@@ -11,6 +11,8 @@ import {
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import { ethers } from 'ethers';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule({
@@ -519,6 +521,15 @@ const TokenBal = styled.div`
   font-size: 13px;
 `;
 
+const formatNumber = (num: string | number) => {
+  const n = typeof num === 'string' ? parseFloat(num) : num;
+  if (isNaN(n)) return '0';
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
+  return n.toFixed(4);
+};
+
 export default function LimitOrdersPage() {
   const [{ wallet, connecting }, connect] = useConnectWallet();
   
@@ -767,15 +778,7 @@ export default function LimitOrdersPage() {
 
   return (
     <Container>
-      <NavTabs>
-        <NavLink href="/">Home</NavLink>
-        <NavLink href="/swap">Swap (Custom)</NavLink>
-        <NavLink href="/swap-all">Swap All</NavLink>
-        <NavLink href="/zap">Zap</NavLink>
-        <NavLink href="/bridge">Bridge</NavLink>
-        <NavLink href="/limit-orders" style={{color:'#20B8CD',background:'#1e293b'}}>Limit Orders</NavLink>
-        <NavLink href="/contact">Contact</NavLink>
-      </NavTabs>
+      <Header activePage="/limit-orders" />
       <Header>
         <Title>Limit Order</Title>
         <HeaderRight>
@@ -877,7 +880,7 @@ export default function LimitOrdersPage() {
                 <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px'}}>
                   <div style={{minWidth:0}}>
                     <div style={{color:'#fff',fontWeight:500}}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div>
-                    <div style={{color:'#a1a1aa',fontSize:13}}>{parseFloat(o.makingAmount).toFixed(4)} {getSym(o.makerAsset)}</div>
+                    <div style={{color:'#a1a1aa',fontSize:13}}>{formatNumber(o.makingAmount)} {getSym(o.makerAsset)}</div>
                   </div>
                   <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
                     <div style={{textAlign:'right'}}>
@@ -914,18 +917,7 @@ export default function LimitOrdersPage() {
         </Modal>
       )}
       
-      <Footer>
-        <FooterLinks>
-          <a href="/privacy-policy">Privacy Policy</a>
-          <a href="/terms-of-service">Terms of Service</a>
-          <a href="/cookie-policy">Cookie Policy</a>
-          <a href="/contact">Contact</a>
-        </FooterLinks>
-        <Disclaimer>
-          <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by KyberSwap Limit Order and is not responsible for any financial losses. Please trade responsibly.
-        </Disclaimer>
-        <p style={{marginTop:'10px'}}>© 2026 Arbitrage Inception. All rights reserved.</p>
-      </Footer>
+      <Footer />
     </Container>
   );
 }

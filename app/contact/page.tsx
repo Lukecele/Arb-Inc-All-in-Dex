@@ -1,5 +1,8 @@
 'use client'
 
+import SharedHeader from '../../components/Header'
+import SharedFooter from '../../components/Footer'
+
 import styled, { createGlobalStyle } from 'styled-components'
 import theme from '../styles/theme'
 
@@ -24,7 +27,7 @@ const Container = styled.div`
   }
 `
 
-const Header = styled.header`
+const PageHeader = styled.header`
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -167,7 +170,7 @@ const SocialLink = styled.a`
   }
 `
 
-const Footer = styled.footer`
+const PageFooter = styled.footer`
   width: 100%;
   max-width: 1200px;
   padding: 40px 0;
@@ -176,7 +179,7 @@ const Footer = styled.footer`
   font-size: 14px;
 `
 
-const FooterLinks = styled.div`
+const PageFooterLinks = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -209,7 +212,7 @@ export default function ContactPage() {
     <>
       <GlobalStyle />
       <Container>
-        <Header>
+        <SharedHeader activePage="/contact" />
           <LogoSection>
             <Logo src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" alt="Arbitrage Inception" />
             <Title>Arbitrage Inception</Title>
@@ -223,7 +226,7 @@ export default function ContactPage() {
             <NavLink href="/limit-orders">Limit Orders</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
-        </Header>
+        
 
         <MainContent>
           <h1>Contact Us</h1>
@@ -287,19 +290,19 @@ export default function ContactPage() {
           </ContactCard>
         </MainContent>
 
-        <Footer>
-          <FooterLinks>
+        <SharedFooter />
+          <PageFooterLinks>
             <a href="/privacy-policy">Privacy Policy</a>
             <a href="/terms-of-service">Terms of Service</a>
             <a href="/cookie-policy">Cookie Policy</a>
             <a href="/contact">Contact</a>
-          </FooterLinks>
+          </PageFooterLinks>
           <Disclaimer>
             <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by KyberSwap Protocol and is not responsible for any financial losses. Please trade responsibly.
           </Disclaimer>
           <p>Powered by KyberSwap Protocol. Arbitrage Inception provides a customized interface to access decentralized liquidity pools on the BNB Smart Chain.</p>
           <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved.</p>
-        </Footer>
+        
       </Container>
     </>
   )

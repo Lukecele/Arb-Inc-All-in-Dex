@@ -1,6 +1,8 @@
 'use client'
 
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaCoins, FaClock, FaDollarSign, FaWater } from 'react-icons/fa'
@@ -900,21 +902,7 @@ export default function HomePageClient() {
           <Orb $color="#06B6D4" $size="250px" $top="30%" $left="60%" $delay="30s" />
           <Orb $color="#10B981" $size="350px" $top="70%" $left="20%" $delay="35s" />
         </BackgroundOrbs>
-        <Header>
-          <LogoSection>
-            <Logo src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" alt="Arbitrage Inception" />
-            <Title>Arbitrage Inception</Title>
-          </LogoSection>
-          <Nav>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap (Custom)</NavLink>
-            <NavLink href="/swap-all">Swap All</NavLink>
-            <NavLink href="/zap">Zap</NavLink>
-            <NavLink href="/bridge">Bridge</NavLink>
-            <NavLink href="/limit-orders">Limit Orders</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
-          </Nav>
-        </Header>
+        <Header />
 
         <MainContent>
           <HeroSection as={motion.div}
@@ -1309,39 +1297,7 @@ export default function HomePageClient() {
           </Section>
         </MainContent>
 
-        <Footer>
-          <FooterGrid>
-            <FooterColumn>
-              <h4>Protocol</h4>
-              <a href="/swap">Swap</a>
-              <a href="/swap-all">Swap All</a>
-              <a href="/zap">Zap</a>
-              <a href="/bridge">Bridge</a>
-            </FooterColumn>
-            <FooterColumn>
-              <h4>Resources</h4>
-              <a href="https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB" target="_blank" rel="noopener noreferrer">DexScreener</a>
-              <a href="https://revshare.dev/token/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c" target="_blank" rel="noopener noreferrer">RevShare</a>
-              <a href="/limit-orders">Limit Orders</a>
-            </FooterColumn>
-            <FooterColumn>
-              <h4>Community</h4>
-              <a href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer">Twitter</a>
-              <a href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">Telegram</a>
-            </FooterColumn>
-            <FooterColumn>
-              <h4>Legal</h4>
-              <a href="/privacy-policy">Privacy Policy</a>
-              <a href="/terms-of-service">Terms of Service</a>
-              <a href="/cookie-policy">Cookie Policy</a>
-              <a href="/contact">Contact</a>
-            </FooterColumn>
-          </FooterGrid>
-          <Disclaimer>
-            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap & KyberSwap and is not responsible for any financial losses. Please trade responsibly.
-          </Disclaimer>
-          <p style={{ marginTop: '10px', textAlign: 'center' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap & KyberSwap</p>
-        </Footer>
+        <Footer />
       </Container>
     </>
   )

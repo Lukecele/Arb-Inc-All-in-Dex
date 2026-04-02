@@ -14,6 +14,8 @@ import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styled, { createGlobalStyle } from 'styled-components'
 import theme from '../styles/theme'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 
 const injected = injectedModule()
 const walletConnect = walletConnectModule({
@@ -332,37 +334,7 @@ function SwapAllContent() {
     <>
       <GlobalStyle />
       <Container>
-        <Header>
-          <LogoSection>
-            <Logo src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" alt="Arbitrage Inception" />
-            <Title>Arbitrage Inception</Title>
-          </LogoSection>
-          <Nav>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap (Custom)</NavLink>
-            <NavLink href="/swap-all" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Swap All</NavLink>
-            <NavLink href="/zap">Zap</NavLink>
-            <NavLink href="/bridge">Bridge</NavLink>
-            <NavLink href="/limit-orders">Limit Orders</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
-          </Nav>
-          <WalletSection>
-            {walletAddress ? (
-              <>
-                <span style={{ fontFamily: 'monospace' }}>
-                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
-                </span>
-                <DisconnectButton onClick={() => wallet && disconnect(wallet)}>
-                  Disconnect
-                </DisconnectButton>
-              </>
-            ) : (
-              <ConnectButton onClick={() => connect()} disabled={connecting}>
-                {connecting ? 'Connecting...' : 'Connect Wallet'}
-              </ConnectButton>
-            )}
-          </WalletSection>
-        </Header>
+        <Header activePage="/swap-all" />
 
         <MainContent>
           <section style={{ 
@@ -436,18 +408,7 @@ function SwapAllContent() {
           </SwapWrapper>
         </MainContent>
 
-        <Footer>
-          <FooterLinks>
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-service">Terms of Service</a>
-            <a href="/cookie-policy">Cookie Policy</a>
-            <a href="/contact">Contact</a>
-          </FooterLinks>
-          <Disclaimer>
-            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by KyberSwap Protocol and is not responsible for any financial losses. Please trade responsibly.
-          </Disclaimer>
-          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by KyberSwap</p>
-        </Footer>
+        <Footer />
       </Container>
     </>
   )
