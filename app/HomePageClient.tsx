@@ -35,15 +35,23 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #050508 0%, #0a0a12 50%, #111118 100%);
+    background: linear-gradient(135deg, #030309 0%, #070715 40%, #0c0c1e 70%, #121228 100%);
     background-size: 300% 300%;
     animation: gradientBackground 20s ease infinite;
-    color: #FFFFFF;
+    color: #F8FAFC;
     min-height: 100vh;
     overflow-x: hidden;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124,58,237,0.4) transparent;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7C3AED, #EC4899);
+    border-radius: 3px;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', 'Inter', sans-serif;
