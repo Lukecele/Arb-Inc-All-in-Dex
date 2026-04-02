@@ -575,59 +575,90 @@ const AboutContent = styled.div`
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin: 32px 0;
+  gap: 12px;
+  margin: 24px 0;
   @media (min-width: 640px) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
   @media (min-width: 900px) {
     grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
   }
 `
 
 const StatCard = styled.div`
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 20px;
-  padding: 28px 20px;
+  border-radius: 16px;
+  padding: 20px 12px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.3s ease;
   position: relative;
+  min-width: 0;
   
   &:hover {
     border-color: rgba(139, 92, 246, 0.3);
     background: rgba(139, 92, 246, 0.05);
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
   }
+  
+  @media (max-width: 480px) {
+    padding: 16px 8px;
+    border-radius: 12px;
+  }
 `
 
 const StatLabel = styled.div`
-  font-size: 13px;
+  font-size: 11px;
   color: #6b7280;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   font-weight: 500;
+  line-height: 1.3;
+  @media (max-width: 480px) {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
 `
 
 const StatIcon = styled.div`
-  font-size: 24px;
-  margin-bottom: 12px;
+  font-size: 20px;
+  margin-bottom: 10px;
   opacity: 0.8;
+  @media (max-width: 480px) {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
 `
 
 const StatValue = styled.div`
-  font-size: 40px;
+  font-size: 28px;
   font-weight: 800;
   color: #a78bfa;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 1.1;
+  word-break: break-word;
+  @media (max-width: 480px) {
+    font-size: 22px;
+  }
+  @media (min-width: 640px) {
+    font-size: 32px;
+  }
+  @media (min-width: 900px) {
+    font-size: 40px;
+  }
 `
 
 const StatSubLabel = styled.div`
-  font-size: 12px;
+  font-size: 11px;
   color: #52525b;
-  margin-top: 6px;
+  margin-top: 4px;
+  line-height: 1.3;
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 `
 
 const CTAButton = styled.div`

@@ -117,16 +117,23 @@ async function fetchBalance(tokenAddr: string, wallet: string, provider: any): P
 const Container = styled.div`
   min-height: 100vh;
   background: #000;
-  padding: 16px;
+  padding: 12px;
+  @media (min-width: 640px) {
+    padding: 16px 24px;
+  }
 `;
 
 const NavTabs = styled.div`
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 6px;
+  margin-bottom: 16px;
   font-size: 14px;
   flex-wrap: wrap;
+  @media (max-width: 480px) {
+    gap: 4px;
+    margin-bottom: 12px;
+  }
 `;
 
 const NavLink = styled.a<{ $active?: boolean }>`
@@ -148,26 +155,39 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
   gap: 12px;
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   color: #fff;
+  @media (min-width: 640px) {
+    font-size: 24px;
+  }
 `;
 
 const DescriptionCard = styled.div`
   background: #18181b;
   border: 1px solid #3f3f46;
   border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
   color: #a1a1aa;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
+  @media (min-width: 640px) {
+    padding: 16px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
 `;
 
 const HeaderRight = styled.div`
@@ -200,10 +220,11 @@ const WalletBadge = styled.div`
 const MainGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 16px;
   
   @media (min-width: 900px) {
     grid-template-columns: 420px 1fr;
+    gap: 24px;
   }
 `;
 
@@ -211,7 +232,10 @@ const Card = styled.div`
   background: #18181b;
   border: 1px solid #27272a;
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
+  @media (min-width: 640px) {
+    padding: 20px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -236,8 +260,11 @@ const InputRow = styled.div`
   background: #27272a;
   border: 1px solid #3f3f46;
   border-radius: 12px;
-  padding: 14px;
+  padding: 10px 12px;
   &:focus-within { border-color: #20B8CD; }
+  @media (min-width: 640px) {
+    padding: 14px;
+  }
 `;
 
 const AmountInput = styled.input`
@@ -245,12 +272,14 @@ const AmountInput = styled.input`
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 600;
   outline: none;
   min-width: 0;
   &::placeholder { color: #52525b; }
-  @media (max-width: 480px) { font-size: 18px; }
+  @media (min-width: 640px) {
+    font-size: 22px;
+  }
 `;
 
 const TokenIcon = styled.img`
@@ -262,16 +291,22 @@ const TokenIcon = styled.img`
 const TokenButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 6px 10px;
   background: #18181b;
   border: 1px solid #3f3f46;
   border-radius: 10px;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
   &:hover { border-color: #20B8CD; }
+  @media (min-width: 640px) {
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
 `;
 
 const SwapIcon = styled.button`
@@ -327,8 +362,11 @@ const Disclaimer = styled.div`
 const RateBox = styled.div`
   background: #27272a;
   border-radius: 12px;
-  padding: 14px;
+  padding: 12px;
   margin: 12px 0;
+  @media (min-width: 640px) {
+    padding: 14px;
+  }
 `;
 
 const RateLabel = styled.div`
@@ -361,6 +399,7 @@ const MarketBtn = styled.button`
   font-weight: 600;
   cursor: pointer;
   margin-left: 8px;
+  white-space: nowrap;
   &:hover { opacity: 0.9; }
 `;
 
@@ -388,17 +427,22 @@ const ExpirySelect = styled.select`
 
 const SubmitBtn = styled.button`
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   background: #20B8CD;
   border: none;
   border-radius: 12px;
   color: #fff;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 16px;
+  margin-top: 12px;
   &:hover:not(:disabled) { opacity: 0.9; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (min-width: 640px) {
+    padding: 16px;
+    font-size: 15px;
+    margin-top: 16px;
+  }
 `;
 
 const TabsRow = styled.div`
@@ -438,10 +482,13 @@ const ModalInner = styled.div`
   background: #18181b;
   border: 1px solid #27272a;
   border-radius: 16px;
-  width: 100%;
+  width: 90%;
   max-width: 360px;
   max-height: 70vh;
   overflow: auto;
+  @media (min-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const ModalTitle = styled.div`
