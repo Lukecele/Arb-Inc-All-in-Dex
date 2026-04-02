@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
-        width: 800,
-        height: 800,
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
         alt: 'Arbitrage Inception Zap',
       },
     ],
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: 'Zap Liquidity | Add/Remove Liquidity | Arbitrage Inception',
     description: 'Add or remove liquidity from BSC pools with a single click.',
     images: [
-      'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
+      '/og-image.png',
     ],
   },
 }
