@@ -163,6 +163,8 @@ export default function BridgePage() {
           </div>
 
           <Footer />
+        </div>
+      </div>
 
       {/* Mayan Finance widget script - v1.8.0 */}
       <Script
