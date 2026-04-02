@@ -45,9 +45,11 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: ${theme.typography.fontFamily};
-    background: ${theme.colors.background.primary};
+    background: ${theme.colors.background.DEFAULT};
     color: #FFFFFF;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 `
 
@@ -72,6 +74,12 @@ const Header = styled.header`
   padding: 15px 0;
   flex-wrap: wrap;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 18, 0.75);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   @media (min-width: 769px) {
     padding: 20px 0;
@@ -109,14 +117,15 @@ const Title = styled.h1`
 const Nav = styled.nav`
   display: flex;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
   border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   @media (max-width: 768px) {
     gap: 3px;
-    padding: 6px 10px;
+    padding: 6px 8px;
     flex-wrap: wrap;
     justify-content: center;
     border-radius: 20px;
@@ -127,17 +136,34 @@ const NavLink = styled.a`
   color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: ${theme.transitions.fast};
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  transition: all ${theme.transitions.fast};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+  }
+  
   &:hover {
     color: ${theme.colors.text.primary};
-    background: ${theme.colors.glass.heavy};
+    background: rgba(139, 92, 246, 0.12);
+    &::before {
+      left: 100%;
+    }
   }
   @media (max-width: 768px) {
-    font-size: 13px;
-    padding: 6px 12px;
+    font-size: 12px;
+    padding: 6px 10px;
   }
 `
 
@@ -156,10 +182,28 @@ const ConnectButton = styled.button`
   border: none;
   border-radius: ${theme.borderRadius.full};
   font-weight: 600;
-  transition: ${theme.transitions.fast};
+  transition: all ${theme.transitions.fast};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+    opacity: 0;
+    transition: opacity ${theme.transitions.DEFAULT};
+  }
+  
   &:hover {
     transform: translateY(-2px);
     box-shadow: ${theme.shadows.glow};
+    &::before {
+      opacity: 1;
+    }
   }
 `
 
@@ -167,10 +211,16 @@ const DisconnectButton = styled.button`
   padding: 6px 12px;
   font-size: 12px;
   cursor: pointer;
-  background: #FF537B;
+  background: #EF4444;
   color: white;
   border: none;
   border-radius: 6px;
+  transition: all ${theme.transitions.fast};
+  
+  &:hover {
+    background: #DC2626;
+    transform: translateY(-1px);
+  }
 `
 
 const MainContent = styled.main`
@@ -183,6 +233,65 @@ const MainContent = styled.main`
   padding: 20px 0;
 `
 
+const InfoCard = styled.div`
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(45, 212, 191, 0.5), transparent);
+  }
+`
+
+const InfoCardTitle = styled.h2`
+  color: #2DD4BF;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+`
+
+const InfoCardText = styled.p`
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: ${theme.colors.text.secondary};
+`
+
+const FeatureList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+`
+
+const FeatureListItem = styled.li`
+  font-size: 13px;
+  line-height: 1.8;
+  color: ${theme.colors.text.secondary};
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 4px;
+  
+  &::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #2DD4BF;
+    font-weight: 600;
+  }
+`
+
 const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
@@ -190,6 +299,17 @@ const Footer = styled.footer`
   text-align: center;
   color: ${theme.colors.text.muted};
   font-size: 14px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+  }
 `
 
 const FooterLinks = styled.div`
@@ -203,6 +323,7 @@ const FooterLinks = styled.div`
     color: ${theme.colors.text.secondary};
     text-decoration: none;
     font-size: 13px;
+    transition: color ${theme.transitions.fast};
     &:hover {
       color: ${theme.colors.accent.DEFAULT};
     }
@@ -213,12 +334,12 @@ const Disclaimer = styled.div`
   max-width: 600px;
   margin: 0 auto 20px;
   padding: 15px;
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.3);
-  border-radius: 8px;
-  color: #FF9901;
+  background: rgba(255, 152, 0, 0.06);
+  border: 1px solid rgba(255, 152, 0, 0.15);
+  border-radius: 10px;
+  color: #FFB347;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
 `
 
 function SwapPageContent() {
@@ -262,7 +383,7 @@ function SwapPageContent() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap" style={{ color: theme.colors.accent.DEFAULT, background: theme.colors.glass.heavy }}>Swap (Custom)</NavLink>
+            <NavLink href="/swap" style={{ color: theme.colors.accent.DEFAULT, background: 'rgba(45, 212, 191, 0.12)' }}>Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
             <NavLink href="/bridge">Bridge</NavLink>
@@ -272,7 +393,7 @@ function SwapPageContent() {
           <WalletSection>
             {walletAddress ? (
               <>
-                <span style={{ fontFamily: 'monospace' }}>
+                <span style={{ fontFamily: 'monospace', fontSize: 13, color: theme.colors.text.secondary }}>
                   {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
                 </span>
                 <DisconnectButton onClick={() => wallet && disconnect(wallet)}>
@@ -288,30 +409,22 @@ function SwapPageContent() {
         </Header>
 
         <MainContent>
-          <section style={{ 
-            maxWidth: '800px', 
-            width: '100%', 
-            marginBottom: '20px',
-            padding: '20px',
-            background: 'rgba(40, 224, 185, 0.1)',
-            border: '1px solid rgba(40, 224, 185, 0.3)',
-            borderRadius: '12px',
-          }}>
-            <h2 style={{ color: '#28E0B9', marginBottom: '10px' }}>Custom Token Swap on BSC</h2>
-            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
-              Swap <strong>ARB Inc</strong> token directly via PancakeSwap V2 Router. Our custom interface handles 
+          <InfoCard>
+            <InfoCardTitle>Custom Token Swap on BSC</InfoCardTitle>
+            <InfoCardText>
+              Swap <strong style={{ color: '#fff' }}>ARB Inc</strong> token directly via PancakeSwap V2 Router. Our custom interface handles 
               Fee-on-Transfer (FOT) tokens with 4% tax automatically, ensuring accurate slippage and successful transactions.
+            </InfoCardText>
+            <FeatureList>
+              <FeatureListItem><strong style={{ color: '#fff' }}>BNB ↔ WBNB:</strong> Instant wrap/unwrap with 0.1% dev fee</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>ARB Inc → BNB:</strong> Sell ARB Inc with 4% tax handled automatically</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>BNB → ARB Inc:</strong> Buy ARB Inc with real-time price calculation</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>Direct Routing:</strong> Bypasses aggregators for tax token compatibility</FeatureListItem>
+            </FeatureList>
+            <p style={{ fontSize: 12, color: theme.colors.text.muted }}>
+              For tokens other than ARB Inc, use our <a href="/swap-all" style={{ color: '#2DD4BF', textDecoration: 'underline' }}>Swap All</a> feature with KyberSwap aggregator.
             </p>
-            <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
-              <li><strong>BNB ↔ WBNB:</strong> Instant wrap/unwrap with 0.1% dev fee</li>
-              <li><strong>ARB Inc → BNB:</strong> Sell ARB Inc with 4% tax handled automatically</li>
-              <li><strong>BNB → ARB Inc:</strong> Buy ARB Inc with real-time price calculation</li>
-              <li><strong>Direct Routing:</strong> Bypasses aggregators for tax token compatibility</li>
-            </ul>
-            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
-              For tokens other than ARB Inc, use our <a href="/swap-all" style={{ color: '#28E0B9' }}>Swap All</a> feature with KyberSwap aggregator.
-            </p>
-          </section>
+          </InfoCard>
           
           <ArbIncSwap
             ethersProvider={ethersProvider}

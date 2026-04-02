@@ -7,11 +7,23 @@ import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaC
 import theme from './styles/theme'
 import { useState, useEffect } from 'react'
 
+const shimmer = keyframes`
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+`
+
 const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+  
   @keyframes gradientBackground {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
   }
   
   * {
@@ -21,9 +33,9 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, ${theme.colors.background.primary} 0%, #1a1a3e 50%, ${theme.colors.background.secondary} 100%);
-    background-size: 400% 400%;
-    animation: gradientBackground 15s ease infinite;
+    background: linear-gradient(135deg, #050508 0%, #0a0a12 50%, #111118 100%);
+    background-size: 300% 300%;
+    animation: gradientBackground 20s ease infinite;
     color: #FFFFFF;
     min-height: 100vh;
     overflow-x: hidden;
@@ -41,7 +53,7 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
   }
   ::selection {
-    background: #8B5CF6;
+    background: rgba(139, 92, 246, 0.4);
     color: white;
   }
 `
@@ -76,8 +88,8 @@ const Orb = styled.div<{ $color: string; $size: string; $top: string; $left: str
   height: ${props => props.$size};
   background: ${props => props.$color};
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.10;
+  filter: blur(100px);
+  opacity: 0.04;
   top: ${props => props.$top};
   left: ${props => props.$left};
   animation: ${floatOrb} ${props => props.$delay} ease-in-out infinite;
@@ -104,6 +116,12 @@ const Header = styled.header`
   padding: 15px 0;
   flex-wrap: wrap;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 18, 0.7);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid ${theme.colors.border.DEFAULT};
   @media (min-width: 769px) {
     padding: 20px 0;
@@ -143,17 +161,18 @@ const Title = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
   border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   @media (min-width: 769px) {
-    gap: 4px;
-    padding: 6px 14px;
+    gap: 2px;
+    padding: 6px 12px;
   }
 `
 
@@ -164,15 +183,32 @@ const NavLink = styled.a`
   font-size: 13px;
   padding: 7px 14px;
   border-radius: 100px;
-  transition: ${theme.transitions.fast};
+  transition: all ${theme.transitions.fast};
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+  }
+  
   &:hover {
     color: ${theme.colors.text.primary};
-    background: rgba(255,255,255,0.08);
+    background: rgba(139, 92, 246, 0.12);
+    &::before {
+      left: 100%;
+    }
   }
   @media (min-width: 769px) {
-    font-size: 13.5px;
-    padding: 8px 16px;
+    font-size: 13px;
+    padding: 8px 14px;
   }
 `
 
@@ -198,16 +234,19 @@ const HeroSection = styled.section`
 `
 
 const HeroTitle = styled.h2`
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 900;
   margin-bottom: 16px;
-  background: ${theme.colors.primary.gradient};
+  background: linear-gradient(135deg, #8B5CF6 0%, #C084FC 25%, #EC4899 50%, #C084FC 75%, #8B5CF6 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
   line-height: 1.1;
   letter-spacing: -0.03em;
   @media (min-width: 769px) {
-    font-size: 72px;
+    font-size: 80px;
     margin-bottom: 24px;
   }
 `
@@ -219,7 +258,7 @@ const HeroSubtitle = styled.p`
   max-width: 680px;
   margin: 0 auto 24px;
   @media (min-width: 769px) {
-    font-size: 19px;
+    font-size: 20px;
     margin-bottom: 40px;
   }
 `
@@ -230,23 +269,40 @@ const FeaturesGrid = styled.div`
   gap: 16px;
   margin: 28px 0;
   @media (min-width: 900px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
 `
 
 const FeatureCard = styled.div`
-  background: rgba(255, 255, 255, 0.025);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
   border-radius: 20px;
   padding: 28px 24px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
   &:hover {
     transform: translateY(-4px);
-    background: rgba(139, 92, 246, 0.06);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(139, 92, 246, 0.2);
-    border-color: rgba(139, 92, 246, 0.22);
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.2);
+    &::before {
+      opacity: 1;
+    }
   }
 `
 
@@ -282,31 +338,32 @@ const TokenomicsContainer = styled.div`
 `
 
 const TokenomicsChart = styled.div`
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   flex-shrink: 0;
   border-radius: 50%;
   background: conic-gradient(
-    #10B981 0% 50%,
-    #06B6D4 50% 100%
+    #F59E0B 0% 50%,
+    #EF4444 50% 70%,
+    #10B981 70% 100%
   );
   position: relative;
-  box-shadow: 0 0 40px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
   &::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 72px;
-    height: 72px;
-    background: #0f0f1a;
+    width: 80px;
+    height: 80px;
+    background: #0a0a12;
     border-radius: 50%;
   }
   @media (max-width: 768px) {
-    width: 140px;
-    height: 140px;
-    &::after { width: 56px; height: 56px; }
+    width: 160px;
+    height: 160px;
+    &::after { width: 64px; height: 64px; }
   }
 `
 
@@ -384,7 +441,7 @@ const TimelineDot = styled.div<{ $status?: 'done' | 'coming' }>`
   height: 14px;
   background: ${props => props.$status === 'done' ? '#10B981' : '#8B5CF6'};
   border-radius: 50%;
-  border: 2px solid #0f0f1a;
+  border: 2px solid #0a0a12;
   z-index: 1;
   box-shadow: ${props => props.$status === 'done' ? '0 0 10px rgba(16, 185, 129, 0.6)' : '0 0 8px rgba(139, 92, 246, 0.4)'};
 `
@@ -411,10 +468,10 @@ const TimelineDescription = styled.p`
 `
 
 const Section = styled.section`
-  background: rgba(255, 255, 255, 0.018);
+  background: rgba(255, 255, 255, 0.015);
   border-radius: 20px;
   padding: 24px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   margin: 12px 0;
   @media (min-width: 769px) {
     padding: 44px 36px;
@@ -424,16 +481,16 @@ const Section = styled.section`
 `
 
 const SectionTitle = styled.h2`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   text-align: center;
   margin-bottom: 24px;
-  background: linear-gradient(90deg, #a78bfa, #f472b6);
+  background: linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #EC4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
   @media (min-width: 769px) {
-    font-size: 38px;
+    font-size: 42px;
     margin-bottom: 36px;
   }
 `
@@ -463,15 +520,18 @@ const StatsGrid = styled.div`
 `
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.02);
   border-radius: 20px;
   padding: 28px 20px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: border-color 0.25s ease, background 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  
   &:hover {
-    border-color: rgba(139, 92, 246, 0.28);
-    background: rgba(139, 92, 246, 0.04);
+    border-color: rgba(139, 92, 246, 0.3);
+    background: rgba(139, 92, 246, 0.05);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
   }
 `
 
@@ -582,11 +642,55 @@ const Footer = styled.footer`
   width: 100%;
   max-width: 1200px;
   padding: 48px 0 32px;
-  text-align: center;
   color: ${theme.colors.text.muted};
   font-size: 13px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
   margin-top: 24px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5), transparent);
+  }
+`
+
+const FooterGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  text-align: left;
+  margin-bottom: 32px;
+  @media (min-width: 769px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+`
+
+const FooterColumn = styled.div`
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: ${theme.colors.text.primary};
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  a {
+    display: block;
+    color: ${theme.colors.text.secondary};
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 10px;
+    transition: color ${theme.transitions.fast};
+    
+    &:hover {
+      color: ${theme.colors.accent.DEFAULT};
+    }
+  }
 `
 
 const FooterLinks = styled.div`
@@ -611,8 +715,8 @@ const Disclaimer = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 15px;
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.3);
+  background: rgba(255, 152, 0, 0.08);
+  border: 1px solid rgba(255, 152, 0, 0.2);
   border-radius: 8px;
   color: #FF9900;
   font-size: 12px;
@@ -697,6 +801,7 @@ export default function HomePageClient() {
           <Orb $color="#8B5CF6" $size="400px" $top="-100px" $left="-100px" $delay="20s" />
           <Orb $color="#EC4899" $size="300px" $top="60%" $left="70%" $delay="25s" />
           <Orb $color="#06B6D4" $size="250px" $top="30%" $left="60%" $delay="30s" />
+          <Orb $color="#10B981" $size="350px" $top="70%" $left="20%" $delay="35s" />
         </BackgroundOrbs>
         <Header>
           <LogoSection>
@@ -735,6 +840,7 @@ export default function HomePageClient() {
               <HeroSubtitle>
                 The future of reward-driven DeFi is here. Generate volume across paired assets,
                 strengthening liquidity and delivering consistent BNB rewards to holders.
+                50% of all DEX revenue distributed to the community.
               </HeroSubtitle>
             </motion.div>
             <motion.div
@@ -863,7 +969,7 @@ export default function HomePageClient() {
                         fontSize: '12px',
                         fontWeight: 600,
                         color: '#fff',
-                        background: 'linear-gradient(90deg, #28E0B9, #00D4FF)',
+                        background: 'linear-gradient(90deg, #2DD4BF, #00D4FF)',
                         borderRadius: '20px',
                         textDecoration: 'none',
                         transition: 'transform 0.2s',
@@ -887,7 +993,7 @@ export default function HomePageClient() {
                   rel="noopener noreferrer"
                   style={{
                     fontSize: '14px',
-                    color: '#28E0B9',
+                    color: '#2DD4BF',
                     textDecoration: 'underline',
                     fontWeight: 500
                   }}
@@ -924,7 +1030,7 @@ export default function HomePageClient() {
                 {[
                   { label: "Total Supply", percent: "1,000,000,000", color: "#8B5CF6" },
                   { label: "Tax (Buy/Sell)", percent: "4%", color: "#EC4899" },
-                  { label: "DEX Revenue to BnB", percent: "50%", color: "#F59E0B" },
+                  { label: "DEX Revenue → BnB", percent: "50%", color: "#F59E0B" },
                   { label: "Burn on Distribution", percent: "20%", color: "#EF4444" },
                   { label: "BNB Rewards (12h)", percent: "40%", color: "#10B981" },
                   { label: "Buyback & Burn (12h)", percent: "20%", color: "#06B6D4" },
@@ -1018,7 +1124,7 @@ export default function HomePageClient() {
                   <CTAButton>Go to Swap Page</CTAButton>
                 </Link>
                 <Link href="/zap" passHref>
-                  <CTAButton style={{ background: 'linear-gradient(90deg, #28E0B9, #00D4FF)' }}>Go to Zap Page</CTAButton>
+                  <CTAButton style={{ background: 'linear-gradient(90deg, #2DD4BF, #00D4FF)' }}>Go to Zap Page</CTAButton>
                 </Link>
               </div>
             </AboutContent>
@@ -1074,16 +1180,37 @@ export default function HomePageClient() {
         </MainContent>
 
         <Footer>
-          <FooterLinks>
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-service">Terms of Service</a>
-            <a href="/cookie-policy">Cookie Policy</a>
-            <a href="/contact">Contact</a>
-          </FooterLinks>
+          <FooterGrid>
+            <FooterColumn>
+              <h4>Protocol</h4>
+              <a href="/swap">Swap</a>
+              <a href="/swap-all">Swap All</a>
+              <a href="/zap">Zap</a>
+              <a href="/bridge">Bridge</a>
+            </FooterColumn>
+            <FooterColumn>
+              <h4>Resources</h4>
+              <a href="https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB" target="_blank" rel="noopener noreferrer">DexScreener</a>
+              <a href="https://revshare.dev/token/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c" target="_blank" rel="noopener noreferrer">RevShare</a>
+              <a href="/limit-orders">Limit Orders</a>
+            </FooterColumn>
+            <FooterColumn>
+              <h4>Community</h4>
+              <a href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer">Twitter</a>
+              <a href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">Telegram</a>
+            </FooterColumn>
+            <FooterColumn>
+              <h4>Legal</h4>
+              <a href="/privacy-policy">Privacy Policy</a>
+              <a href="/terms-of-service">Terms of Service</a>
+              <a href="/cookie-policy">Cookie Policy</a>
+              <a href="/contact">Contact</a>
+            </FooterColumn>
+          </FooterGrid>
           <Disclaimer>
             <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by PancakeSwap & KyberSwap and is not responsible for any financial losses. Please trade responsibly.
           </Disclaimer>
-          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap & KyberSwap</p>
+          <p style={{ marginTop: '10px', textAlign: 'center' }}>© 2026 Arbitrage Inception. All rights reserved. | Powered by PancakeSwap & KyberSwap</p>
         </Footer>
       </Container>
     </>

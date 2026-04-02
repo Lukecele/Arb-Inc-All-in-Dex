@@ -6,11 +6,11 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
+    default: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
     template: '%s | Arbitrage Inception',
   },
-  description: 'Swap, zap, and provide liquidity on BSC with the best rates. Features custom ARB Inc swaps, liquidity pools, and cross-DEX aggregation powered by PancakeSwap & KyberSwap.',
-  keywords: ['DeFi', 'BSC', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator', 'Zap', 'Yield Farming'],
+  description: 'Swap, zap, bridge, and earn BNB rewards with Arbitrage Inception. The all-in-one DeFi aggregator on BNB Smart Chain featuring deflationary tokenomics, automated token burns, passive income through 12h BNB distributions, and cross-DEX aggregation powered by PancakeSwap & KyberSwap.',
+  keywords: ['DeFi', 'BSC', 'BNB Smart Chain', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'KyberSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator', 'Zap', 'Yield Farming', 'BNB Rewards', 'Deflationary Token', 'Token Burn', 'Passive Income', 'Cross-Chain Bridge', 'Mayan Finance'],
   verification: {
     google: '2b040ac83f9d76c4',
   },
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     canonical: 'https://arbitrage-inc.exchange/',
   },
   openGraph: {
-    title: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
-    description: 'Swap, zap, and provide liquidity on BSC with the best rates.',
+    title: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
+    description: 'Swap, zap, bridge, and earn BNB rewards. Deflationary tokenomics with automated burns and passive income distributions.',
     type: 'website',
     url: 'https://arbitrage-inc.exchange/',
     siteName: 'Arbitrage Inception',
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
-    description: 'Swap, zap, and provide liquidity on BSC with the best rates.',
+    title: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
+    description: 'Swap, zap, bridge, and earn BNB rewards. Deflationary tokenomics with automated burns and passive income distributions.',
     images: ['https://arbitrage-inc.exchange/og-image.svg'],
   },
   robots: {
@@ -49,33 +49,67 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Arbitrage Inception',
-  description: 'Swap, zap, and provide liquidity on BSC with the best rates. Features custom ARB Inc swaps, liquidity pools, and cross-DEX aggregation.',
-  url: 'https://arbitrage-inc.exchange/',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://arbitrage-inc.exchange/swap?search={search_term_string}'
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Arbitrage Inception',
+    description: 'All-in-one DeFi aggregator on BNB Smart Chain. Swap, zap, bridge, and earn BNB rewards with deflationary tokenomics.',
+    url: 'https://arbitrage-inc.exchange/',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://arbitrage-inc.exchange/swap?search={search_term_string}'
+      },
+      'query-input': 'required name=search_term_string'
     },
-    'query-input': 'required name=search_term_string'
+    sameAs: [
+      'https://x.com/Arbitrageincept',
+      'https://t.me/ArbitrageInception'
+    ],
+    publisher: {
+      '@type': 'Organization',
+      name: 'Arbitrage Inception',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://arbitrage-inc.exchange/og-image.svg'
+      }
+    }
   },
-  sameAs: [
-    'https://x.com/Arbitrageincept',
-    'https://t.me/ArbitrageInception'
-  ],
-  publisher: {
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FinancialProduct',
+    name: 'ARB Inc Token',
+    description: 'Deflationary BEP-20 token on BNB Smart Chain with BNB rewards distribution, automated token burns, and DEX revenue sharing.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Arbitrage Inception'
+    },
+    category: 'Cryptocurrency',
+    url: 'https://arbitrage-inc.exchange/',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock'
+    }
+  },
+  {
+    '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Arbitrage Inception',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://arbitrage-inc.exchange/og-image.svg'
+    url: 'https://arbitrage-inc.exchange/',
+    logo: 'https://arbitrage-inc.exchange/og-image.svg',
+    sameAs: [
+      'https://x.com/Arbitrageincept',
+      'https://t.me/ArbitrageInception'
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      url: 'https://arbitrage-inc.exchange/contact'
     }
   }
-}
+]
 
 export default function RootLayout({
   children,

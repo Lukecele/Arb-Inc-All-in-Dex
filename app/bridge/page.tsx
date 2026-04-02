@@ -27,7 +27,7 @@ const mayanConfig = {
     icon: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
     uri: 'https://arbitrage-inc.exchange',
   },
-  solanaReferrerAddress: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hFw2kXrZi',
+  solanaReferrerAddress: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hHw2kXrZi',
   evmReferrerAddress: '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7',
   referrerBps: 30,
   sourceChains: ['bsc', 'ethereum', 'arbitrum', 'polygon', 'base', 'avalanche', 'solana'],
@@ -61,7 +61,7 @@ function handleWidgetReady() {
 
 export default function BridgePage() {
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: '#09090b' }}>
+    <div style={{ width: '100%', minHeight: '100vh', background: '#050508' }}>
       {/* Header */}
       <div style={{
         display: 'flex',
@@ -70,7 +70,13 @@ export default function BridgePage() {
         padding: '15px 20px',
         maxWidth: 1200,
         margin: '0 auto',
-        borderBottom: '1px solid #3f3f46',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        background: 'rgba(10, 10, 18, 0.75)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
         flexWrap: 'wrap',
         gap: '10px',
       }}>
@@ -78,12 +84,12 @@ export default function BridgePage() {
           <img
             src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto"
             alt="Logo"
-            style={{ width: 40, height: 40, borderRadius: '50%' }}
+            style={{ width: 40, height: 40, borderRadius: '50%', boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}
           />
           <span style={{
             fontSize: 18,
             fontWeight: 700,
-            background: 'linear-gradient(90deg, #8B5CF6, #EC4899)',
+            background: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #EC4899 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>
@@ -93,13 +99,15 @@ export default function BridgePage() {
 
         <nav style={{
           display: 'flex',
-          gap: '8px',
+          gap: '4px',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          background: 'rgba(255,255,255,0.05)',
-          padding: '8px 16px',
-          borderRadius: 50,
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(255,255,255,0.03)',
+          padding: '6px 10px',
+          borderRadius: 100,
+          border: '1px solid rgba(255,255,255,0.06)',
+          WebkitBackdropFilter: 'blur(16px)',
+          backdropFilter: 'blur(16px)',
         }}>
           {navLinks.map((link) => (
             <Link
@@ -108,12 +116,12 @@ export default function BridgePage() {
               style={{
                 color: link.active ? '#fff' : '#a1a1aa',
                 textDecoration: 'none',
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: 13,
-                padding: '8px 16px',
-                borderRadius: 20,
-                background: link.active ? 'rgba(255,255,255,0.1)' : 'transparent',
-                transition: 'all 0.2s',
+                padding: '7px 14px',
+                borderRadius: 100,
+                background: link.active ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
+                transition: 'all 0.2s ease',
               }}
             >
               {link.label}
@@ -125,23 +133,42 @@ export default function BridgePage() {
       {/* Main content */}
       <div style={{ padding: '24px 16px' }}>
         <div style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
-          <h1 style={{ color: '#fff', marginBottom: 8 }}>Bridge</h1>
-          <p style={{ color: '#a1a1aa', fontSize: 13, marginBottom: 20 }}>
+          <h1 style={{
+            color: '#fff',
+            marginBottom: 8,
+            fontSize: 36,
+            fontWeight: 800,
+            background: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #EC4899 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '-0.02em',
+          }}>Bridge</h1>
+          <p style={{ color: '#a1a1aa', fontSize: 16, marginBottom: 24 }}>
             Powered by <strong style={{ color: '#8B5CF6' }}>Mayan Finance</strong>
           </p>
 
           {/* Info box */}
           <div style={{
-            background: '#18181b',
-            border: '1px solid #3f3f46',
-            borderRadius: 12,
-            padding: 16,
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%)',
+            border: '1px solid rgba(139, 92, 246, 0.2)',
+            borderRadius: 16,
+            padding: 20,
             marginBottom: 24,
             color: '#a1a1aa',
             fontSize: 14,
-            lineHeight: 1.5,
+            lineHeight: 1.7,
             textAlign: 'left',
+            position: 'relative',
+            overflow: 'hidden',
           }}>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 1,
+              background: 'linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent)',
+            }} />
             Bridge tokens across <strong style={{ color: '#fff' }}>Solana ↔ BNB Chain</strong> and
             other major networks with best-rate routing.
             Powered by <strong style={{ color: '#8B5CF6' }}>Mayan Finance</strong> — fast, secure,
@@ -152,14 +179,15 @@ export default function BridgePage() {
 
           {/* Mayan Finance Widget container */}
           <div style={{
-            borderRadius: 16,
+            borderRadius: 20,
             overflow: 'hidden',
-            border: '1px solid #3f3f46',
-            background: '#18181b',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            background: '#0a0a12',
             minHeight: 500,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
           }}>
             <div id="mayan_widget" style={{ width: '100%' }} />
           </div>
@@ -167,23 +195,39 @@ export default function BridgePage() {
           {/* Why use section */}
           <div style={{
             marginTop: 40,
-            padding: 20,
-            background: '#18181b',
-            borderRadius: 12,
+            padding: 24,
+            background: 'rgba(255, 255, 255, 0.02)',
+            borderRadius: 16,
             textAlign: 'left',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
           }}>
-            <h3 style={{ color: '#fff', marginBottom: 12, fontSize: 16 }}>Why use our Bridge?</h3>
-            <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 20, lineHeight: 1.8 }}>
-              <li>Best Solana cross-chain rates via Mayan Finance routing</li>
-              <li>Native Solana ↔ BNB Chain bridging</li>
-              <li>Fast finality — Mayan Swift protocol</li>
-              <li>Support for 10+ major blockchains</li>
-              <li>Secure, audited, and non-custodial</li>
+            <h3 style={{ color: '#fff', marginBottom: 16, fontSize: 18, fontWeight: 700 }}>Why use our Bridge?</h3>
+            <ul style={{ color: '#a1a1aa', fontSize: 14, paddingLeft: 0, lineHeight: 1.8, listStyle: 'none' }}>
+              <li style={{ paddingLeft: 20, position: 'relative', marginBottom: 8 }}>
+                <span style={{ position: 'absolute', left: 0, color: '#8B5CF6', fontWeight: 600 }}>→</span>
+                Best Solana cross-chain rates via Mayan Finance routing
+              </li>
+              <li style={{ paddingLeft: 20, position: 'relative', marginBottom: 8 }}>
+                <span style={{ position: 'absolute', left: 0, color: '#8B5CF6', fontWeight: 600 }}>→</span>
+                Native Solana ↔ BNB Chain bridging
+              </li>
+              <li style={{ paddingLeft: 20, position: 'relative', marginBottom: 8 }}>
+                <span style={{ position: 'absolute', left: 0, color: '#8B5CF6', fontWeight: 600 }}>→</span>
+                Fast finality — Mayan Swift protocol
+              </li>
+              <li style={{ paddingLeft: 20, position: 'relative', marginBottom: 8 }}>
+                <span style={{ position: 'absolute', left: 0, color: '#8B5CF6', fontWeight: 600 }}>→</span>
+                Support for 10+ major blockchains
+              </li>
+              <li style={{ paddingLeft: 20, position: 'relative' }}>
+                <span style={{ position: 'absolute', left: 0, color: '#8B5CF6', fontWeight: 600 }}>→</span>
+                Secure, audited, and non-custodial
+              </li>
             </ul>
           </div>
 
           {/* Footer */}
-          <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid #3f3f46' }}>
+          <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid rgba(255, 255, 255, 0.06)', position: 'relative' }}>
             <div style={{
               display: 'flex',
               justifyContent: 'center',
@@ -191,22 +235,22 @@ export default function BridgePage() {
               marginBottom: 20,
               flexWrap: 'wrap',
             }}>
-              <a href="/privacy-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13 }}>Privacy Policy</a>
-              <a href="/terms-of-service" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13 }}>Terms of Service</a>
-              <a href="/cookie-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13 }}>Cookie Policy</a>
-              <a href="/contact" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13 }}>Contact</a>
+              <a href="/privacy-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Privacy Policy</a>
+              <a href="/terms-of-service" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Terms of Service</a>
+              <a href="/cookie-policy" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Cookie Policy</a>
+              <a href="/contact" style={{ color: '#71717a', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s' }}>Contact</a>
             </div>
 
             <div style={{
               maxWidth: 600,
               margin: '0 auto 20px',
               padding: 15,
-              background: 'rgba(255, 152, 0, 0.1)',
-              border: '1px solid rgba(255, 152, 0, 0.3)',
-              borderRadius: 8,
-              color: '#FF9901',
+              background: 'rgba(255, 152, 0, 0.06)',
+              border: '1px solid rgba(255, 152, 0, 0.15)',
+              borderRadius: 10,
+              color: '#FFB347',
               fontSize: 12,
-              lineHeight: 1.5,
+              lineHeight: 1.6,
             }}>
               <strong>⚠️ Risk Disclaimer:</strong> Cross-chain bridge transactions involve risk.
               Arbitrage Inception provides a frontend interface powered by Mayan Finance and is not

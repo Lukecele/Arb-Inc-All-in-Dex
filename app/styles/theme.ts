@@ -1,5 +1,5 @@
 // Modern Design System - Arbitrage Inception
-// Inspired by shadcn-ui + DeFi aesthetic
+// Premium DeFi aesthetic inspired by Uniswap, Aave, Lido
 
 export const theme = {
   colors: {
@@ -8,32 +8,32 @@ export const theme = {
       DEFAULT: '#8B5CF6',
       light: '#A78BFA',
       dark: '#7C3AED',
-      gradient: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+      gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #EC4899 100%)',
     },
     
     // Accent colors  
     accent: {
-      DEFAULT: '#28E0B9',
+      DEFAULT: '#2DD4BF',
       light: '#5EEAD4',
       dark: '#14B8A6',
       pink: '#EC4899',
     },
     
-    // Background layers
+    // Background layers - deeper, richer
     background: {
-      DEFAULT: '#09090b',        // Deepest black
-      primary: '#0f0f1a',        // Main background
-      secondary: '#18181b',      // Card backgrounds
-      tertiary: '#27272a',       // Elevated elements
-      overlay: 'rgba(0, 0, 0, 0.8)',
+      DEFAULT: '#050508',
+      primary: '#0a0a12',
+      secondary: '#111118',
+      tertiary: '#1a1a24',
+      overlay: 'rgba(0, 0, 0, 0.85)',
     },
     
     // Text hierarchy
     text: {
-      primary: '#fafafa',        // Highest contrast
-      secondary: '#a1a1aa',      // Secondary info
-      muted: '#71717a',          // Placeholder/muted
-      accent: '#a78bfa',         // Accent text
+      primary: '#fafafa',
+      secondary: '#a1a1aa',
+      muted: '#71717a',
+      accent: '#c084fc',
     },
     
     // Status colors
@@ -46,16 +46,16 @@ export const theme = {
     
     // Borders
     border: {
-      DEFAULT: 'rgba(255, 255, 255, 0.1)',
-      hover: 'rgba(139, 92, 246, 0.5)',
+      DEFAULT: 'rgba(255, 255, 255, 0.06)',
+      hover: 'rgba(139, 92, 246, 0.4)',
       focus: '#8B5CF6',
     },
     
-    // Glass effect backgrounds
+    // Glass effect backgrounds - subtler
     glass: {
-      light: 'rgba(255, 255, 255, 0.03)',
-      medium: 'rgba(255, 255, 255, 0.05)',
-      heavy: 'rgba(255, 255, 255, 0.1)',
+      light: 'rgba(255, 255, 255, 0.02)',
+      medium: 'rgba(255, 255, 255, 0.04)',
+      heavy: 'rgba(255, 255, 255, 0.08)',
     },
   },
   
@@ -116,15 +116,15 @@ export const theme = {
     full: '9999px',
   },
   
-  // Shadows
+  // Shadows with enhanced glow
   shadows: {
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
-    DEFAULT: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-    md: '0 10px 15px -3px rgba(0, 0, 0, 0.4)',
-    lg: '0 20px 25px -5px rgba(0, 0, 0, 0.5)',
-    glow: '0 0 20px rgba(139, 92, 246, 0.4)',
-    glowStrong: '0 0 40px rgba(139, 92, 246, 0.6)',
-    innerGlow: 'inset 0 0 20px rgba(139, 92, 246, 0.1)',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
+    DEFAULT: '0 4px 6px -1px rgba(0, 0, 0, 0.4)',
+    md: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
+    lg: '0 20px 25px -5px rgba(0, 0, 0, 0.6)',
+    glow: '0 0 20px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1)',
+    glowStrong: '0 0 30px rgba(139, 92, 246, 0.4), 0 0 80px rgba(139, 92, 246, 0.15)',
+    innerGlow: 'inset 0 0 20px rgba(139, 92, 246, 0.08)',
   },
   
   // Transitions
