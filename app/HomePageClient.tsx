@@ -2,6 +2,7 @@
 
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 import Header from '../components/Header'
+import Footer from '../components/Footer'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaCoins, FaClock, FaDollarSign, FaWater } from 'react-icons/fa'
@@ -340,12 +341,12 @@ const TokenomicsChart = styled.div`
   flex-shrink: 0;
   border-radius: 50%;
   background: conic-gradient(
-    #F59E0B 0% 50%,
-    #EF4444 50% 70%,
-    #10B981 70% 100%
+    #8B5CF6 0% 50%,
+    #EC4899 50% 70%,
+    #06B6D4 70% 100%
   );
   position: relative;
-  box-shadow: 0 0 60px rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 60px rgba(139, 92, 246, 0.2);
   &::after {
     content: '';
     position: absolute;
@@ -1297,7 +1298,7 @@ export default function HomePageClient() {
           </Section>
         </MainContent>
 
-        <PageFooter />
+        <Footer />
       </Container>
     </>
   )

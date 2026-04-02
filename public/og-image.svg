@@ -5,8 +5,8 @@
       <stop offset="100%" style="stop-color:#1a1a24"/>
     </linearGradient>
     <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#7B61FF"/>
-      <stop offset="100%" style="stop-color:#9B85FF"/>
+      <stop offset="0%" style="stop-color:#8B5CF6"/>
+      <stop offset="100%" style="stop-color:#EC4899"/>
     </linearGradient>
   </defs>
   
@@ -22,10 +22,10 @@
   <text x="600" y="200" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle">AI</text>
   
   <!-- Title -->
-  <text x="600" y="340" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">Arbitrage Inc</text>
-  
-  <!-- Subtitle -->
-  <text x="600" y="410" font-family="Arial, sans-serif" font-size="32" fill="#A0A0B8" text-anchor="middle">Swap Widget</text>
+   <text x="600" y="340" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">Arbitrage Inception</text>
+   
+   <!-- Subtitle -->
+   <text x="600" y="410" font-family="Arial, sans-serif" font-size="32" fill="#A0A0B8" text-anchor="middle">All-in-One DeFi Aggregator on BSC</text>
   
   <!-- Divider -->
   <rect x="500" y="450" width="200" height="4" rx="2" fill="url(#accent)"/>

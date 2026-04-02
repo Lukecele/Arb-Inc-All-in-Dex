@@ -6,8 +6,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
-    template: '%s | Arbitrage Inception',
+    default: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
+    template: '%s',
   },
   description: 'Swap, zap, bridge, and earn BNB rewards with Arbitrage Inception. The all-in-one DeFi aggregator on BNB Smart Chain featuring deflationary tokenomics, automated token burns, passive income through 12h BNB distributions, and cross-DEX aggregation powered by PancakeSwap & KyberSwap.',
   keywords: ['DeFi', 'BSC', 'BNB Smart Chain', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'KyberSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator', 'Zap', 'Yield Farming', 'BNB Rewards', 'Deflationary Token', 'Token Burn', 'Passive Income', 'Cross-Chain Bridge', 'Mayan Finance'],
