@@ -1,7 +1,7 @@
 'use client';
 
 import styled, { keyframes } from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { FaCoins, FaFire, FaChartLine, FaShieldAlt, FaRocket, FaCubes, FaClock, FaWallet, FaExchangeAlt } from 'react-icons/fa';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -409,11 +409,11 @@ const CTAButtonSecondary = styled.a`
   }
 `;
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: 'easeOut' }
+    transition: { delay: i * 0.08, duration: 0.5, ease: [0.0, 0.0, 0.2, 1] }
   }),
 };
 
