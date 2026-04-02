@@ -378,7 +378,7 @@ function SwapPageContent() {
     <>
       <GlobalStyle />
       <Container>
-        <PageHeader activePage="/swap" />
+        <PageHeader />
 
         <MainContent>
           <InfoCard>
