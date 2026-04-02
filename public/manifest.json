@@ -1,21 +1,21 @@
 {
   "name": "Arbitrage Inception",
   "short_name": "ArbInc",
-  "description": "Swap, zap, and provide liquidity on BSC with the best rates",
+  "description": "All-in-One DeFi Aggregator on BNB Smart Chain — Swap, Zap, Bridge & earn BNB rewards every 12h",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f0f1a",
-  "theme_color": "#28E0B9",
+  "orientation": "portrait-primary",
+  "lang": "en-US",
+  "scope": "/",
+  "background_color": "#070715",
+  "theme_color": "#7C3AED",
+  "categories": ["finance", "utilities"],
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
