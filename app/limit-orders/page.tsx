@@ -787,7 +787,7 @@ export default function LimitOrdersPage() {
             {walletAddress ? `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}` : 'Connect Wallet'}
           </WalletBadge>
         </HeaderRight>
-      </Header>
+      </PageHeader>
       <DescriptionCard>
         Place limit orders on BSC with the best rates. Set your price and trade automatically when the market reaches your target. Powered by <strong>KyberSwap</strong>.
       </DescriptionCard>
