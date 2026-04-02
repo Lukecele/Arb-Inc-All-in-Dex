@@ -5,12 +5,15 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://arbitrage-inc.exchange'),
   title: {
     default: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
-    template: '%s',
+    template: '%s | Arbitrage Inception',
   },
   description: 'Swap, zap, bridge, and earn BNB rewards with Arbitrage Inception. The all-in-one DeFi aggregator on BNB Smart Chain featuring deflationary tokenomics, automated token burns, passive income through 12h BNB distributions, and cross-DEX aggregation powered by PancakeSwap & KyberSwap.',
   keywords: ['DeFi', 'BSC', 'BNB Smart Chain', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'KyberSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator', 'Zap', 'Yield Farming', 'BNB Rewards', 'Deflationary Token', 'Token Burn', 'Passive Income', 'Cross-Chain Bridge', 'Mayan Finance'],
+  applicationName: 'Arbitrage Inception',
+  authors: [{ name: 'Arbitrage Inception', url: 'https://arbitrage-inc.exchange' }],
   verification: {
     google: '2b040ac83f9d76c4',
   },
@@ -25,10 +28,10 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: 'https://arbitrage-inc.exchange/og-image.svg',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Arbitrage Inception',
+        alt: 'Arbitrage Inception - DeFi Aggregator on BNB Smart Chain',
       },
     ],
   },
@@ -36,11 +39,19 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
     description: 'Swap, zap, bridge, and earn BNB rewards. Deflationary tokenomics with automated burns and passive income distributions.',
-    images: ['https://arbitrage-inc.exchange/og-image.svg'],
+    images: ['/og-image.svg'],
+    site: '@Arbitrageincept',
+    creator: '@Arbitrageincept',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: '/favicon.svg',
