@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Arbitrage Inception - DeFi Aggregator on BNB Smart Chain',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Arbitrage Inception | All-in-One DeFi Aggregator, Swap & Liquidity Hub on BSC',
     description: 'Swap, zap, bridge, and earn BNB rewards. Deflationary tokenomics with automated burns and passive income distributions.',
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
     site: '@Arbitrageincept',
     creator: '@Arbitrageincept',
   },
@@ -84,7 +84,7 @@ const jsonLd = [
       name: 'Arbitrage Inception',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://arbitrage-inc.exchange/og-image.svg'
+        url: 'https://arbitrage-inc.exchange/og-image.png'
       }
     }
   },
@@ -109,7 +109,7 @@ const jsonLd = [
     '@type': 'Organization',
     name: 'Arbitrage Inception',
     url: 'https://arbitrage-inc.exchange/',
-    logo: 'https://arbitrage-inc.exchange/og-image.svg',
+    logo: 'https://arbitrage-inc.exchange/og-image.png',
     sameAs: [
       'https://x.com/Arbitrageincept',
       'https://t.me/ArbitrageInception'
