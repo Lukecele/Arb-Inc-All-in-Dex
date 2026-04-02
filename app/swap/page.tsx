@@ -67,7 +67,7 @@ const Container = styled.div`
   }
 `
 
-const Header = styled.header`
+const PageHeader = styled.header`
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -294,7 +294,7 @@ const FeatureListItem = styled.li`
   }
 `
 
-const Footer = styled.footer`
+const PageFooter = styled.footer`
   width: 100%;
   max-width: 1200px;
   padding: 40px 0;
@@ -378,7 +378,7 @@ function SwapPageContent() {
     <>
       <GlobalStyle />
       <Container>
-        <Header activePage="/swap" />
+        <PageHeader activePage="/swap" />
 
         <MainContent>
           <InfoCard>

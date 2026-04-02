@@ -85,7 +85,7 @@ const Container = styled.div`
   }
 `
 
-const Header = styled.header`
+const PageHeader = styled.header`
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -229,7 +229,7 @@ const SwapSection = styled.section`
   width: 100%;
 `
 
-const Footer = styled.footer`
+const PageFooter = styled.footer`
   width: 100%;
   max-width: 1200px;
   padding: 40px 0;
@@ -334,7 +334,7 @@ function SwapAllContent() {
     <>
       <GlobalStyle />
       <Container>
-        <Header activePage="/swap-all" />
+        <PageHeader activePage="/swap-all" />
 
         <MainContent>
           <section style={{ 

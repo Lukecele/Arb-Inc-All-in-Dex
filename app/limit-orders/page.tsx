@@ -153,7 +153,7 @@ const NavLink = styled.a<{ $active?: boolean }>`
   }
 `;
 
-const Header = styled.div`
+const PageHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -326,7 +326,7 @@ const SwapIcon = styled.button`
   &:hover { background: #3f3f46; }
 `;
 
-const Footer = styled.footer`
+const PageFooter = styled.footer`
   width: 100%;
   max-width: 1200px;
   padding: 40px 0;
@@ -779,7 +779,7 @@ export default function LimitOrdersPage() {
   return (
     <Container>
       <Header activePage="/limit-orders" />
-      <Header>
+      <PageHeader>
         <Title>Limit Order</Title>
         <HeaderRight>
           <ChainBadge><span style={{color:'#20B8CD'}}>●</span> BNB Chain</ChainBadge>
