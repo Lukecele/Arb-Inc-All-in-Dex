@@ -8,3 +8,7 @@ dev.log
 test-results/
 playwright-report/
 .vercel
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+.turbo/
+out/
