@@ -3,8 +3,8 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaCoins, FaFire, FaChartLine, FaShieldAlt, FaRocket, FaCubes, FaClock, FaWallet, FaExchangeAlt, FaPercent } from 'react-icons/fa';
-import Header, { navItems } from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header, { navItems } from '../components/Header';
+import Footer from '../components/Footer';
 import theme from '../styles/theme';
 
 const Container = styled.div`

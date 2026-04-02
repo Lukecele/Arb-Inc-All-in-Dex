@@ -1,8 +1,8 @@
 'use client'
 
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaCoins, FaClock, FaDollarSign, FaWater } from 'react-icons/fa'
