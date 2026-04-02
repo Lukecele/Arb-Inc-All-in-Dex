@@ -28,10 +28,13 @@ const HeaderContainer = styled.header`
   position: sticky;
   top: 0;
   z-index: ${theme.zIndex.sticky};
-  background: rgba(10, 10, 18, 0.8);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
+  background: rgba(7, 7, 21, 0.85);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid transparent;
+  box-shadow:
+    0 1px 0 rgba(124, 58, 237, 0.25),
+    0 4px 24px rgba(0, 0, 0, 0.4);
   @media (min-width: 769px) {
     padding: 16px 0;
   }
@@ -50,58 +53,65 @@ const Logo = styled.img`
   height: 36px;
   border-radius: ${theme.borderRadius.full};
   box-shadow: ${theme.shadows.glow};
+  ring: 2px solid rgba(124, 58, 237, 0.4);
+  outline: 2px solid rgba(124, 58, 237, 0.25);
+  outline-offset: 2px;
   @media (min-width: 769px) {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
 `;
 
 const SiteTitle = styled.span`
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
   @media (min-width: 769px) {
-    font-size: 24px;
+    font-size: 22px;
   }
 `;
 
 const Nav = styled.nav`
   display: flex;
-  gap: 4px;
+  gap: 2px;
   background: rgba(255, 255, 255, 0.03);
-  padding: 6px 10px;
+  padding: 5px 8px;
   border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   flex-wrap: wrap;
   justify-content: center;
   @media (max-width: 768px) {
-    gap: 3px;
-    padding: 5px 8px;
-    border-radius: 16px;
+    gap: 2px;
+    padding: 4px 6px;
+    border-radius: 14px;
   }
 `;
 
 const NavLinkStyled = styled(Link)<{ $active?: boolean }>`
-  color: ${props => props.$active ? theme.colors.accent.DEFAULT : theme.colors.text.secondary};
+  color: ${props => props.$active ? '#fff' : theme.colors.text.secondary};
   text-decoration: none;
-  font-weight: 500;
+  font-weight: ${props => props.$active ? '600' : '500'};
   font-size: 13px;
-  padding: 7px 14px;
+  padding: 6px 13px;
   border-radius: 100px;
   transition: ${theme.transitions.fast};
   white-space: nowrap;
-  background: ${props => props.$active ? 'rgba(40, 224, 185, 0.1)' : 'transparent'};
+  background: ${props => props.$active
+    ? 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(147,51,234,0.4), rgba(236,72,153,0.3))'
+    : 'transparent'};
+  box-shadow: ${props => props.$active ? '0 0 12px rgba(124,58,237,0.3)' : 'none'};
   &:hover {
     color: ${theme.colors.text.primary};
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.07);
   }
   @media (max-width: 768px) {
-    font-size: 12px;
-    padding: 5px 10px;
+    font-size: 11px;
+    padding: 5px 9px;
   }
 `;
 
@@ -109,13 +119,14 @@ const StatusBadge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  background: rgba(16, 185, 129, 0.1);
+  padding: 5px 12px;
+  background: rgba(16, 185, 129, 0.08);
   border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 100px;
   font-size: 11px;
   color: ${theme.colors.status.success};
   font-weight: 600;
+  letter-spacing: 0.04em;
   flex-shrink: 0;
 `;
 
@@ -124,12 +135,11 @@ const StatusDot = styled.div`
   height: 6px;
   border-radius: 50%;
   background: ${theme.colors.status.success};
-  box-shadow: 0 0 6px ${theme.colors.status.success};
+  box-shadow: 0 0 8px ${theme.colors.status.success};
   animation: pulse 2s ease-in-out infinite;
-  
   @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px #10B981; }
+    50% { opacity: 0.5; box-shadow: 0 0 3px #10B981; }
   }
 `;
 
