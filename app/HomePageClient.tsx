@@ -938,17 +938,6 @@ export default function HomePageClient() {
     },
   ]
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map(({ q, a }) => ({
-      '@type': 'Question',
-      name: q,
-      acceptedAnswer: { '@type': 'Answer', text: a }
-    }))
-  }
-
-
   const fetchTokenStats = async () => {
     try {
       const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
@@ -997,10 +986,6 @@ export default function HomePageClient() {
   return (
     <>
       <GlobalStyle />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <Container>
         <BackgroundOrbs>
           <Orb $color="#8B5CF6" $size="400px" $top="-100px" $left="-100px" $delay="20s" />

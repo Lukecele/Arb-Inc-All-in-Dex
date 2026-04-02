@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import Script from 'next/script';
@@ -32,13 +32,13 @@ declare global {
 }
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/swap', label: 'Swap (Custom)' },
-  { href: '/swap-all', label: 'Swap All' },
-  { href: '/zap', label: 'Zap' },
-  { href: '/bridge', label: 'Bridge', active: true },
-  { href: '/limit-orders', label: 'Limit Orders' },
-  { href: '/contact', label: 'Contact' },
+  { href: "/", label: "Home" },
+  { href: "/swap", label: "Swap (Custom)" },
+  { href: "/swap-all", label: "Swap All" },
+  { href: "/zap", label: "Zap" },
+  { href: "/bridge", label: "Bridge", active: true },
+  { href: "/limit-orders", label: "Limit Orders" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const mayanConfig = {
