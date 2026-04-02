@@ -109,7 +109,7 @@ const Container = styled.div`
   }
 `
 
-const Header = styled.header`
+const PageHeader = styled.header`
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -902,7 +902,7 @@ export default function HomePageClient() {
           <Orb $color="#06B6D4" $size="250px" $top="30%" $left="60%" $delay="30s" />
           <Orb $color="#10B981" $size="350px" $top="70%" $left="20%" $delay="35s" />
         </BackgroundOrbs>
-        <Header />
+        <PageHeader />
 
         <MainContent>
           <HeroSection as={motion.div}
