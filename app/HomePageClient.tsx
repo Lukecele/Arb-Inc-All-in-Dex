@@ -1,6 +1,7 @@
 'use client'
 
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
+import Header from '../components/Header'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe, FaRocket, FaShieldAlt, FaCubes, FaCoins, FaClock, FaDollarSign, FaWater } from 'react-icons/fa'
@@ -900,6 +901,7 @@ export default function HomePageClient() {
           <Orb $color="#06B6D4" $size="250px" $top="30%" $left="60%" $delay="30s" />
           <Orb $color="#10B981" $size="350px" $top="70%" $left="20%" $delay="35s" />
         </BackgroundOrbs>
+        <Header activePage="/" />
         <PageHeader />
 
         <MainContent>

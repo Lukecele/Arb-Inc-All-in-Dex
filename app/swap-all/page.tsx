@@ -334,6 +334,7 @@ function SwapAllContent() {
     <>
       <GlobalStyle />
       <Container>
+        <Header activePage="/swap-all" />
         <PageHeader />
 
         <MainContent>
