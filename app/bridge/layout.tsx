@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Arbitrage Inception Bridge - Cross-Chain Swaps',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Bridge | Cross-Chain Token Swaps | Arbitrage Inception',
     description: 'Bridge tokens across 20+ chains with the best rates. Powered by Mayan Finance.',
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
 }
 
