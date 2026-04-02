@@ -330,16 +330,12 @@ const TokenomicsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
-  }
+  gap: 32px;
 `
 
 const TokenomicsChart = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   flex-shrink: 0;
   border-radius: 50%;
   background: conic-gradient(
@@ -348,15 +344,15 @@ const TokenomicsChart = styled.div`
     #10B981 70% 100%
   );
   position: relative;
-  box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 0 60px rgba(245, 158, 11, 0.12);
   &::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     background: #0a0a12;
     border-radius: 50%;
   }
@@ -367,36 +363,106 @@ const TokenomicsChart = styled.div`
   }
 `
 
-const TokenomicsList = styled.div`
-  flex: 1;
+const TokenomicsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `
 
-const TokenomicsItem = styled.div`
+const TokenomicsCard = styled.div`
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.25s ease, background 0.25s ease;
+  &:hover {
+    border-color: rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.03);
+  }
+`
+
+const TokenomicsCardTitle = styled.h3`
+  font-size: 13px;
+  font-weight: 600;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+`
+
+const TokenomicsRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
+const TokenomicsRowLabel = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-`
-
-const TokenomicsColor = styled.div<{ $color: string }>`
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-  background: ${props => props.$color};
-`
-
-const TokenomicsLabel = styled.div`
+  gap: 10px;
   font-size: 14px;
-  color: #A9A9A9;
+  color: #a1a1aa;
 `
 
-const TokenomicsPercent = styled.div`
+const TokenomicsDot = styled.div<{ $color: string }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${props => props.$color};
+  box-shadow: 0 0 8px ${props => props.$color}40;
+`
+
+const TokenomicsRowValue = styled.div`
   font-size: 16px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-left: auto;
+  font-weight: 700;
+  color: #fafafa;
+  letter-spacing: -0.01em;
+`
+
+const TokenomicsNote = styled.p`
+  font-size: 13px;
+  color: #71717a;
+  line-height: 1.6;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+`
+
+const TokenomicsFullWidth = styled.div`
+  grid-column: 1 / -1;
+`
+
+const TokenomicsHighlight = styled.div`
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.06));
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+`
+
+const TokenomicsHighlightValue = styled.div`
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+`
+
+const TokenomicsHighlightLabel = styled.div`
+  font-size: 14px;
+  color: #a1a1aa;
 `
 
 const TimelineContainer = styled.div`
@@ -1026,22 +1092,55 @@ export default function HomePageClient() {
             <SectionTitle>Tokenomics</SectionTitle>
             <TokenomicsContainer>
               <TokenomicsChart />
-              <TokenomicsList>
-                {[
-                  { label: "Total Supply", percent: "1,000,000,000", color: "#8B5CF6" },
-                  { label: "Tax (Buy/Sell)", percent: "4%", color: "#EC4899" },
-                  { label: "DEX Revenue → BnB", percent: "50%", color: "#F59E0B" },
-                  { label: "Burn on Distribution", percent: "20%", color: "#EF4444" },
-                  { label: "BNB Rewards (12h)", percent: "40%", color: "#10B981" },
-                  { label: "Buyback & Burn (12h)", percent: "20%", color: "#06B6D4" },
-                ].map((item, index) => (
-                  <TokenomicsItem key={index}>
-                    <TokenomicsColor $color={item.color} />
-                    <TokenomicsLabel>{item.label}</TokenomicsLabel>
-                    <TokenomicsPercent>{item.percent}</TokenomicsPercent>
-                  </TokenomicsItem>
-                ))}
-              </TokenomicsList>
+
+              <TokenomicsHighlight>
+                <TokenomicsHighlightValue>1,000,000,000</TokenomicsHighlightValue>
+                <TokenomicsHighlightLabel>Total Supply • 4% Tax (Buy/Sell)</TokenomicsHighlightLabel>
+              </TokenomicsHighlight>
+
+              <TokenomicsGrid>
+                <TokenomicsCard>
+                  <TokenomicsCardTitle>Revenue Distribution</TokenomicsCardTitle>
+                  <TokenomicsRow>
+                    <TokenomicsRowLabel>
+                      <TokenomicsDot $color="#F59E0B" />
+                      DEX Revenue → BnB
+                    </TokenomicsRowLabel>
+                    <TokenomicsRowValue>50%</TokenomicsRowValue>
+                  </TokenomicsRow>
+                  <TokenomicsRow>
+                    <TokenomicsRowLabel>
+                      <TokenomicsDot $color="#EF4444" />
+                      Burn on Distribution
+                    </TokenomicsRowLabel>
+                    <TokenomicsRowValue>20%</TokenomicsRowValue>
+                  </TokenomicsRow>
+                  <TokenomicsNote>
+                    50% of all DEX revenue is converted to BnB and sent to the distribution wallet every 12 hours.
+                  </TokenomicsNote>
+                </TokenomicsCard>
+
+                <TokenomicsCard>
+                  <TokenomicsCardTitle>Every 12 Hours</TokenomicsCardTitle>
+                  <TokenomicsRow>
+                    <TokenomicsRowLabel>
+                      <TokenomicsDot $color="#10B981" />
+                      BNB Rewards to Holders & Dev
+                    </TokenomicsRowLabel>
+                    <TokenomicsRowValue>40%</TokenomicsRowValue>
+                  </TokenomicsRow>
+                  <TokenomicsRow>
+                    <TokenomicsRowLabel>
+                      <TokenomicsDot $color="#06B6D4" />
+                      Buyback & Burn
+                    </TokenomicsRowLabel>
+                    <TokenomicsRowValue>20%</TokenomicsRowValue>
+                  </TokenomicsRow>
+                  <TokenomicsNote>
+                    Minimum 2,000,000 tokens required to receive rewards. Buyback & burn reduces supply forever.
+                  </TokenomicsNote>
+                </TokenomicsCard>
+              </TokenomicsGrid>
             </TokenomicsContainer>
           </Section>
 
