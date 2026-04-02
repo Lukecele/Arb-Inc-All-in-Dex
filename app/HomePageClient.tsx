@@ -822,6 +822,46 @@ const Disclaimer = styled.div`
   line-height: 1.5;
 `
 
+const FAQContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`
+
+const FAQItem = styled.details`
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.03);
+  transition: border-color 0.2s;
+  &:hover { border-color: rgba(139, 92, 246, 0.4); }
+  &[open] { border-color: rgba(139, 92, 246, 0.5); }
+`
+
+const FAQSummary = styled.summary`
+  padding: 20px 24px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Grotesk', sans-serif;
+  &::-webkit-details-marker { display: none; }
+  &::after { content: '+'; font-size: 20px; color: #8B5CF6; }
+  details[open] &::after { content: '−'; }
+`
+
+const FAQAnswer = styled.div`
+  padding: 0 24px 20px;
+  color: #A9A9A9;
+  font-size: 15px;
+  line-height: 1.7;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 16px;
+`
+
 const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/watchlist/KvE6lgnr30b0Z2yFhxlB'
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 
@@ -846,6 +886,60 @@ const defaultTokenData: TokenStats = {
 export default function HomePageClient() {
   const [tokenData, setTokenData] = useState<TokenStats>(defaultTokenData)
   const [loading, setLoading] = useState(true)
+
+  const faqs = [
+    {
+      q: 'What is Arbitrage Inception?',
+      a: 'Arbitrage Inception is an all-in-one DeFi platform on BNB Smart Chain. It combines swap, zap, cross-chain bridge, and limit orders with a deflationary token (ARB Inc) that automatically distributes BNB rewards to holders every 12 hours.'
+    },
+    {
+      q: 'What is the ARB Inc token?',
+      a: 'ARB Inc is a deflationary BEP-20 token on BNB Smart Chain with a total supply of 1 billion tokens. It features a 4% buy/sell tax, automated buyback & burn, and BNB reward distributions powered by DEX revenue.'
+    },
+    {
+      q: 'How do I earn BNB rewards?',
+      a: 'Hold at least 2,000,000 ARB Inc tokens in your wallet. Every 12 hours, 40% of the collected BNB from DEX revenue is automatically distributed to qualifying holders. No staking or claiming needed.'
+    },
+    {
+      q: 'What is the minimum holding to receive rewards?',
+      a: 'You need a minimum of 2,000,000 ARB Inc tokens to be eligible for BNB reward distributions.'
+    },
+    {
+      q: 'How often are rewards distributed?',
+      a: 'BNB rewards are distributed every 12 hours automatically to all eligible holders.'
+    },
+    {
+      q: 'What chains does Arbitrage Inception support?',
+      a: 'The ARB Inc token and native DEX functions (swap, zap, limit orders) run on BNB Smart Chain (BSC). The bridge feature powered by Mayan Finance supports cross-chain swaps to and from multiple EVM and non-EVM chains.'
+    },
+    {
+      q: 'How do I buy ARB Inc tokens?',
+      a: 'You can buy ARB Inc directly on the Swap page using BNB. The swap is powered by PancakeSwap V2. Connect your wallet (MetaMask, Coinbase, WalletConnect) and swap BNB for ARB Inc in seconds.'
+    },
+    {
+      q: 'What are the trading fees?',
+      a: 'ARB Inc has a 4% buy/sell tax that funds the reward distribution and buyback & burn mechanism. Additionally, a 0.1% dev fee applies to swaps on the platform.'
+    },
+    {
+      q: 'What is the deflationary mechanism?',
+      a: '20% of every BNB distribution is used for buyback & burn, permanently removing ARB Inc from circulation. This continuous reduction in supply creates deflationary pressure over time.'
+    },
+    {
+      q: 'What is the Zap feature?',
+      a: 'Zap lets you add or remove liquidity from BSC pools with a single transaction. Instead of manually splitting tokens and providing both sides of a pair, Zap handles everything automatically using PancakeSwap and KyberSwap pools.'
+    },
+  ]
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a }
+    }))
+  }
+
 
   const fetchTokenStats = async () => {
     try {
@@ -895,6 +989,10 @@ export default function HomePageClient() {
   return (
     <>
       <GlobalStyle />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Container>
         <BackgroundOrbs>
           <Orb $color="#8B5CF6" $size="400px" $top="-100px" $left="-100px" $delay="20s" />
@@ -1230,6 +1328,19 @@ export default function HomePageClient() {
                 </TimelineItem>
               ))}
             </TimelineContainer>
+          </Section>
+
+
+          <Section>
+            <SectionTitle>Frequently Asked Questions</SectionTitle>
+            <FAQContainer>
+              {faqs.map(({ q, a }, i) => (
+                <FAQItem key={i}>
+                  <FAQSummary>{q}</FAQSummary>
+                  <FAQAnswer>{a}</FAQAnswer>
+                </FAQItem>
+              ))}
+            </FAQContainer>
           </Section>
 
           <Section>
