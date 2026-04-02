@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Arbitrage Inception Limit Orders',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Limit Orders | Set Price & Trade Automatically | Arbitrage Inception',
     description: 'Place limit orders on BSC and trade automatically when the market hits your target. Powered by KyberSwap.',
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
 }
 
