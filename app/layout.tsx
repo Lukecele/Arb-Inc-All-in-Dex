@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import StyledComponentsRegistry from '../lib/registry'
 import { Analytics } from '@vercel/analytics/next'
@@ -216,8 +217,10 @@ export default function RootLayout({
   return (
     <html lang="en-US">
       <body style={{ margin: 0, padding: 0 }}>
-        <script
+        <Script
+          id="structured-data"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
