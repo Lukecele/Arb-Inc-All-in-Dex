@@ -35,7 +35,7 @@ export const theme = {
     text: {
       primary: '#F8FAFC',
       secondary: '#94A3B8',
-      muted: '#475569',
+      muted: '#6B7280',
       accent: '#C4B5FD',
       gold: '#FCD34D',
     },

@@ -244,7 +244,7 @@ const HeroSection = styled.section`
 `
 
 const HeroTitle = styled.h2`
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 900;
   margin-bottom: 16px;
   background: linear-gradient(135deg, #8B5CF6 0%, #C084FC 25%, #EC4899 50%, #C084FC 75%, #8B5CF6 100%);
@@ -255,6 +255,9 @@ const HeroTitle = styled.h2`
   animation: shimmer 4s linear infinite;
   line-height: 1.1;
   letter-spacing: -0.03em;
+  @media (min-width: 481px) {
+    font-size: 52px;
+  }
   @media (min-width: 769px) {
     font-size: 80px;
     margin-bottom: 24px;
@@ -1121,7 +1124,6 @@ export default function HomePageClient() {
                   label: "Liquidity", 
                   value: loading ? '—' : `$${tokenData.liquidity.toLocaleString()}`, 
                   sublabel: loading ? '' : `across over ${tokenData.poolCount} pools`,
-                  zapLink: true,
                   icon: <FaWater /> 
                 },
                 { label: "24h Volume", value: loading ? '—' : `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
@@ -1139,25 +1141,28 @@ export default function HomePageClient() {
                   <StatLabel>{stat.label}</StatLabel>
                   <StatValue>{stat.value}</StatValue>
                   {stat.sublabel && <StatSubLabel>{stat.sublabel}</StatSubLabel>}
-                  {stat.zapLink && (
-                    <Link href="/zap" passHref style={{ marginTop: '12px', display: 'inline-block' }}>
-                      <span style={{
-                        padding: '8px 16px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        color: '#fff',
-                        background: 'linear-gradient(90deg, #06B6D4, #7C3AED)',
-                        borderRadius: '20px',
-                        textDecoration: 'none',
-                        transition: 'transform 0.2s',
-                        display: 'inline-block',
-                      }}>
-                        ⚡ Use Zap
-                      </span>
-                    </Link>
-                  )}
                 </StatCard>
               ))}
+            </StatsGrid>
+            
+            {/* Dedicated Zap CTA Section */}
+            <div style={{ textAlign: 'center', marginTop: '24px' }}>
+              <Link href="/zap" passHref>
+                <span style={{
+                  padding: '12px 28px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  color: '#fff',
+                  background: 'linear-gradient(90deg, #06B6D4, #7C3AED)',
+                  borderRadius: '24px',
+                  textDecoration: 'none',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  display: 'inline-block',
+                  boxShadow: '0 4px 20px rgba(6, 182, 212, 0.3)',
+                }}>
+                  ⚡ Use Zap — Add Liquidity in One Click
+                </span>
+              </Link>
             </StatsGrid>
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
               <a href={DEXSCREENER_WATCHLIST_URL} target="_blank" rel="noopener noreferrer">

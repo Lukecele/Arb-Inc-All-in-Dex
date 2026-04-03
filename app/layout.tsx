@@ -4,6 +4,7 @@ import './globals.css'
 import StyledComponentsRegistry from '../lib/registry'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import CookieConsent from '../components/CookieConsent'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://arbitrage-inc.exchange'),
@@ -226,6 +227,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         <Analytics />
         <SpeedInsights />
+        <CookieConsent />
       </body>
     </html>
   )
