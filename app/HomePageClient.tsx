@@ -1163,7 +1163,7 @@ export default function HomePageClient() {
                   ⚡ Use Zap — Add Liquidity in One Click
                 </span>
               </Link>
-            </StatsGrid>
+            </div>
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
               <a href={DEXSCREENER_WATCHLIST_URL} target="_blank" rel="noopener noreferrer">
                 <CTAButton>View Live Chart on DexScreener</CTAButton>
