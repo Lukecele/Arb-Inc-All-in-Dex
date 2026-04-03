@@ -5,6 +5,7 @@ import StyledComponentsRegistry from '../lib/registry'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import CookieConsent from '../components/CookieConsent'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://arbitrage-inc.exchange'),
@@ -224,7 +225,9 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <ErrorBoundary>
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        </ErrorBoundary>
         <Analytics />
         <SpeedInsights />
         <CookieConsent />

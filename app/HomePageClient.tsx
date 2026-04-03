@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+  :focus-visible {
+    outline: 2px solid #8B5CF6;
+    outline-offset: 2px;
+  }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #030309 0%, #070715 40%, #0c0c1e 70%, #121228 100%);
@@ -243,7 +247,7 @@ const HeroSection = styled.section`
   }
 `
 
-const HeroTitle = styled.h2`
+const HeroTitle = styled.h1`
   font-size: 36px;
   font-weight: 900;
   margin-bottom: 16px;
@@ -621,6 +625,42 @@ const StatCard = styled.div`
     border-radius: 12px;
   }
 `
+
+const StatCardSkeleton = styled.div`
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  padding: 20px 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  & > div {
+    height: 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    width: 60%;
+    margin: 2px 0;
+  }
+  & > div:nth-child(1) { width: 40px; height: 40px; border-radius: 50%; }
+  & > div:nth-child(2) { width: 60%; height: 10px; }
+  & > div:nth-child(3) { width: 40%; height: 20px; }
+`;
 
 const StatLabel = styled.div`
   font-size: 11px;
@@ -1117,32 +1157,40 @@ export default function HomePageClient() {
                 visible: { transition: { staggerChildren: 0.1 } }
               }}
             >
-              {[
-                { label: "Current Price", value: loading ? '—' : `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
-                { label: "Market Cap", value: loading ? '—' : `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
-                { 
-                  label: "Liquidity", 
-                  value: loading ? '—' : `$${tokenData.liquidity.toLocaleString()}`, 
-                  sublabel: loading ? '' : `across over ${tokenData.poolCount} pools`,
-                  icon: <FaWater /> 
-                },
-                { label: "24h Volume", value: loading ? '—' : `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
-              ].map((stat, index) => (
-                <StatCard
-                  as={motion.div}
-                  key={index}
-                  variants={{
-                    hidden: { opacity: 0, scale: 0.9 },
-                    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
-                  }}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                >
-                  <StatIcon>{stat.icon}</StatIcon>
-                  <StatLabel>{stat.label}</StatLabel>
-                  <StatValue>{stat.value}</StatValue>
-                  {stat.sublabel && <StatSubLabel>{stat.sublabel}</StatSubLabel>}
-                </StatCard>
-              ))}
+              {loading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <StatCardSkeleton key={index} />
+                ))
+              ) : (
+                <>
+                  {[
+                    { label: "Current Price", value: `$${tokenData.price.toFixed(9)}`, icon: <FaDollarSign /> },
+                    { label: "Market Cap", value: `$${tokenData.marketCap.toLocaleString()}`, icon: <FaChartLine /> },
+                    { 
+                      label: "Liquidity", 
+                      value: `$${tokenData.liquidity.toLocaleString()}`, 
+                      sublabel: `across over ${tokenData.poolCount} pools`,
+                      icon: <FaWater /> 
+                    },
+                    { label: "24h Volume", value: `$${tokenData.volume24h.toLocaleString()}`, icon: <FaClock /> }
+                  ].map((stat, index) => (
+                    <StatCard
+                      as={motion.div}
+                      key={index}
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.9 },
+                        visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
+                      }}
+                      whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                    >
+                      <StatIcon>{stat.icon}</StatIcon>
+                      <StatLabel>{stat.label}</StatLabel>
+                      <StatValue>{stat.value}</StatValue>
+                      {stat.sublabel && <StatSubLabel>{stat.sublabel}</StatSubLabel>}
+                    </StatCard>
+                  ))}
+                </>
+              )}
             </StatsGrid>
             
             {/* Dedicated Zap CTA Section */}
