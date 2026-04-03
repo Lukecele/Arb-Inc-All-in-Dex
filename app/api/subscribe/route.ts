@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const memberId = btoa(normalizedEmail).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     const url = `https://${dc}.api.mailchimp.com/3.0/lists/${MAILCHIMP_LIST_ID}/members/${memberId}`;
 
-    const credentials = Buffer.from(`${MAILCHIMP_API_KEY}:x`).toString('base64');
+    const credentials = Buffer.from(`apikey:${MAILCHIMP_API_KEY}`).toString('base64');
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
