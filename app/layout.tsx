@@ -58,69 +58,70 @@ export const metadata: Metadata = {
     apple: '/favicon.svg',
   },
   manifest: '/manifest.json',
-}
-
-const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Arbitrage Inception',
-    description: 'All-in-one DeFi aggregator on BNB Smart Chain. Swap, zap, bridge, and earn BNB rewards with deflationary tokenomics.',
-    url: 'https://arbitrage-inc.exchange/',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://arbitrage-inc.exchange/swap?search={search_term_string}'
+  other: {
+    'ld+json': JSON.stringify([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Arbitrage Inception',
+        description: 'All-in-one DeFi aggregator on BNB Smart Chain. Swap, zap, bridge, and earn BNB rewards with deflationary tokenomics.',
+        url: 'https://arbitrage-inc.exchange/',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://arbitrage-inc.exchange/swap?search={search_term_string}'
+          },
+          'query-input': 'required name=search_term_string'
+        },
+        sameAs: [
+          'https://x.com/Arbitrageincept',
+          'https://t.me/ArbitrageInception'
+        ],
+        publisher: {
+          '@type': 'Organization',
+          name: 'Arbitrage Inception',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://arbitrage-inc.exchange/og-image.png'
+          }
+        }
       },
-      'query-input': 'required name=search_term_string'
-    },
-    sameAs: [
-      'https://x.com/Arbitrageincept',
-      'https://t.me/ArbitrageInception'
-    ],
-    publisher: {
-      '@type': 'Organization',
-      name: 'Arbitrage Inception',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://arbitrage-inc.exchange/og-image.png'
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FinancialProduct',
+        name: 'ARB Inc Token',
+        description: 'Deflationary BEP-20 token on BNB Smart Chain with BNB rewards distribution, automated token burns, and DEX revenue sharing.',
+        brand: {
+          '@type': 'Brand',
+          name: 'Arbitrage Inception'
+        },
+        category: 'Cryptocurrency',
+        url: 'https://arbitrage-inc.exchange/',
+        offers: {
+          '@type': 'Offer',
+          availability: 'https://schema.org/InStock'
+        }
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Arbitrage Inception',
+        url: 'https://arbitrage-inc.exchange/',
+        logo: 'https://arbitrage-inc.exchange/og-image.png',
+        sameAs: [
+          'https://x.com/Arbitrageincept',
+          'https://t.me/ArbitrageInception'
+        ],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer support',
+          url: 'https://arbitrage-inc.exchange/contact'
+        }
       }
-    }
+    ]),
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'FinancialProduct',
-    name: 'ARB Inc Token',
-    description: 'Deflationary BEP-20 token on BNB Smart Chain with BNB rewards distribution, automated token burns, and DEX revenue sharing.',
-    brand: {
-      '@type': 'Brand',
-      name: 'Arbitrage Inception'
-    },
-    category: 'Cryptocurrency',
-    url: 'https://arbitrage-inc.exchange/',
-    offers: {
-      '@type': 'Offer',
-      availability: 'https://schema.org/InStock'
-    }
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Arbitrage Inception',
-    url: 'https://arbitrage-inc.exchange/',
-    logo: 'https://arbitrage-inc.exchange/og-image.png',
-    sameAs: [
-      'https://x.com/Arbitrageincept',
-      'https://t.me/ArbitrageInception'
-    ],
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer support',
-      url: 'https://arbitrage-inc.exchange/contact'
-    }
-  }
-]
+}
 
 export default function RootLayout({
   children,
@@ -129,12 +130,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-US">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
       <body style={{ margin: 0, padding: 0 }}>
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         <Analytics />
