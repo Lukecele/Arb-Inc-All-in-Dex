@@ -4,6 +4,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe } from 'react-icons/fa';
 import theme from '../app/styles/theme';
+import NewsletterForm from './NewsletterForm';
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -223,50 +224,7 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
           <p style={{ marginBottom: '16px', color: theme.colors.text.secondary, fontSize: '14px' }}>
             Subscribe to receive updates about new features and announcements.
           </p>
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement)?.value;
-              if (email) {
-                console.log('Subscription email:', email);
-                alert('Thank you for subscribing! (This is a demo)');
-                e.currentTarget.reset();
-              }
-            }}
-            style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}
-          >
-            <input 
-              type="email" 
-              name="email"
-              placeholder="Enter your email" 
-              required
-              aria-label="Email address"
-              style={{ 
-                padding: '10px 16px', 
-                borderRadius: '10px', 
-                border: '1px solid rgba(255,255,255,0.1)', 
-                background: 'rgba(255,255,255,0.05)', 
-                color: '#fff',
-                flex: '1 1 200px',
-                fontSize: '14px',
-              }}
-            />
-            <button 
-              type="submit" 
-              style={{ 
-                padding: '10px 24px', 
-                borderRadius: '10px', 
-                background: 'linear-gradient(135deg, #8B5CF6, #7C3AED)', 
-                border: 'none', 
-                color: '#fff', 
-                fontWeight: '600', 
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
-            >
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
 
         <Divider />

@@ -12,3 +12,4 @@ playwright-report/
 tsconfig.tsbuildinfo
 .turbo/
 out/
+data/
