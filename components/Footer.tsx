@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe } from 'react-icons/fa';
 import theme from '../app/styles/theme';
-import NewsletterForm from './NewsletterForm';
+
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -215,17 +215,6 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
           <FooterLink href="/cookie-policy">Cookie Policy</FooterLink>
         </FooterSection>
         </FooterGrid>
-
-        {/* Newsletter Section */}
-        <div style={{ maxWidth: '600px', margin: '0 auto 32px', textAlign: 'center' }}>
-          <h4 style={{ marginBottom: '12px', color: theme.colors.text.accent, fontSize: '12px', fontWeight: '700', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Stay Updated
-          </h4>
-          <p style={{ marginBottom: '16px', color: theme.colors.text.secondary, fontSize: '14px' }}>
-            Subscribe to receive updates about new features and announcements.
-          </p>
-          <NewsletterForm />
-        </div>
 
         <Divider />
 
