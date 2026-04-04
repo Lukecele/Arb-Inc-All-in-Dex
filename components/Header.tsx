@@ -120,6 +120,12 @@ const RightSection = styled.div`
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    .wallet-section {
+      display: none;
+    }
+  }
 `;
 
 const StatusBadge = styled.div`
@@ -318,7 +324,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
               Active
             </StatusBadge>
           )}
-          {walletSection}
+          <span className="wallet-section">{walletSection}</span>
           <HamburgerBtn
             onClick={() => setMenuOpen(o => !o)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
