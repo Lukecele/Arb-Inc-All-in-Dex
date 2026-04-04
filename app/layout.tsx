@@ -122,8 +122,7 @@ const jsonLd = [
       contactType: 'customer support',
       url: 'https://arbitrage-inc.exchange/contact'
     }
-  }
-]
+  },
   {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -134,19 +133,19 @@ const jsonLd = [
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
+      availability: 'https://schema.org/InStock'
     },
     description: 'All-in-one DeFi aggregator on BNB Smart Chain. Swap, zap, bridge, and earn BNB rewards with deflationary tokenomics.',
-    url: 'https://arbitrage-inc.exchange/',
+    url: 'https://arbitrage-inc.exchange/'
   },
   {
     '@context': 'https://schema.org',
     '@type': 'CryptoExchange',
     name: 'Arbitrage Inception',
     url: 'https://arbitrage-inc.exchange/',
-    description: 'Decentralized exchange aggregator on BNB Smart Chain featuring PancakeSwap and KyberSwap integration.',
-  },
-
+    description: 'Decentralized exchange aggregator on BNB Smart Chain featuring PancakeSwap and KyberSwap integration.'
+  }
+]
 
 export default function RootLayout({
   children,
