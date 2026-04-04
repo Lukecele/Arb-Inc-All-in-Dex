@@ -1376,9 +1376,6 @@ export default function HomePageClient() {
             </TimelineContainer>
           </Section>
 
-
-          <Section>
-
           <Section>
             <SectionTitle>Get Started</SectionTitle>
             <AboutContent style={{ textAlign: 'center' }}>
