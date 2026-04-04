@@ -120,12 +120,6 @@ const RightSection = styled.div`
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    .wallet-section {
-      display: none;
-    }
-  }
 `;
 
 const StatusBadge = styled.div`
@@ -324,7 +318,6 @@ export default function Header({ activePage, showStatus = true, walletSection }:
               Active
             </StatusBadge>
           )}
-          <span className="wallet-section">{walletSection}</span>
           <HamburgerBtn
             onClick={() => setMenuOpen(o => !o)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -332,6 +325,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
           >
             {menuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
           </HamburgerBtn>
+          {walletSection}
         </RightSection>
       </HeaderContainer>
 
