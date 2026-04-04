@@ -165,7 +165,7 @@ interface FooterProps {
 
 export default function Footer({ showDisclaimer = true, showSocial = true }: FooterProps) {
   return (
-    <FooterContainer>
+    <FooterContainer role="contentinfo" aria-label="Site footer">
       <FooterBrand>
         <FooterBrandTitle>Arbitrage Inception</FooterBrandTitle>
         <FooterBrandTagline>All-in-One DeFi Aggregator on BNB Smart Chain</FooterBrandTagline>

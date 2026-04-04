@@ -147,6 +147,50 @@ const jsonLd = [
   }
 ]
 
+// BreadcrumbList schema for improved SEO navigation
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://arbitrage-inc.exchange/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Swap',
+      item: 'https://arbitrage-inc.exchange/swap',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Zap',
+      item: 'https://arbitrage-inc.exchange/zap',
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      name: 'Bridge',
+      item: 'https://arbitrage-inc.exchange/bridge',
+    },
+    {
+      '@type': 'ListItem',
+      position: 5,
+      name: 'Limit Orders',
+      item: 'https://arbitrage-inc.exchange/limit-orders',
+    },
+    {
+      '@type': 'ListItem',
+      position: 6,
+      name: 'About',
+      item: 'https://arbitrage-inc.exchange/about',
+    },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -160,6 +204,12 @@ export default function RootLayout({
           type="application/ld+json"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <Script
+          id="breadcrumb-data"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
         <ErrorBoundary>
           <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
