@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Block unnecessary paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /tests/
+Disallow: /pools.ts
+
 Sitemap: https://arbitrage-inc.exchange/sitemap.xml
