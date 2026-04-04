@@ -142,6 +142,19 @@ const WidgetContainer = styled.div`
 `
 
 const SectionTitle = styled.h2`
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  background: ${theme.colors.primary.gradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  @media (min-width: 769px) {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+`
+
 
 const PageTitle = styled.h1`
   font-size: 32px;
@@ -155,18 +168,6 @@ const PageTitle = styled.h1`
   @media (min-width: 769px) {
     font-size: 40px;
     margin: 30px 0;
-  }
-`
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 20px;
-  background: ${theme.colors.primary.gradient};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) {
-    font-size: 32px;
-    margin-bottom: 30px;
   }
 `
 
