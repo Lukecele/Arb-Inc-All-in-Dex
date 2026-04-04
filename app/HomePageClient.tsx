@@ -1378,16 +1378,6 @@ export default function HomePageClient() {
 
 
           <Section>
-            <SectionTitle>Frequently Asked Questions</SectionTitle>
-            <FAQContainer>
-              {faqs.map(({ q, a }, i) => (
-                <FAQItem key={i}>
-                  <FAQSummary>{q}</FAQSummary>
-                  <FAQAnswer>{a}</FAQAnswer>
-                </FAQItem>
-              ))}
-            </FAQContainer>
-          </Section>
 
           <Section>
             <SectionTitle>Get Started</SectionTitle>

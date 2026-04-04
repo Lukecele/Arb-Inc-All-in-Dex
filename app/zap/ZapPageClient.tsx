@@ -256,7 +256,7 @@ export default function ZapPageClient() {
 
         <MainContent>
           <SectionTitle>Liquidity Zap</SectionTitle>
-          <PageTitle>Liquidity Zap</PageTitle>
+          <PageTitle>Zap</PageTitle>
           
           <section style={{ 
             maxWidth: '800px', 
