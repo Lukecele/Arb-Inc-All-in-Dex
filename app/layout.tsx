@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import './globals.css'
 import StyledComponentsRegistry from '../lib/registry'
@@ -7,6 +7,14 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import CookieConsent from '../components/CookieConsent'
 import ErrorBoundary from '../components/ErrorBoundary'
 import WebVitals from '../components/WebVitals'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#8B5CF6',
+  colorScheme: 'dark',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://arbitrage-inc.exchange'),
@@ -18,6 +26,20 @@ export const metadata: Metadata = {
   keywords: ['DeFi', 'BSC', 'BNB Smart Chain', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'KyberSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator', 'Zap', 'Yield Farming', 'BNB Rewards', 'Deflationary Token', 'Token Burn', 'Passive Income', 'Cross-Chain Bridge', 'Mayan Finance'],
   applicationName: 'Arbitrage Inception',
   authors: [{ name: 'Arbitrage Inception', url: 'https://arbitrage-inc.exchange' }],
+  generator: 'Next.js',
+  creator: 'Arbitrage Inception',
+  publisher: 'Arbitrage Inception',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   verification: {
     google: '2b040ac83f9d76c4',
   },
@@ -30,6 +52,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://arbitrage-inc.exchange/',
     siteName: 'Arbitrage Inception',
+    locale: 'en_US',
     images: [
       {
         url: '/og-image.png',
@@ -47,18 +70,9 @@ export const metadata: Metadata = {
     site: '@Arbitrageincept',
     creator: '@Arbitrageincept',
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
   icons: {
     icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
   manifest: '/manifest.json',
@@ -94,22 +108,6 @@ const jsonLd = [
   },
   {
     '@context': 'https://schema.org',
-    '@type': 'FinancialProduct',
-    name: 'ARB Inc Token',
-    description: 'Deflationary BEP-20 token on BNB Smart Chain with BNB rewards distribution, automated token burns, and DEX revenue sharing.',
-    brand: {
-      '@type': 'Brand',
-      name: 'Arbitrage Inception'
-    },
-    category: 'Cryptocurrency',
-    url: 'https://arbitrage-inc.exchange/',
-    offers: {
-      '@type': 'Offer',
-      availability: 'https://schema.org/InStock'
-    }
-  },
-  {
-    '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Arbitrage Inception',
     url: 'https://arbitrage-inc.exchange/',
@@ -126,21 +124,6 @@ const jsonLd = [
   },
   {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Arbitrage Inception',
-    applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Web Browser',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock'
-    },
-    description: 'All-in-one DeFi aggregator on BNB Smart Chain. Swap, zap, bridge, and earn BNB rewards with deflationary tokenomics.',
-    url: 'https://arbitrage-inc.exchange/'
-  },
-  {
-    '@context': 'https://schema.org',
     '@type': 'CryptoExchange',
     name: 'Arbitrage Inception',
     url: 'https://arbitrage-inc.exchange/',
@@ -148,70 +131,31 @@ const jsonLd = [
   }
 ]
 
-// BreadcrumbList schema for improved SEO navigation
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: 'https://arbitrage-inc.exchange/',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Swap',
-      item: 'https://arbitrage-inc.exchange/swap',
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: 'Zap',
-      item: 'https://arbitrage-inc.exchange/zap',
-    },
-    {
-      '@type': 'ListItem',
-      position: 4,
-      name: 'Bridge',
-      item: 'https://arbitrage-inc.exchange/bridge',
-    },
-    {
-      '@type': 'ListItem',
-      position: 5,
-      name: 'Limit Orders',
-      item: 'https://arbitrage-inc.exchange/limit-orders',
-    },
-    {
-      '@type': 'ListItem',
-      position: 6,
-      name: 'About',
-      item: 'https://arbitrage-inc.exchange/about',
-    },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://arbitrage-inc.exchange/' },
+    { '@type': 'ListItem', position: 2, name: 'Swap', item: 'https://arbitrage-inc.exchange/swap' },
+    { '@type': 'ListItem', position: 3, name: 'Zap', item: 'https://arbitrage-inc.exchange/zap' },
+    { '@type': 'ListItem', position: 4, name: 'Bridge', item: 'https://arbitrage-inc.exchange/bridge' },
+    { '@type': 'ListItem', position: 5, name: 'Limit Orders', item: 'https://arbitrage-inc.exchange/limit-orders' },
+    { '@type': 'ListItem', position: 6, name: 'About', item: 'https://arbitrage-inc.exchange/about' },
   ],
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US">
+    <html lang="en-US" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://bsc.publicnode.com" />
+        <link rel="preconnect" href="https://api.coingecko.com" />
+        <link rel="dns-prefetch" href="https://bsc.publicnode.com" />
+        <link rel="dns-prefetch" href="https://api.coingecko.com" />
+      </head>
       <body style={{ margin: 0, padding: 0 }}>
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Script
-          id="breadcrumb-data"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-        />
+        <Script id="structured-data" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <Script id="breadcrumb-data" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
         <ErrorBoundary>
           <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         </ErrorBoundary>
