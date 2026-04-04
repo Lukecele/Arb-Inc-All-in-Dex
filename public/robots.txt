@@ -1,10 +1,14 @@
-User-agent: *
+# https://www.robotstxt.org/robotstxt.html
+User-Agent: *
 Allow: /
-
-# Block unnecessary paths
 Disallow: /api/
 Disallow: /_next/
-Disallow: /tests/
-Disallow: /pools.ts
+Crawl-delay: 1
+Sitemap: https://arbitrage-inc.exchange/sitemap.xml
 
+User-Agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Host: https://arbitrage-inc.exchange
 Sitemap: https://arbitrage-inc.exchange/sitemap.xml

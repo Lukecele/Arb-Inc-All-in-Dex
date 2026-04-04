@@ -1,21 +1,21 @@
 {
   "name": "Arbitrage Inception",
-  "short_name": "ArbInc",
-  "description": "All-in-One DeFi Aggregator on BNB Smart Chain — Swap, Zap, Bridge & earn BNB rewards every 12h",
+  "short_name": "Arb Inc",
+  "description": "All-in-One DeFi Aggregator on BNB Smart Chain - Swap, Zap, Bridge, and Earn BNB Rewards",
   "start_url": "/",
   "display": "standalone",
+  "background_color": "#07070f",
+  "theme_color": "#8B5CF6",
   "orientation": "portrait-primary",
-  "lang": "en-US",
   "scope": "/",
-  "background_color": "#070715",
-  "theme_color": "#7C3AED",
-  "categories": ["finance", "utilities"],
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "categories": ["finance", "utilities"],
+  "shortcuts": [
+    { "name": "Swap Tokens", "short_name": "Swap", "description": "Swap ARB Inc and other tokens", "url": "/swap" },
+    { "name": "Add Liquidity", "short_name": "Zap", "description": "Add liquidity with one click", "url": "/zap" },
+    { "name": "Bridge Tokens", "short_name": "Bridge", "description": "Bridge tokens across chains", "url": "/bridge" }
+  ],
+  "prefer_related_applications": false
 }
