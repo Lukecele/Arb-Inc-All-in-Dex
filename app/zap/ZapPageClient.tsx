@@ -142,6 +142,21 @@ const WidgetContainer = styled.div`
 `
 
 const SectionTitle = styled.h2`
+
+const PageTitle = styled.h1`
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin: 20px 0;
+  background: ${theme.colors.primary.gradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  @media (min-width: 769px) {
+    font-size: 40px;
+    margin: 30px 0;
+  }
+`
   font-size: 22px;
   font-weight: 700;
   text-align: center;
@@ -240,6 +255,7 @@ export default function ZapPageClient() {
 
         <MainContent>
           <SectionTitle>Liquidity Zap</SectionTitle>
+          <PageTitle>Liquidity Zap</PageTitle>
           
           <section style={{ 
             maxWidth: '800px', 
