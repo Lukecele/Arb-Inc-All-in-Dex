@@ -20,7 +20,6 @@ export const navItems = [
 
 const LOGO_URL = '/logo.jpg';
 
-// Wrapper che prende tutta la larghezza per il background
 const HeaderWrapper = styled.header`
   width: 100%;
   position: sticky;
@@ -31,7 +30,6 @@ const HeaderWrapper = styled.header`
   box-shadow: 0 1px 0 rgba(124, 58, 237, 0.2);
 `;
 
-// Contenitore interno centrato
 const HeaderInner = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -39,7 +37,7 @@ const HeaderInner = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 8px 20px;
-  height: 64px; /* Altezza fissa per evitare salti o righe vuote */
+  height: 64px;
   
   @media (min-width: 769px) {
     padding: 0 24px;
@@ -195,9 +193,9 @@ export default function Header({ showStatus = true, walletSection }: any) {
       <MobileOverlay $open={menuOpen}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
           <SiteTitle>Menu</SiteTitle>
-          <HamburgerBtn onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
+          <HamburgerBtn aria-label="Chiudi" onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
         </div>
-        <div style={{ display: 'flex', flex-direction: 'column', gap: '8px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {navItems.map((item) => (
             <Link 
               key={item.href} 
