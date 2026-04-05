@@ -38,7 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://rsms.me" />
         <link rel="dns-prefetch" href="https://rsms.me" />
-        <link rel="preload" href="/logo.jpg" as="image" />
       </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         <StyledComponentsRegistry>

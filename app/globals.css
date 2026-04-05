@@ -73,3 +73,33 @@ main, h1, .hero-text {
   content-visibility: auto;
   contain-intrinsic-size: 0 500px;
 }
+
+/* Fix Accessibilità: Skip Link */
+#skip-link {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+#skip-link:focus {
+  position: fixed !important;
+  top: 10px !important;
+  left: 10px !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 15px 25px !important;
+  background: #8B5CF6 !important;
+  color: white !important;
+  z-index: 10000 !important;
+  border-radius: 8px !important;
+  outline: 4px solid white !important;
+}
+
+/* Fix Performance: Font Display Swap */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap !important;
+}
