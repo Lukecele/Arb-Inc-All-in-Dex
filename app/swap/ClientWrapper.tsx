@@ -1,0 +1,210 @@
+'use client'
+
+import {
+  init,
+  useConnectWallet,
+  useSetChain,
+} from '@web3-onboard/react'
+import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
+import { ethers } from 'ethers'
+import { useState, useEffect, Suspense } from 'react'
+import styled, { createGlobalStyle } from 'styled-components'
+import ArbIncSwap from './ArbIncSwap'
+import theme from '../styles/theme'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+
+const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+
+const injected = injectedModule()
+const walletConnect = walletConnectModule({
+  projectId: 'b03ed6d8451c1e05022897815db0ad0b',
+  requiredChains: [56],
+  optionalChains: [1, 137, 42161, 8453, 10],
+  dappUrl: 'http://localhost:3000',
+})
+
+init({
+  wallets: [injected, walletConnect],
+  chains: [
+    {
+      id: '0x38',
+      token: 'BNB',
+      label: 'BNB Smart Chain',
+      rpcUrl: 'https://bsc.publicnode.com',
+    },
+  ],
+})
+
+const BSC_CHAIN_ID = 56
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: ${theme.typography.fontFamily};
+    background: ${theme.colors.background.DEFAULT};
+    color: #FFFFFF;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+`
+
+const Container = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 15px;
+  background: ${theme.colors.background.primary};
+  @media (min-width: 769px) {
+    padding: 40px 20px;
+  }
+`
+
+const PageHeader = styled.header`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 18, 0.75);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
+`
+
+const MainContent = styled.main`
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+`
+
+const InfoCard = styled.div`
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 16px;
+`
+
+const InfoCardTitle = styled.h2`
+  color: #2DD4BF;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+`
+
+const InfoCardText = styled.p`
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: ${theme.colors.text.secondary};
+`
+
+const FeatureList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+`
+
+const FeatureListItem = styled.li`
+  font-size: 13px;
+  line-height: 1.8;
+  color: ${theme.colors.text.secondary};
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 4px;
+  
+  &::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #2DD4BF;
+    font-weight: 600;
+  }
+`
+
+export default function ClientWrapper() {
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const [, setChain] = useSetChain()
+
+  const [ethersProvider, setEthersProvider] = useState<ethers.providers.Web3Provider | null>(null)
+  const [walletAddress, setWalletAddress] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (wallet && wallet.provider) {
+      const provider = new ethers.providers.Web3Provider(wallet.provider, 'any')
+      setEthersProvider(provider)
+      setWalletAddress(wallet.accounts[0]?.address || null)
+    } else {
+      setEthersProvider(null)
+      setWalletAddress(null)
+    }
+  }, [wallet])
+
+  useEffect(() => {
+    const previouslyConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') || '[]')
+    async function setWalletFromLocalStorage() {
+      if (previouslyConnectedWallets?.length && !wallet) {
+        await connect({ autoSelect: previouslyConnectedWallets[0] })
+      }
+    }
+    if (previouslyConnectedWallets?.length) {
+      setWalletFromLocalStorage()
+    }
+  }, [connect, wallet])
+
+  return (
+    <>
+      <GlobalStyle />
+      <Container>
+        <Header activePage="/swap" />
+        <PageHeader />
+
+        <MainContent>
+          <InfoCard>
+            <InfoCardTitle>Custom Token Swap on BSC</InfoCardTitle>
+            <InfoCardText>
+              Swap <strong style={{ color: '#fff' }}>ARB Inc</strong> token directly via PancakeSwap V2 Router. Our custom interface handles 
+              Fee-on-Transfer (FOT) tokens with 4% tax automatically, ensuring accurate slippage and successful transactions.
+            </InfoCardText>
+            <FeatureList>
+              <FeatureListItem><strong style={{ color: '#fff' }}>BNB ↔ WBNB:</strong> Instant wrap/unwrap with 0.1% dev fee</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>ARB Inc → BNB:</strong> Sell ARB Inc with 4% tax handled automatically</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>BNB → ARB Inc:</strong> Buy ARB Inc with real-time price calculation</FeatureListItem>
+              <FeatureListItem><strong style={{ color: '#fff' }}>Direct Routing:</strong> Bypasses aggregators for tax token compatibility</FeatureListItem>
+            </FeatureList>
+            <p style={{ fontSize: 12, color: theme.colors.text.muted }}>
+              For tokens other than ARB Inc, use our <a href="/swap-all" style={{ color: '#2DD4BF', textDecoration: 'underline' }}>Swap All</a> feature with KyberSwap aggregator.
+            </p>
+          </InfoCard>
+          
+          <ArbIncSwap
+            ethersProvider={ethersProvider}
+            walletAddress={walletAddress}
+          />
+        </MainContent>
+
+        <Footer />
+      </Container>
+    </>
+  )
+}
