@@ -21,6 +21,13 @@ const nextConfig = {
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // --- NUOVI HEADER DI SICUREZZA ---
+          { key: 'X-Frame-Options', value: 'DENY' }, // Previene il clickjacking
+          { 
+            key: 'Content-Security-Policy', 
+            // CSP Ottimizzata per Web3: Consente WSS (WalletConnect) e API esterne necessarie ai DEX
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; connect-src 'self' https: wss:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; frame-src 'self' https:;" 
+          }
         ],
       },
       {

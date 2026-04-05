@@ -154,7 +154,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://api.coingecko.com" />
         <link rel="dns-prefetch" href="https://bsc.publicnode.com" />
         <link rel="dns-prefetch" href="https://api.coingecko.com" />
-      </head>
+      
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FinancialProduct",
+      "name": "Arb Inc Token",
+      "description": "Deflationary token with 20% burn and BNB rewards on the Arbitrage Inception DEX.",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "BNB",
+        "availability": "https://schema.org/InStock"
+      }
+    })
+  }}
+/>
+</head>
       <body style={{ margin: 0, padding: 0 }}>
         <Script id="structured-data" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Script id="breadcrumb-data" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
