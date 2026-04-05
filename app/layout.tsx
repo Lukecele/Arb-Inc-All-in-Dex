@@ -37,11 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         <StyledComponentsRegistry>
-          <ErrorBoundary>
-            <Web3Provider>
+          <Web3Provider>
+            <ErrorBoundary>
               {children}
-            </Web3Provider>
-          </ErrorBoundary>
+            </ErrorBoundary>
+          </Web3Provider>
         </StyledComponentsRegistry>
         <CookieConsent />
         <Analytics />
