@@ -63,29 +63,6 @@ const SiteTitle = styled.span`
   @media (min-width: 769px) { font-size: 22px; }
 `;
 
-const Nav = styled.nav`
-  display: none;
-  @media (min-width: 769px) {
-    display: flex;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 5px 10px;
-    border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-  }
-`;
-
-const NavLinkStyled = styled(Link)<{ $active?: boolean }>`
-  color: ${props => props.$active ? '#fff' : '#94a3b8'};
-  text-decoration: none;
-  font-size: 13px;
-  padding: 6px 14px;
-  border-radius: 100px;
-  background: ${props => props.$active ? 'rgba(124, 58, 237, 0.4)' : 'transparent'};
-  transition: all 0.2s ease;
-  &:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
-`;
-
 const RightSection = styled.div`
   display: flex;
   align-items: center;
@@ -105,21 +82,8 @@ const StatusDot = styled.div`
   }
 `;
 
-const SkipLink = styled.a`
-  position: absolute;
-  top: -100px;
-  left: 0;
-  background: #8B5CF6;
-  color: white;
-  padding: 10px;
-  z-index: 10000;
-  transition: top 0.2s;
-  &:focus { top: 0; }
-`;
-
 const HamburgerBtn = styled.button`
   display: flex;
-  @media (min-width: 769px) { display: none; }
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px;
@@ -167,25 +131,13 @@ export default function Header({ activePage, showStatus = true, walletSection }:
           <SiteTitle>Arbitrage Inception</SiteTitle>
         </LogoSection>
 
-        <Nav>
-          {navItems.map((item) => (
-            <NavLinkStyled
-              key={item.href}
-              href={item.href}
-              $active={pathname === item.href}
-            >
-              {item.label}
-            </NavLinkStyled>
-          ))}
-        </Nav>
-
         <RightSection>
           {showStatus && mounted && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontSize: '11px', fontWeight: 600 }}>
               <StatusDot /> Active
             </div>
           )}
-          <HamburgerBtn aria-label="Menu Navigazione"  onClick={() => setMenuOpen(!menuOpen)}>
+          <HamburgerBtn aria-label="Menu Navigazione" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes /> : <FaBars />}
           </HamburgerBtn>
           {walletSection}
@@ -195,7 +147,9 @@ export default function Header({ activePage, showStatus = true, walletSection }:
       <MobileOverlay $open={menuOpen}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
           <SiteTitle>Menu</SiteTitle>
-          <HamburgerBtn aria-label="Menu Navigazione"  onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
+          <HamburgerBtn aria-label="Menu Navigazione" onClick={() => setMenuOpen(false)}>
+            <FaTimes />
+          </HamburgerBtn>
         </div>
         {navItems.map((item) => (
           <Link 
