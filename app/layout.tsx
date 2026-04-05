@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     site: '@Arbitrageincept',
     images: ['/og-image.png'],
   },
-  icons: { icon: '/favicon.svg', apple: '/favicon.svg' },
+  icons: { icon: '/logo.png', apple: '/logo.png' },
   manifest: '/manifest.json',
 }
 

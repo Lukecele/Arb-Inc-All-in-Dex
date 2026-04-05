@@ -24,7 +24,7 @@ init({
   ],
   appMetadata: {
     name: 'Arbitrage Inception',
-    icon: 'https://arbitrage-inc.exchange/favicon.svg',
+    icon: 'https://arbitrage-inc.exchange/logo.png',
     description: 'DEX Aggregator on BNB Chain',
   }
 })
