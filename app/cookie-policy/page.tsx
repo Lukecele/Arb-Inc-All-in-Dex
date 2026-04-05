@@ -172,7 +172,7 @@ export default function CookiePolicyPage() {
       <Container>
         <Header>
           <LogoSection>
-            <Logo src="https://arbitrage-inc.exchange/logo.png" alt="Arbitrage Inception" />
+            <Logo src="https://arbitrage-inc.exchange/logo.jpg" alt="Arbitrage Inception" />
             <Title>Arbitrage Inception</Title>
           </LogoSection>
           <Nav>
