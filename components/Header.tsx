@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import theme from '../app/styles/theme';
 
 export const navItems = [
   { href: '/', label: 'Home' },
@@ -63,6 +62,30 @@ const SiteTitle = styled.span`
   @media (min-width: 769px) { font-size: 22px; }
 `;
 
+/* Ritorna la navigazione Desktop! Nascosca su mobile, visibile su PC */
+const Nav = styled.nav`
+  display: none;
+  @media (min-width: 1024px) {
+    display: flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+`;
+
+const NavLinkStyled = styled(Link)<{ $active?: boolean }>`
+  color: ${props => props.$active ? '#fff' : '#94a3b8'};
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: ${props => props.$active ? 'rgba(124, 58, 237, 0.4)' : 'transparent'};
+  transition: all 0.2s ease;
+  &:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+`;
+
 const RightSection = styled.div`
   display: flex;
   align-items: center;
@@ -82,6 +105,7 @@ const StatusDot = styled.div`
   }
 `;
 
+/* L'hamburger ora scompare quando lo schermo è grande (PC) */
 const HamburgerBtn = styled.button`
   display: flex;
   background: rgba(255, 255, 255, 0.05);
@@ -90,6 +114,7 @@ const HamburgerBtn = styled.button`
   border-radius: 8px;
   color: white;
   cursor: pointer;
+  @media (min-width: 1024px) { display: none; }
 `;
 
 const MobileOverlay = styled.div<{ $open: boolean }>`
@@ -102,6 +127,7 @@ const MobileOverlay = styled.div<{ $open: boolean }>`
   padding: 20px;
   transform: ${props => props.$open ? 'translateX(0)' : 'translateX(100%)'};
   transition: transform 0.3s ease-in-out;
+  @media (min-width: 1024px) { display: none; }
 `;
 
 export default function Header({ activePage, showStatus = true, walletSection }: any) {
@@ -130,6 +156,19 @@ export default function Header({ activePage, showStatus = true, walletSection }:
           </LogoWrapper>
           <SiteTitle>Arbitrage Inception</SiteTitle>
         </LogoSection>
+
+        {/* Qui torna il menu Desktop centrale */}
+        <Nav>
+          {navItems.map((item) => (
+            <NavLinkStyled
+              key={item.href}
+              href={item.href}
+              $active={pathname === item.href}
+            >
+              {item.label}
+            </NavLinkStyled>
+          ))}
+        </Nav>
 
         <RightSection>
           {showStatus && mounted && (
