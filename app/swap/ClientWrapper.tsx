@@ -1,14 +1,8 @@
 'use client'
 
-import {
-  init,
-  useConnectWallet,
-  useSetChain,
-} from '@web3-onboard/react'
-import injectedModule from '@web3-onboard/injected-wallets'
-import walletConnectModule from '@web3-onboard/walletconnect'
+import { useConnectWallet, useSetChain } from '@web3-onboard/react'
 import { ethers } from 'ethers'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import ArbIncSwap from './ArbIncSwap'
 import theme from '../styles/theme'
@@ -16,27 +10,6 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
-
-const injected = injectedModule()
-const walletConnect = walletConnectModule({
-  projectId: 'b03ed6d8451c1e05022897815db0ad0b',
-  requiredChains: [56],
-  optionalChains: [1, 137, 42161, 8453, 10],
-  dappUrl: 'https://arbitrage-inc.exchange',
-})
-
-init({
-  wallets: [injected, walletConnect],
-  chains: [
-    {
-      id: '0x38',
-      token: 'BNB',
-      label: 'BNB Smart Chain',
-      rpcUrl: 'https://bsc.publicnode.com',
-    },
-  ],
-})
-
 const BSC_CHAIN_ID = 56
 
 const GlobalStyle = createGlobalStyle`
@@ -113,59 +86,6 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
   @media (min-width: 769px) {
     font-size: 28px;
-  }
-`
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 6px 10px;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  @media (max-width: 768px) {
-    gap: 3px;
-    padding: 6px 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    border-radius: 20px;
-  }
-`
-
-const NavLink = styled.a`
-  color: ${theme.colors.text.secondary};
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 7px 14px;
-  border-radius: 100px;
-  transition: all ${theme.transitions.fast};
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  &:hover {
-    color: ${theme.colors.text.primary};
-    background: rgba(139, 92, 246, 0.12);
-    &::before {
-      left: 100%;
-    }
-  }
-  @media (max-width: 768px) {
-    font-size: 12px;
-    padding: 6px 10px;
   }
 `
 
@@ -294,56 +214,6 @@ const FeatureListItem = styled.li`
   }
 `
 
-const PageFooter = styled.footer`
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px 0;
-  text-align: center;
-  color: ${theme.colors.text.muted};
-  font-size: 14px;
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
-  }
-`
-
-const FooterLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  
-  a {
-    color: ${theme.colors.text.secondary};
-    text-decoration: none;
-    font-size: 13px;
-    transition: color ${theme.transitions.fast};
-    &:hover {
-      color: ${theme.colors.accent.DEFAULT};
-    }
-  }
-`
-
-const Disclaimer = styled.div`
-  max-width: 600px;
-  margin: 0 auto 20px;
-  padding: 15px;
-  background: rgba(255, 152, 0, 0.06);
-  border: 1px solid rgba(255, 152, 0, 0.15);
-  border-radius: 10px;
-  color: #FFB347;
-  font-size: 12px;
-  line-height: 1.6;
-`
-
 export default function ClientWrapper() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [, setChain] = useSetChain()
@@ -380,7 +250,6 @@ export default function ClientWrapper() {
       <Container>
         <Header activePage="/swap" />
         
-        {/* L'HEADER CON I BOTTONI CORRETTI */}
         <PageHeader>
           <LogoSection>
             <Logo src="/favicon.svg" alt="Arb Inc Logo" />

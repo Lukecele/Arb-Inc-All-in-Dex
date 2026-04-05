@@ -1,14 +1,7 @@
 'use client'
 
 import { Widget } from '@kyberswap/widgets'
-import {
-  init,
-  useConnectWallet,
-  useSetChain,
-  useWallets,
-} from '@web3-onboard/react'
-import injectedModule from '@web3-onboard/injected-wallets'
-import walletConnectModule from '@web3-onboard/walletconnect'
+import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
 import { ethers } from 'ethers'
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -16,26 +9,6 @@ import styled, { createGlobalStyle } from 'styled-components'
 import theme from '../styles/theme'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
-
-const injected = injectedModule()
-const walletConnect = walletConnectModule({
-  projectId: 'b03ed6d8451c1e05022897815db0ad0b',
-  requiredChains: [56],
-  optionalChains: [1, 137, 42161, 8453, 10],
-  dappUrl: 'https://arbitrage-inc.exchange',
-})
-
-init({
-  wallets: [injected, walletConnect],
-  chains: [
-    {
-      id: '0x38',
-      token: 'BNB',
-      label: 'BNB Smart Chain',
-      rpcUrl: 'https://bsc.publicnode.com',
-    },
-  ],
-})
 
 const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
@@ -118,38 +91,6 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
 `
 
-const Nav = styled.nav`
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  @media (max-width: 768px) {
-    gap: 3px;
-    padding: 6px 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-    border-radius: 20px;
-  }
-`
-
-const NavLink = styled.a`
-  color: ${theme.colors.text.secondary};
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 7px 13px;
-  border-radius: 100px;
-  white-space: nowrap;
-  transition: ${theme.transitions.fast};
-  &:hover {
-    color: ${theme.colors.text.primary};
-    background: rgba(255, 255, 255, 0.08);
-  }
-`
-
 const WalletSection = styled.div`
   display: flex;
   gap: 10px;
@@ -229,44 +170,6 @@ const SwapSection = styled.section`
   width: 100%;
 `
 
-const PageFooter = styled.footer`
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px 0;
-  text-align: center;
-  color: ${theme.colors.text.muted};
-  font-size: 14px;
-`
-
-const FooterLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  
-  a {
-    color: ${theme.colors.text.secondary};
-    text-decoration: none;
-    font-size: 13px;
-    &:hover {
-      color: ${theme.colors.accent.DEFAULT};
-    }
-  }
-`
-
-const Disclaimer = styled.div`
-  max-width: 600px;
-  margin: 0 auto 20px;
-  padding: 15px;
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.3);
-  border-radius: 8px;
-  color: #FF9900;
-  font-size: 12px;
-  line-height: 1.5;
-`
-
 export default function ClientWrapper() {
   const searchParams = useSearchParams()
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
@@ -336,7 +239,6 @@ export default function ClientWrapper() {
       <Container>
         <Header activePage="/swap-all" />
         
-        {/* L'HEADER CON I BOTTONI CORRETTI */}
         <PageHeader>
           <LogoSection>
             <Logo src="/favicon.svg" alt="Arb Inc Logo" />
@@ -369,34 +271,9 @@ export default function ClientWrapper() {
             <h2 style={{ color: '#8B5CF6', marginBottom: '10px' }}>DEX Aggregator - Best Swap Rates</h2>
             <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
               Swap any token on <strong>BNB Smart Chain</strong> with the best rates through our KyberSwap integration. 
-              Our DEX aggregator compares liquidity across <strong>PancakeSwap</strong>, <strong>Uniswap V3</strong>, and other 
-              major DEXs to find you the optimal price.
-            </p>
-            <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
-              <li><strong>Best Rates:</strong> Aggregates liquidity from multiple DEXs</li>
-              <li><strong>Low Fees:</strong> Only 0.1% dev fee on all swaps</li>
-              <li><strong>Fast Execution:</strong> Optimized routing for speed</li>
-              <li><strong>All Tokens:</strong> Trade any BEP-20 token pair</li>
-            </ul>
-            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
-              For ARB Inc token swaps, use our <a href="/swap" style={{ color: '#8B5CF6' }}>Custom Swap</a> with direct PancakeSwap V2 routing.
             </p>
           </section>
           
-          <div style={{
-            maxWidth: '400px',
-            width: '100%',
-            padding: '10px',
-            background: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            borderRadius: '12px',
-            color: '#8B5CF6',
-            fontSize: '12px',
-            lineHeight: '1.4',
-            textAlign: 'center',
-          }}>
-            <strong>KyberSwap Default Token List</strong> - Access all tokens available on KyberSwap including BNB, WBNB, CAKE, and many more.
-          </div>
           <SwapWrapper>
             <SwapScroller>
               <SwapSection>
