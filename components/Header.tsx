@@ -19,7 +19,7 @@ export const navItems = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const LOGO_URL = 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto';
+const LOGO_URL = 'https://arbitrage-inc.exchange/logo-animato.gif';
 
 /* ─── DESKTOP HEADER ─── */
 const HeaderContainer = styled.header`

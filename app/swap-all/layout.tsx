@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Arbitrage Inception',
     images: [
       {
-        url: 'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
+        url: 'https://arbitrage-inc.exchange/logo-animato.gif',
         width: 800,
         height: 800,
         alt: 'Arbitrage Inception Swap All',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: 'Swap All Tokens | DEX Aggregator | Arbitrage Inception',
     description: 'Swap any token on BSC with the best rates.',
     images: [
-      'https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto',
+      'https://arbitrage-inc.exchange/logo-animato.gif',
     ],
   },
 }

@@ -214,7 +214,7 @@ export default function ContactPage() {
       <Container>
         <SharedHeader activePage="/contact" />
           <LogoSection>
-            <Logo src="https://cdn.dexscreener.com/cms/images/3db2502d596330f75db19c4275c3acd833d9f35d370a39ed28933073d75edc7f?width=800&height=800&quality=95&format=auto" alt="Arbitrage Inception" />
+            <Logo src="https://arbitrage-inc.exchange/logo-animato.gif" alt="Arbitrage Inception" />
             <Title>Arbitrage Inception</Title>
           </LogoSection>
           <Nav>
