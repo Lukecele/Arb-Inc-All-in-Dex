@@ -185,7 +185,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
               <StatusDot /> Active
             </div>
           )}
-          <HamburgerBtn aria-label="Toggle Menu"  onClick={() => setMenuOpen(!menuOpen)}>
+          <HamburgerBtn aria-label="Apri Menu Navigazione"  aria-label="Toggle Menu"  onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes /> : <FaBars />}
           </HamburgerBtn>
           {walletSection}
@@ -195,7 +195,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
       <MobileOverlay $open={menuOpen}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
           <SiteTitle>Menu</SiteTitle>
-          <HamburgerBtn aria-label="Toggle Menu"  onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
+          <HamburgerBtn aria-label="Apri Menu Navigazione"  aria-label="Toggle Menu"  onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
         </div>
         {navItems.map((item) => (
           <Link 
