@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import './globals.css'
@@ -163,6 +164,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
         <CookieConsent />
+        <GoogleAnalytics gaId="G-H6XYJKW0CX" />
       </body>
     </html>
   )
