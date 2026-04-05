@@ -151,7 +151,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
 
   return (
     <>
-      <SkipLink href="#main-content">Skip to main content</SkipLink>
+      <SkipLink href="#main-content" id="skip-link">Skip to main content</SkipLink>
       <HeaderContainer>
         <LogoSection href="/" onClick={() => setMenuOpen(false)}>
           <LogoWrapper>
@@ -207,7 +207,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
             {item.label}
           </Link>
         ))}
-        <div style={{ marginTop: 'auto', textAlign: 'center', color: '#64748b', fontSize: '12px' }}>
+        <div style={{ marginTop: 'auto', textAlign: 'center', color: '#cbd5e1', fontSize: '12px' }}>
           © {currentYear} Arbitrage Inception
         </div>
       </MobileOverlay>
