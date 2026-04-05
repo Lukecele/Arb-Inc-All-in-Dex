@@ -1,4 +1,4 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -35,11 +35,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://rsms.me" />
-        <link rel="dns-prefetch" href="https://rsms.me" />
-      </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
+        {/* Google Analytics caricato in modo intelligente */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-H6XYJKW0CX"
+          strategy="lazyOnload"
+        />
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-H6XYJKW0CX');
+          `}
+        </Script>
+
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
             <ErrorBoundary>
@@ -50,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
-        <GoogleAnalytics gaId="G-H6XYJKW0CX" />
       </body>
     </html>
   )
