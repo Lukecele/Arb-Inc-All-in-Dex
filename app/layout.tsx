@@ -48,7 +48,11 @@ export const metadata: Metadata = {
     site: '@Arbitrageincept',
     images: ['/logo.png'],
   },
-  icons: { icon: '/logo.png', apple: '/logo.png' },
+  icons: { 
+    icon: '/logo.png', 
+    apple: '/logo.png',
+    shortcut: '/favicon.ico'
+  },
   manifest: '/manifest.json',
 }
 
@@ -70,7 +74,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body style={{ margin: 0, padding: 0, fontFamily: 'var(--font-inter), sans-serif' }}>
+      <body 
+        suppressHydrationWarning 
+        style={{ 
+          margin: 0, 
+          padding: 0, 
+          fontFamily: 'var(--font-inter), sans-serif',
+          backgroundColor: '#050508' 
+        }}
+      >
         <ErrorBoundary>
           <Web3Provider>
             <StyledComponentsRegistry>
