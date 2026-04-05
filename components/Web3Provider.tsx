@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { init } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
@@ -30,5 +31,17 @@ init({
 })
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Se non siamo ancora montati sul client, renderizziamo un contenitore invisibile
+  // Questo mantiene il contenuto per il SEO ma evita il mismatch di React
+  if (!mounted) {
+    return <div style={{ visibility: 'hidden' }}>{children}</div>
+  }
+
   return <>{children}</>
 }
