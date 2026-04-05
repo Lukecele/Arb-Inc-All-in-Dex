@@ -286,7 +286,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
       <HeaderContainer>
         <LogoSection href="/" aria-label="Go to homepage" onClick={() => setMenuOpen(false)}>
           <LogoWrapper>
-            <Image
+            <Image unoptimized
               src={LOGO_URL}
               alt="Arbitrage Inception logo"
               width={44}
@@ -334,7 +334,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
         <MobileHeader>
           <LogoSection href="/" onClick={() => setMenuOpen(false)}>
             <LogoWrapper>
-              <Image
+              <Image unoptimized
                 src={LOGO_URL}
                 alt="Arbitrage Inception logo"
                 width={44}
