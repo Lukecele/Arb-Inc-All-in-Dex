@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
-        <GoogleAnalytics gaId="G-H6XYJKW0CX" />
+        <GoogleAnalytics gaId="G-H6XYJKW0CX" strategy="lazyOnload" />
       </body>
     </html>
   )

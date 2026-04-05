@@ -146,6 +146,7 @@ const StatusDot = styled.div`
   background: ${theme.colors.status.success};
   box-shadow: 0 0 8px ${theme.colors.status.success};
   animation: pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
   @keyframes pulse {
     0%, 100% { opacity: 1; opacity: 1; }
     50% { opacity: 0.5; opacity: 0.5; }
