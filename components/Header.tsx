@@ -62,11 +62,11 @@ const SiteTitle = styled.span`
   @media (min-width: 769px) { font-size: 22px; }
 `;
 
-/* Ritorna la navigazione Desktop! Nascosca su mobile, visibile su PC */
 const Nav = styled.nav`
   display: none;
-  @media (min-width: 1024px) {
+  @media (min-width: 769px) {
     display: flex;
+    align-items: center;
     gap: 4px;
     background: rgba(255, 255, 255, 0.03);
     padding: 5px 10px;
@@ -105,16 +105,19 @@ const StatusDot = styled.div`
   }
 `;
 
-/* L'hamburger ora scompare quando lo schermo è grande (PC) */
 const HamburgerBtn = styled.button`
   display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px;
   border-radius: 8px;
   color: white;
   cursor: pointer;
-  @media (min-width: 1024px) { display: none; }
+  @media (min-width: 769px) { 
+    display: none !important; 
+  }
 `;
 
 const MobileOverlay = styled.div<{ $open: boolean }>`
@@ -127,7 +130,9 @@ const MobileOverlay = styled.div<{ $open: boolean }>`
   padding: 20px;
   transform: ${props => props.$open ? 'translateX(0)' : 'translateX(100%)'};
   transition: transform 0.3s ease-in-out;
-  @media (min-width: 1024px) { display: none; }
+  @media (min-width: 769px) { 
+    display: none !important; 
+  }
 `;
 
 export default function Header({ activePage, showStatus = true, walletSection }: any) {
@@ -157,7 +162,6 @@ export default function Header({ activePage, showStatus = true, walletSection }:
           <SiteTitle>Arbitrage Inception</SiteTitle>
         </LogoSection>
 
-        {/* Qui torna il menu Desktop centrale */}
         <Nav>
           {navItems.map((item) => (
             <NavLinkStyled
@@ -186,7 +190,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
       <MobileOverlay $open={menuOpen}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
           <SiteTitle>Menu</SiteTitle>
-          <HamburgerBtn aria-label="Menu Navigazione" onClick={() => setMenuOpen(false)}>
+          <HamburgerBtn aria-label="Chiudi Menu" onClick={() => setMenuOpen(false)}>
             <FaTimes />
           </HamburgerBtn>
         </div>
