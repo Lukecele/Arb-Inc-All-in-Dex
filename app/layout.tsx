@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
