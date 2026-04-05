@@ -147,8 +147,8 @@ const StatusDot = styled.div`
   box-shadow: 0 0 8px ${theme.colors.status.success};
   animation: pulse 2s ease-in-out infinite;
   @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 8px #10B981; }
-    50% { opacity: 0.5; box-shadow: 0 0 3px #10B981; }
+    0%, 100% { opacity: 1; opacity: 1; }
+    50% { opacity: 0.5; opacity: 0.5; }
   }
 `;
 

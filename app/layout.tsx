@@ -1,14 +1,19 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
-import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
-import './globals.css'
-import StyledComponentsRegistry from '../lib/registry'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import CookieConsent from '../components/CookieConsent'
-import ErrorBoundary from '../components/ErrorBoundary'
-import WebVitals from '../components/WebVitals'
-import { Web3Provider } from '../components/Web3Provider' // Il nostro nuovo provider
+import { Inter } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import './globals.css';
+import StyledComponentsRegistry from '../lib/registry';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import CookieConsent from '../components/CookieConsent';
+import ErrorBoundary from '../components/ErrorBoundary';
+import { Web3Provider } from '../components/Web3Provider';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 const DAPP_URL = process.env.NEXT_PUBLIC_DAPP_URL || 'https://arbitrage-inc.exchange';
 
@@ -49,11 +54,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US" suppressHydrationWarning>
+    <html lang="en-US" className={inter.variable} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://bsc.publicnode.com" />
         <link rel="dns-prefetch" href="https://bsc.publicnode.com" />
-        {/* Schema FinancialProduct per SEO Pro */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -67,9 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body style={{ margin: 0, padding: 0 }}>
+      <body style={{ margin: 0, padding: 0, fontFamily: 'var(--font-inter), sans-serif' }}>
         <ErrorBoundary>
-          <Web3Provider> {/* Avvolge tutto il sito: wallet sempre connesso */}
+          <Web3Provider>
             <StyledComponentsRegistry>
               {children}
             </StyledComponentsRegistry>
