@@ -24,12 +24,18 @@ const Container = styled.div`
   padding: 0 15px;
 `
 
+const MainContent = styled.main`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh; /* FIX CLS: Riserva spazio per evitare salti del footer */
+`
+
 const HeroSection = styled.section`
   text-align: center;
   padding: 100px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 `
 
 const HeroTitle = styled.h1`
@@ -38,8 +44,14 @@ const HeroTitle = styled.h1`
   background: linear-gradient(135deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: 1.1;
   margin-bottom: 20px;
+`
+
+const SectionTitle = styled.h2` /* FIX A11Y: H2 invece di H3 */
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 30px;
+  text-transform: uppercase;
 `
 
 const StatsGrid = styled.div`
@@ -66,8 +78,6 @@ export default function HomePageClient() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Eseguiamo il fetch solo quando il browser ha finito di renderizzare tutto (Idle)
     const loadData = () => {
       fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
         .then(res => res.json())
@@ -80,12 +90,8 @@ export default function HomePageClient() {
           }
         }).catch(() => {});
     };
-
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(loadData);
-    } else {
-      setTimeout(loadData, 2500);
-    }
+    if ('requestIdleCallback' in window) window.requestIdleCallback(loadData);
+    else setTimeout(loadData, 2000);
   }, []);
 
   if (!mounted) return null;
@@ -95,33 +101,34 @@ export default function HomePageClient() {
       <GlobalStyle />
       <Container>
         <Header activePage="/" />
-        <main id="main-content" style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <MainContent id="main-content">
           <HeroSection>
             <HeroTitle>Trade Smarter</HeroTitle>
-            <p style={{ color: '#cbd5e1', fontSize: '1.1rem', marginBottom: '40px' }}>
+            <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '40px' }}>
               All-in-One DeFi Aggregator on BNB Smart Chain
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
               <Link href="/swap" style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold' }}>Swap Now</Link>
-              <Link href="/swap-all" style={{ border: '1px solid #333', color: 'white', padding: '14px 40px', borderRadius: '100px' }}>Explore</Link>
+              <Link href="/swap-all" style={{ border: '1px solid #444', color: 'white', padding: '14px 40px', borderRadius: '100px' }}>Explore</Link>
             </div>
           </HeroSection>
 
+          <SectionTitle>Live Stats</SectionTitle>
           <StatsGrid>
             <StatCard>
-              <div style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>ARB INC PRICE</div>
+              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>ARB INC PRICE</div>
               <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
                 {tokenData.price > 0 ? `$${tokenData.price.toFixed(8)}` : '---'}
               </div>
             </StatCard>
             <StatCard>
-              <div style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>LIQUIDITY (USD)</div>
+              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>LIQUIDITY (USD)</div>
               <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
                 {tokenData.liquidity > 0 ? `$${tokenData.liquidity.toLocaleString()}` : '---'}
               </div>
             </StatCard>
           </StatsGrid>
-        </main>
+        </MainContent>
         <Footer />
       </Container>
     </>
