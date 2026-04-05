@@ -20,56 +20,69 @@ export const navItems = [
 
 const LOGO_URL = '/logo.jpg';
 
-const HeaderContainer = styled.header`
+// Wrapper che prende tutta la larghezza per il background
+const HeaderWrapper = styled.header`
   width: 100%;
-  max-width: 1200px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
   background: rgba(7, 7, 21, 0.85);
   backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 1px 0 rgba(124, 58, 237, 0.25);
-  @media (min-width: 769px) { padding: 16px 0; }
+  box-shadow: 0 1px 0 rgba(124, 58, 237, 0.2);
+`;
+
+// Contenitore interno centrato
+const HeaderInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
+  height: 64px; /* Altezza fissa per evitare salti o righe vuote */
+  
+  @media (min-width: 769px) {
+    padding: 0 24px;
+    height: 72px;
+  }
 `;
 
 const LogoSection = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
+  flex-shrink: 0;
 `;
 
 const LogoWrapper = styled.div`
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-  @media (min-width: 769px) { width: 44px; height: 44px; }
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  @media (min-width: 769px) { width: 40px; height: 40px; }
 `;
 
 const SiteTitle = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
+  white-space: nowrap;
   background: linear-gradient(135deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) { font-size: 22px; }
+  @media (min-width: 769px) { font-size: 18px; }
 `;
 
 const Nav = styled.nav`
   display: none;
-  @media (min-width: 769px) {
+  @media (min-width: 992px) {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     background: rgba(255, 255, 255, 0.03);
-    padding: 5px 10px;
+    padding: 4px;
     border-radius: 100px;
     border: 1px solid rgba(255, 255, 255, 0.07);
   }
@@ -78,31 +91,28 @@ const Nav = styled.nav`
 const NavLinkStyled = styled(Link)<{ $active?: boolean }>`
   color: ${props => props.$active ? '#fff' : '#94a3b8'};
   text-decoration: none;
-  font-size: 13px;
-  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
   border-radius: 100px;
-  background: ${props => props.$active ? 'rgba(124, 58, 237, 0.4)' : 'transparent'};
+  background: ${props => props.$active ? 'rgba(124, 58, 237, 0.5)' : 'transparent'};
   transition: all 0.2s ease;
-  &:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+  &:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
 `;
 
 const RightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-shrink: 0;
 `;
 
 const StatusDot = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #10B981;
   box-shadow: 0 0 8px #10B981;
-  animation: pulseLight 2s ease-in-out infinite;
-  @keyframes pulseLight {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(0.9); }
-  }
 `;
 
 const HamburgerBtn = styled.button`
@@ -115,9 +125,7 @@ const HamburgerBtn = styled.button`
   border-radius: 8px;
   color: white;
   cursor: pointer;
-  @media (min-width: 769px) { 
-    display: none !important; 
-  }
+  @media (min-width: 992px) { display: none !important; }
 `;
 
 const MobileOverlay = styled.div<{ $open: boolean }>`
@@ -127,85 +135,87 @@ const MobileOverlay = styled.div<{ $open: boolean }>`
   z-index: 2000;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 24px;
   transform: ${props => props.$open ? 'translateX(0)' : 'translateX(100%)'};
-  transition: transform 0.3s ease-in-out;
-  @media (min-width: 769px) { 
-    display: none !important; 
-  }
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
-export default function Header({ activePage, showStatus = true, walletSection }: any) {
+export default function Header({ showStatus = true, walletSection }: any) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
-  const currentYear = mounted ? new Date().getFullYear() : '';
-
   return (
     <>
       <a href="#main-content" id="skip-link" className="sr-only focus:not-sr-only">Skip to main content</a>
-      <HeaderContainer>
-        <LogoSection href="/" onClick={() => setMenuOpen(false)}>
-          <LogoWrapper>
-            <Image
-              src={LOGO_URL}
-              alt="Logo"
-              width={44}
-              height={44}
-              priority
-              style={{ objectFit: 'cover' }}
-            />
-          </LogoWrapper>
-          <SiteTitle>Arbitrage Inception</SiteTitle>
-        </LogoSection>
+      <HeaderWrapper>
+        <HeaderInner>
+          <LogoSection href="/" onClick={() => setMenuOpen(false)}>
+            <LogoWrapper>
+              <Image
+                src={LOGO_URL}
+                alt="Logo"
+                width={40}
+                height={40}
+                priority
+                style={{ objectFit: 'cover' }}
+              />
+            </LogoWrapper>
+            <SiteTitle>Arbitrage Inception</SiteTitle>
+          </LogoSection>
 
-        <Nav>
-          {navItems.map((item) => (
-            <NavLinkStyled
-              key={item.href}
-              href={item.href}
-              $active={pathname === item.href}
-            >
-              {item.label}
-            </NavLinkStyled>
-          ))}
-        </Nav>
+          <Nav>
+            {navItems.map((item) => (
+              <NavLinkStyled
+                key={item.href}
+                href={item.href}
+                $active={pathname === item.href}
+              >
+                {item.label}
+              </NavLinkStyled>
+            ))}
+          </Nav>
 
-        <RightSection>
-          {showStatus && mounted && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontSize: '11px', fontWeight: 600 }}>
-              <StatusDot /> Active
-            </div>
-          )}
-          <HamburgerBtn aria-label="Menu Navigazione" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <FaTimes /> : <FaBars />}
-          </HamburgerBtn>
-          {walletSection}
-        </RightSection>
-      </HeaderContainer>
+          <RightSection>
+            {showStatus && mounted && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <StatusDot /> <span className="hidden sm:inline">Active</span>
+              </div>
+            )}
+            {walletSection}
+            <HamburgerBtn aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <FaTimes /> : <FaBars />}
+            </HamburgerBtn>
+          </RightSection>
+        </HeaderInner>
+      </HeaderWrapper>
 
       <MobileOverlay $open={menuOpen}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
           <SiteTitle>Menu</SiteTitle>
-          <HamburgerBtn aria-label="Chiudi Menu" onClick={() => setMenuOpen(false)}>
-            <FaTimes />
-          </HamburgerBtn>
+          <HamburgerBtn onClick={() => setMenuOpen(false)}><FaTimes /></HamburgerBtn>
         </div>
-        {navItems.map((item) => (
-          <Link 
-            key={item.href} 
-            href={item.href} 
-            onClick={() => setMenuOpen(false)}
-            style={{ padding: '15px', fontSize: '20px', color: pathname === item.href ? '#8B5CF6' : '#fff', textDecoration: 'none' }}
-          >
-            {item.label}
-          </Link>
-        ))}
-        <div style={{ marginTop: 'auto', textAlign: 'center', color: '#cbd5e1', fontSize: '12px' }}>
-          © {currentYear} Arbitrage Inception
+        <div style={{ display: 'flex', flex-direction: 'column', gap: '8px' }}>
+          {navItems.map((item) => (
+            <Link 
+              key={item.href} 
+              href={item.href} 
+              onClick={() => setMenuOpen(false)}
+              style={{ 
+                padding: '16px', 
+                fontSize: '18px', 
+                fontWeight: '600',
+                borderRadius: '12px',
+                background: pathname === item.href ? 'rgba(124, 58, 237, 0.1)' : 'transparent',
+                color: pathname === item.href ? '#8B5CF6' : '#fff', 
+                textDecoration: 'none' 
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </MobileOverlay>
     </>
