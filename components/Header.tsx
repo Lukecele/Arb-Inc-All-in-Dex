@@ -19,7 +19,7 @@ export const navItems = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const LOGO_URL = 'https://arbitrage-inc.exchange/logo.png';
+const LOGO_URL = '/logo.png';
 
 /* ─── DESKTOP HEADER ─── */
 const HeaderContainer = styled.header`
