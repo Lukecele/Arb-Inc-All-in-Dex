@@ -30,7 +30,7 @@ const MainContent = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 80vh; /* FIX CLS: Riserva spazio per evitare salti del footer */
+  min-height: 80vh;
 `
 
 const HeroSection = styled.section`
@@ -47,7 +47,7 @@ const HeroTitle = styled.h1`
   margin-bottom: 20px;
 `
 
-const SectionTitle = styled.h2` /* FIX A11Y: H2 invece di H3 */
+const SectionTitle = styled.h2`
   font-size: 20px;
   color: #fff;
   margin-bottom: 30px;
@@ -73,7 +73,7 @@ const StatCard = styled.div`
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 
 export default function HomePageClient() {
-  const [tokenData, setTokenData] = useState({ price: 0, liquidity: 0 });
+  const [tokenData, setTokenData] = useState({ price: 0, liquidity: 0, volume: 0 });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -82,10 +82,23 @@ export default function HomePageClient() {
       fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
         .then(res => res.json())
         .then(data => {
-          if (data.pairs?.[0]) {
+          if (data.pairs && data.pairs.length > 0) {
+            // SOMMA AGGREGATA: iteriamo su tutte le pool
+            let totalLiquidity = 0;
+            let totalVolume = 0;
+            
+            data.pairs.forEach((pair: any) => {
+              totalLiquidity += parseFloat(pair.liquidity?.usd || 0);
+              totalVolume += parseFloat(pair.volume?.h24 || 0);
+            });
+
+            // Il prezzo lo prendiamo dalla pool principale (solitamente la prima)
+            const mainPrice = parseFloat(data.pairs[0].priceUsd || 0);
+
             setTokenData({
-              price: parseFloat(data.pairs[0].priceUsd),
-              liquidity: parseFloat(data.pairs[0].liquidity.usd)
+              price: mainPrice,
+              liquidity: totalLiquidity,
+              volume: totalVolume
             });
           }
         }).catch(() => {});
@@ -113,18 +126,24 @@ export default function HomePageClient() {
             </div>
           </HeroSection>
 
-          <SectionTitle>Live Stats</SectionTitle>
+          <SectionTitle>Live Protocol Stats</SectionTitle>
           <StatsGrid>
             <StatCard>
-              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>ARB INC PRICE</div>
+              <div style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>ARB INC PRICE</div>
               <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
                 {tokenData.price > 0 ? `$${tokenData.price.toFixed(8)}` : '---'}
               </div>
             </StatCard>
             <StatCard>
-              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>LIQUIDITY (USD)</div>
+              <div style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>AGGREGATE LIQUIDITY</div>
               <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
-                {tokenData.liquidity > 0 ? `$${tokenData.liquidity.toLocaleString()}` : '---'}
+                {tokenData.liquidity > 0 ? `$${Math.round(tokenData.liquidity).toLocaleString()}` : '---'}
+              </div>
+            </StatCard>
+            <StatCard>
+              <div style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>24H VOLUME</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
+                {tokenData.volume > 0 ? `$${Math.round(tokenData.volume).toLocaleString()}` : '---'}
               </div>
             </StatCard>
           </StatsGrid>
