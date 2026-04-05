@@ -44,7 +44,7 @@ const navLinks = [
 const mayanConfig = {
   appIdentity: {
     name: 'Arbitrage Inception',
-    icon: 'https://arbitrage-inc.exchange/logo-animato.gif',
+    icon: 'https://arbitrage-inc.exchange/logo.webp',
     uri: 'https://arbitrage-inc.exchange',
   },
   solanaReferrerAddress: 'FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hHw2kXrZi',

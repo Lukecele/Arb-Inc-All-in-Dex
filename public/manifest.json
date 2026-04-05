@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [
-    { "src": "/logo-animato.gif", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "/logo.webp", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ],
   "categories": ["finance", "utilities"],
   "shortcuts": [

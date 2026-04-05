@@ -241,7 +241,7 @@ export default function ClientWrapper() {
         
         <PageHeader>
           <LogoSection>
-            <Logo src="/logo-animato.gif" alt="Arb Inc Logo" />
+            <Logo src="/logo.webp" alt="Arb Inc Logo" />
             <Title>Swap All</Title>
           </LogoSection>
           

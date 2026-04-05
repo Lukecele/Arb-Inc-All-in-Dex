@@ -19,7 +19,7 @@ export const navItems = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const LOGO_URL = 'https://arbitrage-inc.exchange/logo-animato.gif';
+const LOGO_URL = 'https://arbitrage-inc.exchange/logo.webp';
 
 /* ─── DESKTOP HEADER ─── */
 const HeaderContainer = styled.header`
@@ -286,7 +286,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
       <HeaderContainer>
         <LogoSection href="/" aria-label="Go to homepage" onClick={() => setMenuOpen(false)}>
           <LogoWrapper>
-            <Image unoptimized
+            <Image
               src={LOGO_URL}
               alt="Arbitrage Inception logo"
               width={44}
@@ -334,7 +334,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
         <MobileHeader>
           <LogoSection href="/" onClick={() => setMenuOpen(false)}>
             <LogoWrapper>
-              <Image unoptimized
+              <Image
                 src={LOGO_URL}
                 alt="Arbitrage Inception logo"
                 width={44}
