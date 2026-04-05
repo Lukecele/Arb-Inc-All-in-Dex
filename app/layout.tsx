@@ -36,17 +36,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
-        {/* Google Analytics caricato in modo intelligente */}
+        {/* Caricamento Differito Tag Google (Analytics + Ads) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-H6XYJKW0CX"
           strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18066589265"
+          strategy="lazyOnload"
+        />
+        <Script id="google-analytics-ads" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-H6XYJKW0CX');
+            gtag('config', 'AW-18066589265');
           `}
         </Script>
 
