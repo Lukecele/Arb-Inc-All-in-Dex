@@ -256,7 +256,7 @@ const HeroTitle = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: none 4s linear infinite;
   line-height: 1.1;
   letter-spacing: -0.03em;
   @media (min-width: 481px) {
@@ -647,7 +647,7 @@ const StatCardSkeleton = styled.div`
     inset: 0;
     background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: none 1.5s infinite;
   }
   
   & > div {

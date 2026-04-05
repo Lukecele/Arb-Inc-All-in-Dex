@@ -61,3 +61,15 @@ a[href*="/swap"], a[href*="/swap-all"], button {
   align-items: center !important;
   justify-content: center !important;
 }
+
+/* Forza la visualizzazione immediata del testo */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap; /* Questa è la chiave! */
+}
+
+/* Ottimizzazione rendering per elementi critici (LCP) */
+main, h1, .hero-text {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
