@@ -12,7 +12,6 @@ import { Web3Provider } from '../components/Web3Provider';
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
 });
 
 const DAPP_URL = process.env.NEXT_PUBLIC_DAPP_URL || 'https://arbitrage-inc.exchange';
@@ -27,69 +26,23 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(DAPP_URL),
-  title: {
-    default: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
-    template: '%s | Arbitrage Inception',
-  },
-  description: 'Swap, earn BNB rewards and build passive income on BNB Chain. All-in-one DeFi hub with zap, bridge, limit orders & cross-DEX aggregation.',
-  keywords: ['DeFi', 'BSC', 'BNB Smart Chain', 'Swap', 'PancakeSwap', 'KyberSwap', 'Arbitrage', 'Bridge', 'Mayan Finance'],
-  authors: [{ name: 'Arbitrage Inception', url: DAPP_URL }],
-  alternates: { canonical: '/' },
-  openGraph: {
-    title: 'Arbitrage Inception | DeFi Hub on BNB Chain',
-    description: 'Swap, earn BNB rewards and build passive income.',
-    type: 'website',
-    url: DAPP_URL,
-    siteName: 'Arbitrage Inception',
-    images: [{ url: '/logo.png', width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@Arbitrageincept',
-    images: ['/logo.png'],
-  },
-  icons: { 
-    icon: '/logo.png', 
-    apple: '/logo.png',
-    shortcut: '/favicon.ico'
-  },
+  title: 'Arbitrage Inception | DEX Aggregator',
+  description: 'Swap and earn BNB rewards on BNB Chain.',
+  icons: { icon: '/logo.png', apple: '/logo.png' },
   manifest: '/manifest.json',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US" className={inter.variable} suppressHydrationWarning>
-      <head>
-        <link rel="dns-prefetch" href="https://bsc.publicnode.com" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FinancialProduct",
-              "name": "Arb Inc Token",
-              "description": "Deflationary token with 20% burn and BNB rewards.",
-              "offers": { "@type": "Offer", "priceCurrency": "BNB" }
-            })
-          }}
-        />
-      </head>
-      <body 
-        suppressHydrationWarning 
-        style={{ 
-          margin: 0, 
-          padding: 0, 
-          fontFamily: 'var(--font-inter), sans-serif',
-          backgroundColor: '#050508' 
-        }}
-      >
-        <ErrorBoundary>
-          <Web3Provider>
-            <StyledComponentsRegistry>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
+        <StyledComponentsRegistry>
+          <ErrorBoundary>
+            <Web3Provider>
               {children}
-            </StyledComponentsRegistry>
-          </Web3Provider>
-        </ErrorBoundary>
+            </Web3Provider>
+          </ErrorBoundary>
+        </StyledComponentsRegistry>
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
