@@ -1,9 +1,13 @@
-/** @type {import('next').NextConfig} */
+/** @type {import('next').Next.js} */
 const nextConfig = {
-  reactStrictMode: true,
   compiler: {
-    styledComponents: true, // Questo evita i reflow causati dagli stili dinamici!
+    styledComponents: true,
   },
+  // Forza l'output in formato moderno (ESM) per eliminare polyfill inutili
+  swcMinify: true,
+  experimental: {
+    optimizePackageImports: ['react-icons'],
+  }
 }
 
 module.exports = nextConfig

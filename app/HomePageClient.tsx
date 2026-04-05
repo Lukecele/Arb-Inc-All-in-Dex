@@ -4,6 +4,7 @@ import styled, { createGlobalStyle } from 'styled-components'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 const GlobalStyle = createGlobalStyle`
@@ -58,6 +59,14 @@ const StatCard = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.06);
 `
 
+// Cambiato h3 in h2 per gerarchia corretta
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  color: #fff;
+`
+
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 
 export default function HomePageClient() {
@@ -66,8 +75,6 @@ export default function HomePageClient() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Usiamo requestIdleCallback per caricare i dati solo quando il browser è libero
     const loadData = () => {
       fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
         .then(res => res.json())
@@ -99,25 +106,28 @@ export default function HomePageClient() {
         <main id="main-content" style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <HeroSection>
             <HeroTitle>Trade Smarter</HeroTitle>
-            <p style={{ color: '#94a3b8', fontSize: '1.2rem', marginBottom: '40px' }}>
-              DEX Aggregator & Rewards on BNB Chain.
+            <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '40px' }}>
+              All-in-One DeFi Aggregator on BNB Smart Chain
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
               <Link href="/swap" style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold' }}>Swap Now</Link>
-              <Link href="/swap-all" style={{ border: '1px solid #333', color: 'white', padding: '14px 40px', borderRadius: '100px' }}>Explore</Link>
+              <Link href="/swap-all" style={{ border: '1px solid #444', color: 'white', padding: '14px 40px', borderRadius: '100px' }}>Explore</Link>
             </div>
           </HeroSection>
 
+          <SectionTitle>Live Protocol Stats</SectionTitle>
+          
           <StatsGrid>
             <StatCard>
-              <div style={{ color: '#64748b', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>ARB INC PRICE</div>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
+              {/* Schiarito il grigio per contrasto (da #64748b a #cbd5e1) */}
+              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>ARB INC PRICE</div>
+              <div style={{ fontSize: '26px', fontWeight: '900', color: '#a78bfa' }}>
                 {tokenData.price > 0 ? `$${tokenData.price.toFixed(8)}` : '---'}
               </div>
             </StatCard>
             <StatCard>
-              <div style={{ color: '#64748b', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>LIQUIDITY (USD)</div>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: '#a78bfa' }}>
+              <div style={{ color: '#cbd5e1', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>LIQUIDITY (USD)</div>
+              <div style={{ fontSize: '26px', fontWeight: '900', color: '#a78bfa' }}>
                 {tokenData.liquidity > 0 ? `$${tokenData.liquidity.toLocaleString()}` : '---'}
               </div>
             </StatCard>
