@@ -39,3 +39,9 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   clip: auto;
 }
+
+/* Ottimizzazione Rendering */
+main {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+}
