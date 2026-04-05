@@ -151,7 +151,7 @@ export default function Header({ activePage, showStatus = true, walletSection }:
 
   return (
     <>
-      <SkipLink href="#main-content" id="skip-link">Skip to main content</SkipLink>
+      <a href="#main-content" id="skip-link" className="sr-only focus:not-sr-only">Skip to main content</a>
       <HeaderContainer>
         <LogoSection href="/" onClick={() => setMenuOpen(false)}>
           <LogoWrapper>

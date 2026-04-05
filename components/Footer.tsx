@@ -56,7 +56,7 @@ const FooterGrid = styled.div`
 
 const FooterSection = styled.div``;
 
-const FooterSectionTitle = styled.h4`
+const FooterSectionTitle = styled.h3`
   font-size: 12px;
   font-weight: 700;
   color: ${theme.colors.text.accent};

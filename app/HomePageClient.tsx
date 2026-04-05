@@ -536,7 +536,7 @@ const TimelineDate = styled.div`
   margin-bottom: 8px;
 `
 
-const TimelineTitle = styled.h4`
+const TimelineTitle = styled.h3`
   font-size: 16px;
   font-weight: 700;
   color: #f4f4f5;

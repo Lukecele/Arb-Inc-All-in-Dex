@@ -7,7 +7,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import CookieConsent from '../components/CookieConsent';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { Web3Provider } from '../components/Web3Provider';
+import { ClientWeb3Provider } from '../components/ClientWeb3Provider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,20 +28,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(DAPP_URL),
   title: 'Arbitrage Inception | DEX Aggregator',
   description: 'Swap and earn BNB rewards on BNB Chain.',
-  icons: { icon: '/logo.jpg', apple: '/logo.jpg' },
+  icons: { icon: '/logo.jpg', apple: '/logo.jpg', shortcut: '/favicon.ico' },
   manifest: '/manifest.json',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://rsms.me" />
+      </head>
+      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         <StyledComponentsRegistry>
-          <Web3Provider>
+          <ClientWeb3Provider>
             <ErrorBoundary>
               {children}
             </ErrorBoundary>
-          </Web3Provider>
+          </ClientWeb3Provider>
         </StyledComponentsRegistry>
         <CookieConsent />
         <Analytics />
