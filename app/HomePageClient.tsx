@@ -26,11 +26,10 @@ const Container = styled.div`
 
 const HeroSection = styled.section`
   text-align: center;
-  padding: 80px 10px;
+  padding: 100px 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  contain: content;
 `
 
 const HeroTitle = styled.h1`
@@ -46,10 +45,10 @@ const HeroTitle = styled.h1`
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 15px;
+  gap: 20px;
   width: 100%;
   max-width: 900px;
-  margin: 40px 0;
+  margin-bottom: 60px;
 `
 
 const StatCard = styled.div`
@@ -67,7 +66,8 @@ export default function HomePageClient() {
 
   useEffect(() => {
     setMounted(true);
-    // Carichiamo i dati solo quando il browser è "idle" (riposato)
+    
+    // Eseguiamo il fetch solo quando il browser ha finito di renderizzare tutto (Idle)
     const loadData = () => {
       fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
         .then(res => res.json())
@@ -84,7 +84,7 @@ export default function HomePageClient() {
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(loadData);
     } else {
-      setTimeout(loadData, 2000);
+      setTimeout(loadData, 2500);
     }
   }, []);
 
@@ -98,7 +98,7 @@ export default function HomePageClient() {
         <main id="main-content" style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <HeroSection>
             <HeroTitle>Trade Smarter</HeroTitle>
-            <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '40px' }}>
+            <p style={{ color: '#cbd5e1', fontSize: '1.1rem', marginBottom: '40px' }}>
               All-in-One DeFi Aggregator on BNB Smart Chain
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
