@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: DAPP_URL,
     siteName: 'Arbitrage Inception',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    images: [{ url: '/logo-animato.gif', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@Arbitrageincept',
-    images: ['/og-image.png'],
+    images: ['/logo-animato.gif'],
   },
-  icons: { icon: '/logo.png', apple: '/logo.png' },
+  icons: { icon: '/logo-animato.gif', apple: '/logo-animato.gif' },
   manifest: '/manifest.json',
 }
 
