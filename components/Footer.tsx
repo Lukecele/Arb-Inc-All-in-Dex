@@ -156,7 +156,7 @@ const Disclaimer = styled.div`
   line-height: 1.6;
 `;
 
-const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/watchlists/arb-inc';
+const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/bsc/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c';
 
 interface FooterProps {
   showDisclaimer?: boolean;
