@@ -44,6 +44,7 @@ const HeroTitle = styled.h1`
   background: linear-gradient(135deg, #8B5CF6, #EC4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  line-height: 1.1;
   margin-bottom: 20px;
 `
 
@@ -52,6 +53,7 @@ const SectionTitle = styled.h2`
   color: #fff;
   margin-bottom: 30px;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
 `
 
 const StatsGrid = styled.div`
@@ -60,7 +62,7 @@ const StatsGrid = styled.div`
   gap: 20px;
   width: 100%;
   max-width: 900px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 `
 
 const StatCard = styled.div`
@@ -68,6 +70,21 @@ const StatCard = styled.div`
   border-radius: 16px;
   padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+`
+
+const ContractSection = styled.div`
+  background: rgba(139, 92, 246, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 15px 25px;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
 `
 
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
@@ -75,6 +92,7 @@ const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
 export default function HomePageClient() {
   const [tokenData, setTokenData] = useState({ price: 0, liquidity: 0, volume: 0 });
   const [mounted, setMounted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -83,20 +101,17 @@ export default function HomePageClient() {
         .then(res => res.json())
         .then(data => {
           if (data.pairs && data.pairs.length > 0) {
-            // SOMMA AGGREGATA: iteriamo su tutte le pool
             let totalLiquidity = 0;
             let totalVolume = 0;
-            
             data.pairs.forEach((pair: any) => {
               totalLiquidity += parseFloat(pair.liquidity?.usd || 0);
               totalVolume += parseFloat(pair.volume?.h24 || 0);
             });
-
-            // Il prezzo lo prendiamo dalla pool principale (solitamente la prima)
-            const mainPrice = parseFloat(data.pairs[0].priceUsd || 0);
-
+            const mainPair = data.pairs.sort((a: any, b: any) => 
+              parseFloat(b.liquidity?.usd || 0) - parseFloat(a.liquidity?.usd || 0)
+            )[0];
             setTokenData({
-              price: mainPrice,
+              price: parseFloat(mainPair.priceUsd || 0),
               liquidity: totalLiquidity,
               volume: totalVolume
             });
@@ -106,6 +121,12 @@ export default function HomePageClient() {
     if ('requestIdleCallback' in window) window.requestIdleCallback(loadData);
     else setTimeout(loadData, 2000);
   }, []);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(TOKEN_ADDRESS);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (!mounted) return null;
 
@@ -121,8 +142,8 @@ export default function HomePageClient() {
               All-in-One DeFi Aggregator on BNB Smart Chain
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
-              <Link href="/swap" style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold' }}>Swap Now</Link>
-              <Link href="/swap-all" style={{ border: '1px solid #444', color: 'white', padding: '14px 40px', borderRadius: '100px' }}>Explore</Link>
+              <Link href="/swap" style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold', textDecoration: 'none' }}>Swap Now</Link>
+              <Link href="/swap-all" style={{ border: '1px solid #444', color: 'white', padding: '14px 40px', borderRadius: '100px', textDecoration: 'none' }}>Explore</Link>
             </div>
           </HeroSection>
 
@@ -147,6 +168,27 @@ export default function HomePageClient() {
               </div>
             </StatCard>
           </StatsGrid>
+
+          <ContractSection>
+            <div style={{ color: '#a78bfa', fontSize: '12px', fontWeight: 'bold' }}>OFFICIAL CONTRACT ADDRESS (BEP-20)</div>
+            <div 
+              onClick={copyToClipboard}
+              style={{ 
+                color: '#fff', 
+                fontSize: 'clamp(10px, 3vw, 14px)', 
+                fontFamily: 'monospace', 
+                background: 'rgba(0,0,0,0.3)', 
+                padding: '10px', 
+                borderRadius: '6px', 
+                cursor: 'pointer',
+                border: '1px dashed rgba(167, 139, 250, 0.4)',
+                width: '100%',
+                textAlign: 'center'
+              }}
+            >
+              {TOKEN_ADDRESS} {copied ? '✅ COPIED!' : '📋'}
+            </div>
+          </ContractSection>
         </MainContent>
         <Footer />
       </Container>

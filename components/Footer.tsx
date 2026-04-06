@@ -206,7 +206,6 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
           <FooterSectionTitle>Resources</FooterSectionTitle>
           <ExternalLink href="https://pancakeswap.finance" target="_blank" rel="noopener noreferrer">PancakeSwap</ExternalLink>
           <ExternalLink href="https://kyberswap.com" target="_blank" rel="noopener noreferrer">KyberSwap</ExternalLink>
-          <ExternalLink href="https://docs.arbitrage-inc.exchange" target="_blank" rel="noopener noreferrer">Documentation</ExternalLink>
         </FooterSection>
         <FooterSection>
           <FooterSectionTitle>Legal</FooterSectionTitle>
