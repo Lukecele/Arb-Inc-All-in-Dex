@@ -138,9 +138,20 @@ export default function HomePageClient() {
     else setTimeout(loadData, 2000);
   }, []);
 
+  // Funzione per tracciare la conversione in Google Ads
+  const trackConversion = () => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'conversion', {
+        'send_to': 'AW-18066589265/nahxCLjv3JYcENGM6aZD'
+      });
+      console.log('Conversion tracked!');
+    }
+  };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(TOKEN_ADDRESS);
     setCopied(true);
+    trackConversion(); // Traccia quando qualcuno copia il contratto
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -158,7 +169,13 @@ export default function HomePageClient() {
               All-in-One DeFi Aggregator on BNB Smart Chain
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
-              <Link href="/swap" style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold', textDecoration: 'none' }}>Swap Now</Link>
+              <Link 
+                href="/swap" 
+                onClick={trackConversion}
+                style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold', textDecoration: 'none' }}
+              >
+                Swap Now
+              </Link>
               <Link href="/swap-all" style={{ border: '1px solid #444', color: 'white', padding: '14px 40px', borderRadius: '100px', textDecoration: 'none' }}>Explore</Link>
             </div>
           </HeroSection>
@@ -185,7 +202,6 @@ export default function HomePageClient() {
             </StatCard>
           </StatsGrid>
 
-          {/* Link alla pagina About per maggiori info */}
           <InfoLink href="/about">
              Learn more about Arbitrage Inception tokenomics →
           </InfoLink>
