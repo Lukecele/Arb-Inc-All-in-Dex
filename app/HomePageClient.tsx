@@ -73,6 +73,22 @@ const StatCard = styled.div`
   text-align: center;
 `
 
+const InfoLink = styled(Link)`
+  color: #a78bfa;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  &:hover {
+    color: #c4b5fd;
+    transform: translateY(-2px);
+  }
+`
+
 const ContractSection = styled.div`
   background: rgba(139, 92, 246, 0.05);
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -168,6 +184,11 @@ export default function HomePageClient() {
               </div>
             </StatCard>
           </StatsGrid>
+
+          {/* Link alla pagina About per maggiori info */}
+          <InfoLink href="/about">
+             Learn more about Arbitrage Inception tokenomics →
+          </InfoLink>
 
           <ContractSection>
             <div style={{ color: '#a78bfa', fontSize: '12px', fontWeight: 'bold' }}>OFFICIAL CONTRACT ADDRESS (BEP-20)</div>
