@@ -142,7 +142,7 @@ export default function HomePageClient() {
   const trackConversion = () => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'conversion', {
-        'send_to': 'AW-18066589265/nahxCLjv3JYcENGM6aZD'
+        'send_to': 'AW-18071424132/nahxCLjv3JYcENGM6aZD'
       });
       console.log('Conversion tracked!');
     }
