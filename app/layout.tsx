@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
         <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18071424132" />
-        <Script id="google-analytics" strategy="afterInteractive">{`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "AW-18071424132");`}</Script>
+        <Script id="google-analytics" strategy="afterInteractive">{`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "AW-18071424132"); gtag("config", "AW-18069102524");`}</Script>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         {/* Caricamento Differito Tag Google (Analytics + Ads) */}
         <Script
