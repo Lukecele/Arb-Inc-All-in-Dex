@@ -37,15 +37,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         {/* Caricamento Differito Tag Google (Analytics + Ads) */}
-        <Script
-          strategy="lazyOnload"
-        />
-        <Script
-          strategy="lazyOnload"
-        />
-          {`
-          `}
-        </Script>
 
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
