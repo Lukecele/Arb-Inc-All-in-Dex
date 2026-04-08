@@ -1,4 +1,3 @@
-import CoinAd from "../components/CoinAd";
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -48,7 +47,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
-        <CoinAd />
       </body>
     </html>
   )
