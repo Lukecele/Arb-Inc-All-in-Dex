@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import AAdsLeaderboard from "../components/AAdsLeaderboard";
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
+        <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         {/* Caricamento Differito Tag Google (Analytics + Ads) */}
 
         <StyledComponentsRegistry>
