@@ -10,6 +10,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="monetag" content="34275828e267717f003219fdbfcb9234" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   )
