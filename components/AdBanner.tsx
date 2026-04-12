@@ -2,15 +2,13 @@
 
 export default function AdBanner() {
   return (
-    <div className="flex flex-col items-center w-full max-w-[340px] my-4 p-4 border border-blue-500/20 bg-blue-500/5 rounded-2xl backdrop-blur-md shadow-lg shadow-blue-500/5">
-      <span className="text-[9px] text-blue-400/60 uppercase mb-2 tracking-widest font-bold">
-        Sponsored Protocol
+    <div className="flex flex-col items-center w-full max-w-[340px] my-4 p-4 border border-slate-500/10 bg-slate-500/5 rounded-2xl">
+      <span className="text-[9px] text-slate-400/60 uppercase mb-2 tracking-widest font-bold">
+        Ad Slot Ready
       </span>
-      {/* ClickADilla Banner ID */}
-      <div 
-        data-banner-id="1487808" 
-        style={{ minHeight: '250px', minWidth: '300px', display: 'flex', justifyContent: 'center' }}
-      ></div>
+      <div className="min-h-[250px] flex items-center justify-center text-slate-500 text-xs italic">
+        Waiting for new provider...
+      </div>
     </div>
   );
 }
