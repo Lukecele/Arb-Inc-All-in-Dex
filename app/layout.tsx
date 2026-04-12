@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Verifica HillTopAds */}
         <meta name="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" content="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" />
         
-        {/* HillTopAds Popunder Script */}
+        {/* 1. HillTopAds Popunder Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -49,6 +49,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     l = d.scripts[d.scripts.length - 1];
                 s.settings = aja || {};
                 s.src = "\/\/fluffy-management.com\/c\/Df9.6lb\/2S5xlRScW\/QH9nNqjZkA1tMyThEF2nMiSV0T2qOzTTU\/xUM\/T_Yh1q";
+                s.async = true;
+                s.referrerPolicy = 'no-referrer-when-downgrade';
+                l.parentNode.insertBefore(s, l);
+              })({})
+            `,
+          }}
+        />
+
+        {/* 2. HillTopAds MultiTag Banner Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(iaux){
+                var d = document,
+                    s = d.createElement('script'),
+                    l = d.scripts[d.scripts.length - 1];
+                s.settings = iaux || {};
+                s.src = "\/\/stupid-police.com\/b.XsVbsUdQG\/lR0bYqWvcL\/leZmT9\/u\/ZeUQlJkrP\/TnYh5cNxTwEpy\/MxjxkctLN\/jwk_1PMATqItz\/MNwm";
                 s.async = true;
                 s.referrerPolicy = 'no-referrer-when-downgrade';
                 l.parentNode.insertBefore(s, l);
