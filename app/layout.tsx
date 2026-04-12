@@ -38,6 +38,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Verifica HillTopAds */}
         <meta name="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" content="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" />
+        
+        {/* HillTopAds Popunder Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(aja){
+                var d = document,
+                    s = d.createElement('script'),
+                    l = d.scripts[d.scripts.length - 1];
+                s.settings = aja || {};
+                s.src = "\/\/fluffy-management.com\/c\/Df9.6lb\/2S5xlRScW\/QH9nNqjZkA1tMyThEF2nMiSV0T2qOzTTU\/xUM\/T_Yh1q";
+                s.async = true;
+                s.referrerPolicy = 'no-referrer-when-downgrade';
+                l.parentNode.insertBefore(s, l);
+              })({})
+            `,
+          }}
+        />
       </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
