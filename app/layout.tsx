@@ -29,10 +29,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
 
-        {/* COINTRAFFIC UNIFIED CODE: Caricamento sicuro post-interazione */}
+        {/* CLICKADILLA GLOBAL MANAGER - Carica In-page Push e gestisce i Banner */}
         <Script 
-          src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi" 
-          strategy="afterInteractive" 
+          src="https://js.wpadmngr.com/static/adManager.js" 
+          data-admpid="436135"
+          strategy="lazyOnload" 
         />
       </body>
     </html>
