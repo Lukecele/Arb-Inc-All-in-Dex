@@ -2,21 +2,11 @@ import HomePageClient from './HomePageClient'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Arbitrage Inception | DEX Aggregator',
-  description: 'Professional Swap & Liquidity Hub',
+  title: 'Arbitrage Inception | DEX Aggregator & Liquidity Hub',
+  description: 'Swap, zap, and provide liquidity on BSC with the best rates. Features custom ARB Inc swaps, liquidity pools, and cross-DEX aggregation powered by PancakeSwap & KyberSwap.',
+  keywords: ['DeFi', 'BSC', 'Cryptocurrency', 'Swap', 'Liquidity', 'PancakeSwap', 'Arbitrage', 'ARB Inc', 'DEX Aggregator'],
 }
 
 export default function HomePage() {
-  return (
-    <main className="min-h-screen flex flex-col">
-      {/* Monetag gestirà la pubblicità automaticamente, noi lasciamo lo spazio pulito */}
-      <div className="flex-grow pt-8">
-        <HomePageClient />
-      </div>
-      
-      <footer className="container mx-auto px-4 pb-10 text-center text-slate-600 text-[10px] uppercase tracking-widest opacity-50 mt-10">
-        © 2026 Arbitrage Inception • Decentralized & Secure
-      </footer>
-    </main>
-  )
+  return <HomePageClient />
 }
