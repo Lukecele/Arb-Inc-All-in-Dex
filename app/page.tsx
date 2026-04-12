@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', paddingTop: '40px' }}>
       
-      {/* 1. TOP PROMO BAR (Impossibile non vederla) */}
+      {/* TOP PROMO BAR - Più discreta */}
       <a 
         href="https://idealistic-revenue.com/8YeCXW" 
         target="_blank" 
@@ -21,8 +21,8 @@ export default function HomePage() {
           left: 0,
           right: 0,
           height: '40px',
-          backgroundColor: '#f59e0b', // Arancione BTC
-          color: '#000',
+          backgroundColor: '#8B5CF6', // Viola come il brand
+          color: '#fff',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -33,20 +33,18 @@ export default function HomePage() {
           boxShadow: '0 2px 10px rgba(0,0,0,0.5)'
         }}
       >
-        <span style={{ marginRight: '10px' }}>🚀</span> 
-        SPECIAL REWARD: CLAIM YOUR FREE DAILY BTC NOW! 
-        <span style={{ marginLeft: '10px', backgroundColor: '#000', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '11px' }}>CLICK HERE</span>
+        <span style={{ marginRight: '10px' }}>💎</span> 
+        PROMOTIONAL: COLLECT YOUR DAILY REWARD
+        <span style={{ marginLeft: '10px', backgroundColor: '#fff', color: '#8B5CF6', padding: '2px 8px', borderRadius: '4px', fontSize: '11px' }}>COLLECT</span>
       </a>
 
-      {/* Il DEX originale */}
       <HomePageClient />
 
-      {/* 2. FLOATING BUTTON con animazione Pulse */}
+      {/* FLOATING BUTTON - Stile Faucet/Reward */}
       <a 
         href="https://idealistic-revenue.com/8YeCXW" 
         target="_blank" 
         rel="noopener noreferrer"
-        className="reward-button"
         style={{
           position: 'fixed',
           bottom: '30px',
@@ -59,32 +57,30 @@ export default function HomePage() {
         }}
       >
         <div style={{
-          backgroundColor: '#7c3aed',
-          backgroundImage: 'linear-gradient(to right, #7c3aed, #4f46e5)',
+          backgroundColor: '#1e293b',
           color: 'white',
           padding: '15px 25px',
           borderRadius: '20px',
-          boxShadow: '0 0 20px rgba(124, 58, 237, 0.8)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          border: '1px solid #8B5CF6',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
           cursor: 'pointer',
           animation: 'pulse 2s infinite'
         }}>
-          <span style={{ fontSize: '24px' }}>🎁</span>
+          <span style={{ fontSize: '24px' }}>💰</span>
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
-            <span style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase' }}>Instant Reward</span>
-            <span style={{ fontSize: '18px', fontWeight: '900' }}>GET FREE BTC</span>
+            <span style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', color: '#8B5CF6' }}>Community</span>
+            <span style={{ fontSize: '16px', fontWeight: '800' }}>REWARD HUB</span>
           </div>
         </div>
 
-        {/* CSS inline per l'animazione pulse */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(124, 58, 237, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); border-color: #fff; }
+            100% { transform: scale(1); }
           }
         `}} />
       </a>
