@@ -35,6 +35,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Verifica HillTopAds */}
+        <meta name="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" content="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" />
+      </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         <StyledComponentsRegistry>
