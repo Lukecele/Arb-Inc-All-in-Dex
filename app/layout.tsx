@@ -1,5 +1,4 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
-import AAdsLeaderboard from "../components/AAdsLeaderboard";
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -41,7 +40,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Caricamento Differito Tag Google (Analytics + Ads) */}
 
         <StyledComponentsRegistry>
-        <AAdsLeaderboard />
           <ClientWeb3Provider>
             <ErrorBoundary>
               {children}
