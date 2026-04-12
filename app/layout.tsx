@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Verifica HillTopAds */}
         <meta name="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" content="fc1ab86acd169d0bdfc0110c03e37eea1b45dafa" />
         
-        {/* 1. HillTopAds Popunder Script */}
+        {/* 1. HillTopAds Popunder (Il "motore" invisibile) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -57,16 +57,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        {/* 2. HillTopAds MultiTag Banner Script */}
+        {/* 2. HillTopAds In-Page Push (Notifica discreta) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function(iaux){
+              (function(sxax){
                 var d = document,
                     s = d.createElement('script'),
                     l = d.scripts[d.scripts.length - 1];
-                s.settings = iaux || {};
-                s.src = "\/\/stupid-police.com\/b.XsVbsUdQG\/lR0bYqWvcL\/leZmT9\/u\/ZeUQlJkrP\/TnYh5cNxTwEpy\/MxjxkctLN\/jwk_1PMATqItz\/MNwm";
+                s.settings = sxax || {};
+                s.src = "\/\/stupid-police.com\/b.XwV\/sUdrGnls0CYSWTcb\/jeomQ9huXZkUklZkEPUT\/YS5rNoT\/ECydOWD\/UctpNPjpkm1SM\/TfIZ4bOoQV";
                 s.async = true;
                 s.referrerPolicy = 'no-referrer-when-downgrade';
                 l.parentNode.insertBefore(s, l);
