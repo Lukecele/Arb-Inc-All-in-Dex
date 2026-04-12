@@ -1,7 +1,6 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter } from 'next/font/google';
-import type { Metadata, Viewport } from 'next';
-import './globals.css';
+import "./globals.css";
 import StyledComponentsRegistry from '../lib/registry';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -11,12 +10,6 @@ import { ClientWeb3Provider } from '../components/ClientWeb3Provider';
 import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#8B5CF6',
-}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,10 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
 
-        {/* MANTENIAMO SOLO LA SOCIAL BAR (Meno invasiva) */}
+        {/* COINTRAFFIC UNIFIED CODE: Caricamento sicuro post-interazione */}
         <Script 
-          src="https://pl29130418.profitablecpmratenetwork.com/be/fa/88/befa8896026792febb6eddb72ce45b2e.js" 
-          strategy="lazyOnload" 
+          src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi" 
+          strategy="afterInteractive" 
         />
       </body>
     </html>
