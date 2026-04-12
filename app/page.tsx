@@ -35,7 +35,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 2. Pulsante Accattivante FaucetPay */}
+      {/* 2. Pulsante FaucetPay (CSS-based Hover) */}
       <div style={{ 
         width: '100%', 
         display: 'flex', 
@@ -47,11 +47,12 @@ export default function HomePage() {
           href="https://faucetpay.io/?r=5296764" 
           target="_blank" 
           rel="noopener noreferrer"
+          className="faucetpay-btn"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            backgroundColor: '#0052ff', // Colore FaucetPay
+            backgroundColor: '#0052ff',
             backgroundImage: 'linear-gradient(45deg, #0052ff, #00a3ff)',
             color: 'white',
             padding: '14px 28px',
@@ -60,16 +61,8 @@ export default function HomePage() {
             fontWeight: 'bold',
             fontSize: '16px',
             boxShadow: '0 0 20px rgba(0, 82, 255, 0.4)',
-            transition: 'transform 0.2s, box-shadow 0.2s',
+            transition: 'all 0.3s ease',
             border: '1px solid rgba(255,255,255,0.2)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'scale(1.03)';
-            e.currentTarget.style.boxShadow = '0 0 30px rgba(0, 82, 255, 0.6)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 82, 255, 0.4)';
           }}
         >
           <span style={{ fontSize: '22px' }}>⚡</span>
@@ -78,6 +71,15 @@ export default function HomePage() {
             <span>GET A FAUCETPAY WALLET</span>
           </div>
         </a>
+
+        {/* Stile CSS per l'effetto hover senza JS */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .faucetpay-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 82, 255, 0.7) !important;
+            filter: brightness(1.1);
+          }
+        `}} />
       </div>
 
       {/* 3. Il DEX originale */}
