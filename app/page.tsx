@@ -28,38 +28,33 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Banner Coinserom IN ALTO (Massima visibilità) */}
-      <div style={{ 
-        width: '100%', 
-        margin: '20px 0', 
-        overflowX: 'auto', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center' 
-      }}>
+      {/* 2. Banner Coinserom (In Alto) */}
+      <div style={{ width: '100%', margin: '20px 0', overflowX: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '970px', margin: '0 auto', textAlign: 'center' }}>
           <iframe 
             src="//ads.coinserom.com/pub?adsunit=333937&size=970x250" 
             style={{ width: '970px', height: '250px', border: '0px', padding: '0', backgroundColor: 'transparent', overflow: 'auto' }}
           ></iframe>
-          <a 
-            style={{ display: 'block', textAlign: 'right', fontSize: '11px', width: '970px', color: 'rgba(255,255,255,0.3)', textDecoration: 'none', marginTop: '5px' }} 
-            href="https://coinserom.com/?affiliate=3537313432" 
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ads by Coinserom
-          </a>
         </div>
       </div>
 
       {/* 3. Il DEX Aggregator */}
       <HomePageClient />
 
-      {/* 4. MintFunnel / Coinscribble Widget (In fondo) */}
+      {/* 4. Banner A-Ads (Il Paracadute - 728x90 o simile) */}
+      <div style={{ width: '100%', margin: '40px 0', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
+        {/* SOSTITUISCI IL_TUO_ID_AADS CON IL TUO CODICE */}
+        <iframe 
+          data-aa='IL_TUO_ID_AADS' 
+          src='//ad.a-ads.com/IL_TUO_ID_AADS?size=728x90' 
+          style={{ width: '728px', height: '90px', border: '0px', padding: '0', overflow: 'hidden', backgroundColor: 'transparent' }}
+        ></iframe>
+      </div>
+
+      {/* 5. MintFunnel / Coinscribble Widget (In Fondo) */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '40px auto 60px auto', 
+        margin: '20px auto 60px auto', 
         padding: '20px',
         display: 'flex',
         justifyContent: 'center'
