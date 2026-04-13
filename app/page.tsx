@@ -28,21 +28,8 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Banner Coinserom (Premium - In Alto) */}
-      <div style={{ width: '100%', margin: '20px 0', overflowX: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '970px', margin: '0 auto', textAlign: 'center' }}>
-          <iframe 
-            src="//ads.coinserom.com/pub?adsunit=333937&size=970x250" 
-            style={{ width: '970px', height: '250px', border: '0px', padding: '0', backgroundColor: 'transparent', overflow: 'auto' }}
-          ></iframe>
-        </div>
-      </div>
-
-      {/* 3. Il cuore del sito: Il DEX Aggregator */}
-      <HomePageClient />
-
-      {/* 4. Banner A-Ads (Il Paracadute - Adaptive ID 2433982) */}
-      <div style={{ width: '100%', margin: '40px auto', position: 'relative', zIndex: 999 }}>
+      {/* 2. Banner A-Ads IN ALTO (Adaptive ID 2433982) */}
+      <div style={{ width: '100%', margin: '20px 0', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
         <iframe 
           data-aa='2433982' 
           src='//acceptable.a-ads.com/2433982/?size=Adaptive' 
@@ -58,10 +45,13 @@ export default function HomePage() {
         ></iframe>
       </div>
 
-      {/* 5. MintFunnel / Coinscribble Widget (Chiusura in Fondo) */}
+      {/* 3. Il DEX Aggregator */}
+      <HomePageClient />
+
+      {/* 4. MintFunnel / Coinscribble Widget (In Fondo) */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '20px auto 60px auto', 
+        margin: '40px auto 60px auto', 
         padding: '20px',
         display: 'flex',
         justifyContent: 'center'
