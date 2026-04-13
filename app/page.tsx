@@ -10,7 +10,6 @@ export default function HomePage() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508' }}>
       
-      {/* Navigazione */}
       <nav style={{ 
         width: '100%', 
         padding: '20px 0', 
@@ -28,21 +27,21 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* DEX Aggregator */}
       <HomePageClient />
 
-      {/* MintFunnel / Coinscribble Widget */}
       <div style={{ 
         maxWidth: '1200px', 
         margin: '40px auto', 
         padding: '20px',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        minHeight: '200px'
       }}>
-        {/* Widget Coinscribble */}
-        <coinscribble-ad widget="c86fd914-f913-4395-865b-e43860c2de26"></coinscribble-ad>
+        {/* Iniezione sicura per bypassare il controllo TypeScript */}
+        <div dangerouslySetInnerHTML={{ 
+          __html: '<coinscribble-ad widget="c86fd914-f913-4395-865b-e43860c2de26"></coinscribble-ad>' 
+        }} />
         
-        {/* Caricamento Script Coinscribble */}
         <script async src="https://cdn.coinscribble.sapient.tools/js/widget2.js"></script>
       </div>
       
