@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(DAPP_URL),
   title: 'Arbitrage Inception | DEX Aggregator',
   description: 'Swap and earn BNB rewards on BNB Chain.',
+    other: { coinzilla: "40513d259822a129e42a968860c68483" },
   icons: { icon: '/logo.jpg', apple: '/logo.jpg', shortcut: '/favicon.ico' },
   manifest: '/manifest.json',
 }
