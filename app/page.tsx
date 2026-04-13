@@ -28,27 +28,46 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Banner A-Ads IN ALTO (Adaptive ID 2433982) */}
-      <div style={{ width: '100%', margin: '20px 0', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
-        <iframe 
-          data-aa='2433982' 
-          src='//acceptable.a-ads.com/2433982/?size=Adaptive' 
-          style={{ 
-            border: 0, 
-            padding: 0, 
-            width: '70%', 
-            minHeight: '90px', 
-            overflow: 'hidden', 
-            display: 'block', 
-            margin: '0 auto' 
-          }}
-        ></iframe>
+      {/* 2. AREA ADS TOP (A-Ads + Coinserom Square) */}
+      <div style={{ 
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        gap: '30px', 
+        padding: '20px 10px',
+        width: '100%'
+      }}>
+        {/* A-Ads Adaptive */}
+        <div style={{ minWidth: '300px', flex: '1', maxWidth: '728px' }}>
+          <iframe 
+            data-aa='2433982' 
+            src='//acceptable.a-ads.com/2433982/?size=Adaptive' 
+            style={{ border: 0, padding: 0, width: '100%', minHeight: '90px', overflow: 'hidden', display: 'block' }}
+          ></iframe>
+        </div>
+
+        {/* Coinserom Square (250x250) */}
+        <div style={{ width: '250px', textAlign: 'center' }}>
+          <iframe 
+            src="//ads.coinserom.com/pub?adsunit=333938&size=250x250" 
+            style={{ width: '250px', height: '250px', border: '0px', padding: '0', backgroundColor: 'transparent', overflow: 'auto' }}
+          ></iframe>
+          <a 
+            style={{ display: 'block', textAlign: 'right', fontSize: '10px', width: '250px', color: 'rgba(255,255,255,0.2)', textDecoration: 'none', marginTop: '5px' }} 
+            href="https://coinserom.com/?affiliate=3537313432" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ads by coinserom
+          </a>
+        </div>
       </div>
 
       {/* 3. Il DEX Aggregator */}
       <HomePageClient />
 
-      {/* 4. MintFunnel / Coinscribble Widget (In Fondo) */}
+      {/* 4. MintFunnel / Coinscribble Widget (Footer) */}
       <div style={{ 
         maxWidth: '1200px', 
         margin: '40px auto 60px auto', 
