@@ -28,7 +28,7 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Banner Coinserom (In Alto) */}
+      {/* 2. Banner Coinserom (Premium - In Alto) */}
       <div style={{ width: '100%', margin: '20px 0', overflowX: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '970px', margin: '0 auto', textAlign: 'center' }}>
           <iframe 
@@ -38,20 +38,27 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. Il DEX Aggregator */}
+      {/* 3. Il cuore del sito: Il DEX Aggregator */}
       <HomePageClient />
 
-      {/* 4. Banner A-Ads (Il Paracadute - 728x90 o simile) */}
-      <div style={{ width: '100%', margin: '40px 0', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
-        {/* SOSTITUISCI IL_TUO_ID_AADS CON IL TUO CODICE */}
+      {/* 4. Banner A-Ads (Il Paracadute - Adaptive ID 2433982) */}
+      <div style={{ width: '100%', margin: '40px auto', position: 'relative', zIndex: 999 }}>
         <iframe 
-          data-aa='IL_TUO_ID_AADS' 
-          src='//ad.a-ads.com/IL_TUO_ID_AADS?size=728x90' 
-          style={{ width: '728px', height: '90px', border: '0px', padding: '0', overflow: 'hidden', backgroundColor: 'transparent' }}
+          data-aa='2433982' 
+          src='//acceptable.a-ads.com/2433982/?size=Adaptive' 
+          style={{ 
+            border: 0, 
+            padding: 0, 
+            width: '70%', 
+            minHeight: '90px', 
+            overflow: 'hidden', 
+            display: 'block', 
+            margin: '0 auto' 
+          }}
         ></iframe>
       </div>
 
-      {/* 5. MintFunnel / Coinscribble Widget (In Fondo) */}
+      {/* 5. MintFunnel / Coinscribble Widget (Chiusura in Fondo) */}
       <div style={{ 
         maxWidth: '1200px', 
         margin: '20px auto 60px auto', 
