@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508' }}>
       
-      {/* Navigazione */}
+      {/* 1. Navigazione */}
       <nav style={{ 
         width: '100%', 
         padding: '20px 0', 
@@ -28,13 +28,10 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 1. Il DEX Aggregator */}
-      <HomePageClient />
-
-      {/* 2. Banner Coinserom (Leaderboard 970x250) */}
+      {/* 2. Banner Coinserom IN ALTO (Massima visibilità) */}
       <div style={{ 
         width: '100%', 
-        margin: '40px 0', 
+        margin: '20px 0', 
         overflowX: 'auto', 
         display: 'flex', 
         flexDirection: 'column', 
@@ -46,20 +43,23 @@ export default function HomePage() {
             style={{ width: '970px', height: '250px', border: '0px', padding: '0', backgroundColor: 'transparent', overflow: 'auto' }}
           ></iframe>
           <a 
-            style={{ display: 'block', textAlign: 'right', fontSize: '12px', width: '970px', color: '#8b5cf6', textDecoration: 'none', marginTop: '5px' }} 
+            style={{ display: 'block', textAlign: 'right', fontSize: '11px', width: '970px', color: 'rgba(255,255,255,0.3)', textDecoration: 'none', marginTop: '5px' }} 
             href="https://coinserom.com/?affiliate=3537313432" 
             target="_blank"
             rel="noopener noreferrer"
           >
-            Advertise here
+            Ads by Coinserom
           </a>
         </div>
       </div>
 
-      {/* 3. MintFunnel / Coinscribble Widget */}
+      {/* 3. Il DEX Aggregator */}
+      <HomePageClient />
+
+      {/* 4. MintFunnel / Coinscribble Widget (In fondo) */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '20px auto 60px auto', 
+        margin: '40px auto 60px auto', 
         padding: '20px',
         display: 'flex',
         justifyContent: 'center'
