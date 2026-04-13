@@ -10,26 +10,23 @@ export default function HomePage() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508' }}>
       
-      {/* Header di cortesia minimale per dare un tono professionale */}
-      <div style={{ 
+      <nav style={{ 
         width: '100%', 
-        backgroundColor: '#0a0a0f', 
+        padding: '20px 0', 
+        textAlign: 'center', 
         borderBottom: '1px solid rgba(139, 92, 246, 0.1)',
-        padding: '15px 0',
-        textAlign: 'center'
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '30px'
       }}>
-        <span style={{ 
-          color: 'rgba(255,255,255,0.5)', 
-          fontSize: '11px', 
-          letterSpacing: '2px', 
-          fontWeight: 'bold',
-          textTransform: 'uppercase' 
-        }}>
-          Institutional Grade Trading Interface
-        </span>
-      </div>
+        <a href="/" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
+          TRADING TERMINAL
+        </a>
+        <a href="/rewards" style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
+          ECOSYSTEM REWARDS
+        </a>
+      </nav>
 
-      {/* Solo il DEX originale */}
       <HomePageClient />
       
     </main>

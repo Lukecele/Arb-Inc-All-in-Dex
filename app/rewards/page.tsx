@@ -1,75 +1,74 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'VIP Rewards | Arbitrage Inception',
-  description: 'Guadagna crypto gratis con i nostri partner selezionati.',
-}
+import React from 'react'
 
 export default function RewardsPage() {
   return (
-    <main style={{ minHeight: '100vh', backgroundColor: '#050508', color: 'white' }}>
-      
-      {/* 1. Navigazione di Ritorno */}
-      <nav style={{ 
-        width: '100%', 
-        padding: '15px 20px', 
-        backgroundColor: 'rgba(139, 92, 246, 0.1)', 
-        borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <span style={{ fontWeight: 'bold', color: '#8B5CF6' }}>VIP HUB</span>
-        <a href="/" style={{ 
-          color: 'white', 
-          textDecoration: 'none', 
-          fontSize: '14px', 
-          backgroundColor: '#1f2937', 
-          padding: '8px 16px', 
-          borderRadius: '8px',
-          border: '1px solid #374151'
-        }}>
-          ← Torna al DEX
-        </a>
-      </nav>
+    <main style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#050508', 
+      color: 'white', 
+      fontFamily: 'sans-serif',
+      padding: '40px 20px' 
+    }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '32px', marginBottom: '10px', fontWeight: 'bold' }}>Ecosystem Rewards</h1>
+        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '40px' }}>
+          Explore our partner ecosystem to maximize your crypto earnings and trading efficiency.
+        </p>
 
-      <div style={{ maxWidth: '800px', margin: 'auto', padding: '40px 20px' }}>
-        
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: '900', marginBottom: '10px' }}>💎 AREA PREMI ESCLUSIVA</h1>
-          <p style={{ color: '#94a3b8' }}>Usa i link qui sotto per accumulare crypto e finanziare i tuoi swap!</p>
-        </div>
-
-        {/* Banner Pubblicitario */}
-        <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-           <iframe data-aa='2433982' src='//acceptable.a-ads.com/2433982/?size=Adaptive' style={{ border:0, padding:0, width:'100%', maxWidth:'728px', height:'90px', overflow:'hidden', backgroundColor: 'transparent' }}></iframe>
-        </div>
-
-        {/* Lista dei Guadagni */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'grid', gap: '20px' }}>
           
-          {/* adBTC - LINK REALE AGGIORNATO */}
-          <a href="https://r.adbtc.top/2245084" target="_blank" rel="noreferrer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#0a0a0f', padding: '20px', borderRadius: '15px', textDecoration: 'none', color: 'white', border: '1px solid #d97706' }}>
-            <div>
-              <div style={{ fontWeight: 'bold', fontSize: '18px', color: '#fbbf24' }}>adBTC.top</div>
-              <div style={{ fontSize: '13px', color: '#94a3b8' }}>Guadagna Bitcoin guardando siti web. Affidabile e veloce.</div>
-            </div>
-            <div style={{ backgroundColor: '#d97706', color: 'white', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold' }}>GUADAGNA ORA</div>
-          </a>
+          {/* Card 1: adBTC */}
+          <div style={{ 
+            background: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            padding: '25px', 
+            borderRadius: '16px' 
+          }}>
+            <h2 style={{ fontSize: '20px', color: '#8B5CF6', marginBottom: '10px' }}>Daily Crypto Faucet</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>
+              Earn Bitcoin by interacting with our verified advertising partner. High-yield tasks available daily.
+            </p>
+            <a href="https://r.adbtc.top/3494539" target="_blank" style={{ 
+              display: 'inline-block', 
+              backgroundColor: '#8B5CF6', 
+              color: 'white', 
+              padding: '10px 25px', 
+              borderRadius: '8px', 
+              textDecoration: 'none', 
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}>Access Portal</a>
+          </div>
 
-          {/* FaucetPay */}
-          <a href="https://faucetpay.io/?r=5296764" target="_blank" rel="noreferrer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#0a0a0f', padding: '20px', borderRadius: '15px', textDecoration: 'none', color: 'white', border: '1px solid #0052ff' }}>
-            <div>
-              <div style={{ fontWeight: 'bold', fontSize: '18px', color: '#00d1ff' }}>FaucetPay Wallet</div>
-              <div style={{ fontSize: '13px', color: '#94a3b8' }}>Il micro-wallet essenziale per ricevere pagamenti dai faucet.</div>
-            </div>
-            <div style={{ backgroundColor: '#0052ff', color: 'white', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold' }}>ISCRIVITI</div>
-          </a>
+          {/* Card 2: FaucetPay */}
+          <div style={{ 
+            background: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            padding: '25px', 
+            borderRadius: '16px' 
+          }}>
+            <h2 style={{ fontSize: '20px', color: '#0052ff', marginBottom: '10px' }}>Micro-Wallet Integration</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>
+              Connect your FaucetPay account to receive instant micro-payments and access premium crypto rewards.
+            </p>
+            <a href="https://faucetpay.io/?r=5296764" target="_blank" style={{ 
+              display: 'inline-block', 
+              backgroundColor: '#0052ff', 
+              color: 'white', 
+              padding: '10px 25px', 
+              borderRadius: '8px', 
+              textDecoration: 'none', 
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}>Claim Rewards</a>
+          </div>
 
         </div>
 
-        <div style={{ marginTop: '60px', textAlign: 'center', color: '#475569', fontSize: '12px' }}>
-          © Arbitrage Inception - Tutti i link sono testati e sicuri.
+        <div style={{ marginTop: '40px', textAlign: 'center' }}>
+          <a href="/" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', textDecoration: 'none' }}>
+            ← Back to Trading Terminal
+          </a>
         </div>
       </div>
     </main>
