@@ -28,45 +28,24 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* DEX */}
+      {/* DEX Aggregator */}
       <HomePageClient />
 
-      {/* Container Annunci - Ho aggiunto un bordo grigio per vedere se esiste */}
+      {/* MintFunnel / Coinscribble Widget */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '60px auto', 
+        margin: '40px auto', 
         padding: '20px',
-        backgroundColor: 'rgba(255,255,255,0.02)',
-        borderRadius: '12px',
-        border: '1px dashed rgba(255,255,255,0.1)',
-        minHeight: '250px'
+        display: 'flex',
+        justifyContent: 'center'
       }}>
-        <div id="ts_ad_native_794p8"></div>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            function loadNative() {
-              if (typeof NativeAd === 'function') {
-                console.log('TrafficStars: SDK trovato, inizializzo...');
-                NativeAd({
-                  element_id: "ts_ad_native_794p8",
-                  spot: "54d88e539e5241e884c0e19981fd174e",
-                  type: "label-under",
-                  cols: 4,
-                  rows: 1,
-                  title: "Suggested for you",
-                  titlePosition: "left",
-                  adsByPosition: "right",
-                  breakpoints: [{ "cols": 2, "width": 770 }],
-                });
-              } else {
-                console.log('TrafficStars: SDK non ancora pronto, riprovo tra 500ms...');
-                setTimeout(loadNative, 500);
-              }
-            }
-            loadNative();
-          })();
-        `}} />
+        {/* Widget Coinscribble */}
+        <coinscribble-ad widget="c86fd914-f913-4395-865b-e43860c2de26"></coinscribble-ad>
+        
+        {/* Caricamento Script Coinscribble */}
+        <script async src="https://cdn.coinscribble.sapient.tools/js/widget2.js"></script>
       </div>
+      
     </main>
   )
 }
