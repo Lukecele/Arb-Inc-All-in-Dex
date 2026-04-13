@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(DAPP_URL),
   title: 'Arbitrage Inception | DEX Aggregator',
   description: 'Swap and earn BNB rewards on BNB Chain.',
-    other: { coinzilla: "40513d259822a129e42a968860c68483" },
+  other: { coinzilla: "40513d259822a129e42a968860c68483" },
   icons: { icon: '/logo.jpg', apple: '/logo.jpg', shortcut: '/favicon.ico' },
   manifest: '/manifest.json',
 }
@@ -36,9 +36,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}><script async src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
+      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
+        
+        {/* Cointraffic Unified Code */}
         <script async src="https://appsha-pnd.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
+        
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
+        
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
             <ErrorBoundary>
@@ -46,9 +50,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </ErrorBoundary>
           </ClientWeb3Provider>
         </StyledComponentsRegistry>
+        
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
+      </body>
     </html>
   )
 }
