@@ -10,6 +10,7 @@ export default function HomePage() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508' }}>
       
+      {/* Navigazione */}
       <nav style={{ 
         width: '100%', 
         padding: '20px 0', 
@@ -27,21 +28,45 @@ export default function HomePage() {
         </a>
       </nav>
 
+      {/* 1. Il DEX Aggregator */}
       <HomePageClient />
 
+      {/* 2. Banner Coinserom (Leaderboard 970x250) */}
+      <div style={{ 
+        width: '100%', 
+        margin: '40px 0', 
+        overflowX: 'auto', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center' 
+      }}>
+        <div style={{ width: '970px', margin: '0 auto', textAlign: 'center' }}>
+          <iframe 
+            src="//ads.coinserom.com/pub?adsunit=333937&size=970x250" 
+            style={{ width: '970px', height: '250px', border: '0px', padding: '0', backgroundColor: 'transparent', overflow: 'auto' }}
+          ></iframe>
+          <a 
+            style={{ display: 'block', textAlign: 'right', fontSize: '12px', width: '970px', color: '#8b5cf6', textDecoration: 'none', marginTop: '5px' }} 
+            href="https://coinserom.com/?affiliate=3537313432" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Advertise here
+          </a>
+        </div>
+      </div>
+
+      {/* 3. MintFunnel / Coinscribble Widget */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '40px auto', 
+        margin: '20px auto 60px auto', 
         padding: '20px',
         display: 'flex',
-        justifyContent: 'center',
-        minHeight: '200px'
+        justifyContent: 'center'
       }}>
-        {/* Iniezione sicura per bypassare il controllo TypeScript */}
         <div dangerouslySetInnerHTML={{ 
           __html: '<coinscribble-ad widget="c86fd914-f913-4395-865b-e43860c2de26"></coinscribble-ad>' 
         }} />
-        
         <script async src="https://cdn.coinscribble.sapient.tools/js/widget2.js"></script>
       </div>
       
