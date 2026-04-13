@@ -28,7 +28,7 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. NUOVO Cointraffic Banner (Top) */}
+      {/* 2. Cointraffic Banner (Top) */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
         <span id="ct_cQd9eSMbdcb"></span>
       </div>
@@ -36,23 +36,9 @@ export default function HomePage() {
       {/* 3. Il DEX Aggregator al centro */}
       <HomePageClient />
 
-      {/* 4. Primo Cointraffic Banner (Bottom) */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0' }}>
+      {/* 4. Cointraffic Banner (Bottom) */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0 60px 0' }}>
         <span id="ct_clEJQkwMj04"></span>
-      </div>
-
-      {/* 5. MintFunnel / Coinscribble Widget */}
-      <div style={{ 
-        maxWidth: '1200px', 
-        margin: '20px auto 60px auto', 
-        padding: '20px',
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
-        <div dangerouslySetInnerHTML={{ 
-          __html: '<coinscribble-ad widget="c86fd914-f913-4395-865b-e43860c2de26"></coinscribble-ad>' 
-        }} />
-        <script async src="https://cdn.coinscribble.sapient.tools/js/widget2.js"></script>
       </div>
       
     </main>
