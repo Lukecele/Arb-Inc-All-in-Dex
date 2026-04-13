@@ -28,13 +28,23 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Il DEX Aggregator (Ora al centro della scena) */}
+      {/* 2. NUOVO Cointraffic Banner (Top) */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+        <span id="ct_cQd9eSMbdcb"></span>
+      </div>
+
+      {/* 3. Il DEX Aggregator al centro */}
       <HomePageClient />
 
-      {/* 3. MintFunnel / Coinscribble Widget (Footer discreto) */}
+      {/* 4. Primo Cointraffic Banner (Bottom) */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0' }}>
+        <span id="ct_clEJQkwMj04"></span>
+      </div>
+
+      {/* 5. MintFunnel / Coinscribble Widget */}
       <div style={{ 
         maxWidth: '1200px', 
-        margin: '60px auto', 
+        margin: '20px auto 60px auto', 
         padding: '20px',
         display: 'flex',
         justifyContent: 'center'
