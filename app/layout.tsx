@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}><script async src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
+      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}><script src="//cdn.runative-syndicate.com/sdk/v1/n.js"></script><script async src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
