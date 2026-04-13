@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
-      </body>
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="436322"></script><script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="436323"></script></body>
     </html>
   )
 }
