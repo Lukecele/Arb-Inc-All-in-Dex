@@ -37,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}><script async src="https://appsha-prm.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
+        <script async src="https://appsha-pnd.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
@@ -48,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
-      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="436322"></script><script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="436323"></script></body>
     </html>
   )
 }
