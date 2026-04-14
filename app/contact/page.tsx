@@ -227,6 +227,10 @@ export default function ContactPage() {
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
         
+        {/* 1. Cointraffic Banner (Top) */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0' }}>
+          <span id="ct_cQd9eSMbdcb"></span>
+        </div>
 
         <MainContent>
           <h1>Contact Us</h1>
@@ -289,6 +293,11 @@ export default function ContactPage() {
             </p>
           </ContactCard>
         </MainContent>
+
+        {/* 2. Cointraffic Banner (Bottom) */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 40px 0' }}>
+          <span id="ct_clEJQkwMj04"></span>
+        </div>
 
         <SharedFooter />
           <PageFooterLinks>
