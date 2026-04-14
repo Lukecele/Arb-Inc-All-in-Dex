@@ -170,43 +170,6 @@ const SocialLink = styled.a`
   }
 `
 
-const PageFooter = styled.footer`
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px 0;
-  text-align: center;
-  color: ${theme.colors.text.muted};
-  font-size: 14px;
-`
-
-const PageFooterLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-
-  a {
-    color: ${theme.colors.accent.DEFAULT};
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`
-
-const Disclaimer = styled.div`
-  max-width: 600px;
-  margin: 0 auto 20px;
-  padding: 15px;
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.3);
-  border-radius: 8px;
-  color: #FF9901;
-  font-size: 12px;
-  line-height: 1.5;
-`
-
 export default function ContactPage() {
   return (
     <>
@@ -229,7 +192,7 @@ export default function ContactPage() {
         
         {/* 1. Cointraffic Banner (Top) */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0' }}>
-          <span id="ct_cQd9eSMbdcb"></span>
+          <span id="ct_cTsuCksMpJ3"></span>
         </div>
 
         <MainContent>
@@ -296,21 +259,11 @@ export default function ContactPage() {
 
         {/* 2. Cointraffic Banner (Bottom) */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 40px 0' }}>
-          <span id="ct_clEJQkwMj04"></span>
+          <span id="ct_ct6kxn0fBVV"></span>
         </div>
 
+        {/* Qui lasciamo SOLO il componente ufficiale, rimuovendo le scritte doppie */}
         <SharedFooter />
-          <PageFooterLinks>
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-service">Terms of Service</a>
-            <a href="/cookie-policy">Cookie Policy</a>
-            <a href="/contact">Contact</a>
-          </PageFooterLinks>
-          <Disclaimer>
-            <strong>⚠️ Risk Disclaimer:</strong> Cryptocurrency trading involves high risk. Arbitrage Inception provides a frontend interface powered by KyberSwap Protocol and is not responsible for any financial losses. Please trade responsibly.
-          </Disclaimer>
-          <p>Powered by KyberSwap Protocol. Arbitrage Inception provides a customized interface to access decentralized liquidity pools on the BNB Smart Chain.</p>
-          <p style={{ marginTop: '10px' }}>© 2026 Arbitrage Inception. All rights reserved.</p>
         
       </Container>
     </>
