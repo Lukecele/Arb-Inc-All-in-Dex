@@ -190,8 +190,8 @@ export default function ContactPage() {
             <NavLink href="/contact">Contact</NavLink>
           </Nav>
         
-        {/* 1. Cointraffic Banner (Top) */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0' }}>
+        {/* 1. Cointraffic Banner (Top) con anti-skyscraper */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0', minHeight: '250px' }}>
           <span id="ct_cTsuCksMpJ3"></span>
         </div>
 
@@ -257,12 +257,12 @@ export default function ContactPage() {
           </ContactCard>
         </MainContent>
 
-        {/* 2. Cointraffic Banner (Bottom) */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 40px 0' }}>
+        {/* 2. Cointraffic Banner (Bottom) con anti-skyscraper */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 40px 0', minHeight: '250px' }}>
           <span id="ct_ct6kxn0fBVV"></span>
         </div>
 
-        {/* Qui lasciamo SOLO il componente ufficiale, rimuovendo le scritte doppie */}
+        {/* Footer pulito e unico */}
         <SharedFooter />
         
       </Container>

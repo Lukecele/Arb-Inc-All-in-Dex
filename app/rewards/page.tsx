@@ -2,93 +2,86 @@ import React from 'react'
 
 export default function RewardsPage() {
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508', color: 'white' }}>
-      
-      {/* 1. Navigazione (Coerente con la Home) */}
-      <nav style={{ 
-        width: '100%', 
-        padding: '20px 0', 
-        textAlign: 'center', 
-        borderBottom: '1px solid rgba(139, 92, 246, 0.1)',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '30px'
-      }}>
-        <a href="/" style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
-          TRADING TERMINAL
-        </a>
-        <a href="/rewards" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
-          ECOSYSTEM REWARDS
-        </a>
-      </nav>
-
-      {/* 2. Cointraffic Banner (Top) */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-        <span id="ct_cmykXXKHPsy"></span>
-      </div>
-
-      {/* 3. Contenuto Rewards */}
-      <section style={{ 
-        maxWidth: '800px', 
-        margin: '0 auto', 
-        padding: '60px 20px', 
-        textAlign: 'center' 
-      }}>
-        <h1 style={{ 
-          fontSize: '48px', 
-          fontWeight: 'bold', 
-          marginBottom: '20px',
-          background: 'linear-gradient(to right, #8B5CF6, #D946EF)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          Ecosystem Rewards
-        </h1>
+    <main style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#050508', 
+      color: 'white', 
+      fontFamily: 'sans-serif',
+      padding: '40px 20px' 
+    }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         
-        <p style={{ 
-          color: 'rgba(255,255,255,0.6)', 
-          fontSize: '18px', 
-          lineHeight: '1.6',
-          marginBottom: '40px' 
-        }}>
-          Earn passive income through our multi-chain arbitrage protocol. <br />
-          Holders and stakers will receive a share of the aggregator's volume fees.
+        {/* 1. Cointraffic Banner Top (Con anti-skyscraper) */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '0 0 30px 0', minHeight: '250px' }}>
+          <span id="ct_cmykXXKHPsy"></span>
+        </div>
+
+        <h1 style={{ fontSize: '32px', marginBottom: '10px', fontWeight: 'bold' }}>Ecosystem Rewards</h1>
+        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '40px' }}>
+          Explore our partner ecosystem to maximize your crypto earnings and trading efficiency.
         </p>
 
-        <div style={{ 
-          padding: '40px', 
-          border: '1px solid rgba(139, 92, 246, 0.3)', 
-          borderRadius: '24px', 
-          backgroundColor: 'rgba(139, 92, 246, 0.05)',
-          backdropFilter: 'blur(10px)'
-        }}>
-          <h2 style={{ fontSize: '24px', marginBottom: '15px' }}>Rewards Dashboard</h2>
+        <div style={{ display: 'grid', gap: '20px' }}>
+          
+          {/* Card 1: adBTC */}
           <div style={{ 
-            display: 'inline-block', 
-            padding: '8px 16px', 
-            borderRadius: '100px', 
-            backgroundColor: 'rgba(139, 92, 246, 0.2)',
-            color: '#A78BFA',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            marginBottom: '20px'
+            background: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            padding: '25px', 
+            borderRadius: '16px' 
           }}>
-            Status: Under Development
+            <h2 style={{ fontSize: '20px', color: '#8B5CF6', marginBottom: '10px' }}>Daily Crypto Faucet</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>
+              Earn Bitcoin by interacting with our verified advertising partner. High-yield tasks available daily.
+            </p>
+            <a href="https://r.adbtc.top/3494539" target="_blank" style={{ 
+              display: 'inline-block', 
+              backgroundColor: '#8B5CF6', 
+              color: 'white', 
+              padding: '10px 25px', 
+              borderRadius: '8px', 
+              textDecoration: 'none', 
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}>Access Portal</a>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
-            We are finalizing the smart contracts for the automated distribution of fees. <br />
-            The dashboard will be live shortly. Stay tuned to our official channels.
-          </p>
+
+          {/* Card 2: FaucetPay */}
+          <div style={{ 
+            background: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            padding: '25px', 
+            borderRadius: '16px' 
+          }}>
+            <h2 style={{ fontSize: '20px', color: '#0052ff', marginBottom: '10px' }}>Micro-Wallet Integration</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>
+              Connect your FaucetPay account to receive instant micro-payments and access premium crypto rewards.
+            </p>
+            <a href="https://faucetpay.io/?r=5296764" target="_blank" style={{ 
+              display: 'inline-block', 
+              backgroundColor: '#0052ff', 
+              color: 'white', 
+              padding: '10px 25px', 
+              borderRadius: '8px', 
+              textDecoration: 'none', 
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}>Claim Rewards</a>
+          </div>
+
         </div>
-      </section>
 
-      {/* 4. Cointraffic Banner (Bottom) */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0 80px 0' }}>
-        <span id="ct_c83XILwXy4d"></span>
+        {/* 2. Cointraffic Banner Bottom (Con anti-skyscraper) */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0', minHeight: '250px' }}>
+          <span id="ct_c83XILwXy4d"></span>
+        </div>
+
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <a href="/" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', textDecoration: 'none' }}>
+            ← Back to Trading Terminal
+          </a>
+        </div>
       </div>
-
     </main>
   )
 }
