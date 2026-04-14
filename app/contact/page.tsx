@@ -27,71 +27,6 @@ const Container = styled.div`
   }
 `
 
-const PageHeader = styled.header`
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  flex-wrap: wrap;
-  gap: 10px;
-  border-bottom: 1px solid ${theme.colors.border.DEFAULT};
-`
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`
-
-const Logo = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: ${theme.borderRadius.full};
-  box-shadow: ${theme.shadows.glow};
-`
-
-const Title = styled.h1`
-  font-size: 18px;
-  font-weight: 700;
-  background: ${theme.colors.primary.gradient};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  @media (max-width: 768px) {
-    gap: 3px;
-    padding: 6px 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-    border-radius: 20px;
-  }
-`
-
-const NavLink = styled.a`
-  color: ${theme.colors.text.secondary};
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 7px 13px;
-  border-radius: 100px;
-  white-space: nowrap;
-  transition: ${theme.transitions.fast};
-  &:hover {
-    color: ${theme.colors.text.primary};
-    background: rgba(255, 255, 255, 0.08);
-  }
-`
-
 const MainContent = styled.main`
   flex: 1;
   width: 100%;
@@ -175,20 +110,8 @@ export default function ContactPage() {
     <>
       <GlobalStyle />
       <Container>
+        {/* Header pulito e unico */}
         <SharedHeader activePage="/contact" />
-          <LogoSection>
-            <Logo src="https://arbitrage-inc.exchange/logo.jpg" alt="Arbitrage Inception" />
-            <Title>Arbitrage Inception</Title>
-          </LogoSection>
-          <Nav>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap (Custom)</NavLink>
-            <NavLink href="/swap-all">Swap All</NavLink>
-            <NavLink href="/zap">Zap</NavLink>
-            <NavLink href="/bridge">Bridge</NavLink>
-            <NavLink href="/limit-orders">Limit Orders</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
-          </Nav>
         
         {/* 1. Cointraffic Banner (Top) con anti-skyscraper */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0', minHeight: '250px' }}>
