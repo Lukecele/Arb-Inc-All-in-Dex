@@ -1,37 +1,52 @@
 import { NextResponse } from 'next/server';
-import Parser from 'rss-parser';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const wallet = searchParams.get('wallet') || 'guest';
   
-  // TRUCCO DA MAESTRI: Catturiamo l'IP reale dell'utente che sta visitando il sito
-  // Vercel inserisce l'IP in questo header "x-forwarded-for"
+  // 1. CATTURIAMO L'IP REALE (Da Vercel)
   const forwardedFor = request.headers.get('x-forwarded-for');
-  const userIp = forwardedFor ? forwardedFor.split(',')[0] : '';
+  const userIp = forwardedFor ? forwardedFor.split(',')[0] : '151.75.207.169'; // IP di fallback in caso di test locale
+  
+  // 2. CATTURIAMO LO USER AGENT (Che dispositivo usa l'utente?)
+  const userAgent = request.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)';
   
   const userId = '2517944';
   const key = '26271b30ab81cc1f2aa423c79ccb3d6a';
   
-  // Aggiungiamo il parametro &ip= alla richiesta
-  const rssUrl = `https://www.cpagrip.com/common/offer_feed_rss.php?user_id=${userId}&key=${key}&tracking_id=${wallet}&ip=${userIp}`;
+  // 3. COSTRUIAMO L'URL COMPLETO CON TUTTE LE ARMI
+  const apiUrl = `https://www.cpagrip.com/common/offer_feed_rss.php?user_id=${userId}&key=${key}&tracking_id=${encodeURIComponent(wallet)}&ip=${userIp}&ua=${encodeURIComponent(userAgent)}`;
   
   try {
-    const parser = new Parser();
-    const feed = await parser.parseURL(rssUrl);
+    const response = await fetch(apiUrl);
+    const xmlText = await response.text();
     
-    const cleanOffers = feed.items.map(item => {
-      const imgMatch = item.content?.match(/src="(.*?)"/);
-      return {
-        title: item.title,
-        link: item.link,
-        image: imgMatch ? imgMatch[1] : null,
-      };
-    }).slice(0, 8);
+    // Siccome CPAGrip usa un XML custom, usiamo una Regex (Espressione Regolare) veloce
+    // per estrarre le offerte invece di librerie pesanti
+    const offers: any[] = [];
+    const offerBlocks = xmlText.match(/<offer>([\s\S]*?)<\/offer>/g) || [];
+    
+    for (const block of offerBlocks) {
+      // Estraiamo i campi che ci interessano
+      const titleMatch = block.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/);
+      const linkMatch = block.match(/<offerlink><!\[CDATA\[(.*?)\]\]><\/offerlink>/);
+      const photoMatch = block.match(/<offerphoto><!\[CDATA\[(.*?)\]\]><\/offerphoto>/);
+      
+      if (titleMatch && linkMatch) {
+        offers.push({
+          title: titleMatch[1],
+          link: linkMatch[1],
+          image: photoMatch ? photoMatch[1] : null,
+        });
+      }
+      
+      // Fermiamoci a 8 offerte
+      if (offers.length >= 8) break;
+    }
 
-    return NextResponse.json({ offers: cleanOffers });
+    return NextResponse.json({ offers });
   } catch (error) {
-    console.error("Errore CPAGrip RSS:", error);
+    console.error("Errore CPAGrip Custom API:", error);
     return NextResponse.json({ error: 'Failed to fetch offers' }, { status: 500 });
   }
 }
