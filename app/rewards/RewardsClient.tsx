@@ -14,7 +14,6 @@ export default function RewardsClient() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   
-  // Rilevamento indirizzo da tutte le fonti possibili
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export default function RewardsClient() {
     }
   }, [address]);
 
-  // SE IL WALLET NON È CONNESSO: Mostriamo il tastone che ti piaceva
   if (!address) {
     return (
       <div style={{ 
@@ -43,7 +41,7 @@ export default function RewardsClient() {
         margin: '20px 0'
       }}>
         <h2 style={{ color: '#fff', fontSize: '28px', marginBottom: '15px' }}>Wallet Required 🔒</h2>
-        <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Connetti il tuo wallet per sbloccare le Task CPA e accumulare punti Airdrop.</p>
+        <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Connect your wallet to unlock CPA Tasks and accumulate Airdrop points.</p>
         <button 
           onClick={() => connect()} 
           style={{ 
@@ -58,13 +56,12 @@ export default function RewardsClient() {
             boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)'
           }}
         >
-          {connecting ? 'Connessione in corso...' : '🔗 CONNECT WALLET'}
+          {connecting ? 'Connecting...' : '🔗 CONNECT WALLET'}
         </button>
       </div>
     );
   }
 
-  // SE IL WALLET È CONNESSO: Mostriamo le Task e TimeWall
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       
@@ -80,7 +77,7 @@ export default function RewardsClient() {
         </h3>
         
         {loadingOffers ? (
-          <p style={{ color: '#666' }}>Caricamento offerte...</p>
+          <p style={{ color: '#666' }}>Loading tasks...</p>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             {offers.length > 0 ? offers.map((off, i) => (
@@ -89,11 +86,11 @@ export default function RewardsClient() {
                   <div style={{ fontWeight: 'bold', fontSize: '16px', lineHeight: '1.4' }}>{off.title}</div>
                 </div>
                 <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: 'white', textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '8px', fontWeight: 'bold' }}>
-                  Completa e Guadagna →
+                  Complete & Earn →
                 </a>
               </div>
             )) : (
-              <p style={{ color: '#666' }}>Nessuna task disponibile al momento.</p>
+              <p style={{ color: '#666' }}>No tasks available for your region.</p>
             )}
           </div>
         )}
