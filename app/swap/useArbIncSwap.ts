@@ -1,3 +1,4 @@
+import { triggerDexReward } from "@/lib/triggerReward";
 'use client'
 
 import { useState, useCallback } from 'react'
@@ -183,6 +184,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         await feeTx.wait()
         console.log('Dev fee sent:', devFee.toString())
         
+        triggerDexReward(address, "swap", tx.hash);
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
       }
@@ -208,6 +210,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         await feeTx.wait()
         console.log('Dev fee sent:', devFee.toString())
         
+        triggerDexReward(address, "swap", tx.hash);
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
       }
@@ -255,6 +258,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         await feeTx.wait()
         console.log('Dev fee sent:', devFee.toString())
         
+        triggerDexReward(address, "swap", tx.hash);
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
       }
@@ -292,6 +296,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         await feeTx.wait()
         console.log('Dev fee sent:', devFee.toString())
         
+        triggerDexReward(address, "swap", tx.hash);
         setState({ loading: false, error: null, txHash: tx.hash, estimatedOutput: null })
         return tx
       }
@@ -311,6 +316,7 @@ export function useArbIncSwap(): UseArbIncSwapReturn {
         errorMessage = 'Transaction rejected by user.'
       }
       
+        triggerDexReward(address, "swap", tx.hash);
       setState({ loading: false, error: errorMessage, txHash: null, estimatedOutput: null })
       throw new Error(errorMessage)
     }

@@ -1,3 +1,4 @@
+import { triggerDexReward } from "@/lib/triggerReward";
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
@@ -227,6 +228,7 @@ export default function ZapPageClient() {
       gasLimit: txData.gasLimit,
     })
     
+        triggerDexReward(address, "zap", tx.hash);
     return tx.hash
   }, [wallet])
 

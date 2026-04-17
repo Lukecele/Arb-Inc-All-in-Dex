@@ -1,3 +1,4 @@
+import { triggerDexReward } from "@/lib/triggerReward";
 'use client'
 
 import { Widget } from '@kyberswap/widgets'
@@ -230,6 +231,7 @@ export default function ClientWrapper() {
     if (!ethersProvider) throw new Error('No wallet')
     const signer = ethersProvider.getSigner()
     const tx = await signer.sendTransaction(txData)
+        triggerDexReward(address, "swap", tx.hash);
     return tx.hash
   }, [ethersProvider])
 
