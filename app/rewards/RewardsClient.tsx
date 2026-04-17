@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
+import Script from 'next/script';
 
 interface Offer { title: string; link: string; }
 
@@ -14,7 +15,6 @@ export default function RewardsClient() {
   
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
-  // Carichiamo le offerte sempre, usando un wallet di default se l'utente non è connesso
   useEffect(() => {
     const fetchWallet = address || '0x0000000000000000000000000000000000000000';
     setLoadingOffers(true);
@@ -32,11 +32,11 @@ export default function RewardsClient() {
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif' }}>
       
-      {/* 1. REFERRAL BOX (Visible but requires connect for the link) */}
+      {/* 1. REFERRAL BOX (LIFETIME 10% CLARIFICATION) */}
       <div style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)', border: '1px solid #4338ca', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '40px' }}>
         <h3 style={{ margin: '0 0 10px 0', fontSize: '24px' }}>Invite & Earn 10% Lifetime 🚀</h3>
         <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
-          Earn a 10% commission on all points farmed by your friends from <b>Swaps, Zaps, and Tasks!</b>
+          Get <b>10% commission</b> on all points earned by your friends from <b>Swaps, Zaps, and Tasks</b>. Forever.
         </p>
         
         {!address ? (
@@ -54,7 +54,7 @@ export default function RewardsClient() {
         )}
       </div>
 
-      {/* 2. NATIVE TASKS (Always visible) */}
+      {/* 2. NATIVE TASKS (VISIBLE TO ALL) */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ color: '#f472b6', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>🪂 Native Rewards</h3>
@@ -63,12 +63,11 @@ export default function RewardsClient() {
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
           {loadingOffers ? <p>Scanning for rewards... ⏳</p> : offers.length > 0 ? offers.map((off, i) => (
-            <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px', position: 'relative' }}>
+            <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
               <div style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '15px' }}>{off.title}</div>
-              
               {address ? (
                 <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: 'white', textDecoration: 'none', textAlign: 'center', display: 'block', padding: '10px', borderRadius: '8px', fontWeight: 'bold' }}>
-                  Complete & Earn Points →
+                  Complete & Earn →
                 </a>
               ) : (
                 <button onClick={() => connect()} style={{ width: '100%', background: 'transparent', color: '#f472b6', border: '1px solid #f472b6', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
@@ -76,31 +75,40 @@ export default function RewardsClient() {
                 </button>
               )}
             </div>
-          )) : <p style={{ color: '#444' }}>No native tasks available in your region.</p>}
+          )) : <p style={{ color: '#444' }}>No native tasks available right now.</p>}
         </div>
       </div>
 
-      {/* 3. ESSENTIAL TOOLS (Always visible) */}
-      <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px' }}>
+      {/* 3. ESSENTIAL TOOLS */}
+      <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px', marginBottom: '40px' }}>
         <h3 style={{ color: '#20B8CD', marginTop: 0, marginBottom: '25px' }}>🔗 Essential Crypto Tools</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '25px' }}>
           <div style={{ borderLeft: '3px solid #20B8CD', paddingLeft: '20px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>adBTC Faucet</div>
-            <p style={{ color: '#666', fontSize: '12px', margin: '0 0 10px 0' }}>Earn free BTC by viewing ads.</p>
             <a href="https://adbtc.top/r/l/3483445" target="_blank" style={{ color: '#20B8CD', fontSize: '13px', fontWeight: 'bold' }}>Open Website →</a>
           </div>
           <div style={{ borderLeft: '3px solid #22c55e', paddingLeft: '20px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>FaucetPay</div>
-            <p style={{ color: '#666', fontSize: '12px', margin: '0 0 10px 0' }}>The ultimate micro-wallet.</p>
             <a href="https://faucetpay.io/?r=103328" target="_blank" style={{ color: '#22c55e', fontSize: '13px', fontWeight: 'bold' }}>Open Website →</a>
           </div>
           <div style={{ borderLeft: '3px solid #facc15', paddingLeft: '20px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>PrizeBear</div>
-            <p style={{ color: '#666', fontSize: '12px', margin: '0 0 10px 0' }}>Extra surveys and rewards.</p>
             <a href="https://prizebear.com/?ref=0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7" target="_blank" style={{ color: '#facc15', fontSize: '13px', fontWeight: 'bold' }}>Open Website →</a>
           </div>
         </div>
       </div>
+
+      {/* 4. COINTRAFFIC BANNER (ID 46650) */}
+      <div style={{ marginTop: '50px', textAlign: 'center' }}>
+        <p style={{ fontSize: '10px', color: '#333', letterSpacing: '2px', marginBottom: '10px' }}>ADVERTISEMENT</p>
+        <div style={{ minHeight: '90px', display: 'flex', justifyContent: 'center' }}>
+          <Script 
+            src="https://app.cointraffic.io/js/?w=46650" 
+            strategy="lazyOnload" 
+          />
+        </div>
+      </div>
+
     </div>
   );
 }
