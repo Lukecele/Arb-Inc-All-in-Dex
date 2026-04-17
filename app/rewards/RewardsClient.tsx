@@ -1,16 +1,18 @@
 'use client';
 
 import React from 'react';
-import { useWallets } from '@web3-onboard/react';
+import { useWallets, useConnectWallet } from '@web3-onboard/react';
 
 export default function RewardsClient() {
   const connectedWallets = useWallets();
+  // Importiamo la funzione per connettere/disconnettere il wallet
+  const [{ wallet }, connect, disconnect] = useConnectWallet();
   
   const address = connectedWallets?.[0]?.accounts?.[0]?.address;
   
   const displayAddress = address 
     ? `${address.slice(0, 6)}...${address.slice(-4)}` 
-    : 'Wallet Not Connected';
+    : null;
 
   const trackingId = address || 'guest';
   const cpaGripUrl = `https://singingfiles.com/show.php?id=1890760&s1=${trackingId}`;
@@ -26,15 +28,44 @@ export default function RewardsClient() {
       <h1 style={{ fontSize: '36px', fontWeight: '900', textAlign: 'center', background: 'linear-gradient(135deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '10px' }}>
         Ecosystem Rewards
       </h1>
-      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: '40px' }}>
+      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: '30px' }}>
         Earn instant crypto or farm points for the upcoming $ARB-INC Airdrop.
       </p>
 
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <span style={{ fontSize: '12px', background: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', padding: '6px 16px', borderRadius: '100px', border: '1px solid rgba(236, 72, 153, 0.2)', fontWeight: 'bold' }}>
-          Status: {displayAddress}
-        </span>
+      {/* --- ZONA WALLET INTERATTIVA --- */}
+      <div style={{ textAlign: 'center', marginBottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+        {!address ? (
+          <button 
+            onClick={() => connect()}
+            style={{
+              background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+              color: 'white',
+              border: 'none',
+              padding: '12px 28px',
+              borderRadius: '100px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)'
+            }}
+          >
+            🔗 Connect Wallet
+          </button>
+        ) : (
+          <>
+            <span style={{ fontSize: '14px', background: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', padding: '8px 20px', borderRadius: '100px', border: '1px solid rgba(236, 72, 153, 0.3)', fontWeight: 'bold' }}>
+              🟢 Status: {displayAddress}
+            </span>
+            <button 
+              onClick={() => disconnect(wallet!)}
+              style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: '13px', textDecoration: 'underline' }}
+            >
+              Disconnect
+            </button>
+          </>
+        )}
       </div>
+      {/* ------------------------------- */}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
         
