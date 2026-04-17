@@ -66,9 +66,9 @@ export default function RewardsClient() {
       </div>
       {/* ------------------------------- */}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', marginBottom: '40px' }}>
 
-        {/* 1. CPAGRIP (Lucchettato se non connesso) - SPOSTATO SOPRA */}
+        {/* 1. CPAGRIP (Lucchettato se non connesso) */}
         <section style={{ background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.05) 0%, rgba(5, 5, 8, 0) 100%)', border: '1px solid rgba(236, 72, 153, 0.2)', padding: '30px', borderRadius: '32px' }}>
           <div style={{ textAlign: 'center', marginBottom: '20px' }}>
             <h2 style={{ fontSize: '24px', color: '#EC4899', margin: 0 }}>🪂 $ARB-INC Airdrop Farming</h2>
@@ -110,7 +110,7 @@ export default function RewardsClient() {
           )}
         </section>
         
-        {/* 2. TIMEWALL (Sempre aperto perché ha il suo login) - SPOSTATO SOTTO */}
+        {/* 2. TIMEWALL (Sempre aperto perché ha il suo login) */}
         <section style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '30px', borderRadius: '32px' }}>
           <h2 style={{ fontSize: '24px', color: '#8B5CF6', marginBottom: '15px' }}>💰 Instant Payouts</h2>
           <div style={{ width: '100%', height: '800px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
@@ -118,6 +118,21 @@ export default function RewardsClient() {
           </div>
         </section>
 
+      </div>
+
+      {/* 3. I TUOI REFERRAL (Bentornati!) */}
+      <h2 style={{ fontSize: '24px', textAlign: 'center', marginBottom: '20px', color: 'white' }}>🔗 Essential Tools</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '18px', marginBottom: '10px', color: '#8B5CF6' }}>Daily BTC Faucet</h3>
+          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '15px' }}>Earn free Bitcoin by viewing ads.</p>
+          <a href="https://r.adbtc.top/3494539" target="_blank" style={{ display: 'inline-block', backgroundColor: 'rgba(139, 92, 246, 0.1)', border: '1px solid #8B5CF6', color: '#8B5CF6', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', width: '100%' }}>Open adBTC →</a>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '18px', marginBottom: '10px', color: '#0052ff' }}>Micro-Wallet</h3>
+          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '15px' }}>Withdraw your TimeWall earnings here.</p>
+          <a href="https://faucetpay.io/?r=5296764" target="_blank" style={{ display: 'inline-block', backgroundColor: 'rgba(0, 82, 255, 0.1)', border: '1px solid #0052ff', color: '#0052ff', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', width: '100%' }}>Open FaucetPay →</a>
+        </div>
       </div>
 
       {/* Banner Cointraffic BOTTOM */}
