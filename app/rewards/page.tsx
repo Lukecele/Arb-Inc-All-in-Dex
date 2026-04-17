@@ -1,94 +1,67 @@
 'use client';
 
 import React from 'react';
+import { useWallets } from '@web3-onboard/react';
 
 export default function RewardsPage() {
+  const connectedWallets = useWallets();
+  const userAddress = connectedWallets[0]?.accounts[0]?.address || 'guest';
+  
+  // Link CPAGrip con s1 (Wallet) per il conteggio Airdrop
+  const cpaGripUrl = `https://singingfiles.com/show.php?l=0&u=1890760&id=1890760&s1=${userAddress}`;
+
   return (
-    <main style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#050508', 
-      color: 'white', 
-      fontFamily: 'sans-serif',
-      padding: '40px 20px' 
-    }}>
+    <main style={{ minHeight: '100vh', backgroundColor: '#050508', color: 'white', fontFamily: 'sans-serif', padding: '40px 20px' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         
-        {/* 1. BANNER COINTRAFFIC TOP */}
+        {/* Banner Cointraffic TOP */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '30px', minHeight: '250px' }}>
           <span id="ct_cmykXXKHPsy"></span>
         </div>
 
-        <h1 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center', marginBottom: '10px' }}>
-          Arbitrage Rewards Hub
+        <h1 style={{ fontSize: '36px', fontWeight: '900', textAlign: 'center', background: 'linear-gradient(135deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '10px' }}>
+          Ecosystem Rewards
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '40px', textAlign: 'center' }}>
-          Complete tasks and watch videos to boost your terminal balance.
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: '40px' }}>
+          Earn instant crypto or farm points for the upcoming $ARB-INC Airdrop.
         </p>
 
-        {/* 2. TIMEWALL (Premium Wall) */}
-        <div style={{ 
-          background: 'rgba(139, 92, 246, 0.05)', 
-          border: '1px solid rgba(139, 92, 246, 0.2)', 
-          padding: '20px', 
-          borderRadius: '24px',
-          marginBottom: '40px'
-        }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '15px', color: '#8B5CF6' }}>⭐ Premium Offers (TimeWall)</h2>
-          <div style={{ width: '100%', height: '800px', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-            <iframe 
-              src="https://timewall.io/widget/v2/678fdb164b161a3c" 
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="TimeWall"
-            />
-          </div>
-        </div>
-
-        {/* 3. CPAGRIP (Secondary Wall - NO LOCKER) */}
-        <div style={{ 
-          background: 'rgba(255, 255, 255, 0.02)', 
-          border: '1px solid rgba(255, 255, 255, 0.1)', 
-          padding: '20px', 
-          borderRadius: '24px',
-          marginBottom: '40px'
-        }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '15px', color: '#fff' }}>⚡ Fast Tasks (CPAGrip)</h2>
-          <div style={{ width: '100%', height: '600px', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-            {/* NOTA: Qui ho messo il link di CPAGrip. 
-                Se vedi errore, è perché CPAGrip vuole il "Direct Link" (quello che inizia con show.php).
-            */}
-            <iframe 
-              src="https://www.cpagrip.com/view.php?id=1890760" 
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="CPAGrip"
-            />
-          </div>
-        </div>
-
-        {/* 4. CARDS REFERRAL RIPRISTINATE */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
           
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '25px', borderRadius: '16px' }}>
-            <h2 style={{ fontSize: '18px', color: '#8B5CF6', marginBottom: '10px' }}>Daily BTC Faucet</h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '20px' }}>High-paying tasks and Bitcoin rewards from our trusted partner adBTC.</p>
-            <a href="https://r.adbtc.top/3494539" target="_blank" style={{ display: 'inline-block', backgroundColor: '#8B5CF6', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', fontSize: '13px' }}>Open Portal</a>
-          </div>
+          {/* SEZIONE 1: TIMEWALL (SOLDI SUBITO) */}
+          <section style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '30px', borderRadius: '32px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '24px', color: '#8B5CF6', margin: 0 }}>💰 Instant Payouts</h2>
+              <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)' }}>Managed by TimeWall. Withdraw directly to FaucetPay.</p>
+            </div>
+            <div style={{ width: '100%', height: '800px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
+              <iframe src="https://timewall.io/widget/v2/678fdb164b161a3c" style={{ width: '100%', height: '100%', border: 'none' }} title="TimeWall" />
+            </div>
+          </section>
 
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '25px', borderRadius: '16px' }}>
-            <h2 style={{ fontSize: '18px', color: '#0052ff', marginBottom: '10px' }}>Micro-Wallet</h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '20px' }}>Register on FaucetPay to receive your external rewards directly.</p>
-            <a href="https://faucetpay.io/?r=5296764" target="_blank" style={{ display: 'inline-block', backgroundColor: '#0052ff', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', fontSize: '13px' }}>Register Wallet</a>
-          </div>
+          {/* SEZIONE 2: CPAGRIP (AIRDROP FARMING) */}
+          <section style={{ background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.05) 0%, rgba(5, 5, 8, 0) 100%)', border: '1px solid rgba(236, 72, 153, 0.2)', padding: '30px', borderRadius: '32px' }}>
+            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+              <h2 style={{ fontSize: '24px', color: '#EC4899', margin: 0 }}>🪂 $ARB-INC Airdrop Farming</h2>
+              <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)' }}>Every task here adds points to your wallet address for the future Airdrop.</p>
+              <div style={{ marginTop: '10px' }}>
+                <span style={{ fontSize: '12px', background: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', padding: '4px 12px', borderRadius: '100px', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
+                  Tracking Wallet: {userAddress.slice(0,6)}...{userAddress.slice(-4)}
+                </span>
+              </div>
+            </div>
+            <div style={{ width: '100%', height: '700px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
+              <iframe src={cpaGripUrl} style={{ width: '100%', height: '100%', border: 'none' }} title="Airdrop Wall" />
+            </div>
+          </section>
 
         </div>
 
-        {/* 5. BANNER COINTRAFFIC BOTTOM */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0', minHeight: '250px' }}>
+        {/* Banner Cointraffic BOTTOM */}
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '50px 0', minHeight: '250px' }}>
           <span id="ct_c83XILwXy4d"></span>
         </div>
 
-        <div style={{ textAlign: 'center', paddingBottom: '60px' }}>
-          <a href="/" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '14px' }}>← Back to Terminal</a>
-        </div>
       </div>
     </main>
   );
