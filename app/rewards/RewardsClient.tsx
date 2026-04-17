@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useConnectWallet, useWallets } from '@web3-onboard/react';
+import { useWallets } from '@web3-onboard/react';
 
 interface Offer {
   title: string;
@@ -9,13 +9,11 @@ interface Offer {
 }
 
 export default function RewardsClient() {
-  const [{ wallet, connecting }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   
-  // Prendiamo l'indirizzo in modo ultra-sicuro
-  const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
+  const address = connectedWallets?.[0]?.accounts?.[0]?.address;
 
   useEffect(() => {
     if (address) {
@@ -30,49 +28,64 @@ export default function RewardsClient() {
     }
   }, [address]);
 
+  if (!address) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center', background: '#0a0a0a', borderRadius: '15px', border: '1px solid #333', color: '#666' }}>
+        Per favore, connetti il wallet dal menu in alto per vedere le tue ricompense.
+      </div>
+    );
+  }
+
   return (
-    <div style={{ color: 'white', fontFamily: 'sans-serif', textAlign: 'center' }}>
+    <div style={{ color: 'white', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       
-      {!address ? (
-        <div style={{ padding: '40px', background: '#111', borderRadius: '20px', border: '2px dashed #EC4899', marginBottom: '30px' }}>
-          <h2 style={{ color: '#EC4899' }}>Wallet Required 🔒</h2>
-          <p style={{ marginBottom: '20px', color: '#a1a1aa' }}>Connect your wallet to unlock CPA Tasks and Leaderboard points.</p>
-          <button 
-            onClick={() => connect()} 
-            style={{ background: 'linear-gradient(to right, #8B5CF6, #EC4899)', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '100px', fontWeight: 'bold', cursor: 'pointer', fontSize: '18px' }}
-          >
-            {connecting ? 'Connecting...' : '🔗 CONNECT WALLET NOW'}
-          </button>
+      {/* 1. STATUS BAR */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
+        <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22c55e', padding: '8px 20px', borderRadius: '50px', color: '#22c55e', fontWeight: 'bold', fontSize: '14px' }}>
+          ● Tracking Active: {address.slice(0,6)}...{address.slice(-4)}
         </div>
-      ) : (
-        <>
-          {/* SEZIONE CPA / NATIVE TASKS */}
-          <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '24px', marginBottom: '30px', textAlign: 'left' }}>
-            <h3 style={{ color: '#EC4899', marginTop: 0 }}>🪂 $ARB-INC Native Tasks (CPA)</h3>
-            {loadingOffers ? <p>Loading tasks... ⏳</p> : offers.length === 0 ? (
-              <p style={{ color: '#666' }}>No tasks available for {address.slice(0,6)}. Try again later!</p>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '15px' }}>
-                {offers.map((off, i) => (
-                  <div key={i} style={{ background: '#1a1a1a', padding: '20px', borderRadius: '12px', border: '1px solid #444' }}>
-                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '10px' }}>{off.title}</div>
-                    <a href={off.link} target="_blank" style={{ color: '#EC4899', textDecoration: 'none', fontWeight: 'bold', display: 'block' }}>Complete & Earn Points →</a>
-                  </div>
-                ))}
+      </div>
+
+      {/* 2. SEZIONE CPA (NATIVE TASKS) */}
+      <div style={{ marginBottom: '40px' }}>
+        <h3 style={{ color: '#f472b6', fontSize: '22px', marginBottom: '20px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          🪂 $ARB-INC Native Tasks (CPA)
+        </h3>
+        
+        {loadingOffers ? (
+          <p style={{ color: '#666' }}>Caricamento offerte...</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            {offers.length > 0 ? offers.map((off, i) => (
+              <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: '0.3s' }}>
+                <div style={{ marginBottom: '15px' }}>
+                  <div style={{ color: '#f472b6', fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>OFFERTA DISPONIBILE</div>
+                  <div style={{ fontWeight: 'bold', fontSize: '16px', lineHeight: '1.4' }}>{off.title}</div>
+                </div>
+                <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: 'white', textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                  Completa e Guadagna →
+                </a>
               </div>
+            )) : (
+              <p style={{ color: '#666' }}>Nessuna task disponibile al momento per la tua regione.</p>
             )}
           </div>
+        )}
+      </div>
 
-          {/* SEZIONE TIMEWALL */}
-          <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '24px', textAlign: 'left' }}>
-            <h3 style={{ color: '#8B5CF6', marginTop: 0 }}>💰 Instant Payouts (TimeWall)</h3>
-            <iframe 
-              src={`https://timewall.io/widget/v2/678fdb164b161a3c?userid=${address}`} 
-              style={{ width: '100%', height: '700px', border: 'none', background: '#000', borderRadius: '15px', marginTop: '15px' }} 
-            />
-          </div>
-        </>
-      )}
+      {/* 3. SEZIONE TIMEWALL */}
+      <div style={{ marginBottom: '40px' }}>
+        <h3 style={{ color: '#818cf8', fontSize: '22px', marginBottom: '20px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          💰 Instant Payouts (TimeWall)
+        </h3>
+        <div style={{ background: '#000', borderRadius: '20px', border: '1px solid #333', height: '800px', overflow: 'hidden' }}>
+          <iframe 
+            src={`https://timewall.io/widget/v2/678fdb164b161a3c?userid=${address}`} 
+            style={{ width: '100%', height: '100%', border: 'none' }} 
+          />
+        </div>
+      </div>
+
     </div>
   );
 }
