@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useWallets } from '@web3-onboard/react';
+import { useConnectWallet, useWallets } from '@web3-onboard/react';
 
 interface Offer {
   title: string;
@@ -9,11 +9,13 @@ interface Offer {
 }
 
 export default function RewardsClient() {
+  const [{ wallet, connecting }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   
-  const address = connectedWallets?.[0]?.accounts?.[0]?.address;
+  // Rilevamento indirizzo da tutte le fonti possibili
+  const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
   useEffect(() => {
     if (address) {
@@ -28,27 +30,52 @@ export default function RewardsClient() {
     }
   }, [address]);
 
+  // SE IL WALLET NON È CONNESSO: Mostriamo il tastone che ti piaceva
   if (!address) {
     return (
-      <div style={{ padding: '40px', textAlign: 'center', background: '#0a0a0a', borderRadius: '15px', border: '1px solid #333', color: '#666' }}>
-        Per favore, connetti il wallet dal menu in alto per vedere le tue ricompense.
+      <div style={{ 
+        padding: '60px 20px', 
+        textAlign: 'center', 
+        background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)', 
+        borderRadius: '24px', 
+        border: '2px solid #4f46e5',
+        boxShadow: '0 10px 30px rgba(79, 70, 229, 0.2)',
+        margin: '20px 0'
+      }}>
+        <h2 style={{ color: '#fff', fontSize: '28px', marginBottom: '15px' }}>Wallet Required 🔒</h2>
+        <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Connetti il tuo wallet per sbloccare le Task CPA e accumulare punti Airdrop.</p>
+        <button 
+          onClick={() => connect()} 
+          style={{ 
+            background: 'linear-gradient(to right, #8B5CF6, #EC4899)', 
+            color: 'white', 
+            border: 'none', 
+            padding: '15px 40px', 
+            borderRadius: '100px', 
+            fontWeight: 'bold', 
+            cursor: 'pointer', 
+            fontSize: '18px',
+            boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)'
+          }}
+        >
+          {connecting ? 'Connessione in corso...' : '🔗 CONNECT WALLET'}
+        </button>
       </div>
     );
   }
 
+  // SE IL WALLET È CONNESSO: Mostriamo le Task e TimeWall
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       
-      {/* 1. STATUS BAR */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
         <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22c55e', padding: '8px 20px', borderRadius: '50px', color: '#22c55e', fontWeight: 'bold', fontSize: '14px' }}>
           ● Tracking Active: {address.slice(0,6)}...{address.slice(-4)}
         </div>
       </div>
 
-      {/* 2. SEZIONE CPA (NATIVE TASKS) */}
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#f472b6', fontSize: '22px', marginBottom: '20px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <h3 style={{ color: '#f472b6', fontSize: '22px', marginBottom: '20px', fontWeight: '800', textTransform: 'uppercase' }}>
           🪂 $ARB-INC Native Tasks (CPA)
         </h3>
         
@@ -57,33 +84,26 @@ export default function RewardsClient() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             {offers.length > 0 ? offers.map((off, i) => (
-              <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: '0.3s' }}>
+              <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div style={{ marginBottom: '15px' }}>
-                  <div style={{ color: '#f472b6', fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>OFFERTA DISPONIBILE</div>
                   <div style={{ fontWeight: 'bold', fontSize: '16px', lineHeight: '1.4' }}>{off.title}</div>
                 </div>
-                <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: 'white', textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: 'white', textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '8px', fontWeight: 'bold' }}>
                   Completa e Guadagna →
                 </a>
               </div>
             )) : (
-              <p style={{ color: '#666' }}>Nessuna task disponibile al momento per la tua regione.</p>
+              <p style={{ color: '#666' }}>Nessuna task disponibile al momento.</p>
             )}
           </div>
         )}
       </div>
 
-      {/* 3. SEZIONE TIMEWALL */}
-      <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#818cf8', fontSize: '22px', marginBottom: '20px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          💰 Instant Payouts (TimeWall)
-        </h3>
-        <div style={{ background: '#000', borderRadius: '20px', border: '1px solid #333', height: '800px', overflow: 'hidden' }}>
-          <iframe 
-            src={`https://timewall.io/widget/v2/678fdb164b161a3c?userid=${address}`} 
-            style={{ width: '100%', height: '100%', border: 'none' }} 
-          />
-        </div>
+      <div style={{ background: '#000', borderRadius: '20px', border: '1px solid #333', height: '800px', overflow: 'hidden' }}>
+        <iframe 
+          src={`https://timewall.io/widget/v2/678fdb164b161a3c?userid=${address}`} 
+          style={{ width: '100%', height: '100%', border: 'none' }} 
+        />
       </div>
 
     </div>
