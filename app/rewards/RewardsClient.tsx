@@ -5,7 +5,6 @@ import { useWallets, useConnectWallet } from '@web3-onboard/react';
 
 export default function RewardsClient() {
   const connectedWallets = useWallets();
-  // Importiamo la funzione per connettere/disconnettere il wallet
   const [{ wallet }, connect, disconnect] = useConnectWallet();
   
   const address = connectedWallets?.[0]?.accounts?.[0]?.address;
@@ -49,7 +48,7 @@ export default function RewardsClient() {
               boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)'
             }}
           >
-            🔗 Connect Wallet
+            🔗 Connect Wallet to Track Points
           </button>
         ) : (
           <>
@@ -68,24 +67,54 @@ export default function RewardsClient() {
       {/* ------------------------------- */}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
+
+        {/* 1. CPAGRIP (Lucchettato se non connesso) - SPOSTATO SOPRA */}
+        <section style={{ background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.05) 0%, rgba(5, 5, 8, 0) 100%)', border: '1px solid rgba(236, 72, 153, 0.2)', padding: '30px', borderRadius: '32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '24px', color: '#EC4899', margin: 0 }}>🪂 $ARB-INC Airdrop Farming</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginTop: '5px' }}>
+              Complete tasks to earn points. Offers are geo-targeted.
+            </p>
+          </div>
+          
+          {!address ? (
+            /* STATO BLOCCATO */
+            <div style={{ 
+              width: '100%', height: '350px', borderRadius: '20px', 
+              backgroundColor: 'rgba(236, 72, 153, 0.02)', 
+              border: '1px dashed rgba(236, 72, 153, 0.3)',
+              display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+              padding: '20px', textAlign: 'center'
+            }}>
+              <span style={{ fontSize: '48px', marginBottom: '15px' }}>🔒</span>
+              <h3 style={{ color: 'white', fontSize: '20px', marginBottom: '10px' }}>Wallet Required</h3>
+              <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '350px', marginBottom: '25px', lineHeight: '1.5' }}>
+                You must connect your Web3 wallet before accessing the Airdrop tasks. This ensures your points are accurately tracked on the blockchain.
+              </p>
+              <button 
+                onClick={() => connect()}
+                style={{ background: '#EC4899', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '100px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+              >
+                Connect to Unlock Wall
+              </button>
+            </div>
+          ) : (
+            /* STATO SBLOCCATO (Mostra iframe) */
+            <div style={{ width: '100%', height: '700px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
+              <iframe 
+                src={cpaGripUrl} 
+                style={{ width: '100%', height: '100%', border: 'none' }} 
+                title="Airdrop Wall" 
+              />
+            </div>
+          )}
+        </section>
         
-        {/* TIMEWALL */}
+        {/* 2. TIMEWALL (Sempre aperto perché ha il suo login) - SPOSTATO SOTTO */}
         <section style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '30px', borderRadius: '32px' }}>
           <h2 style={{ fontSize: '24px', color: '#8B5CF6', marginBottom: '15px' }}>💰 Instant Payouts</h2>
           <div style={{ width: '100%', height: '800px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
             <iframe src="https://timewall.io/widget/v2/678fdb164b161a3c" style={{ width: '100%', height: '100%', border: 'none' }} title="TimeWall" />
-          </div>
-        </section>
-
-        {/* CPAGRIP (AIRDROP FARMING) */}
-        <section style={{ background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.05) 0%, rgba(5, 5, 8, 0) 100%)', border: '1px solid rgba(236, 72, 153, 0.2)', padding: '30px', borderRadius: '32px' }}>
-          <h2 style={{ fontSize: '24px', color: '#EC4899', marginBottom: '15px', textAlign: 'center' }}>🪂 $ARB-INC Airdrop Farming</h2>
-          <div style={{ width: '100%', height: '700px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-            <iframe 
-              src={cpaGripUrl} 
-              style={{ width: '100%', height: '100%', border: 'none' }} 
-              title="Airdrop Wall" 
-            />
           </div>
         </section>
 
