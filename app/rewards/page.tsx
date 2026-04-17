@@ -5,16 +5,20 @@ import { useWallets } from '@web3-onboard/react';
 
 export default function RewardsPage() {
   const connectedWallets = useWallets();
-  const userAddress = connectedWallets[0]?.accounts[0]?.address || 'guest';
   
-  // LOGICA DISPLAY WALLET: slice solo se è un indirizzo reale
-  const displayAddress = userAddress === 'guest' 
-    ? 'Wallet Not Connected' 
-    : `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+  // Prendiamo l'indirizzo direttamente
+  const address = connectedWallets[0]?.accounts[0]?.address;
+  
+  // Logica Display: usiamo la presenza o meno di 'address' invece del confronto con 'guest'
+  const displayAddress = address 
+    ? `${address.slice(0, 6)}...${address.slice(-4)}` 
+    : 'Wallet Not Connected';
 
-  // LINK CORRETTO: Usiamo il dominio base e solo l'ID del muro (id)
-  // s1 conterrà l'indirizzo per il tuo airdrop tracking
-  const cpaGripUrl = `https://www.cpagrip.com/show.php?id=1890760&s1=${userAddress}`;
+  // Tracking ID per CPAGrip: se non c'è l'indirizzo, passiamo 'guest'
+  const trackingId = address || 'guest';
+
+  // LINK CORRETTO: Usiamo il dominio del tuo screenshot e l'ID verificato
+  const cpaGripUrl = `https://singingfiles.com/show.php?id=1890760&s1=${trackingId}`;
 
   return (
     <main style={{ minHeight: '100vh', backgroundColor: '#050508', color: 'white', fontFamily: 'sans-serif', padding: '40px 20px' }}>
@@ -57,7 +61,11 @@ export default function RewardsPage() {
               </div>
             </div>
             <div style={{ width: '100%', height: '700px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-              <iframe src={cpaGripUrl} style={{ width: '100%', height: '100%', border: 'none' }} title="Airdrop Wall" />
+              <iframe 
+                src={cpaGripUrl} 
+                style={{ width: '100%', height: '100%', border: 'none' }} 
+                title="Airdrop Wall" 
+              />
             </div>
           </section>
 
