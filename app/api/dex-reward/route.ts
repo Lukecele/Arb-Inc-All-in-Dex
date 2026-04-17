@@ -1,42 +1,38 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    // Riceviamo i dati dal frontend
-    const { userWallet, referrerWallet, actionType, txHash } = await request.json();
+    const { userWallet, type, referrerWallet } = await req.json();
 
-    if (!userWallet || !userWallet.startsWith('0x')) {
-      return NextResponse.json({ error: 'Wallet non valido' }, { status: 400 });
+    if (!userWallet) {
+      return NextResponse.json({ error: 'Missing wallet' }, { status: 400 });
     }
 
-    // Listino Punti per Azione
-    const pointsMap: Record<string, number> = {
-      'swap': 100,
-      'zap': 150,
-      'limit-order': 200,
-      'bridge': 500
-    };
+    let points = 0;
+    if (type === 'swap') points = 100;
+    if (type === 'zap') points = 150;
+    if (type === 'limit-order') points = 200;
 
-    const points = pointsMap[actionType] || 0;
+    // 🛡️ CONTROLLO REDIS: Eseguiamo solo se la connessione esiste
+    if (redis) {
+      if (points > 0) {
+        // 1. Punti all'utente
+        await redis.zincrby('leaderboard', points, userWallet);
 
-    if (points > 0) {
-      // 1. Diamo i punti a chi ha fatto lo Swap
-      await redis.zincrby('leaderboard', points, userWallet);
-
-      // 2. Se l'utente era stato invitato, diamo il 10% di bonus al Padrino
-      if (referrerWallet && referrerWallet.startsWith('0x') && referrerWallet !== userWallet) {
-        const bonus = points * 0.10;
-        await redis.zincrby('leaderboard', bonus, referrerWallet);
+        // 2. Bonus al Padrino (10%)
+        if (referrerWallet && referrerWallet.startsWith('0x') && referrerWallet !== userWallet) {
+          const bonus = Math.floor(points * 0.1);
+          if (bonus > 0) {
+            await redis.zincrby('leaderboard', bonus, referrerWallet);
+          }
+        }
       }
-
-      console.log(`🔥 DEX Reward: ${userWallet} ha ottenuto ${points} punti per un ${actionType}.`);
-      return NextResponse.json({ success: true, pointsAdded: points });
     }
 
-    return NextResponse.json({ error: 'Azione non riconosciuta' }, { status: 400 });
-
+    return NextResponse.json({ success: true, points });
   } catch (error) {
-    return NextResponse.json({ error: 'Errore server' }, { status: 500 });
+    console.error('Reward API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
