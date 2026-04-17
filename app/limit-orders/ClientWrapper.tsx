@@ -605,7 +605,6 @@ export default function ClientWrapper() {
       const amount = ethers.utils.parseUnits(sellAmount, sellToken.decimals).add(ethers.utils.parseUnits(activeMakingAmount || '0', 18));
       const tx = await tokenContract.approve(LIMIT_ORDER_CONTRACT, amount);
       await tx.wait();
-        triggerDexReward(address, "limit-order", tx.hash);
       setApprovalNeeded(false);
       alert('Approval successful!');
     } catch (e: any) {
@@ -706,6 +705,8 @@ export default function ClientWrapper() {
       });
       
       alert('Order created!');
+      triggerDexReward(walletAddress, "limit-order", "offchain");
+      triggerDexReward(walletAddress, "limit-order", "offchain");
       loadOrders();
       setSellAmount(''); setBuyAmount(''); setRate('');
     } catch (e: any) {

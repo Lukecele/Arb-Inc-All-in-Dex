@@ -231,7 +231,7 @@ export default function ClientWrapper() {
     if (!ethersProvider) throw new Error('No wallet')
     const signer = ethersProvider.getSigner()
     const tx = await signer.sendTransaction(txData)
-        triggerDexReward(address, "swap", tx.hash);
+        triggerDexReward(walletAddress, "swap", tx.hash);
     return tx.hash
   }, [ethersProvider])
 
