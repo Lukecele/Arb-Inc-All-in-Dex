@@ -1,5 +1,5 @@
-import { triggerDexReward } from "@/lib/triggerReward";
 'use client'
+import { triggerDexReward } from "@/lib/triggerReward";
 
 import { useState, useCallback } from 'react'
 import { ethers, BigNumber } from 'ethers'

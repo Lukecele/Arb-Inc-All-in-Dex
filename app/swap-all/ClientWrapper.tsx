@@ -1,5 +1,5 @@
-import { triggerDexReward } from "@/lib/triggerReward";
 'use client'
+import { triggerDexReward } from "@/lib/triggerReward";
 
 import { Widget } from '@kyberswap/widgets'
 import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'

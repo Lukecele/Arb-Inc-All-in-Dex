@@ -1,5 +1,5 @@
-import { triggerDexReward } from "@/lib/triggerReward";
 'use client';
+import { triggerDexReward } from "@/lib/triggerReward";
 
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
