@@ -3,15 +3,21 @@
 import React, { useEffect, useState } from 'react';
 import { useWallets, useConnectWallet } from '@web3-onboard/react';
 
+// 🛡️ Definiamo il tipo per TypeScript
+interface Offer {
+  title: string;
+  link: string;
+}
+
 export default function RewardsClient() {
   const connectedWallets = useWallets();
   const [{ wallet }, connect] = useConnectWallet();
-  const [offers, setOffers] = useState([]);
+  // 🛡️ Specifichiamo che offers è un array di tipo Offer
+  const [offers, setOffers] = useState<Offer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   
   const address = connectedWallets?.[0]?.accounts?.[0]?.address;
 
-  // Caricamento Offerte CPA
   useEffect(() => {
     if (address) {
       setLoadingOffers(true);
