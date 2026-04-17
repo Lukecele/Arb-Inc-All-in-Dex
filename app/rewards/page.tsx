@@ -2,10 +2,11 @@
 
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import ReferralBox from '@/components/rewards/ReferralBox';
-import Leaderboard from '@/components/rewards/Leaderboard';
 
+// Carichiamo TUTTI i componenti Web3 con ssr: false per evitare il crash di Vercel
 const RewardsClient = dynamic(() => import('./RewardsClient'), { ssr: false });
+const ReferralBox = dynamic(() => import('@/components/rewards/ReferralBox'), { ssr: false });
+const Leaderboard = dynamic(() => import('@/components/rewards/Leaderboard'), { ssr: false });
 
 export default function RewardsPage() {
   
@@ -28,6 +29,7 @@ export default function RewardsPage() {
           Arbitrage Inc Rewards
         </h1>
 
+        {/* Ora questi sono al sicuro dal server-side rendering */}
         <ReferralBox />
         <RewardsClient />
         <Leaderboard />
