@@ -1,19 +1,34 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   
-  // Estraiamo i dati che TimeWall ci sta mandando
-  const userId = searchParams.get('userId');
-  const transId = searchParams.get('transId');
-  const revenue = searchParams.get('rev');
-  const amount = searchParams.get('amt');
+  // 1. Estraiamo i parametri (facendo attenzione a maiuscole e minuscole dell'URL)
+  const userID = searchParams.get('userID') || '';
+  const transId = searchParams.get('transId') || '';
+  const rev = searchParams.get('rev') || '';
+  const amt = searchParams.get('amt') || '';
+  const receivedHash = searchParams.get('hash') || '';
   
-  // Stampiamo i dati nel terminale (utile per noi per vedere se funziona)
-  console.log(`🔔 TimeWall Ping: User ${userId} ha guadagnato ${amount} (Rev: $${revenue}). Trans: ${transId}`);
+  // La tua chiave segreta (in futuro la sposteremo nel file .env)
+  const secretKey = '47a8d13548d53cc588d7faf8ee5b84fc';
+  
+  // 2. LA SICUREZZA: Ricostruiamo l'hash di TimeWall
+  // La loro formula: hash("sha256", userID . revenue . SecretKey)
+  const stringToHash = `${userID}${rev}${secretKey}`;
+  const expectedHash = crypto.createHash('sha256').update(stringToHash).digest('hex');
+  
+  // 3. Verifica Anti-Hacker
+  if (receivedHash && receivedHash !== expectedHash) {
+    console.error(`🚨 Allarme Sicurezza TimeWall! Hash non valido. Ricevuto: ${receivedHash}, Atteso: ${expectedHash}`);
+    // Rispondiamo comunque 200 per non far bloccare l'URL da TimeWall, ma NON diamo i punti
+    return new NextResponse('Invalid Security Hash', { status: 200 });
+  }
 
-  // LA MAGIA PER L'APPROVAZIONE:
-  // TimeWall vuole solo sapere che abbiamo ricevuto il messaggio.
-  // Dobbiamo rispondere con uno Status 200 (OK) altrimenti considerano il postback fallito.
+  // 4. Successo! Qui in futuro aggiungeremo i punti al database
+  console.log(`✅ TimeWall Postback Sicuro: Utente ${userID} ha guadagnato ${amt} punti (Rev: $${rev}). Trans: ${transId}`);
+
+  // Risposta obbligatoria per farci approvare
   return new NextResponse('OK', { status: 200 });
 }
