@@ -14,6 +14,7 @@ export const navItems = [
   { href: '/zap', label: 'Zap' },
   { href: '/bridge', label: 'Bridge' },
   { href: '/limit-orders', label: 'Limit Orders' },
+  { href: '/rewards', label: 'Rewards' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
