@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useWallets, useConnectWallet } from '@web3-onboard/react';
 
-// Tipo per le nostre offerte
 type Offer = { title: string; link: string; image: string | null };
 
 export default function RewardsClient() {
@@ -12,13 +11,18 @@ export default function RewardsClient() {
   
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
+  const [comboId, setComboId] = useState<string>('');
 
   const address = connectedWallets?.[0]?.accounts?.[0]?.address;
   const displayAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : null;
 
-  // Quando l'utente si connette, andiamo a pescare le offerte dalla NOSTRA Api
   useEffect(() => {
     if (address) {
+      // 🚨 FIX CRUCIALE: Prepara l'ID per TimeWall (Utente + Referrer)
+      const referrer = localStorage.getItem('arb_inc_referrer') || 'none';
+      setComboId(`${address}--ref--${referrer}`);
+
+      // Fetch Offerte
       setLoadingOffers(true);
       fetch(`/api/offers?wallet=${address}`)
         .then(res => res.json())
@@ -32,85 +36,99 @@ export default function RewardsClient() {
         });
     } else {
       setOffers([]);
+      setComboId('');
     }
   }, [address]);
 
+  // Genera l'URL di TimeWall dinamicamente agganciando il wallet per il postback
+  const timeWallUrl = comboId 
+    ? `https://timewall.io/widget/v2/678fdb164b161a3c?userid=${comboId}`
+    : `https://timewall.io/widget/v2/678fdb164b161a3c`;
+
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div className="max-w-5xl mx-auto space-y-12">
       
       {/* Banner Cointraffic TOP */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '30px', minHeight: '250px' }}>
+      <div className="flex justify-center w-full min-h-[250px]">
         <span id="ct_cmykXXKHPsy"></span>
       </div>
 
-      <h1 style={{ fontSize: '36px', fontWeight: '900', textAlign: 'center', background: 'linear-gradient(135deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '10px' }}>
-        Ecosystem Rewards
-      </h1>
-      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: '30px' }}>
-        Earn instant crypto or farm points for the upcoming $ARB-INC Airdrop.
-      </p>
+      <div className="text-center space-y-3">
+        <h2 className="text-4xl font-black bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text text-transparent">
+          Ecosystem Rewards
+        </h2>
+        <p className="text-white/60">
+          Earn instant crypto or farm points for the upcoming $ARB-INC Airdrop.
+        </p>
+      </div>
 
       {/* --- ZONA WALLET INTERATTIVA --- */}
-      <div style={{ textAlign: 'center', marginBottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+      <div className="flex flex-col items-center gap-3">
         {!address ? (
           <button 
             onClick={() => connect()}
-            style={{
-              background: 'linear-gradient(135deg, #8B5CF6, #EC4899)', color: 'white', border: 'none', padding: '12px 28px',
-              borderRadius: '100px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)'
-            }}
+            className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-[0_4px_20px_rgba(236,72,153,0.4)] hover:scale-105 transition-transform"
           >
             🔗 Connect Wallet to Track Points
           </button>
         ) : (
           <>
-            <span style={{ fontSize: '14px', background: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', padding: '8px 20px', borderRadius: '100px', border: '1px solid rgba(236, 72, 153, 0.3)', fontWeight: 'bold' }}>
+            <span className="bg-pink-500/10 text-pink-500 border border-pink-500/30 font-bold py-2 px-5 rounded-full text-sm">
               🟢 Tracking to: {displayAddress}
             </span>
-            <button onClick={() => disconnect(wallet!)} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: '13px', textDecoration: 'underline' }}>
+            <button 
+              onClick={() => disconnect(wallet!)} 
+              className="text-white/40 text-sm hover:text-white underline transition-colors"
+            >
               Disconnect
             </button>
           </>
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', marginBottom: '40px' }}>
+      <div className="grid grid-cols-1 gap-10">
 
-        {/* 1. NATIVE AIRDROP WALL (Ex CPAGrip Iframe) */}
-        <section style={{ background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.05) 0%, rgba(5, 5, 8, 0) 100%)', border: '1px solid rgba(236, 72, 153, 0.2)', padding: '30px', borderRadius: '32px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '24px', color: '#EC4899', margin: 0 }}>🪂 $ARB-INC Native Tasks</h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginTop: '5px' }}>Complete tasks to farm airdrop points.</p>
+        {/* 1. NATIVE AIRDROP WALL */}
+        <section className="bg-gradient-to-b from-pink-500/5 to-transparent border border-pink-500/20 p-8 rounded-[32px]">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-pink-500">🪂 $ARB-INC Native Tasks</h2>
+            <p className="text-sm text-white/50 mt-1">Complete tasks to farm airdrop points.</p>
           </div>
           
           {!address ? (
-            /* STATO BLOCCATO */
-            <div style={{ width: '100%', height: '250px', borderRadius: '20px', backgroundColor: 'rgba(236, 72, 153, 0.02)', border: '1px dashed rgba(236, 72, 153, 0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', textAlign: 'center' }}>
-              <span style={{ fontSize: '48px', marginBottom: '15px' }}>🔒</span>
-              <h3 style={{ color: 'white', fontSize: '20px', marginBottom: '10px' }}>Wallet Required</h3>
-              <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '350px', marginBottom: '25px', lineHeight: '1.5' }}>Connect your Web3 wallet to load your localized tasks.</p>
-              <button onClick={() => connect()} style={{ background: '#EC4899', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '100px', fontWeight: 'bold', cursor: 'pointer' }}>Unlock Tasks</button>
+            <div className="w-full h-[250px] rounded-3xl bg-pink-500/5 border border-dashed border-pink-500/30 flex flex-col justify-center items-center text-center p-6">
+              <span className="text-5xl mb-4">🔒</span>
+              <h3 className="text-white text-xl font-bold mb-2">Wallet Required</h3>
+              <p className="text-white/60 max-w-sm mb-6">Connect your Web3 wallet to load your localized tasks.</p>
+              <button 
+                onClick={() => connect()} 
+                className="bg-pink-500 text-white font-bold py-3 px-8 rounded-full hover:bg-pink-600 transition-colors"
+              >
+                Unlock Tasks
+              </button>
             </div>
           ) : loadingOffers ? (
-            /* STATO CARICAMENTO */
-            <div style={{ width: '100%', height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#EC4899' }}>
-              <h3>Loading localized tasks... ⏳</h3>
+            <div className="w-full h-[200px] flex justify-center items-center text-pink-500 font-bold text-lg">
+              Loading localized tasks... ⏳
             </div>
           ) : offers.length === 0 ? (
-            /* NESSUNA OFFERTA TROVATA */
-            <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255,255,255,0.5)' }}>
+            <div className="text-center p-10 text-white/50">
               <p>No tasks currently available in your region. Check back later!</p>
             </div>
           ) : (
-            /* LE NUOVE CARD MAGICHE */
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {offers.map((offer, index) => (
-                <div key={index} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(236, 72, 153, 0.2)', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div key={index} className="bg-white/5 border border-pink-500/20 rounded-2xl p-5 flex flex-col justify-between hover:border-pink-500/50 transition-colors">
                   <div>
-                    {offer.image && <img src={offer.image} alt="Task" style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }} />}
-                    <h3 style={{ fontSize: '16px', color: 'white', marginBottom: '10px', lineHeight: '1.4' }}>{offer.title}</h3>
+                    {offer.image && <img src={offer.image} alt="Task" className="w-full h-[120px] object-cover rounded-lg mb-4" />}
+                    <h3 className="text-white text-base font-semibold leading-snug mb-3">{offer.title}</h3>
                   </div>
-                  <a href={offer.link} target="_blank" rel="noopener noreferrer" style={{ display: 'block', textAlign: 'center', background: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', border: '1px solid #EC4899', padding: '10px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', marginTop: '15px', transition: 'all 0.2s' }}>
+                  <a 
+                    href={offer.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block text-center bg-pink-500/10 text-pink-500 border border-pink-500 font-bold py-3 rounded-xl hover:bg-pink-500 hover:text-white transition-all mt-4"
+                  >
                     Complete Task →
                   </a>
                 </div>
@@ -119,37 +137,50 @@ export default function RewardsClient() {
           )}
         </section>
         
-        {/* 2. TIMEWALL (Intatto) */}
-        <section style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.2)', padding: '30px', borderRadius: '32px' }}>
-          <h2 style={{ fontSize: '24px', color: '#8B5CF6', marginBottom: '15px', textAlign: 'center' }}>💰 Instant Payouts</h2>
-          <div style={{ width: '100%', height: '800px', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-            <iframe src="https://timewall.io/widget/v2/678fdb164b161a3c" style={{ width: '100%', height: '100%', border: 'none' }} title="TimeWall" />
+        {/* 2. TIMEWALL */}
+        <section className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[32px]">
+          <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center">💰 Instant Payouts</h2>
+          <div className="w-full h-[800px] rounded-2xl overflow-hidden bg-white shadow-2xl">
+            {!address ? (
+               <div className="w-full h-full flex flex-col justify-center items-center bg-[#050508] text-white/50">
+                 <span className="text-4xl mb-4">🔒</span>
+                 <p>Connect wallet to unlock TimeWall.</p>
+               </div>
+            ) : (
+               <iframe src={timeWallUrl} className="w-full h-full border-none" title="TimeWall" />
+            )}
           </div>
         </section>
 
       </div>
 
-      {/* 3. ESSENTIAL TOOLS (Intatti) */}
-      <h2 style={{ fontSize: '24px', textAlign: 'center', marginBottom: '20px', color: 'white' }}>🔗 Essential Tools</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '18px', marginBottom: '10px', color: '#8B5CF6' }}>Daily BTC Faucet</h3>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '15px' }}>Earn free Bitcoin by viewing ads.</p>
-          <a href="https://r.adbtc.top/3494539" target="_blank" style={{ display: 'inline-block', backgroundColor: 'rgba(139, 92, 246, 0.1)', border: '1px solid #8B5CF6', color: '#8B5CF6', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', width: '100%' }}>Open adBTC →</a>
-        </div>
-        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '18px', marginBottom: '10px', color: '#0052ff' }}>Micro-Wallet</h3>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '15px' }}>Withdraw your TimeWall earnings here.</p>
-          <a href="https://faucetpay.io/?r=5296764" target="_blank" style={{ display: 'inline-block', backgroundColor: 'rgba(0, 82, 255, 0.1)', border: '1px solid #0052ff', color: '#0052ff', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', width: '100%' }}>Open FaucetPay →</a>
-        </div>
-        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '18px', marginBottom: '10px', color: '#F59E0B' }}>Bonus: PrizeBear</h3>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', marginBottom: '15px' }}>Complete extra surveys for more rewards.</p>
-          <a href="https://prizebear.com/r/OPKQLG" target="_blank" style={{ display: 'inline-block', backgroundColor: 'rgba(245, 158, 11, 0.1)', border: '1px solid #F59E0B', color: '#F59E0B', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', width: '100%' }}>Open PrizeBear →</a>
+      {/* 3. ESSENTIAL TOOLS */}
+      <div className="pt-8">
+        <h2 className="text-2xl font-bold text-center text-white mb-8">🔗 Essential Tools</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col items-center text-center hover:border-purple-500/50 transition-colors">
+            <h3 className="text-lg font-bold text-purple-500 mb-2">Daily BTC Faucet</h3>
+            <p className="text-sm text-white/60 mb-6 flex-1">Earn free Bitcoin by viewing ads.</p>
+            <a href="https://r.adbtc.top/3494539" target="_blank" className="w-full bg-purple-500/10 text-purple-500 border border-purple-500 font-bold py-2.5 rounded-xl hover:bg-purple-500 hover:text-white transition-colors">Open adBTC →</a>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col items-center text-center hover:border-blue-500/50 transition-colors">
+            <h3 className="text-lg font-bold text-blue-500 mb-2">Micro-Wallet</h3>
+            <p className="text-sm text-white/60 mb-6 flex-1">Withdraw your TimeWall earnings here.</p>
+            <a href="https://faucetpay.io/?r=5296764" target="_blank" className="w-full bg-blue-500/10 text-blue-500 border border-blue-500 font-bold py-2.5 rounded-xl hover:bg-blue-500 hover:text-white transition-colors">Open FaucetPay →</a>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col items-center text-center hover:border-orange-500/50 transition-colors">
+            <h3 className="text-lg font-bold text-orange-500 mb-2">Bonus: PrizeBear</h3>
+            <p className="text-sm text-white/60 mb-6 flex-1">Complete extra surveys for more rewards.</p>
+            <a href="https://prizebear.com/r/OPKQLG" target="_blank" className="w-full bg-orange-500/10 text-orange-500 border border-orange-500 font-bold py-2.5 rounded-xl hover:bg-orange-500 hover:text-white transition-colors">Open PrizeBear →</a>
+          </div>
+
         </div>
       </div>
 
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '50px 0', minHeight: '250px' }}>
+      <div className="flex justify-center w-full min-h-[250px] mt-12">
         <span id="ct_c83XILwXy4d"></span>
       </div>
 
