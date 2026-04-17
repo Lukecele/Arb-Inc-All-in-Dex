@@ -2,29 +2,42 @@
 
 import React, { useEffect, useState } from 'react';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
-import Script from 'next/script';
 
 interface Offer { title: string; link: string; }
+interface Leader { address: string; points: number; }
 
 export default function RewardsClient() {
   const [{ wallet, connecting }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [loadingOffers, setLoadingOffers] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<Leader[]>([]);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
   useEffect(() => {
-    const fetchWallet = address || '0x0000000000000000000000000000000000000000';
-    setLoadingOffers(true);
-    fetch(`/api/offers?wallet=${fetchWallet}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.offers) setOffers(data.offers);
-        setLoadingOffers(false);
-      })
-      .catch(() => setLoadingOffers(false));
+    const fetchStats = async () => {
+      setLoading(true);
+      const fetchWallet = address || '0x0000000000000000000000000000000000000000';
+      
+      try {
+        // 1. Fetch CPA Offers
+        const resOffers = await fetch(`/api/offers?wallet=${fetchWallet}`);
+        const dataOffers = await resOffers.json();
+        if (dataOffers.offers) setOffers(dataOffers.offers);
+
+        // 2. Fetch Leaderboard
+        const resLeader = await fetch(`/api/leaderboard`);
+        const dataLeader = await resLeader.json();
+        if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+      setLoading(false);
+    };
+
+    fetchStats();
   }, [address]);
 
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
@@ -32,7 +45,7 @@ export default function RewardsClient() {
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif' }}>
       
-      {/* 1. REFERRAL BOX (LIFETIME 10% CLARIFICATION) */}
+      {/* 1. REFERRAL BOX */}
       <div style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)', border: '1px solid #4338ca', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '40px' }}>
         <h3 style={{ margin: '0 0 10px 0', fontSize: '24px' }}>Invite & Earn 10% Lifetime 🚀</h3>
         <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
@@ -62,7 +75,7 @@ export default function RewardsClient() {
         </div>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-          {loadingOffers ? <p>Scanning for rewards... ⏳</p> : offers.length > 0 ? offers.map((off, i) => (
+          {loading ? <p>Scanning for rewards... ⏳</p> : offers.length > 0 ? offers.map((off, i) => (
             <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
               <div style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '15px' }}>{off.title}</div>
               {address ? (
@@ -98,14 +111,33 @@ export default function RewardsClient() {
         </div>
       </div>
 
-      {/* 4. COINTRAFFIC BANNER (ID 46650) */}
-      <div style={{ marginTop: '50px', textAlign: 'center' }}>
-        <p style={{ fontSize: '10px', color: '#333', letterSpacing: '2px', marginBottom: '10px' }}>ADVERTISEMENT</p>
-        <div style={{ minHeight: '90px', display: 'flex', justifyContent: 'center' }}>
-          <Script 
-            src="https://app.cointraffic.io/js/?w=46650" 
-            strategy="lazyOnload" 
-          />
+      {/* 4. LEADERBOARD (AT THE BOTTOM) */}
+      <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px' }}>
+        <h3 style={{ color: '#facc15', marginTop: 0, marginBottom: '20px', textTransform: 'uppercase' }}>🏆 Top Farmers</h3>
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ color: '#666', fontSize: '12px', borderBottom: '1px solid #222' }}>
+                <th style={{ padding: '10px' }}>RANK</th>
+                <th style={{ padding: '10px' }}>ADDRESS</th>
+                <th style={{ padding: '10px', textAlign: 'right' }}>POINTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboard.length > 0 ? leaderboard.map((user, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #222', background: address === user.address ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
+                  <td style={{ padding: '12px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
+                  <td style={{ padding: '12px', fontSize: '13px', fontFamily: 'monospace' }}>
+                    {user.address.slice(0,6)}...{user.address.slice(-4)}
+                    {address === user.address && <span style={{ marginLeft: '8px', color: '#facc15', fontSize: '10px' }}>(YOU)</span>}
+                  </td>
+                  <td style={{ padding: '12px', textAlign: 'right', fontWeight: 'bold' }}>{user.points.toLocaleString()}</td>
+                </tr>
+              )) : (
+                <tr><td colSpan={3} style={{ padding: '20px', textAlign: 'center', color: '#444' }}>No data yet. Start swapping to climb the ranks!</td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
