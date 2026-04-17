@@ -705,8 +705,8 @@ export default function ClientWrapper() {
       });
       
       alert('Order created!');
-      triggerDexReward(walletAddress, "limit-order", "offchain");
-      triggerDexReward(walletAddress, "limit-order", "offchain");
+      triggerDexReward(walletAddress || undefined, "limit-order", "offchain");
+      triggerDexReward(walletAddress || undefined, "limit-order", "offchain");
       loadOrders();
       setSellAmount(''); setBuyAmount(''); setRate('');
     } catch (e: any) {
