@@ -1,5 +1,4 @@
 'use client'
-import { triggerDexReward } from "@/lib/triggerReward";
 
 import { Widget } from '@kyberswap/widgets'
 import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
@@ -221,6 +220,7 @@ export default function ClientWrapper() {
     }
   }, [wallet, setChain])
 
+  // IL NUOVO GRILLETTO BLINDATO 🔫🔥
   const handleSubmitTx = useCallback(async (txData: {
     from: string
     to: string
@@ -230,10 +230,30 @@ export default function ClientWrapper() {
   }): Promise<string> => {
     if (!ethersProvider) throw new Error('No wallet')
     const signer = ethersProvider.getSigner()
+    
+    // 1. Invia la transazione sulla Blockchain
     const tx = await signer.sendTransaction(txData)
-        triggerDexReward(walletAddress || undefined, "swap", tx.hash);
+    
+    // 2. Spara i punti al nostro Database Redis (in Background)
+    if (walletAddress) {
+      try {
+        const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
+        fetch('/api/dex-reward', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userWallet: walletAddress,
+            type: 'swap',
+            referrerWallet: referrer
+          })
+        });
+      } catch (err) {
+        console.error("Errore salvataggio punti:", err);
+      }
+    }
+
     return tx.hash
-  }, [ethersProvider])
+  }, [ethersProvider, walletAddress]) // WalletAddress aggiunto qui, fondamentale!
 
   return (
     <>
