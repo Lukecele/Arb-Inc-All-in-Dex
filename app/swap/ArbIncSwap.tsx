@@ -218,6 +218,37 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
   const toToken = currentSwap.to
   const swapType = currentSwap.type
 
+  // --- IL CECCHINO DEI PUNTI (Usa txHash ufficiale per sicurezza) ---
+  useEffect(() => {
+    if (txHash && walletAddress) {
+      const localKey = `claimed_custom_swap_${txHash}`;
+      
+      // Controlla che non abbiamo già festeggiato per questo txHash
+      if (!window.localStorage.getItem(localKey)) {
+        const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
+        
+        fetch('/api/dex-reward', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userWallet: walletAddress,
+            type: 'swap',
+            txHash: txHash, // Fondamentale per l'Anti-Farming!
+            referrerWallet: referrer
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.localStorage.setItem(localKey, 'true');
+            alert("🔥 Custom Swap Success! You earned 100 Points!");
+          }
+        })
+        .catch(console.error);
+      }
+    }
+  }, [txHash, walletAddress]);
+
   useEffect(() => {
     const updateEstimation = async () => {
       if (!ethersProvider || !amount || parseFloat(amount) <= 0) {
@@ -262,30 +293,13 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
     
     try {
       const signer = ethersProvider.getSigner()
+      // Chiamiamo lo swap e basta. I punti partono col cecchino (useEffect) appena c'è il txHash.
       await swap(signer, amount, swapType, 3)
       
       if (onSuccess) onSuccess()
       
       setAmount('')
       setEstimatedOutput(null)
-      
-      // Assegna i punti e lancia l'Alert 🎉
-      try {
-        const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
-        fetch('/api/dex-reward', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userWallet: walletAddress,
-            type: 'swap',
-            referrerWallet: referrer
-          })
-        }).then(() => {
-           alert("🔥 Custom Swap Success! You earned 100 Points!");
-        });
-      } catch (err) {
-        console.error("Errore salvataggio punti:", err);
-      }
       
       const bal = await getBalance(ethersProvider, walletAddress, swapType)
       setBalance(bal)

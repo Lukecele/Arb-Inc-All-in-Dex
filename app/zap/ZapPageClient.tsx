@@ -39,20 +39,13 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10 // 0.1% fee
 
-// Map string poolType to PoolType enum
 const mapStringToPoolType = (poolTypeString: string): PoolType => {
   switch (poolTypeString) {
-    case 'DEX_PANCAKESWAPV2':
-      return PoolType.DEX_PANCAKESWAPV2;
-    case 'DEX_PANCAKESWAPV3':
-      return PoolType.DEX_PANCAKESWAPV3;
-    case 'DEX_SUSHISWAPV2':
-      return PoolType.DEX_SUSHISWAPV2;
-    case 'DEX_SUSHISWAPV3':
-      return PoolType.DEX_SUSHISWAPV3;
-    default:
-      // Default to PancakeSwap V2 if unknown
-      return PoolType.DEX_PANCAKESWAPV2;
+    case 'DEX_PANCAKESWAPV2': return PoolType.DEX_PANCAKESWAPV2;
+    case 'DEX_PANCAKESWAPV3': return PoolType.DEX_PANCAKESWAPV3;
+    case 'DEX_SUSHISWAPV2': return PoolType.DEX_SUSHISWAPV2;
+    case 'DEX_SUSHISWAPV3': return PoolType.DEX_SUSHISWAPV3;
+    default: return PoolType.DEX_PANCAKESWAPV2;
   }
 };
 
@@ -73,15 +66,7 @@ const Container = styled.div`
   align-items: center;
   padding: 40px 20px;
   background: ${theme.colors.background.primary};
-  @media (max-width: 768px) {
-    padding: 15px;
-  }
-`
-
-const WalletSection = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  @media (max-width: 768px) { padding: 15px; }
 `
 
 const ConnectButton = styled.button`
@@ -126,9 +111,7 @@ const WidgetWrapper = styled.div`
   border: 1px solid ${theme.colors.border.DEFAULT};
   padding: 20px;
   overflow: hidden;
-  @media (max-width: 480px) {
-    padding: 10px;
-  }
+  @media (max-width: 480px) { padding: 10px; }
 `
 
 const WidgetScroller = styled.div<{ $scale?: number }>`
@@ -149,12 +132,8 @@ const SectionTitle = styled.h2`
   background: ${theme.colors.primary.gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  @media (min-width: 769px) {
-    font-size: 32px;
-    margin-bottom: 30px;
-  }
+  @media (min-width: 769px) { font-size: 32px; margin-bottom: 30px; }
 `
-
 
 const PageTitle = styled.h1`
   font-size: 32px;
@@ -165,10 +144,7 @@ const PageTitle = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  @media (min-width: 769px) {
-    font-size: 40px;
-    margin: 30px 0;
-  }
+  @media (min-width: 769px) { font-size: 40px; margin: 30px 0; }
 `
 
 const TabButton = styled.button<{ $active?: boolean }>`
@@ -181,9 +157,22 @@ const TabButton = styled.button<{ $active?: boolean }>`
   border-radius: ${theme.borderRadius.md};
   cursor: pointer;
   transition: ${theme.transitions.fast};
-  &:hover {
-    background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.heavy};
-  }
+  &:hover { background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.heavy}; }
+`
+
+// NUOVO: BADGE PUNTI ZAP
+const PointsBadge = styled.div`
+  background: rgba(255, 153, 0, 0.1);
+  color: #FF9900;
+  border: 1px solid rgba(255, 153, 0, 0.3);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `
 
 export default function ZapPageClient() {
@@ -213,7 +202,7 @@ export default function ZapPageClient() {
     await setChain({ chainId: '0x38' })
   }, [setChain])
 
-  // --- IL GRILLETTO AGGIORNATO (ZAP IN = 150 PUNTI) ---
+  // --- IL GRILLETTO AGGIORNATO CON TXHASH E ALERT ---
   const handleSubmitTx = useCallback(async (txData: any) => {
     if (!wallet) throw new Error('No wallet connected')
     
@@ -229,7 +218,7 @@ export default function ZapPageClient() {
       gasLimit: txData.gasLimit,
     })
     
-    // Spariamo i 150 punti nel Database (con Referral!)
+    // Spariamo i 150 punti e mostriamo l'alert
     if (address) {
       try {
         const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
@@ -239,8 +228,11 @@ export default function ZapPageClient() {
           body: JSON.stringify({
             userWallet: address,
             type: 'zap', 
+            txHash: tx.hash, // Fondamentale per l'anti-cheat
             referrerWallet: referrer
           })
+        }).then(() => {
+           alert("🎉 Liquidity Zap Successful! +150 Points added to your Leaderboard!");
         });
       } catch (err) {
         console.error("Errore salvataggio punti Zap:", err);
@@ -259,7 +251,7 @@ export default function ZapPageClient() {
           walletSection={
             address ? (
               <>
-                <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                <span style={{ fontFamily: 'monospace', fontSize: '12px', marginRight: '10px' }}>
                   {address.slice(0, 6)}...{address.slice(-4)}
                 </span>
                 <DisconnectButton onClick={() => wallet && disconnect(wallet)}>
@@ -290,18 +282,13 @@ export default function ZapPageClient() {
             <h2 style={{ color: '#FF9900', marginBottom: '10px' }}>Add/Remove Liquidity with One Click</h2>
             <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '15px' }}>
               Zap in or out of <strong>liquidity pools</strong> on BNB Smart Chain with a single transaction. 
-              Our Zap feature supports both <strong>PancakeSwap V2/V3</strong> and <strong>SushiSwap</strong> pools, 
-              making it easy to manage your liquidity positions.
+              Our Zap feature supports both <strong>PancakeSwap V2/V3</strong> and <strong>SushiSwap</strong> pools.
             </p>
             <ul style={{ listStyleType: 'square', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8' }}>
               <li><strong>Zap In:</strong> Add liquidity with any token in one click</li>
               <li><strong>Zap Out:</strong> Remove liquidity and receive single token</li>
-              <li><strong>Multiple DEXs:</strong> PancakeSwap V2, V3, and SushiSwap support</li>
               <li><strong>ARB Inc Pools:</strong> Special pools for ARB Inception liquidity</li>
             </ul>
-            <p style={{ fontSize: '12px', marginTop: '15px', color: '#A9A9A9' }}>
-              Zap automatically calculates optimal token ratios and handles all intermediate swaps.
-            </p>
           </section>
           
           <PoolSelector
@@ -342,6 +329,7 @@ export default function ZapPageClient() {
                 </div>
                 
                 <WidgetWrapper>
+                  <PointsBadge>🏆 Earn 150 Points & 10% Referral Bonus per Zap In!</PointsBadge>
                   <WidgetScroller $scale={0.8}>
                     <WidgetContainer style={{ position: 'relative' }}>
                       {address ? (
