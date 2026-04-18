@@ -22,6 +22,21 @@ const Container = styled.div`
   width: 100%;
 `
 
+// BADGE PUNTI CUSTOM SWAP
+const PointsNotice = styled.div`
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`
+
 const Title = styled.h3`
   color: ${theme.colors.text.primary};
   margin-bottom: 16px;
@@ -242,13 +257,11 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
     }
   }
 
-  // --- IL GRILLETTO AGGIORNATO ---
   const handleSwap = async () => {
     if (!ethersProvider || !walletAddress || !amount) return
     
     try {
       const signer = ethersProvider.getSigner()
-      // Esegue lo Swap sulla Blockchain
       await swap(signer, amount, swapType, 3)
       
       if (onSuccess) onSuccess()
@@ -256,7 +269,7 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
       setAmount('')
       setEstimatedOutput(null)
       
-      // Assegna i punti in Background
+      // Assegna i punti e lancia l'Alert 🎉
       try {
         const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
         fetch('/api/dex-reward', {
@@ -264,9 +277,11 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userWallet: walletAddress,
-            type: 'swap', // Custom Swap vale come uno Swap (100pt)
+            type: 'swap',
             referrerWallet: referrer
           })
+        }).then(() => {
+           alert("🔥 Custom Swap Success! You earned 100 Points!");
         });
       } catch (err) {
         console.error("Errore salvataggio punti:", err);
@@ -323,6 +338,7 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
 
   return (
     <Container>
+      <PointsNotice>💎 Rewards Active: +100 Points per swap</PointsNotice>
       <Title>Custom Swap</Title>
       
       <InputGroup>

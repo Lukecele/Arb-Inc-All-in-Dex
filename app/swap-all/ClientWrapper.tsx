@@ -170,6 +170,21 @@ const SwapSection = styled.section`
   width: 100%;
 `
 
+// BADGE UI PER I PUNTI
+const PointsBadge = styled.div`
+  background: rgba(40, 224, 185, 0.1);
+  color: #28E0B9;
+  border: 1px solid rgba(40, 224, 185, 0.3);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`
+
 export default function ClientWrapper() {
   const searchParams = useSearchParams()
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
@@ -220,7 +235,6 @@ export default function ClientWrapper() {
     }
   }, [wallet, setChain])
 
-  // IL NUOVO GRILLETTO BLINDATO 🔫🔥
   const handleSubmitTx = useCallback(async (txData: {
     from: string
     to: string
@@ -234,7 +248,7 @@ export default function ClientWrapper() {
     // 1. Invia la transazione sulla Blockchain
     const tx = await signer.sendTransaction(txData)
     
-    // 2. Spara i punti al nostro Database Redis (in Background)
+    // 2. Spara i punti al database e notifica l'utente!
     if (walletAddress) {
       try {
         const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
@@ -246,6 +260,9 @@ export default function ClientWrapper() {
             type: 'swap',
             referrerWallet: referrer
           })
+        }).then(() => {
+          // ALERT DI SUCCESSO 🎉
+          alert("🎉 Swap Successful! +100 Points added to your Leaderboard!");
         });
       } catch (err) {
         console.error("Errore salvataggio punti:", err);
@@ -253,7 +270,7 @@ export default function ClientWrapper() {
     }
 
     return tx.hash
-  }, [ethersProvider, walletAddress]) // WalletAddress aggiunto qui, fondamentale!
+  }, [ethersProvider, walletAddress])
 
   return (
     <>
@@ -297,6 +314,7 @@ export default function ClientWrapper() {
           </section>
           
           <SwapWrapper>
+            <PointsBadge>🚀 Earn 100 Points & 10% Referral Bonus per swap!</PointsBadge>
             <SwapScroller>
               <SwapSection>
                 <Widget

@@ -64,7 +64,6 @@ async function fetchBalance(tokenAddr: string, wallet: string, provider: any): P
   } catch { return '0'; }
 }
 
-// --- STYLED COMPONENTS (Nascosti per brevità, sono identici a prima) ---
 const Container = styled.div`min-height: 100vh; background: #000; padding: 12px; @media (min-width: 640px) { padding: 16px 24px; }`;
 const PageHeader = styled.div`display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;`;
 const Title = styled.h1`font-size: 20px; font-weight: 700; color: #fff;`;
@@ -140,7 +139,6 @@ export default function ClientWrapper() {
 
   useEffect(() => { if (walletAddress && provider) loadBalances(); }, [walletAddress, provider, loadBalances]);
 
-  // --- LOGICA MODIFICATA: RICERCA E CLAIM DEGLI ORDINI COMPLETATI ---
   const loadOrders = useCallback(async () => {
     if (!maker || !walletAddress) return;
     setLoading(true);
@@ -156,12 +154,11 @@ export default function ClientWrapper() {
       }));
       setOrders(fetchedOrders);
 
-      // Cerca ordini 'Filled' ed eroga i punti se non sono già stati erogati
+      // LAZY CLAIM CON ALERT
       const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
       fetchedOrders.forEach((o: any) => {
         if (o.status.toLowerCase() === 'filled') {
           const localKey = `claimed_limit_${o.id}`;
-          // Per non spammare inutilmente il DB ogni secondo, controlliamo prima il browser
           if (!window.localStorage.getItem(localKey)) {
             fetch('/api/dex-reward', {
               method: 'POST',
@@ -169,11 +166,12 @@ export default function ClientWrapper() {
               body: JSON.stringify({
                 userWallet: walletAddress,
                 type: 'limit',
-                txHash: o.id, // L'ID dell'ordine fa da lucchetto nel DB per evitare doppioni
+                txHash: o.id,
                 referrerWallet: referrer
               })
             }).then(() => {
               window.localStorage.setItem(localKey, 'true');
+              alert('🏆 Reward Claimed! 200 points added for your completed Limit Order!');
             });
           }
         }
@@ -239,7 +237,6 @@ export default function ClientWrapper() {
   const handleWrap = () => { window.location.href = '/swap?mode=wrap'; };
   useEffect(() => { if (walletAddress && provider && sellAmount) checkApproval(); }, [walletAddress, provider, sellAmount, checkApproval]);
 
-  // CREAZIONE ORDINE: Niente punti gratis qui!
   const handleCreate = async () => {
     if (!wallet || !provider || !sellAmount || !rate) { alert('Please enter amount and rate'); return; }
     await checkApproval();
@@ -264,7 +261,7 @@ export default function ClientWrapper() {
         expiredAt: exp,
       });
       
-      alert('Order created! Points will be awarded when the order is successfully filled.');
+      alert('Order created! Points will be awarded automatically when the order is successfully filled.');
       loadOrders(); setSellAmount(''); setBuyAmount(''); setRate('');
     } catch (e: any) { alert(e?.response?.data?.message || e?.message || 'Error creating order'); }
   };
@@ -288,6 +285,11 @@ export default function ClientWrapper() {
       <MainGrid>
         <Card>
           <CardTitle>Place Limit Order</CardTitle>
+          {/* BANNER 200 PUNTI */}
+          <div style={{background:'rgba(244,114,182,0.1)', color:'#F472B6', padding:'10px', borderRadius:'8px', fontSize:'12px', fontWeight:'bold', marginBottom:'15px', textAlign:'center', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid rgba(244,114,182,0.3)'}}>
+            🏆 Earn 200 Points Upon Execution
+          </div>
+          
           <InputGroup>
             <InputLabel><span>You Sell</span><span style={{color:'#a1a1aa',float:'right',fontSize:12}}>{walletAddress ? (balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : '...') : 'Connect wallet'}</span></InputLabel>
             <InputRow><AmountInput type="number" placeholder="0.0" value={sellAmount} onChange={e=>handleSell(e.target.value)} /><TokenButton onClick={()=>setShowTokenModal('sell')}>{sellToken.logoUrl && <TokenIcon src={sellToken.logoUrl} />} {sellToken.symbol} ▼</TokenButton></InputRow>
