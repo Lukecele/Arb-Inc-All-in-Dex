@@ -12,16 +12,28 @@ export async function GET() {
       return NextResponse.json({ leaderboard: [] });
     }
 
-    // Prende i primi 100 utenti con i punteggi più alti, ordinati dal più alto al più basso
+    // withScores: true restituisce i dati. Nelle nuove versioni è un array di oggetti!
     const data = await redis.zrange('leaderboard:points', 0, 99, { rev: true, withScores: true });
     
-    const leaderboard = [];
-    // Upstash restituisce un array piatto: [wallet1, punti1, wallet2, punti2...]
-    for (let i = 0; i < data.length; i += 2) {
-      leaderboard.push({
-        address: data[i],
-        points: Number(data[i + 1])
-      });
+    let leaderboard = [];
+    
+    if (data && data.length > 0) {
+      // Se Upstash ci dà un array di oggetti: [{ member: '0x...', score: 100 }]
+      if (typeof data[0] === 'object' && data[0] !== null) {
+        leaderboard = data.map((item: any) => ({
+          address: item.member || item.id || item.value || "Unknown",
+          points: Number(item.score)
+        }));
+      } 
+      // Se Upstash ci dà un array piatto (vecchio stile): ['0x...', 100]
+      else {
+        for (let i = 0; i < data.length; i += 2) {
+          leaderboard.push({
+            address: String(data[i]),
+            points: Number(data[i + 1])
+          });
+        }
+      }
     }
 
     return NextResponse.json({ leaderboard });
