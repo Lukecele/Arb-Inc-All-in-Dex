@@ -1,5 +1,4 @@
 'use client'
-import { triggerDexReward } from "@/lib/triggerReward";
 
 import { useState, useEffect, useCallback } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
@@ -214,12 +213,14 @@ export default function ZapPageClient() {
     await setChain({ chainId: '0x38' })
   }, [setChain])
 
+  // --- IL GRILLETTO AGGIORNATO (ZAP IN = 150 PUNTI) ---
   const handleSubmitTx = useCallback(async (txData: any) => {
     if (!wallet) throw new Error('No wallet connected')
     
     const provider = new ethers.providers.Web3Provider(wallet.provider, 'any')
     const signer = provider.getSigner()
     
+    // Invia la transazione ZAP sulla blockchain
     const tx = await signer.sendTransaction({
       from: txData.from,
       to: txData.to,
@@ -228,9 +229,26 @@ export default function ZapPageClient() {
       gasLimit: txData.gasLimit,
     })
     
-        triggerDexReward(address, "zap", tx.hash);
+    // Spariamo i 150 punti nel Database (con Referral!)
+    if (address) {
+      try {
+        const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
+        fetch('/api/dex-reward', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userWallet: address,
+            type: 'zap', 
+            referrerWallet: referrer
+          })
+        });
+      } catch (err) {
+        console.error("Errore salvataggio punti Zap:", err);
+      }
+    }
+
     return tx.hash
-  }, [wallet])
+  }, [wallet, address])
 
   return (
     <>

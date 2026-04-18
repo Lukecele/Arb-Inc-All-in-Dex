@@ -242,17 +242,35 @@ export default function ArbIncSwap({ ethersProvider, walletAddress, onSuccess }:
     }
   }
 
+  // --- IL GRILLETTO AGGIORNATO ---
   const handleSwap = async () => {
     if (!ethersProvider || !walletAddress || !amount) return
     
     try {
       const signer = ethersProvider.getSigner()
+      // Esegue lo Swap sulla Blockchain
       await swap(signer, amount, swapType, 3)
       
       if (onSuccess) onSuccess()
       
       setAmount('')
       setEstimatedOutput(null)
+      
+      // Assegna i punti in Background
+      try {
+        const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
+        fetch('/api/dex-reward', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userWallet: walletAddress,
+            type: 'swap', // Custom Swap vale come uno Swap (100pt)
+            referrerWallet: referrer
+          })
+        });
+      } catch (err) {
+        console.error("Errore salvataggio punti:", err);
+      }
       
       const bal = await getBalance(ethersProvider, walletAddress, swapType)
       setBalance(bal)
