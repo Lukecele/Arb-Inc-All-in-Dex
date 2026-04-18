@@ -13,3 +13,4 @@ tsconfig.tsbuildinfo
 .turbo/
 out/
 data/
+*.mp4
