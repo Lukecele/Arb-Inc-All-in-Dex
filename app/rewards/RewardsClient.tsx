@@ -16,18 +16,29 @@ export default function RewardsClient() {
   
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
+  // 1. CATTURA IL REFERRAL DAL LINK APPENA LA PAGINA CARICA
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref');
+      if (ref) {
+        // Salva il wallet di chi ha invitato nella memoria del browser
+        window.localStorage.setItem('arb_inc_referrer', ref);
+      }
+    }
+  }, []);
+
+  // 2. CARICA STATISTICHE (Offerte e Classifica)
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
       const fetchWallet = address || '0x0000000000000000000000000000000000000000';
       
       try {
-        // 1. Fetch CPA Offers
         const resOffers = await fetch(`/api/offers?wallet=${fetchWallet}`);
         const dataOffers = await resOffers.json();
         if (dataOffers.offers) setOffers(dataOffers.offers);
 
-        // 2. Fetch Leaderboard
         const resLeader = await fetch(`/api/leaderboard`);
         const dataLeader = await resLeader.json();
         if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
@@ -67,7 +78,7 @@ export default function RewardsClient() {
         )}
       </div>
 
-      {/* 2. NATIVE TASKS (VISIBLE TO ALL) */}
+      {/* 2. NATIVE TASKS */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ color: '#f472b6', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>🪂 Native Rewards</h3>
@@ -111,7 +122,7 @@ export default function RewardsClient() {
         </div>
       </div>
 
-      {/* 4. LEADERBOARD (AT THE BOTTOM) */}
+      {/* 4. LEADERBOARD */}
       <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px' }}>
         <h3 style={{ color: '#facc15', marginTop: 0, marginBottom: '20px', textTransform: 'uppercase' }}>🏆 Top Farmers</h3>
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
