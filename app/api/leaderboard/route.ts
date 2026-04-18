@@ -15,13 +15,14 @@ export async function GET() {
     // withScores: true restituisce i dati. Nelle nuove versioni è un array di oggetti!
     const data = await redis.zrange('leaderboard:points', 0, 99, { rev: true, withScores: true });
     
-    let leaderboard = [];
+    // LA SOLUZIONE: Diciamo a TypeScript esattamente cosa ci sarà in questo array
+    let leaderboard: Array<{ address: string; points: number }> = [];
     
     if (data && data.length > 0) {
       // Se Upstash ci dà un array di oggetti: [{ member: '0x...', score: 100 }]
       if (typeof data[0] === 'object' && data[0] !== null) {
         leaderboard = data.map((item: any) => ({
-          address: item.member || item.id || item.value || "Unknown",
+          address: String(item.member || item.id || item.value || "Unknown"),
           points: Number(item.score)
         }));
       } 
