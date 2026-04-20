@@ -19,13 +19,13 @@ export async function GET(req: Request) {
   if (redis && userWallet && userWallet.startsWith('0x') && amt > 0) {
     try {
       // 1. Punti pieni all'utente
-      await redis.zincrby('leaderboard', amt, userWallet);
+      await redis.zincrby('leaderboard:points', amt, userWallet);
 
       // 2. Bonus 10% al referrer (se esiste e non è l'utente stesso)
       if (referrerWallet && referrerWallet.startsWith('0x') && referrerWallet !== userWallet) {
         const bonus = Math.floor(amt * 0.1);
         if (bonus > 0) {
-          await redis.zincrby('leaderboard', bonus, referrerWallet);
+          await redis.zincrby('leaderboard:points', bonus, referrerWallet);
         }
       }
     } catch (err) {
