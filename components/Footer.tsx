@@ -156,7 +156,7 @@ const Disclaimer = styled.div`
   line-height: 1.6;
 `;
 
-const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/bsc/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c';
+const DEXSCREENER_WATCHLIST_URL = 'https://dexscreener.com/bsc/0x630b9c39d46314a3268d75bb25fd79df4581d1af';
 
 interface FooterProps {
   showDisclaimer?: boolean;

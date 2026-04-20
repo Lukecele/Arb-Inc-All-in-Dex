@@ -114,7 +114,7 @@ export default function HomePageClient() {
   useEffect(() => {
     setMounted(true);
     const loadData = () => {
-      fetch(`https://api.dexscreener.com/latest/dex/tokens/${CHART_ADDRESS}`)
+      fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
         .then(res => res.json())
         .then(data => {
           if (data.pairs && data.pairs.length > 0) {
