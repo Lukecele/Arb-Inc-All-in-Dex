@@ -15,7 +15,7 @@ import theme from '../styles/theme'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
-const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+const ARB_INC_ADDRESS = '0x630b9c39d46314a3268d75bb25fd79df4581d1af'
 
 const injected = injectedModule()
 const walletConnect = walletConnectModule({

@@ -107,7 +107,7 @@ export const SUPPORTED_TOKENS: Record<number, Array<{
       name: 'USD Coin',
     },
     {
-      address: '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c',
+      address: '0x630b9c39d46314a3268d75bb25fd79df4581d1af',
       symbol: 'ARB INC',
       decimals: 18,
       name: 'Arbitrage Inception',

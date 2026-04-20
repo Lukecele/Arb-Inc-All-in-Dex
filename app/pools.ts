@@ -19,7 +19,7 @@ export interface PoolInfo {
   isArbitrageInception: boolean
 }
 
-export const ARB_INC_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+export const ARB_INC_ADDRESS = '0x630b9c39d46314a3268d75bb25fd79df4581d1af'
 export const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 
 export const pools: PoolInfo[] = [

@@ -5,7 +5,7 @@ import { ethers, BigNumber } from 'ethers'
 
 // Contract addresses
 const ROUTER_ADDRESS = '0x10ED43C718714eb63d5aA57B78B54704E256024E' // PancakeSwap V2 Router
-const ARB_INC = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+const ARB_INC = '0x630b9c39d46314a3268d75bb25fd79df4581d1af'
 const WBNB = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 
 // Dev fee configuration

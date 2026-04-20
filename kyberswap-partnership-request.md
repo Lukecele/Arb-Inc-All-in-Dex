@@ -22,7 +22,7 @@ I have built and deployed a frontend DEX aggregator for BNB Smart Chain at **htt
 
 - **Custom Swap Interface**: Token swap with optimized routing through KyberSwap Aggregator
 - **Zap In/Out**: Single-click liquidity provision and withdrawal via KyberSwap ZaaS
-- **Custom Token List**: Includes ARBINc token (0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c) and major BSC tokens
+- **Custom Token List**: Includes ARBINc token (0x630b9c39d46314a3268d75bb25fd79df4581d1af) and major BSC tokens
 - **Fee Integration**: 0.1% fee on swaps directed to ecosystem fund for sustainability
 - **SEO Optimized**: Full legal pages, meta tags, sitemap, robots.txt
 - **Mobile Responsive**: Works on all devices
@@ -70,7 +70,7 @@ We are generating real trading volume on BSC through our interface and want to b
 | Swap Page | https://arbitrage-inc.exchange/swap |
 | Zap Page | https://arbitrage-inc.exchange/zap |
 | GitHub | https://github.com/Lukecele/Arb-Inc-All-in-Dex |
-| Token (BscScan) | https://bscscan.com/token/0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c |
+| Token (BscScan) | https://bscscan.com/token/0x630b9c39d46314a3268d75bb25fd79df4581d1af |
 
 ## Contact Information
 
