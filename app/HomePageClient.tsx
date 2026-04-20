@@ -104,6 +104,7 @@ const ContractSection = styled.div`
 `
 
 const TOKEN_ADDRESS = '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c'
+const CHART_ADDRESS = '0x630b9c39d46314a3268d75bb25fd79df4581d1af'
 
 export default function HomePageClient() {
   const [tokenData, setTokenData] = useState({ price: 0, liquidity: 0, volume: 0 });
@@ -113,7 +114,7 @@ export default function HomePageClient() {
   useEffect(() => {
     setMounted(true);
     const loadData = () => {
-      fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`)
+      fetch(`https://api.dexscreener.com/latest/dex/tokens/${CHART_ADDRESS}`)
         .then(res => res.json())
         .then(data => {
           if (data.pairs && data.pairs.length > 0) {
