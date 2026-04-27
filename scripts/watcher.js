@@ -15,9 +15,7 @@ const TOKEN_CONTRACT_ADDRESS = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLo
 const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 const MIN_HOLDING = 2000000n * (10n ** 9n);
-
-// 🛡️ IL NUOVO MARGINE DI SICUREZZA
-const SAFE_FACTOR = 0.50; // 50% distribuito, 50% trattenuto in cassa
+const SAFE_FACTOR = 0.50; 
 
 async function watch() {
     console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Ciclo di controllo...`);
@@ -62,8 +60,11 @@ async function watch() {
 
                 const holding = await contract.balanceOf(ethers.getAddress(walletLower));
                 let updatedPoints = currentPoints;
+                
                 if (holding >= MIN_HOLDING) {
-                    updatedPoints += (Number(holding / (10n ** 9n)) / 100000 / 96);
+                    // LA TUA REGOLA: 10 punti per ogni milione di token posseduti ad ogni ciclo
+                    const millionsHeld = Number(holding / (10n ** 9n)) / 1000000;
+                    updatedPoints += (millionsHeld * 10);
                 }
 
                 await redis.zadd('leaderboard:points', { score: updatedPoints, member: walletLower });
