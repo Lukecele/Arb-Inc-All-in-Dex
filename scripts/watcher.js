@@ -9,28 +9,40 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN 
 });
 
-// 🔥 SINTASSI ETHERS V5
 const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 const TOKEN_ADDRESS = "0xafF5340Ecfaf7cE049261CfF193F5FEd6BDf04e7";
 const TREASURY_WALLET = "0xdd10e79aef463D71cfF79bAdD033a32f93Bd8E3A";
 const MIN_HOLDING = ethers.BigNumber.from("2000000").mul(ethers.BigNumber.from(10).pow(9));
 
+// 🛡️ CONFIGURAZIONE RISERVA GAS (5%)
+const GAS_RESERVE_PERCENT = 0.05;
+
 async function watch() {
-    console.log("🚀 Avvio Watcher (Ethers V5 Mode)...");
+    console.log("🚀 Avvio Watcher V6 (Gas Reserve Mode)...");
     try {
         const balance = await provider.getBalance(TREASURY_WALLET);
-        const lastBalance = ethers.BigNumber.from(await redis.get('rewards:last_balance') || "0");
+        const lastBalanceStr = await redis.get('rewards:last_balance') || "0";
+        const lastBalance = ethers.BigNumber.from(lastBalanceStr);
         
         let globalIndex = parseFloat(await redis.get('rewards:global_index') || "0");
 
+        // Se sono entrati nuovi BNB
         if (balance.gt(lastBalance)) {
             const diff = parseFloat(ethers.utils.formatEther(balance.sub(lastBalance)));
+            
+            // 💰 CALCOLO NETTO (Togliamo il 5% per le gas fees dei claim)
+            const netDiff = diff * (1 - GAS_RESERVE_PERCENT);
+            
             const totalPointsGlobal = parseFloat(await redis.get('leaderboard:total_points_sum:global') || "1");
-            globalIndex += diff / totalPointsGlobal;
+            
+            globalIndex += netDiff / totalPointsGlobal;
+            
             await redis.set('rewards:global_index', globalIndex.toString());
-            await redis.set('rewards:last_balance', balance.toString());
-            console.log(`📈 Nuove tasse! Global Index: ${globalIndex}`);
+            console.log(`📈 Nuove tasse! Totale: ${diff} BNB. Distribuito (95%): ${netDiff} BNB. Index: ${globalIndex}`);
         }
+
+        // AGGIORNA SEMPRE IL LAST BALANCE (fondamentale dopo i claim)
+        await redis.set('rewards:last_balance', balance.toString());
 
         const allWallets = await redis.zrange('leaderboard:points', 0, -1);
         let newGlobalTotalPoints = 0;
