@@ -11,6 +11,9 @@ export async function POST(request: Request) {
   try {
     const { wallet } = await request.json();
     const walletLower = wallet.toLowerCase();
+    
+    // 🎯 NUOVA SOGLIA MINIMA AGGIORNATA
+    const MIN_CLAIM = 0.002;
 
     const points = parseFloat(String(await redis.zscore('leaderboard:points', walletLower) || '0'));
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
@@ -21,15 +24,18 @@ export async function POST(request: Request) {
     const currentClaimable = points * (globalIndex - userIndex);
     const totalToPay = pendingBnb + Math.max(0, currentClaimable);
 
-    if (totalToPay <= 0) {
-      return NextResponse.json({ error: 'Nulla da prelevare' }, { status: 400 });
+    // Controllo soglia minima 0.002
+    if (totalToPay < MIN_CLAIM) {
+      return NextResponse.json({ 
+        error: `Soglia minima non raggiunta. Hai ${totalToPay.toFixed(6)} BNB, minimo richiesto ${MIN_CLAIM} BNB.` 
+      }, { status: 400 });
     }
 
-    // 🔥 SINTASSI ETHERS V5
+    // Sintassi Ethers v5
     const provider = new (ethers as any).providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
     
     if (!process.env.TREASURY_PRIVATE_KEY) {
-        throw new Error("Manca la chiave privata su Vercel!");
+        throw new Error("TREASURY_PRIVATE_KEY mancante!");
     }
     
     const signer = new (ethers as any).Wallet(process.env.TREASURY_PRIVATE_KEY, provider);
@@ -41,6 +47,7 @@ export async function POST(request: Request) {
 
     await tx.wait();
 
+    // Reset post-pagamento
     await redis.set(`rewards:pending:${walletLower}`, "0");
     await redis.set(`rewards:user_index:${walletLower}`, globalIndex.toString());
 
