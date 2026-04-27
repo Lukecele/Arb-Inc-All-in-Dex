@@ -10,75 +10,73 @@ const redis = new Redis({
 });
 
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-const tokenAddress = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c";
-const treasuryAddress = process.env.TREASURY_WALLET;
+const TOKEN_ADDRESS = "0xafF5340Ecfaf7cE049261CfF193F5FEd6BDf04e7"; // Il tuo token
+const TREASURY_WALLET = "0xdd10e79aef463D71cfF79bAdD033a32f93Bd8E3A"; // Treasury
+const MIN_HOLDING = 2000000n * 10n**9n; // 2M con 9 decimali
 
-async function run() {
-    console.log("🚀 Avvio Watcher V4 (Fix Decimali 9)...");
-    
-    if (!treasuryAddress) {
-        console.error("❌ ERRORE: Variabile TREASURY_WALLET non trovata nel file .env!");
-        return;
-    }
-    if (!process.env.UPSTASH_REDIS_REST_URL) {
-        console.error("❌ ERRORE: Variabili Upstash non trovate nel file .env!");
-        return;
-    }
+async function watch() {
+    console.log("🚀 Avvio Watcher V5 (MasterChef Vault System)...");
 
     try {
-        // --- 1. GESTIONE DIVIDENDI BNB ---
-        const currentBnb = parseFloat(ethers.formatEther(await provider.getBalance(treasuryAddress)));
-        const lastSeenBnb = parseFloat(await redis.get("rewards:last_seen_bnb") || 0);
-        const diff = currentBnb - lastSeenBnb;
+        // 1. Calcolo del Global Index (Tasse nuove)
+        const balance = await provider.getBalance(TREASURY_WALLET);
+        const lastBalance = BigInt(await redis.get('rewards:last_balance') || "0");
+        const totalPoints = parseFloat(await redis.zcard('leaderboard:points') === 0 ? "1" : await redis.zscore('leaderboard:total_global_points', 'all') || "1");
+        
+        let globalIndex = parseFloat(await redis.get('rewards:global_index') || "0");
 
-        if (diff > 0) {
-            const allData = await redis.zrange("leaderboard:points", 0, -1, { withScores: true });
-            let totalPoints = 0;
-            for (let i = 1; i < allData.length; i += 2) totalPoints += parseInt(allData[i]);
-
-            if (totalPoints > 0) {
-                const indexIncrement = diff / totalPoints;
-                await redis.incrbyfloat("rewards:global_index", indexIncrement);
-                console.log(`💰 Nuove tasse: +${diff.toFixed(6)} BNB. Index aggiornato.`);
-            }
+        if (balance > lastBalance) {
+            const diff = Number(ethers.formatEther(balance - lastBalance));
+            const totalPointsGlobal = await redis.zscore('leaderboard:total_points_sum', 'global') || 1;
+            globalIndex += diff / parseFloat(totalPointsGlobal);
+            await redis.set('rewards:global_index', globalIndex.toString());
+            await redis.set('rewards:last_balance', balance.toString());
+            console.log(`📈 Nuove tasse! Global Index aggiornato: ${globalIndex}`);
         }
-        await redis.set("rewards:last_seen_bnb", currentBnb);
 
-        // --- 2. STAKING BILANCIATO E PENALITA' CHIRURGICA ---
-        const abi = ["function balanceOf(address) view returns (uint256)"];
-        const contract = new ethers.Contract(tokenAddress, abi, provider);
-        const wallets = await redis.zrange("leaderboard:points", 0, -1);
+        // 2. Aggiornamento Wallet per Wallet
+        const allWallets = await redis.zrange('leaderboard:points', 0, -1);
+        let newGlobalTotalPoints = 0;
 
-        for (const wallet of wallets) {
-            try {
-                const balance = await contract.balanceOf(wallet);
-                // LA MAGIA È QUI: 9 Decimali invece di 18
-                const tokens = parseFloat(ethers.formatUnits(balance, 9));
-                const currentPoints = parseFloat(await redis.zscore("leaderboard:points", wallet)) || 0;
+        for (const wallet of allWallets) {
+            const walletLower = wallet.toLowerCase();
+            
+            // --- LOGICA DI CONGELAMENTO (VAULT) ---
+            const currentPoints = parseFloat(await redis.zscore('leaderboard:points', walletLower) || "0");
+            const userIndex = parseFloat(await redis.get(`rewards:user_index:${walletLower}`) || globalIndex.toString());
+            const currentPending = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
 
-                if (tokens >= 2000000) {
-                    const pointsToAdd = Math.floor((tokens / 1000000) * 10);
-                    await redis.zincrby("leaderboard:points", pointsToAdd, wallet);
-                    await redis.set(`status:diamond:${wallet}`, "1");
-                    console.log(`✨ ${wallet}: +${pointsToAdd} pt (Hold ${Math.floor(tokens).toLocaleString()} TKN)`);
-                } 
-                else if (tokens < 2000000 && currentPoints > 0) {
-                    const wasDiamond = await redis.get(`status:diamond:${wallet}`);
-                    if (wasDiamond === "1") {
-                        const penalty = Math.floor(currentPoints * 0.05);
-                        if (penalty > 0) {
-                            await redis.zincrby("leaderboard:points", -penalty, wallet);
-                            console.log(`🩸 ${wallet}: -${penalty} pt (Paper Hands Penalty!)`);
-                        }
-                    }
-                }
-            } catch (e) {
-                console.error(`❌ Errore lettura wallet ${wallet}`);
+            // Calcola quanto ha guadagnato con i VECCHI punti e lo mette nel "salvadanaio"
+            const earned = currentPoints * (globalIndex - userIndex);
+            const newPending = currentPending + Math.max(0, earned);
+            await redis.set(`rewards:pending:${walletLower}`, newPending.toString());
+
+            // --- AGGIORNAMENTO PUNTI HOLDING ---
+            const abi = ["function balanceOf(address) view returns (uint256)"];
+            const contract = new ethers.Contract(TOKEN_ADDRESS, abi, provider);
+            const holding = await contract.balanceOf(walletLower);
+            
+            let updatedPoints = currentPoints;
+            if (holding >= MIN_HOLDING) {
+                const dailyReward = Number(holding / 10n**9n) / 100000; 
+                updatedPoints += dailyReward; // Esempio: assegna punti in base all'hold
+                console.log(`✨ ${walletLower}: +${dailyReward.toFixed(2)} pt (Hold stimato)`);
             }
+
+            // --- RESET LINEA DI PARTENZA ---
+            await redis.zadd('leaderboard:points', { score: updatedPoints, member: walletLower });
+            await redis.set(`rewards:user_index:${walletLower}`, globalIndex.toString());
+            
+            newGlobalTotalPoints += updatedPoints;
         }
-        console.log("🏁 Ciclo completato.");
-    } catch (e) { 
-        console.error("💥 Errore fatale:", e); 
+
+        await redis.set('rewards:total_points_sum:global', newGlobalTotalPoints.toString());
+        console.log("🏁 Ciclo completato in sicurezza.");
+
+    } catch (e) {
+        console.error("❌ Errore Watcher:", e);
     }
+    process.exit(0);
 }
-run();
+
+watch();
