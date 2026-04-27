@@ -7,7 +7,6 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// RPC alternativo più stabile per evitare l'errore noNetwork
 const RPC_URL = "https://binance.chainnodes.org"; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,24 +19,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const walletLower = address.toLowerCase();
     const pendingBalance = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
 
-    // Soglia minima di sicurezza per il claim
     if (pendingBalance < 0.002) {
       return res.status(400).json({ error: 'Sotto la soglia minima di 0.002 BNB' });
     }
 
-    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    // 🛠️ FIX: Sintassi per Ethers v5
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
     console.log(`Inizio claim per ${walletLower}: ${pendingBalance} BNB`);
 
     const tx = await signer.sendTransaction({
       to: address,
-      value: ethers.parseEther(pendingBalance.toFixed(18))
+      value: ethers.utils.parseEther(pendingBalance.toFixed(18))
     });
 
     await tx.wait();
 
-    // Reset del saldo su Redis dopo il successo
     await redis.set(`rewards:pending:${walletLower}`, "0");
 
     return res.status(200).json({ success: true, hash: tx.hash });
