@@ -38,3 +38,23 @@ Errore: TypeError: unsupported addressable value (argument="target", value=null,
   value: undefined,
   shortMessage: 'unsupported addressable value'
 }
+◇ injected env (7) from .env // tip: ⌘ override existing { override: true }
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...
+💥 Errore fatale: TypeError: unsupported addressable value (argument="target", value=null, code=INVALID_ARGUMENT, version=6.16.0)
+    at makeError (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:130:21)
+    at assert (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:157:15)
+    at assertArgument (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:169:5)
+    at resolveAddress (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/address/checks.js:117:35)
+    at JsonRpcProvider._getAddress (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:398:46)
+    at #getAccountValue (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:723:28)
+    at JsonRpcProvider.getBalance (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:731:69)
+    at run (/home/luca/progetti/arb-inc/scripts/watcher.js:18:73)
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:79:1)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14) {
+  code: 'INVALID_ARGUMENT',
+  argument: 'target',
+  value: undefined,
+  shortMessage: 'unsupported addressable value'
+}
