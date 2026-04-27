@@ -34,11 +34,11 @@ export async function POST(request: Request) {
     // Sintassi Ethers v5
     const provider = new (ethers as any).providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
     
-    if (!process.env.TREASURY_PRIVATE_KEY) {
-        throw new Error("TREASURY_PRIVATE_KEY mancante!");
+    if (!process.env.PRIVATE_KEY) {
+        throw new Error("PRIVATE_KEY mancante!");
     }
     
-    const signer = new (ethers as any).Wallet(process.env.TREASURY_PRIVATE_KEY, provider);
+    const signer = new (ethers as any).Wallet(process.env.PRIVATE_KEY, provider);
     
     const tx = await signer.sendTransaction({
       to: walletLower,
