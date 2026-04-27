@@ -14,7 +14,6 @@ export default function RewardsClient() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   
-  // STATO PER BNB REWARDS
   const [claimableBnb, setClaimableBnb] = useState(0);
   const [userPoints, setUserPoints] = useState(0);
   const [claimLoading, setClaimLoading] = useState(false);
@@ -29,18 +28,8 @@ export default function RewardsClient() {
       const data = await res.json();
       if (data.claimable !== undefined) setClaimableBnb(data.claimable);
       if (data.points !== undefined) setUserPoints(data.points);
-    } catch (err) {
-      console.error("Error fetching rewards stats:", err);
-    }
+    } catch (err) { console.error(err); }
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const ref = params.get('ref');
-      if (ref) window.localStorage.setItem('arb_inc_referrer', ref);
-    }
-  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -56,7 +45,7 @@ export default function RewardsClient() {
         if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
         
         if (address) fetchRewardsData();
-      } catch (err) { console.error("Fetch error:", err); }
+      } catch (err) { console.error(err); }
       setLoading(false);
     };
     fetchStats();
@@ -86,104 +75,90 @@ export default function RewardsClient() {
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
 
   return (
-    <div style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px' }}>
+    <div style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       
       {/* 1. REFERRAL */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
-        <h3>Invite & Earn 10% 🚀</h3>
+        <h3 style={{ margin: '0 0 10px 0' }}>Invite & Earn 10% 🚀</h3>
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Connect to Get Link</button>
+          <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>Connect to Get Link</button>
         ) : (
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-            <input readOnly value={referralLink} style={{ background: '#000', color: '#818cf8', padding: '10px', borderRadius: '5px', width: '60%' }} />
+            <input readOnly value={referralLink} style={{ background: '#000', color: '#818cf8', padding: '10px', borderRadius: '5px', width: '60%', border: '1px solid #333' }} />
             <button onClick={() => { navigator.clipboard.writeText(referralLink); setCopied(true); setTimeout(()=>setCopied(false), 2000); }} style={{ background: '#4f46e5', border: 'none', color: 'white', padding: '10px', borderRadius: '5px', cursor: 'pointer' }}>{copied ? 'Copied' : 'Copy'}</button>
           </div>
         )}
       </div>
 
       {/* 2. DIVIDENDS BOX */}
-      <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '20px' }}>
-        <h3 style={{ color: '#a78bfa', margin: '0 0 15px 0', fontSize: '26px' }}>💎 BNB Dividends Pool</h3>
-        
-        <p style={{ fontSize: '15px', color: '#e2e8f0', marginBottom: '25px', maxWidth: '700px', margin: '0 auto 20px auto', lineHeight: '1.5' }}>
-          All points generated from <b>Auto-Staking, Swaps, Native Tasks, and Referrals</b> automatically increase your share of the BNB collected from platform trading fees!
+      <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
+        <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
+        <p style={{ color: '#cbd5e1', fontSize: '14px', marginBottom: '25px', lineHeight: '1.6' }}>
+          Tutti i punti accumulati aumentano la tua quota dei BNB raccolti dalle tasse di trading.<br/>
+          <b>Punti = Potere di Claim.</b>
         </p>
 
-        <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#fff' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
-        <p style={{ fontSize: '14px', color: '#a78bfa', marginBottom: '20px', fontWeight: 'bold' }}>Your Total Points: {address ? userPoints.toLocaleString() : "0"}</p>
+        <div style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '5px' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
+        <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>I tuoi Punti Totali: {address ? userPoints.toLocaleString() : "0"}</p>
         
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
-            CONNECT WALLET TO CLAIM
-          </button>
+          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
         ) : (
-          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
+          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
             {claimLoading ? 'Processing...' : 'CLAIM BNB NOW'}
           </button>
         )}
-        {claimStatus && <p style={{ fontSize: '13px', marginTop: '15px', color: '#a78bfa' }}>{claimStatus}</p>}
+        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px' }}>{claimStatus}</p>}
       </div>
 
-      {/* 3. VIRTUAL STAKING & PENALTY BOX (AGGIORNATO) */}
-      <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #000 100%)', border: '1px solid #10b981', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
-        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>💎 Diamond Hands Staking</h3>
-        <p style={{ fontSize: '14px', color: '#a7f3d0', marginBottom: '20px' }}>
-          No lock-ups. No gas fees. Your tokens stay safe in your wallet.
-        </p>
+      {/* 3. DIAMOND VS PAPER HANDS (Coerente con V3) */}
+      <div style={{ background: '#000', border: '1px solid #333', padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
+        <h3 style={{ textAlign: 'center', color: '#10b981', marginTop: 0 }}>🛡️ Diamond Hands Protection</h3>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
-          {/* THE REWARD */}
-          <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', padding: '15px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
-            <div style={{ color: '#10b981', fontWeight: 'bold', marginBottom: '5px', fontSize: '15px' }}>✅ THE REWARD</div>
-            <div style={{ fontSize: '14px', color: '#fff' }}>
-              Hold at least <b>2,000,000 tokens</b>.<br/> 
-              Earn <b>10 Points per 1M tokens</b> automatically every 15 minutes!
-            </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
+          <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid #10b981', padding: '15px', borderRadius: '12px' }}>
+            <h4 style={{ color: '#10b981', margin: '0 0 10px 0' }}>✅ Diamond Status</h4>
+            <p style={{ fontSize: '13px', color: '#a7f3d0' }}>Hold 2M+ Token: Guadagni 10pt/1M ogni 15 minuti in automatico.</p>
           </div>
-
-          {/* PAPER HANDS PENALTY */}
-          <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', padding: '15px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
-            <div style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '5px', fontSize: '15px' }}>🩸 PAPER HANDS PENALTY</div>
-            <div style={{ fontSize: '14px', color: '#fff' }}>
-              Drop below 2M tokens? You will bleed <b>-5% of your total points</b> every 15 minutes until you buy back!
-            </div>
+          <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid #ef4444', padding: '15px', borderRadius: '12px' }}>
+            <h4 style={{ color: '#ef4444', margin: '0 0 10px 0' }}>🩸 Paper Hands Penalty</h4>
+            <p style={{ fontSize: '13px', color: '#fca5a5' }}>Se vendi dopo essere stato Diamond: perdi il 5% dei punti ogni 15 min.</p>
+          </div>
+          <div style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px solid #3b82f6', padding: '15px', borderRadius: '12px', gridColumn: '1 / -1' }}>
+            <h4 style={{ color: '#3b82f6', margin: '0 0 10px 0' }}>🛡️ Task Safe Zone</h4>
+            <p style={{ fontSize: '13px', color: '#93c5fd' }}>Non hai mai holdato 2M token? I tuoi punti dalle task sono <b>protetti al 100%</b> e non scadranno mai.</p>
           </div>
         </div>
       </div>
 
       {/* 4. NATIVE TASKS */}
-      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Native Rewards (Complete to Earn Points)</h3>
+      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Guadagna Punti Extra</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
-            <div style={{ fontWeight: 'bold' }}>{off.title}</div>
-            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontWeight: 'bold', display: 'block', marginTop: '10px' }}>
-              Complete →
-            </a>
+            <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>{off.title}</div>
+            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>Vai alla Task →</a>
           </div>
         ))}
       </div>
 
       {/* 5. LEADERBOARD */}
-      <div style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
-        <h3 style={{ color: '#facc15' }}>🏆 Top 100 Farmers</h3>
-        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <div style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
+        <h3 style={{ color: '#facc15', marginTop: 0 }}>🏆 Top 100 Farmers</h3>
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ color: '#666', textAlign: 'left', fontSize: '12px', borderBottom: '1px solid #222' }}>
                 <th style={{ padding: '10px' }}>RANK</th>
                 <th style={{ padding: '10px' }}>WALLET</th>
-                <th style={{ padding: '10px', textAlign: 'right' }}>POINTS</th>
+                <th style={{ padding: '10px', textAlign: 'right' }}>PUNTI</th>
               </tr>
             </thead>
             <tbody>
               {leaderboard.map((u, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid #222', background: address?.toLowerCase() === u.address.toLowerCase() ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
                   <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
-                  <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>
-                    {u.address.slice(0,6)}...{u.address.slice(-4)}
-                    {address?.toLowerCase() === u.address.toLowerCase() && <span style={{ marginLeft: '8px', color: '#facc15', fontSize: '10px' }}>(YOU)</span>}
-                  </td>
+                  <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>{u.address.slice(0,6)}...{u.address.slice(-4)}</td>
                   <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{u.points.toLocaleString()}</td>
                 </tr>
               ))}
