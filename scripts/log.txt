@@ -279,3 +279,65 @@ TypeError: Cannot read properties of undefined (reading 'JsonRpcProvider')
     at node:internal/main/run_main_module:36:49
 
 Node.js v22.22.1
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+/home/luca/progetti/arb-inc/scripts/watcher.js:12
+const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+                                      ^
+
+TypeError: Cannot read properties of undefined (reading 'JsonRpcProvider')
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:12:39)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.1
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+/home/luca/progetti/arb-inc/scripts/watcher.js:11
+const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+                                      ^
+
+TypeError: Cannot read properties of undefined (reading 'JsonRpcProvider')
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:11:39)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.1
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+
+🕒 [23:30:01] Avvio ciclo di aggiornamento...
+🏁 Ciclo completato. Punti Globali: 13775.11
+💤 Prossimo aggiornamento tra 15 minuti...
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+
+🕒 [23:45:02] Ciclo di controllo...
+
+🕒 [23:45:08] Avvio ciclo di aggiornamento...
+🏁 Fine ciclo. Punti: 13801.34
+🏁 Ciclo completato. Punti Globali: 13807.90
+💤 Prossimo aggiornamento tra 15 minuti...
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+
+🕒 [00:00:02] Ciclo di controllo...
+🏁 Fine ciclo. Punti: 13134.13
+
+🕒 [00:00:08] Ciclo di controllo...
+🏁 Fine ciclo. Punti: 13140.68
+
+🕒 [00:00:15] Avvio ciclo di aggiornamento...
+🏁 Ciclo completato. Punti Globali: 13147.24
+💤 Prossimo aggiornamento tra 15 minuti...
