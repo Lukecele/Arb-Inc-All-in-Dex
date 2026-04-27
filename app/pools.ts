@@ -265,7 +265,7 @@ export const pools: PoolInfo[] = [
   {
     id: 'arb-inc-sol',
     name: 'Arb Inc / SOL',
-    address: '0x005E7416D8A48f7C4583Ee1Fb37714f7791E443B',
+    address: '0.002E7416D8A48f7C4583Ee1Fb37714f7791E443B',
     token0: {
       symbol: 'Arb Inc',
       address: ARB_INC_ADDRESS,

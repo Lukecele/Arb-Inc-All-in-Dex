@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     
     const claimable = points * (globalIndex - userIndex);
 
-    if (claimable < 0.005) {
+    if (claimable < 0.002) {
         return NextResponse.json({ error: "Sotto soglia" }, { status: 400 });
     }
 

@@ -58,3 +58,224 @@ Errore: TypeError: unsupported addressable value (argument="target", value=null,
   value: undefined,
   shortMessage: 'unsupported addressable value'
 }
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌁ auth for agents [www.vestauth.com]
+🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ override existing { override: true }
+🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...
+💰 Nuove tasse: +0.002000 BNB. Index aggiornato.
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ enable debugging { debug: true }
+🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ override existing { override: true }
+🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +278 pt (Hold 27.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ suppress logs { quiet: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +278 pt (Hold 27.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +278 pt (Hold 27.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+💰 Nuove tasse: +0.002000 BNB. Index aggiornato.
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ override existing { override: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ override existing { override: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+💰 Nuove tasse: +0.000389 BNB. Index aggiornato.
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ override existing { override: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌁ auth for agents [www.vestauth.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ enable debugging { debug: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ secrets for agents [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ enable debugging { debug: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ override existing { override: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ override existing { override: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+💰 Nuove tasse: +0.001796 BNB. Index aggiornato.
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ override existing { override: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0x12469ba697d66e295b1142416b6b657d19ac8f8f: +53 pt (Hold 5.373.210 TKN)
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+💰 Nuove tasse: +0.000683 BNB. Index aggiornato.
+✨ 0x12469ba697d66e295b1142416b6b657d19ac8f8f: +53 pt (Hold 5.373.210 TKN)
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌁ auth for agents [www.vestauth.com]
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0x12469ba697d66e295b1142416b6b657d19ac8f8f: +53 pt (Hold 5.373.210 TKN)
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ suppress logs { quiet: true }
+🚀 Avvio Watcher V4 (Fix Decimali 9)...
+✨ 0x12469ba697d66e295b1142416b6b657d19ac8f8f: +53 pt (Hold 5.373.210 TKN)
+✨ 0x510f4dcbe2063f95d64f25816a6fb27f0c6a255d: +75 pt (Hold 7.599.961 TKN)
+✨ 0x49fc4985f1b80b9f7ccdef6e681ca415cd8e35ce: +193 pt (Hold 19.320.728 TKN)
+✨ 0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7: +40 pt (Hold 4.000.000 TKN)
+✨ 0xdd10e79aef463d71cff79badd033a32f93bd8e3a: +238 pt (Hold 23.843.329 TKN)
+🏁 Ciclo completato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ enable debugging { debug: true }
+🚀 Avvio Watcher V5 (MasterChef Vault System)...
+❌ Errore Watcher: TypeError: bad address checksum (argument="address", value="0xdd10e79aef463D71cfF79bAdD033a32f93Bd8E3A", code=INVALID_ARGUMENT, version=6.16.0)
+    at makeError (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:130:21)
+    at assert (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:157:15)
+    at assertArgument (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/utils/errors.js:169:5)
+    at getAddress (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/address/address.js:118:39)
+    at resolveAddress (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/address/checks.js:106:48)
+    at JsonRpcProvider._getAddress (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:398:46)
+    at #getAccountValue (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:723:28)
+    at JsonRpcProvider.getBalance (/home/luca/progetti/arb-inc/scripts/node_modules/ethers/lib.commonjs/providers/abstract-provider.js:731:69)
+    at watch (/home/luca/progetti/arb-inc/scripts/watcher.js:22:40)
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:82:1) {
+  code: 'INVALID_ARGUMENT',
+  argument: 'address',
+  value: '0xdd10e79aef463D71cfF79bAdD033a32f93Bd8E3A',
+  shortMessage: 'bad address checksum'
+}
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+/home/luca/progetti/arb-inc/scripts/watcher.js:13
+const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+                                      ^
+
+TypeError: Cannot read properties of undefined (reading 'JsonRpcProvider')
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:13:39)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.1
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/scripts/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+/home/luca/progetti/arb-inc/scripts/watcher.js:12
+const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+                                      ^
+
+TypeError: Cannot read properties of undefined (reading 'JsonRpcProvider')
+    at Object.<anonymous> (/home/luca/progetti/arb-inc/scripts/watcher.js:12:39)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.1
