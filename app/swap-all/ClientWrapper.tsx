@@ -194,8 +194,8 @@ export default function ClientWrapper() {
   const [ethersProvider, setEthersProvider] = useState<ethers.providers.Web3Provider | null>(null)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
 
-  const tokenInParam = searchParams.get('tokenIn')
-  const tokenOutParam = searchParams.get('tokenOut')
+  const tokenInParam = searchParams?.get('tokenIn')
+  const tokenOutParam = searchParams?.get('tokenOut')
 
   const defaultTokenIn = tokenInParam || undefined
   const defaultTokenOut = tokenOutParam || undefined
