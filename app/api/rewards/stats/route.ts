@@ -18,7 +18,6 @@ export async function GET(request: Request) {
     let points = await redis.zscore('leaderboard:points', wallet);
     let isNewUser = false;
 
-    // 1. IL FIX DEL RADAR (Rileva se è DAVVERO un nuovo utente)
     if (points === null) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
@@ -26,23 +25,21 @@ export async function GET(request: Request) {
       console.log(`🎯 Nuovo Holder sul radar: ${wallet}`);
     }
 
-    const globalIndex = parseFloat((await redis.get('rewards:global_index')) || '0');
+    const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
     
-    // 2. IL FIX DEI BNB (Protegge i vecchi holder)
     if (userIndexStr === null) {
         if (isNewUser) {
-            // È un nuovo utente: parte da OGGI per proteggere la pool
             await redis.set(`rewards:user_index:${wallet}`, globalIndex.toString());
             userIndexStr = globalIndex.toString();
         } else {
-            // È UN VECCHIO HOLDER! Non ha mai fatto claim, merita i BNB passati.
             await redis.set(`rewards:user_index:${wallet}`, "0");
             userIndexStr = "0";
         }
     }
 
-    const userIndex = parseFloat(userIndexStr);
+    // 🛠️ IL FIX TYPESCRIPT È QUI: Aggiunto String() per far felice Vercel
+    const userIndex = parseFloat(String(userIndexStr));
     const claimable = Number(points) * (globalIndex - userIndex);
 
     return NextResponse.json({ 
