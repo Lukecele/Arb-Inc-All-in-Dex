@@ -22,33 +22,33 @@ export async function GET(request: Request) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
       isNewUser = true;
-      console.log(`🎯 Nuovo Holder sul radar: ${wallet}`);
     }
 
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
     
     if (userIndexStr === null) {
-        if (isNewUser) {
-            await redis.set(`rewards:user_index:${wallet}`, globalIndex.toString());
-            userIndexStr = globalIndex.toString();
-        } else {
-            await redis.set(`rewards:user_index:${wallet}`, "0");
-            userIndexStr = "0";
-        }
+        userIndexStr = globalIndex.toString();
+        await redis.set(`rewards:user_index:${wallet}`, userIndexStr);
     }
 
-    // 🛠️ IL FIX TYPESCRIPT È QUI: Aggiunto String() per far felice Vercel
     const userIndex = parseFloat(String(userIndexStr));
-    const claimable = Number(points) * (globalIndex - userIndex);
+    
+    // 🔥 LA PATCH È QUI: Leggiamo i BNB congelati nel salvadanaio
+    const pendingBnb = parseFloat(String(await redis.get(`rewards:pending:${wallet}`) || '0'));
+    
+    // Calcoliamo i BNB nuovi generati DALL'ULTIMO aggiornamento
+    const currentClaimable = Number(points) * (globalIndex - userIndex);
+
+    // Il totale è: Salvadanaio + Nuovi BNB
+    const totalClaimable = pendingBnb + Math.max(0, currentClaimable);
 
     return NextResponse.json({ 
       points: Number(points), 
-      claimable: Math.max(0, claimable) 
+      claimable: totalClaimable 
     });
 
   } catch (error) {
-    console.error('Errore API Stats:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
