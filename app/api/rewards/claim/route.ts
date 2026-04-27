@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL || '',
@@ -25,12 +25,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Nulla da prelevare' }, { status: 400 });
     }
 
-    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-    const signer = new ethers.Wallet(process.env.TREASURY_PRIVATE_KEY || '', provider);
+    // 🔥 SINTASSI ETHERS V5
+    const provider = new (ethers as any).providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+    
+    if (!process.env.TREASURY_PRIVATE_KEY) {
+        throw new Error("Manca la chiave privata su Vercel!");
+    }
+    
+    const signer = new (ethers as any).Wallet(process.env.TREASURY_PRIVATE_KEY, provider);
     
     const tx = await signer.sendTransaction({
       to: walletLower,
-      value: ethers.parseEther(totalToPay.toFixed(18))
+      value: (ethers as any).utils.parseEther(totalToPay.toFixed(18))
     });
 
     await tx.wait();
