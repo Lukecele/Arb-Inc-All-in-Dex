@@ -102,27 +102,32 @@ export default function RewardsClient() {
         )}
       </div>
 
-      {/* 2. DIVIDENDS BOX (Sempre visibile per FOMO) */}
+      {/* 2. DIVIDENDS BOX (Aggiornato con testo esplicativo) */}
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '20px' }}>
-        <h3 style={{ color: '#a78bfa', margin: '0 0 10px 0' }}>💎 BNB Dividends Pool</h3>
-        <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
-        <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '15px' }}>Your Points: {address ? userPoints.toLocaleString() : "0"}</p>
+        <h3 style={{ color: '#a78bfa', margin: '0 0 15px 0', fontSize: '26px' }}>💎 BNB Dividends Pool</h3>
+        
+        <p style={{ fontSize: '15px', color: '#e2e8f0', marginBottom: '25px', maxWidth: '700px', margin: '0 auto 20px auto', lineHeight: '1.5' }}>
+          All points generated from <b>Auto-Staking, Swaps, Native Tasks, and Referrals</b> automatically increase your share of the BNB collected from platform trading fees!
+        </p>
+
+        <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#fff' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
+        <p style={{ fontSize: '14px', color: '#a78bfa', marginBottom: '20px', fontWeight: 'bold' }}>Your Total Points: {address ? userPoints.toLocaleString() : "0"}</p>
         
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
             CONNECT WALLET TO CLAIM
           </button>
         ) : (
-          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-            {claimLoading ? 'Wait...' : 'CLAIM BNB NOW'}
+          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
+            {claimLoading ? 'Processing...' : 'CLAIM BNB NOW'}
           </button>
         )}
-        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px', color: '#a78bfa' }}>{claimStatus}</p>}
+        {claimStatus && <p style={{ fontSize: '13px', marginTop: '15px', color: '#a78bfa' }}>{claimStatus}</p>}
       </div>
 
-      {/* 3. VIRTUAL STAKING INFO BOX (Nuovo marketing) */}
+      {/* 3. VIRTUAL STAKING INFO BOX */}
       <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #000 100%)', border: '1px solid #10b981', padding: '20px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
-        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>🏦 Auto-Staking (Hold to Earn)</h3>
+        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>🏦 Auto-Staking (Hold to Earn Points)</h3>
         <p style={{ fontSize: '14px', color: '#a7f3d0', marginBottom: '15px' }}>
           No lock-ups. No gas fees for staking. Keep your tokens safe in your wallet!
         </p>
@@ -133,8 +138,8 @@ export default function RewardsClient() {
       </div>
 
       {/* 4. NATIVE TASKS */}
-      <h3 style={{ color: '#f472b6' }}>🪂 Native Rewards</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Native Rewards (Complete to Earn Points)</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
             <div style={{ fontWeight: 'bold' }}>{off.title}</div>
