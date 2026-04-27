@@ -23,7 +23,6 @@ export default function RewardsClient() {
 
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
-  // Carica i BNB accumulati
   const fetchRewardsData = async () => {
     if (!address) return;
     try {
@@ -89,58 +88,89 @@ export default function RewardsClient() {
 
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px' }}>
+      
       {/* 1. REFERRAL */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h3>Invite & Earn 10% 🚀</h3>
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px' }}>Connect</button>
+          <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Connect to Get Link</button>
         ) : (
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
             <input readOnly value={referralLink} style={{ background: '#000', color: '#818cf8', padding: '10px', borderRadius: '5px', width: '60%' }} />
-            <button onClick={() => { navigator.clipboard.writeText(referralLink); setCopied(true); setTimeout(()=>setCopied(false), 2000); }} style={{ background: '#4f46e5', border: 'none', color: 'white', padding: '10px', borderRadius: '5px' }}>{copied ? 'Copied' : 'Copy'}</button>
+            <button onClick={() => { navigator.clipboard.writeText(referralLink); setCopied(true); setTimeout(()=>setCopied(false), 2000); }} style={{ background: '#4f46e5', border: 'none', color: 'white', padding: '10px', borderRadius: '5px', cursor: 'pointer' }}>{copied ? 'Copied' : 'Copy'}</button>
           </div>
         )}
       </div>
 
-      {/* 2. DIVIDENDS BOX */}
-      {address && (
-        <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
-          <h3 style={{ color: '#a78bfa' }}>💎 Your BNB Dividends</h3>
-          <div style={{ fontSize: '28px', fontWeight: 'bold' }}>{claimableBnb.toFixed(6)} BNB</div>
-          <p style={{ fontSize: '12px', color: '#94a3b8' }}>Points: {userPoints}</p>
-          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '10px 30px', borderRadius: '8px', cursor: 'pointer', marginTop: '10px' }}>
-            {claimLoading ? 'Wait...' : 'CLAIM BNB'}
+      {/* 2. DIVIDENDS BOX (Sempre visibile per FOMO) */}
+      <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '20px' }}>
+        <h3 style={{ color: '#a78bfa', margin: '0 0 10px 0' }}>💎 BNB Dividends Pool</h3>
+        <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
+        <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '15px' }}>Your Points: {address ? userPoints.toLocaleString() : "0"}</p>
+        
+        {!address ? (
+          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+            CONNECT WALLET TO CLAIM
           </button>
-          {claimStatus && <p style={{ fontSize: '10px', marginTop: '10px' }}>{claimStatus}</p>}
-        </div>
-      )}
+        ) : (
+          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+            {claimLoading ? 'Wait...' : 'CLAIM BNB NOW'}
+          </button>
+        )}
+        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px', color: '#a78bfa' }}>{claimStatus}</p>}
+      </div>
 
-      {/* 3. NATIVE TASKS */}
+      {/* 3. VIRTUAL STAKING INFO BOX (Nuovo marketing) */}
+      <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #000 100%)', border: '1px solid #10b981', padding: '20px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
+        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>🏦 Auto-Staking (Hold to Earn)</h3>
+        <p style={{ fontSize: '14px', color: '#a7f3d0', marginBottom: '15px' }}>
+          No lock-ups. No gas fees for staking. Keep your tokens safe in your wallet!
+        </p>
+        <div style={{ display: 'inline-block', background: 'rgba(16, 185, 129, 0.1)', border: '1px dashed #10b981', padding: '12px 20px', borderRadius: '8px', fontSize: '13px', color: '#fff' }}>
+          Hold at least <b>2,000,000 tokens</b>.<br/> 
+          Our system auto-scans the blockchain and airdrops you <b>1,000 Points per 1M tokens</b> continuously!
+        </div>
+      </div>
+
+      {/* 4. NATIVE TASKS */}
       <h3 style={{ color: '#f472b6' }}>🪂 Native Rewards</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
-            <div>{off.title}</div>
-            <a href={off.link} target="_blank" style={{ color: '#f472b6', textDecoration: 'none', fontWeight: 'bold', display: 'block', marginTop: '10px' }}>Complete →</a>
+            <div style={{ fontWeight: 'bold' }}>{off.title}</div>
+            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontWeight: 'bold', display: 'block', marginTop: '10px' }}>
+              Complete →
+            </a>
           </div>
         ))}
       </div>
 
-      {/* 4. LEADERBOARD */}
+      {/* 5. LEADERBOARD */}
       <div style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
         <h3 style={{ color: '#facc15' }}>🏆 Top 100 Farmers</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead><tr style={{ color: '#666', textAlign: 'left' }}><th>#</th><th>Wallet</th><th style={{ textAlign: 'right' }}>Points</th></tr></thead>
-          <tbody>
-            {leaderboard.map((u, i) => (
-              <tr key={i} style={{ borderTop: '1px solid #222', background: address?.toLowerCase() === u.address.toLowerCase() ? '#222' : 'transparent' }}>
-                <td style={{ padding: '10px' }}>{i + 1}</td>
-                <td style={{ padding: '10px', fontSize: '12px' }}>{u.address.slice(0,6)}...{u.address.slice(-4)}</td>
-                <td style={{ padding: '10px', textAlign: 'right' }}>{u.points.toLocaleString()}</td>
+        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ color: '#666', textAlign: 'left', fontSize: '12px', borderBottom: '1px solid #222' }}>
+                <th style={{ padding: '10px' }}>RANK</th>
+                <th style={{ padding: '10px' }}>WALLET</th>
+                <th style={{ padding: '10px', textAlign: 'right' }}>POINTS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {leaderboard.map((u, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #222', background: address?.toLowerCase() === u.address.toLowerCase() ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
+                  <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
+                  <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>
+                    {u.address.slice(0,6)}...{u.address.slice(-4)}
+                    {address?.toLowerCase() === u.address.toLowerCase() && <span style={{ marginLeft: '8px', color: '#facc15', fontSize: '10px' }}>(YOU)</span>}
+                  </td>
+                  <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{u.points.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
