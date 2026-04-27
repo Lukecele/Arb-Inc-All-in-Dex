@@ -107,11 +107,32 @@ export default function RewardsClient() {
         {!address ? (
           <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
         ) : (
-          <button onClick={handleClaim} disabled={claimLoading || claimableBnb < 0.005} style={{ background: claimableBnb < 0.005 ? '#333' : '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-            {claimLoading ? 'Processing...' : 'CLAIM BNB NOW'}
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            <button 
+              onClick={handleClaim} 
+              disabled={claimLoading || claimableBnb < 0.005} 
+              style={{ 
+                background: claimableBnb < 0.005 ? '#222' : '#a78bfa', 
+                color: claimableBnb < 0.005 ? '#666' : 'white', 
+                border: claimableBnb < 0.005 ? '1px solid #444' : 'none', 
+                padding: '15px 40px', 
+                borderRadius: '8px', 
+                cursor: claimableBnb < 0.005 ? 'not-allowed' : 'pointer', 
+                fontWeight: 'bold' 
+              }}
+            >
+              {claimLoading ? 'Processing...' : claimableBnb < 0.005 ? 'MIN. 0.005 BNB TO CLAIM' : 'CLAIM BNB NOW'}
+            </button>
+            
+            {/* SPIEGAZIONE DEL GAS FEE IN INGLESE */}
+            {claimableBnb < 0.005 && (
+              <div style={{ fontSize: '12px', color: '#94a3b8', maxWidth: '450px', lineHeight: '1.4', marginTop: '5px' }}>
+                <span style={{ color: '#facc15' }}>⚠️ Security Note:</span> A minimum threshold of 0.005 BNB is required to cover blockchain gas fees and protect the treasury from bot drain. Keep earning points!
+              </div>
+            )}
+          </div>
         )}
-        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px' }}>{claimStatus}</p>}
+        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px', color: claimStatus.includes('✅') ? '#10b981' : '#ef4444' }}>{claimStatus}</p>}
       </div>
 
       {/* 3. DIAMOND VS PAPER HANDS */}
