@@ -12,35 +12,49 @@ const RPC_URL = "https://binance.chainnodes.org";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { address } = req.body;
-  if (!address) return res.status(400).json({ error: 'Missing address' });
+  console.log("📦 Dati ricevuti dal sito:", req.body);
+
+  // 1. Rendiamo il body flessibile (JSON o Testo)
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch(e) {}
+  }
+
+  // 2. Cerchiamo l'indirizzo in tutti i modi possibili
+  const address = body?.address || body?.wallet || body?.account;
+
+  if (!address) {
+    console.log("❌ Errore: Il sito non ha inviato l'indirizzo del wallet!");
+    return res.status(400).json({ error: 'Missing address' });
+  }
 
   try {
     const walletLower = address.toLowerCase();
     const pendingBalance = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
 
-    if (pendingBalance < 0.002) {
-      return res.status(400).json({ error: 'Sotto la soglia minima di 0.002 BNB' });
+    console.log(`🔍 Controllo: Il wallet ${walletLower} ha ${pendingBalance} BNB su Redis`);
+
+    if (pendingBalance < 0.0005) {
+      console.log(`❌ Errore: Saldo troppo basso.`);
+      return res.status(400).json({ error: 'Sotto la soglia minima' });
     }
 
-    // 🛠️ FIX: Sintassi per Ethers v5
     const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
-    console.log(`Inizio claim per ${walletLower}: ${pendingBalance} BNB`);
-
+    console.log(`🚀 Tutto ok! Invio transazione...`);
     const tx = await signer.sendTransaction({
       to: address,
       value: ethers.utils.parseEther(pendingBalance.toFixed(18))
     });
 
     await tx.wait();
-
     await redis.set(`rewards:pending:${walletLower}`, "0");
+    console.log(`✅ Claim completato con successo: ${tx.hash}`);
 
     return res.status(200).json({ success: true, hash: tx.hash });
   } catch (error: any) {
-    console.error('Errore Claim:', error);
+    console.error('❌ Errore Claim Transazione:', error);
     return res.status(500).json({ error: error.message || 'Errore durante il prelievo' });
   }
 }
