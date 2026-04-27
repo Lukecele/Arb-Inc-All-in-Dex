@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
-import { ethers } from 'ethers';
 
 interface Offer { title: string; link: string; }
 interface Leader { address: string; points: number; }
@@ -102,7 +101,7 @@ export default function RewardsClient() {
         )}
       </div>
 
-      {/* 2. DIVIDENDS BOX (Aggiornato con testo esplicativo) */}
+      {/* 2. DIVIDENDS BOX */}
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '20px' }}>
         <h3 style={{ color: '#a78bfa', margin: '0 0 15px 0', fontSize: '26px' }}>💎 BNB Dividends Pool</h3>
         
@@ -125,15 +124,30 @@ export default function RewardsClient() {
         {claimStatus && <p style={{ fontSize: '13px', marginTop: '15px', color: '#a78bfa' }}>{claimStatus}</p>}
       </div>
 
-      {/* 3. VIRTUAL STAKING INFO BOX */}
-      <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #000 100%)', border: '1px solid #10b981', padding: '20px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
-        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>🏦 Auto-Staking (Hold to Earn Points)</h3>
-        <p style={{ fontSize: '14px', color: '#a7f3d0', marginBottom: '15px' }}>
-          No lock-ups. No gas fees for staking. Keep your tokens safe in your wallet!
+      {/* 3. VIRTUAL STAKING & PENALTY BOX (AGGIORNATO) */}
+      <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #000 100%)', border: '1px solid #10b981', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
+        <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>💎 Diamond Hands Staking</h3>
+        <p style={{ fontSize: '14px', color: '#a7f3d0', marginBottom: '20px' }}>
+          No lock-ups. No gas fees. Your tokens stay safe in your wallet.
         </p>
-        <div style={{ display: 'inline-block', background: 'rgba(16, 185, 129, 0.1)', border: '1px dashed #10b981', padding: '12px 20px', borderRadius: '8px', fontSize: '13px', color: '#fff' }}>
-          Hold at least <b>2,000,000 tokens</b>.<br/> 
-          Our system auto-scans the blockchain and airdrops you <b>1,000 Points per 1M tokens</b> continuously!
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+          {/* THE REWARD */}
+          <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', padding: '15px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
+            <div style={{ color: '#10b981', fontWeight: 'bold', marginBottom: '5px', fontSize: '15px' }}>✅ THE REWARD</div>
+            <div style={{ fontSize: '14px', color: '#fff' }}>
+              Hold at least <b>2,000,000 tokens</b>.<br/> 
+              Earn <b>10 Points per 1M tokens</b> automatically every 15 minutes!
+            </div>
+          </div>
+
+          {/* PAPER HANDS PENALTY */}
+          <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', padding: '15px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
+            <div style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '5px', fontSize: '15px' }}>🩸 PAPER HANDS PENALTY</div>
+            <div style={{ fontSize: '14px', color: '#fff' }}>
+              Drop below 2M tokens? You will bleed <b>-5% of your total points</b> every 15 minutes until you buy back!
+            </div>
+          </div>
         </div>
       </div>
 
