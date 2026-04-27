@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
+import { ethers } from 'ethers';
 
 interface Offer { title: string; link: string; }
 interface Leader { address: string; points: number; }
@@ -14,21 +15,39 @@ export default function RewardsClient() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   
+  // NUOVE STATO PER BNB REWARDS
+  const [claimableBnb, setClaimableBnb] = useState(0);
+  const [userPoints, setUserPoints] = useState(0);
+  const [claimLoading, setClaimLoading] = useState(false);
+  const [claimStatus, setClaimStatus] = useState('');
+
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
-  // 1. CATTURA IL REFERRAL DAL LINK APPENA LA PAGINA CARICA
+  // FUNZIONE PER CARICARE I BNB (NUOVA)
+  const fetchRewardsData = async () => {
+    if (!address) return;
+    try {
+      const res = await fetch(`/api/rewards/stats?wallet=${address.toLowerCase()}`);
+      const data = await res.json();
+      if (data.claimable !== undefined) setClaimableBnb(data.claimable);
+      if (data.points !== undefined) setUserPoints(data.points);
+    } catch (err) {
+      console.error("Error fetching rewards stats:", err);
+    }
+  };
+
+  // 1. CATTURA REFERRAL (Tua logica originale)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const ref = params.get('ref');
       if (ref) {
-        // Salva il wallet di chi ha invitato nella memoria del browser
         window.localStorage.setItem('arb_inc_referrer', ref);
       }
     }
   }, []);
 
-  // 2. CARICA STATISTICHE (Offerte e Classifica)
+  // 2. CARICA STATISTICHE (Tua logica originale + refresh BNB)
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
@@ -42,6 +61,9 @@ export default function RewardsClient() {
         const resLeader = await fetch(`/api/leaderboard`);
         const dataLeader = await resLeader.json();
         if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
+        
+        // Se il wallet è connesso, carichiamo anche i BNB claimabili
+        if (address) fetchRewardsData();
       } catch (err) {
         console.error("Fetch error:", err);
       }
@@ -51,18 +73,41 @@ export default function RewardsClient() {
     fetchStats();
   }, [address]);
 
+  // LOGICA PER IL CLAIM (NUOVA)
+  const handleClaim = async () => {
+    if (!address) return;
+    setClaimLoading(true);
+    setClaimStatus('Processing transaction...');
+    try {
+      const res = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ walletAddress: address }),
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        setClaimStatus(`✅ Success! TX: ${resData.hash.substring(0, 10)}...`);
+        fetchRewardsData(); // Reset del contatore BNB
+      } else {
+        setClaimStatus(`❌ Error: ${resData.error}`);
+      }
+    } catch (e) {
+      setClaimStatus('❌ Network error');
+    }
+    setClaimLoading(false);
+  };
+
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
 
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif' }}>
       
-      {/* 1. REFERRAL BOX */}
+      {/* 1. REFERRAL BOX (Originale) */}
       <div style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)', border: '1px solid #4338ca', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '40px' }}>
         <h3 style={{ margin: '0 0 10px 0', fontSize: '24px' }}>Invite & Earn 10% Lifetime 🚀</h3>
         <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
           Get <b>10% commission</b> on all points earned by your friends from <b>Swaps, Zaps, and Tasks</b>. Forever.
         </p>
-        
         {!address ? (
           <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '12px 30px', borderRadius: '100px', fontWeight: 'bold', cursor: 'pointer' }}>
             {connecting ? 'Connecting...' : 'Connect Wallet to Get Referral Link'}
@@ -78,13 +123,38 @@ export default function RewardsClient() {
         )}
       </div>
 
-      {/* 2. NATIVE TASKS */}
+      {/* 2. DIVIDENDS BOX (Aggiunto) */}
+      {address && (
+        <div style={{ background: 'linear-gradient(135deg, #2e1065 0%, #000 100%)', border: '1px solid #a78bfa', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '40px' }}>
+          <h3 style={{ color: '#a78bfa', margin: '0 0 5px 0' }}>💎 Your BNB Dividends</h3>
+          <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '5px' }}>{claimableBnb.toFixed(6)} BNB</div>
+          <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '20px' }}>Based on {userPoints.toLocaleString()} points</p>
+          
+          <button 
+            onClick={handleClaim} 
+            disabled={claimLoading || claimableBnb < 0.005}
+            style={{ 
+              background: claimableBnb < 0.005 ? '#333' : '#a78bfa', 
+              color: 'white', 
+              border: 'none', 
+              padding: '12px 40px', 
+              borderRadius: '8px', 
+              fontWeight: 'bold', 
+              cursor: claimableBnb < 0.005 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {claimLoading ? 'Processing...' : claimableBnb < 0.005 ? 'Min. 0.005 BNB to Claim' : 'CLAIM BNB NOW'}
+          </button>
+          {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px', color: '#a78bfa' }}>{claimStatus}</p>}
+        </div>
+      )}
+
+      {/* 3. NATIVE TASKS (Originale) */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ color: '#f472b6', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>🪂 Native Rewards</h3>
           {!address && <span style={{ color: '#f472b6', fontSize: '12px', background: 'rgba(244,114,182,0.1)', padding: '4px 10px', borderRadius: '20px' }}>Connect wallet to track progress</span>}
         </div>
-        
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
           {loading ? <p>Scanning for rewards... ⏳</p> : offers.length > 0 ? offers.map((off, i) => (
             <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
@@ -103,7 +173,7 @@ export default function RewardsClient() {
         </div>
       </div>
 
-      {/* 3. ESSENTIAL TOOLS */}
+      {/* 4. ESSENTIAL TOOLS (Originale) */}
       <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px', marginBottom: '40px' }}>
         <h3 style={{ color: '#20B8CD', marginTop: 0, marginBottom: '25px' }}>🔗 Essential Crypto Tools</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '25px' }}>
@@ -122,10 +192,10 @@ export default function RewardsClient() {
         </div>
       </div>
 
-      {/* 4. LEADERBOARD */}
+      {/* 5. LEADERBOARD (Originale - mostra tutti) */}
       <div style={{ background: '#111', border: '1px solid #333', borderRadius: '20px', padding: '30px' }}>
         <h3 style={{ color: '#facc15', marginTop: 0, marginBottom: '20px', textTransform: 'uppercase' }}>🏆 Top Farmers</h3>
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ color: '#666', fontSize: '12px', borderBottom: '1px solid #222' }}>
@@ -135,23 +205,20 @@ export default function RewardsClient() {
               </tr>
             </thead>
             <tbody>
-              {leaderboard.length > 0 ? leaderboard.map((user, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #222', background: address === user.address ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
+              {leaderboard.map((user, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #222', background: address?.toLowerCase() === user.address.toLowerCase() ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
                   <td style={{ padding: '12px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
                   <td style={{ padding: '12px', fontSize: '13px', fontFamily: 'monospace' }}>
                     {user.address.slice(0,6)}...{user.address.slice(-4)}
-                    {address === user.address && <span style={{ marginLeft: '8px', color: '#facc15', fontSize: '10px' }}>(YOU)</span>}
+                    {address?.toLowerCase() === user.address.toLowerCase() && <span style={{ marginLeft: '8px', color: '#facc15', fontSize: '10px' }}>(YOU)</span>}
                   </td>
                   <td style={{ padding: '12px', textAlign: 'right', fontWeight: 'bold' }}>{user.points.toLocaleString()}</td>
                 </tr>
-              )) : (
-                <tr><td colSpan={3} style={{ padding: '20px', textAlign: 'center', color: '#444' }}>No data yet. Start swapping to climb the ranks!</td></tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
       </div>
-
     </div>
   );
 }
