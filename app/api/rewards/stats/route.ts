@@ -15,25 +15,34 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. Cerca l'utente nel database
     let points = await redis.zscore('leaderboard:points', wallet);
+    let isNewUser = false;
 
-    // 2. IL FIX DEL RADAR: Se non esiste, lo inseriamo con 0 punti!
+    // 1. IL FIX DEL RADAR (Rileva se è DAVVERO un nuovo utente)
     if (points === null) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
+      isNewUser = true;
       console.log(`🎯 Nuovo Holder sul radar: ${wallet}`);
     }
 
-    // 3. Calcolo dei dividendi BNB
     const globalIndex = parseFloat((await redis.get('rewards:global_index')) || '0');
-    const userIndex = parseFloat((await redis.get(`rewards:user_index:${wallet}`)) || globalIndex.toString());
+    let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
     
-    // Assicuriamoci che l'userIndex sia salvato per i nuovi utenti
-    if (await redis.get(`rewards:user_index:${wallet}`) === null) {
-        await redis.set(`rewards:user_index:${wallet}`, globalIndex.toString());
+    // 2. IL FIX DEI BNB (Protegge i vecchi holder)
+    if (userIndexStr === null) {
+        if (isNewUser) {
+            // È un nuovo utente: parte da OGGI per proteggere la pool
+            await redis.set(`rewards:user_index:${wallet}`, globalIndex.toString());
+            userIndexStr = globalIndex.toString();
+        } else {
+            // È UN VECCHIO HOLDER! Non ha mai fatto claim, merita i BNB passati.
+            await redis.set(`rewards:user_index:${wallet}`, "0");
+            userIndexStr = "0";
+        }
     }
 
+    const userIndex = parseFloat(userIndexStr);
     const claimable = Number(points) * (globalIndex - userIndex);
 
     return NextResponse.json({ 
