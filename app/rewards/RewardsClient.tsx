@@ -80,6 +80,9 @@ export default function RewardsClient() {
       {/* 1. REFERRAL */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h3 style={{ margin: '0 0 10px 0' }}>Invite & Earn 10% 🚀</h3>
+        <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
+          Get <b>10% commission</b> on all points earned by your friends from <b>Swaps, Zaps, Limit Orders, and Tasks</b>. Forever.
+        </p>
         {!address ? (
           <button onClick={() => connect()} style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>Connect to Get Link</button>
         ) : (
@@ -93,13 +96,13 @@ export default function RewardsClient() {
       {/* 2. DIVIDENDS BOX */}
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
-        <p style={{ color: '#cbd5e1', fontSize: '14px', marginBottom: '25px', lineHeight: '1.6' }}>
-          Tutti i punti accumulati aumentano la tua quota dei BNB raccolti dalle tasse di trading.<br/>
-          <b>Punti = Potere di Claim.</b>
+        <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
+          Points earned from <b>Swaps, Zaps, Limit Orders, Auto-Staking, Tasks, and Referrals</b> increase your share of the BNB collected from platform trading fees!<br/>
+          <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>Points = Claim Power.</span>
         </p>
 
         <div style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '5px' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
-        <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>I tuoi Punti Totali: {address ? userPoints.toLocaleString() : "0"}</p>
+        <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? userPoints.toLocaleString() : "0"}</p>
         
         {!address ? (
           <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
@@ -111,33 +114,33 @@ export default function RewardsClient() {
         {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px' }}>{claimStatus}</p>}
       </div>
 
-      {/* 3. DIAMOND VS PAPER HANDS (Coerente con V3) */}
+      {/* 3. DIAMOND VS PAPER HANDS */}
       <div style={{ background: '#000', border: '1px solid #333', padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
         <h3 style={{ textAlign: 'center', color: '#10b981', marginTop: 0 }}>🛡️ Diamond Hands Protection</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
           <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid #10b981', padding: '15px', borderRadius: '12px' }}>
             <h4 style={{ color: '#10b981', margin: '0 0 10px 0' }}>✅ Diamond Status</h4>
-            <p style={{ fontSize: '13px', color: '#a7f3d0' }}>Hold 2M+ Token: Guadagni 10pt/1M ogni 15 minuti in automatico.</p>
+            <p style={{ fontSize: '13px', color: '#a7f3d0' }}>Hold 2M+ Tokens: Earn 10pt/1M automatically every 15 minutes.</p>
           </div>
           <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid #ef4444', padding: '15px', borderRadius: '12px' }}>
             <h4 style={{ color: '#ef4444', margin: '0 0 10px 0' }}>🩸 Paper Hands Penalty</h4>
-            <p style={{ fontSize: '13px', color: '#fca5a5' }}>Se vendi dopo essere stato Diamond: perdi il 5% dei punti ogni 15 min.</p>
+            <p style={{ fontSize: '13px', color: '#fca5a5' }}>If you sell after being Diamond: lose 5% of your points every 15 mins.</p>
           </div>
           <div style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px solid #3b82f6', padding: '15px', borderRadius: '12px', gridColumn: '1 / -1' }}>
             <h4 style={{ color: '#3b82f6', margin: '0 0 10px 0' }}>🛡️ Task Safe Zone</h4>
-            <p style={{ fontSize: '13px', color: '#93c5fd' }}>Non hai mai holdato 2M token? I tuoi punti dalle task sono <b>protetti al 100%</b> e non scadranno mai.</p>
+            <p style={{ fontSize: '13px', color: '#93c5fd' }}>Never held 2M tokens? Your task and trading points are <b>100% protected</b> and will never expire.</p>
           </div>
         </div>
       </div>
 
       {/* 4. NATIVE TASKS */}
-      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Guadagna Punti Extra</h3>
+      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Earn Extra Points</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>{off.title}</div>
-            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>Vai alla Task →</a>
+            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>Complete Task →</a>
           </div>
         ))}
       </div>
@@ -151,7 +154,7 @@ export default function RewardsClient() {
               <tr style={{ color: '#666', textAlign: 'left', fontSize: '12px', borderBottom: '1px solid #222' }}>
                 <th style={{ padding: '10px' }}>RANK</th>
                 <th style={{ padding: '10px' }}>WALLET</th>
-                <th style={{ padding: '10px', textAlign: 'right' }}>PUNTI</th>
+                <th style={{ padding: '10px', textAlign: 'right' }}>POINTS</th>
               </tr>
             </thead>
             <tbody>
