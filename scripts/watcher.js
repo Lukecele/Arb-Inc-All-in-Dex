@@ -1,8 +1,6 @@
 const path = require('path');
-// Cerca il file .env in modo assoluto e blindato
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });    
-
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const { Redis } = require('@upstash/redis');
 const { ethers } = require('ethers');
 
@@ -16,9 +14,8 @@ const tokenAddress = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c";
 const treasuryAddress = process.env.TREASURY_WALLET;
 
 async function run() {
-    console.log("🚀 Avvio Watcher V3 (Anti-Whale, Decay & Task-Safe)...");
+    console.log("🚀 Avvio Watcher V4 (Fix Decimali 9)...");
     
-    // Controlli di sicurezza iniziali
     if (!treasuryAddress) {
         console.error("❌ ERRORE: Variabile TREASURY_WALLET non trovata nel file .env!");
         return;
@@ -55,14 +52,15 @@ async function run() {
         for (const wallet of wallets) {
             try {
                 const balance = await contract.balanceOf(wallet);
-                const tokens = parseFloat(ethers.formatUnits(balance, 18));
+                // LA MAGIA È QUI: 9 Decimali invece di 18
+                const tokens = parseFloat(ethers.formatUnits(balance, 9));
                 const currentPoints = parseFloat(await redis.zscore("leaderboard:points", wallet)) || 0;
 
                 if (tokens >= 2000000) {
                     const pointsToAdd = Math.floor((tokens / 1000000) * 10);
                     await redis.zincrby("leaderboard:points", pointsToAdd, wallet);
                     await redis.set(`status:diamond:${wallet}`, "1");
-                    console.log(`✨ ${wallet}: +${pointsToAdd} pt (Hold ${tokens.toLocaleString()} TKN)`);
+                    console.log(`✨ ${wallet}: +${pointsToAdd} pt (Hold ${Math.floor(tokens).toLocaleString()} TKN)`);
                 } 
                 else if (tokens < 2000000 && currentPoints > 0) {
                     const wasDiamond = await redis.get(`status:diamond:${wallet}`);
