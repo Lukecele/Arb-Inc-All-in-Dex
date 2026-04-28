@@ -1,36 +1,45 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
 const { Redis } = require('@upstash/redis');
+const ethers = require('ethers');
 
-const redis = new Redis({ 
-    url: process.env.UPSTASH_REDIS_REST_URL, 
-    token: process.env.UPSTASH_REDIS_REST_TOKEN 
-});
+const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
+const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+const TREASURY = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f";
 
-async function fix() {
-    console.log("🛑 INIZIO FIX DI EMERGENZA...");
+async function fixDebt() {
+    console.log("🚨 INIZIO PROCEDURA DI EMERGENZA...");
     
-    try {
-        const globalIndex = await redis.get('rewards:global_index') || "0";
-        console.log(`Indice Globale attuale: ${globalIndex}`);
-
-        const affectedWallets = [
-            "0x75f7f06a5c5c440c1adbd586826cd26253ede219",
-            "0x66bb01f14229e2179bad84d52a69c0e4628de63f",
-            "0xdd10e79aef463d71cff79badd033a32f93bd8e3a",
-            "0x3b523ec5ac7f37a151142b756040301729061348",
-            "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7"
-        ];
-
-        for (const wallet of affectedWallets) {
-            await redis.set(`rewards:user_index:${wallet.toLowerCase()}`, globalIndex);
-            console.log(`✅ Falla chiusa per: ${wallet}`);
-        }
-        console.log("🎉 MESSA IN SICUREZZA COMPLETATA. Ricarica la pagina.");
-    } catch (e) {
-        console.error("❌ Errore:", e);
+    const balanceWei = await provider.getBalance(TREASURY);
+    const balanceBnb = parseFloat(ethers.formatEther(balanceWei));
+    const safeMax = balanceBnb * 0.50; // Massimo debito consentito
+    
+    const wallets = await redis.zrange('leaderboard:points', 0, -1);
+    let totalPending = 0;
+    
+    for (const w of wallets) {
+        totalPending += parseFloat(await redis.get(`rewards:pending:${w}`) || "0");
     }
-    process.exit(0);
+    
+    console.log(`🏦 Saldo Reale Treasury: ${balanceBnb.toFixed(6)} BNB`);
+    console.log(`💰 Debito Attuale: ${totalPending.toFixed(6)} BNB`);
+    console.log(`🛡️ Limite Sicurezza (50%): ${safeMax.toFixed(6)} BNB`);
+    
+    if (totalPending > safeMax) {
+        const ratio = safeMax / totalPending;
+        console.log(`\n⚠️ Debito eccessivo! Applico correzione del ${(100 - ratio*100).toFixed(2)}%...`);
+        
+        let newTotal = 0;
+        for (const w of wallets) {
+            const pending = parseFloat(await redis.get(`rewards:pending:${w}`) || "0");
+            const corrected = pending * ratio;
+            await redis.set(`rewards:pending:${w}`, corrected.toString());
+            newTotal += corrected;
+        }
+        console.log(`✅ Debito riallineato con successo a: ${newTotal.toFixed(6)} BNB`);
+    } else {
+        console.log("\n✅ Debito sotto controllo. Nessuna correzione necessaria.");
+    }
 }
-fix();
+fixDebt();

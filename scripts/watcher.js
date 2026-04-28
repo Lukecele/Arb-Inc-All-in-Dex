@@ -1,6 +1,6 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
 const { Redis } = require('@upstash/redis');
 const ethers = require('ethers');
 
@@ -21,82 +21,71 @@ async function watch() {
     console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Ciclo di controllo...`);
     try {
         const balance = await provider.getBalance(ethers.getAddress(REAL_TREASURY_WALLET));
-        const lastBalanceStr = await redis.get('rewards:last_balance') || "0";
-        const lastBalance = BigInt(lastBalanceStr);
-        let globalIndex = parseFloat(await redis.get('rewards:global_index') || "0");
+        const lastBalanceStr = await redis.get('rewards:last_balance');
+        const lastBalance = lastBalanceStr ? BigInt(lastBalanceStr) : balance;
+        const allWallets = await redis.zrange('leaderboard:points', 0, -1);
 
+        // 🛡️ FASE 1: DISTRIBUZIONE DIRETTA (Matematica Infallibile)
         if (balance > lastBalance) {
             const diff = parseFloat(ethers.formatEther(balance - lastBalance));
-            const totalPointsStr = await redis.get('leaderboard:total_points_sum:global');
-            let totalPointsGlobal = parseFloat(totalPointsStr || "7000");
-            if (totalPointsGlobal < 100) totalPointsGlobal = 7000; 
+            const toDistribute = diff * SAFE_FACTOR;
 
-            globalIndex += (diff * SAFE_FACTOR) / totalPointsGlobal;
-            await redis.set('rewards:global_index', globalIndex.toString());
-            console.log(`📈 Dividendi: ${diff.toFixed(6)} BNB. Nuovo Index: ${globalIndex}`);
+            let realTotalPoints = 0;
+            const scores = {};
+            for (const w of allWallets) {
+                const pts = parseFloat(await redis.zscore('leaderboard:points', w) || "0");
+                scores[w] = pts;
+                realTotalPoints += pts;
+            }
+
+            if (realTotalPoints > 0) {
+                console.log(`📈 Tasse rilevate: ${diff.toFixed(6)} BNB. Distribuisco: ${toDistribute.toFixed(6)} BNB su ${realTotalPoints.toFixed(2)} punti.`);
+                for (const w of allWallets) {
+                    if (scores[w] > 0) {
+                        const share = scores[w] / realTotalPoints;
+                        const earned = toDistribute * share;
+                        const pending = parseFloat(await redis.get(`rewards:pending:${w}`) || "0");
+                        await redis.set(`rewards:pending:${w}`, (pending + earned).toString());
+                    }
+                }
+            }
         }
         await redis.set('rewards:last_balance', balance.toString());
 
-        const allWallets = await redis.zrange('leaderboard:points', 0, -1);
-        let newGlobalTotalPoints = 0;
+        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Malus)
         const abi = ["function balanceOf(address) view returns (uint256)"];
         const contract = new ethers.Contract(ethers.getAddress(TOKEN_CONTRACT_ADDRESS), abi, provider);
 
-        for (const wallet of allWallets) {
-            const walletLower = wallet.toLowerCase();
-            if (walletLower === REAL_TREASURY_WALLET || walletLower === TOKEN_CONTRACT_ADDRESS) continue;
-
+        for (const w of allWallets) {
+            if (w === REAL_TREASURY_WALLET || w === TOKEN_CONTRACT_ADDRESS) continue;
             try {
-                const currentPoints = parseFloat(await redis.zscore('leaderboard:points', walletLower) || "0");
-                const userIndex = parseFloat(await redis.get(`rewards:user_index:${walletLower}`) || globalIndex);
-                const currentPending = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
-
-                // 1. Applichiamo i BNB guadagnati finora
-                const earned = currentPoints * (globalIndex - userIndex);
-                if (earned > 0) {
-                    await redis.set(`rewards:pending:${walletLower}`, (currentPending + earned).toString());
-                }
-
-                // 2. Controllo Status Diamond / Paper
-                const holding = await contract.balanceOf(ethers.getAddress(walletLower));
-                const lastHoldingStr = await redis.get(`rewards:last_holding:${walletLower}`);
+                const currentPoints = parseFloat(await redis.zscore('leaderboard:points', w) || "0");
+                const holding = await contract.balanceOf(ethers.getAddress(w));
+                const lastHoldingStr = await redis.get(`rewards:last_holding:${w}`);
+                const lastHolding = lastHoldingStr ? BigInt(lastHoldingStr) : holding;
                 
-                // Se è la prima volta che lo leggiamo, non lo puniamo subito
-                const lastHolding = lastHoldingStr ? BigInt(lastHoldingStr) : holding; 
-                
-                let status = await redis.get(`rewards:status:${walletLower}`) || "diamond";
+                let status = await redis.get(`rewards:status:${w}`) || "diamond";
 
                 if (holding < lastHolding) {
                     status = "paper";
-                    console.log(`🩸 ${walletLower} ha venduto! Status: PAPER HANDS.`);
+                    console.log(`🩸 ${w} ha venduto! Status: PAPER.`);
                 } else if (holding > lastHolding && holding >= MIN_HOLDING) {
                     status = "diamond";
-                    console.log(`💎 ${walletLower} ha comprato! Status: DIAMOND HANDS.`);
                 }
 
                 let updatedPoints = currentPoints;
-
                 if (status === "paper") {
-                    // MALUS: Perde il 5% dei punti correnti
-                    updatedPoints = currentPoints * 0.95;
-                    console.log(`📉 Malus 5% applicato a ${walletLower}. Punti attuali: ${updatedPoints.toFixed(2)}`);
+                    updatedPoints = currentPoints * 0.95; // Malus
                 } else if (status === "diamond" && holding >= MIN_HOLDING) {
-                    // PREMIO: 10 pt per Milione
-                    const millionsHeld = Number(holding / (10n ** 9n)) / 1000000;
-                    updatedPoints += (millionsHeld * 10);
+                    updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * 10); // Bonus
                 }
 
-                // Salviamo le modifiche per il prossimo giro
-                await redis.set(`rewards:status:${walletLower}`, status);
-                await redis.set(`rewards:last_holding:${walletLower}`, holding.toString());
-                await redis.zadd('leaderboard:points', { score: updatedPoints, member: walletLower });
-                await redis.set(`rewards:user_index:${walletLower}`, globalIndex.toString());
-                
-                newGlobalTotalPoints += updatedPoints;
+                await redis.set(`rewards:status:${w}`, status);
+                await redis.set(`rewards:last_holding:${w}`, holding.toString());
+                await redis.zadd('leaderboard:points', { score: updatedPoints, member: w });
             } catch (e) { continue; }
         }
-        await redis.set('leaderboard:total_points_sum:global', newGlobalTotalPoints.toString());
-        console.log(`🏁 Ciclo completato. Totale Punti Globali: ${newGlobalTotalPoints.toFixed(2)}`);
+        console.log(`🏁 Ciclo completato e blindato.`);
     } catch (e) { console.error("Errore Watcher:", e.message); }
     setTimeout(watch, 15 * 60 * 1000);
 }
