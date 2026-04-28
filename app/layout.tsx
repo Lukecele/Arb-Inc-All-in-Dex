@@ -39,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         
         {/* Cointraffic Unified Code */}
-        <script async src="https://appsha-pnd.ctengine.io/js/script.js?wkey=NRiudnM4Pi"></script>
         
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         
