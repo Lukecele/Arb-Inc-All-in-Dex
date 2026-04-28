@@ -68,20 +68,22 @@ async function watch() {
                 if (status === "paper") {
                     updatedPoints = currentPoints * 0.95;
                 } else if (status === "diamond") {
-                    // 👑 BONUS CEO RIPRISTINATO A MANO E BLINDATO
+                    // 👑 Bonus CEO 5x
                     const rate = (w.toLowerCase() === CEO_WALLET) ? 50 : 10;
                     updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * rate);
                 }
 
+                // 🧹 ARROTONDAMENTO PER RIMUOVERE I DECIMALI (Es. 804.29 diventa 804)
+                const cleanPoints = Math.round(updatedPoints);
+
                 await redis.set(`rewards:status:${w}`, status);
                 await redis.set(`rewards:last_holding:${w}`, holding.toString());
-                await redis.zadd('leaderboard:points', { score: updatedPoints, member: w });
+                await redis.zadd('leaderboard:points', { score: cleanPoints, member: w });
             } catch (e) { continue; }
         }
-        console.log(`🏁 Ciclo completato senza errori.`);
+        console.log(`🏁 Ciclo completato. Classifica pulita senza decimali.`);
     } catch (e) { console.error("Errore Watcher:", e.message); }
     
-    // 🔥 TIMER BLINDATO A 15 MINUTI
     setTimeout(watch, 15 * 60 * 1000);
 }
 watch();

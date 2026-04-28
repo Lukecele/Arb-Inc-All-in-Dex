@@ -3904,3 +3904,8 @@ Killed
 
 🕒 [15:49:04] Ciclo di controllo...
 🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ◈ encrypted .env [www.dotenvx.com]
+
+🕒 [16:00:01] Ciclo di controllo...
+🏁 Ciclo completato senza errori.
