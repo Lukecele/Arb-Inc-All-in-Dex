@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode } from 'react-icons/fa';
 
 const pulse = keyframes`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
@@ -146,12 +146,47 @@ const FeatureCard = styled.div`
   }
 `;
 
+const AuditSection = styled.section`
+  padding: 80px 0;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
+  border-radius: 40px;
+  border: 1px solid rgba(168, 85, 247, 0.1);
+  margin-bottom: 100px;
+`;
+
+const AuditHeader = styled.div`
+  text-align: center;
+  margin-bottom: 50px;
+  h2 { font-size: 2.5rem; margin-bottom: 16px; }
+  p { color: #94a3b8; max-width: 700px; margin: 0 auto; }
+`;
+
+const AuditGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 0 40px;
+  @media (max-width: 768px) { padding: 0 20px; }
+`;
+
+const AuditCard = styled.div`
+  background: rgba(3, 0, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  .icon { color: #a855f7; font-size: 1.5rem; }
+  h4 { font-size: 1.2rem; color: white; }
+  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
+`;
+
 const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    // ANCORA SINCRONIZZATA CON BRASILE (UTC-3)
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
     const PROCESSING_TIME = 2 * 60 * 1000; 
@@ -159,11 +194,9 @@ const HomePageClient = () => {
     const updateTimer = () => {
       const now = new Date().getTime();
       const elapsed = now - ANCHOR_TIME;
-      
       const cycles = Math.floor(elapsed / INTERVAL);
       const lastPayout = ANCHOR_TIME + (cycles * INTERVAL);
       const nextPayout = lastPayout + INTERVAL;
-
       const timeSinceLast = now - lastPayout;
 
       if (timeSinceLast >= 0 && timeSinceLast <= PROCESSING_TIME) {
@@ -241,6 +274,33 @@ const HomePageClient = () => {
             <p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p>
           </FeatureCard>
         </FeatureGrid>
+
+        <AuditSection>
+          <AuditHeader>
+            <h2>Security & Audit</h2>
+            <p>Arbitrage Inception prioritizes safety through strategic simplification and industry-standard integrations.</p>
+          </AuditHeader>
+          <AuditGrid>
+            <AuditCard>
+              <FaCheckCircle className="icon" />
+              <h4>KyberSwap Integration</h4>
+              <p>We do not use custom, unverified smart contracts for trading. By integrating KyberSwap widgets, you inherit the security of a battle-tested aggregator audited by ChainSecurity.</p>
+            </AuditCard>
+            <AuditCard>
+              <FaLock className="icon" />
+              <h4>Zero-Contract Risk</h4>
+              <p>Core swap logic is non-custodial. Your funds never interact with proprietary custom-coded contracts, eliminating the primary attack surface for DeFi hacks.</p>
+            </AuditCard>
+            <AuditCard>
+              <FaCode className="icon" />
+              <h4>Frontend Rewards Logic</h4>
+              <p>Our meritocratic rewards are calculated by a precision frontend engine. This allows for transparent 9-decimal ranking without the risks associated with complex on-chain reward vaults.</p>
+            </AuditCard>
+          </AuditGrid>
+          <div style={{textAlign: 'center', marginTop: '40px'}}>
+             <PrimaryButton href="#" style={{display: 'inline-flex', background: 'transparent', border: '1px solid #a855f7'}}>View Security Profile</PrimaryButton>
+          </div>
+        </AuditSection>
       </Container>
       <Footer />
     </PageWrapper>
