@@ -14,14 +14,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   console.log("📦 Dati ricevuti dal sito:", req.body);
 
-  // 1. Rendiamo il body flessibile (JSON o Testo)
   let body = req.body;
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch(e) {}
   }
 
-  // 2. Cerchiamo l'indirizzo in tutti i modi possibili
-  const address = body?.address || body?.wallet || body?.account;
+  // 🛠️ IL FIX È QUI: Abbiamo aggiunto body?.walletAddress
+  const address = body?.address || body?.wallet || body?.account || body?.walletAddress;
 
   if (!address) {
     console.log("❌ Errore: Il sito non ha inviato l'indirizzo del wallet!");
@@ -42,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
-    console.log(`🚀 Tutto ok! Invio transazione...`);
+    console.log(`🚀 Tutto ok! Invio transazione a ${address}...`);
     const tx = await signer.sendTransaction({
       to: address,
       value: ethers.utils.parseEther(pendingBalance.toFixed(18))
@@ -50,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await tx.wait();
     await redis.set(`rewards:pending:${walletLower}`, "0");
-    console.log(`✅ Claim completato con successo: ${tx.hash}`);
+    console.log(`✅ Claim completato con successo! Hash: ${tx.hash}`);
 
     return res.status(200).json({ success: true, hash: tx.hash });
   } catch (error: any) {
