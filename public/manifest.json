@@ -13,7 +13,6 @@
   ],
   "categories": ["finance", "utilities"],
   "shortcuts": [
-    { "name": "Swap Tokens", "short_name": "Swap", "description": "Swap ARB Inc and other tokens", "url": "/swap" },
     { "name": "Add Liquidity", "short_name": "Zap", "description": "Add liquidity with one click", "url": "/zap" },
     { "name": "Bridge Tokens", "short_name": "Bridge", "description": "Bridge tokens across chains", "url": "/bridge" }
   ],

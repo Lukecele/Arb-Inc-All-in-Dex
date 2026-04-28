@@ -23,7 +23,7 @@ test.describe('Arbitrage Inception Website', () => {
   })
 
   test('Swap page loads with demo mode', async ({ page }) => {
-    await page.goto('http://localhost:3000/swap')
+    await page.goto('/swap-all')
     
     await expect(page.locator('text=Arbitrage Inception')).toBeVisible()
     

@@ -16,7 +16,6 @@ export function usePrefetch() {
 
 // Common pages to prefetch on layout load
 export const commonPagesToPrefetch = [
-  '/swap',
   '/zap',
   '/bridge',
   '/limit-orders',

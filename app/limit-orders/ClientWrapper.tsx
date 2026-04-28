@@ -234,7 +234,6 @@ export default function ClientWrapper() {
   const handleMarket = () => { const r = getMarketRate(); setRate(r); setUseMarketRate(true); if (sellAmount) setBuyAmount((parseFloat(sellAmount) * parseFloat(r)).toFixed(6)); };
   const handleSell = (v: string) => { setSellAmount(v); if (v && rate) setBuyAmount((parseFloat(v) * parseFloat(rate)).toFixed(6)); else if (v && useMarketRate) setBuyAmount((parseFloat(v) * parseFloat(getMarketRate())).toFixed(6)); };
   const handleFlip = () => { const t = sellToken; setSellToken(buyToken); setBuyToken(t); setSellAmount(''); setBuyAmount(''); setRate(''); };
-  const handleWrap = () => { window.location.href = '/swap?mode=wrap'; };
   useEffect(() => { if (walletAddress && provider && sellAmount) checkApproval(); }, [walletAddress, provider, sellAmount, checkApproval]);
 
   const handleCreate = async () => {
@@ -307,7 +306,6 @@ export default function ClientWrapper() {
             <span style={{fontSize:13,color:'#a1a1aa',display:'block',marginBottom:6}}>Expires in</span>
             <ExpirySelect value={expiry} onChange={e=>setExpiry(Number(e.target.value))}><option value={0}>Forever</option><option value={3600}>1 hour</option><option value={86400}>1 day</option></ExpirySelect>
           </div>
-          {(sellToken.address.toLowerCase() === WBNB_ADDRESS.toLowerCase() || sellToken.address.toLowerCase() === NATIVE_BNB_ADDRESS.toLowerCase()) && <SubmitBtn onClick={handleWrap} disabled={wrapLoading} style={{background:'#22c55e', marginBottom:8}}>{wrapLoading ? 'Wrapping...' : 'Wrap BNB'}</SubmitBtn>}
           {approvalNeeded && sellAmount && <SubmitBtn onClick={handleApprove} disabled={approving} style={{background:'#f59e0b', marginBottom:8}}>{approving ? 'Approving...' : `Approve ${sellToken.symbol}`}</SubmitBtn>}
           <SubmitBtn onClick={handleCreate}>Create Order</SubmitBtn>
         </Card>

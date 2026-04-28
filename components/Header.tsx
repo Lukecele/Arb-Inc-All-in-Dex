@@ -9,8 +9,6 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 
 export const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/swap', label: 'Swap' },
-  { href: '/swap-all', label: 'Swap All' },
   { href: '/zap', label: 'Zap' },
   { href: '/bridge', label: 'Bridge' },
   { href: '/limit-orders', label: 'Limit Orders' },

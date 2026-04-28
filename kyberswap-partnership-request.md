@@ -43,7 +43,7 @@ Chain:          BNB Smart Chain (Chain ID: 56)
 | Page | URL | Description |
 |------|-----|-------------|
 | Home | / | Project info, stats, roadmap |
-| Swap (Custom) | /swap | Custom token swap with ARBINc |
+| Swap (Custom) | /swap-all | Custom token swap with ARBINc |
 | Swap All | /swap-all | Full token swap (all tokens) |
 | Zap | /zap | Liquidity provision/withdrawal |
 | Privacy Policy | /privacy-policy | GDPR compliant |
@@ -67,7 +67,7 @@ We are generating real trading volume on BSC through our interface and want to b
 | Resource | URL |
 |----------|-----|
 | Our Platform | https://arbitrage-inc.exchange |
-| Swap Page | https://arbitrage-inc.exchange/swap |
+| Swap Page | https://arbitrage-inc.exchange/swap-all-all |
 | Zap Page | https://arbitrage-inc.exchange/zap |
 | GitHub | https://github.com/Lukecele/Arb-Inc-All-in-Dex |
 | Token (BscScan) | https://bscscan.com/token/0x630b9c39d46314a3268d75bb25fd79df4581d1af |
