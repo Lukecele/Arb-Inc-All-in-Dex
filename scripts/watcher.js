@@ -11,8 +11,8 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN 
 });
 
-// ✅ INDIRIZZO CORRETTO (Quello che vede i tuoi 4M di token)
-const TOKEN_CONTRACT_ADDRESS = "0x56a640954939768ad660686940860089201a9908".toLowerCase();
+// ✅ IL CONTRATTO ORIGINALE CORRETTO
+const TOKEN_CONTRACT_ADDRESS = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLowerCase();
 const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
@@ -74,7 +74,7 @@ async function watch() {
                 if (status === "paper") {
                     updatedPoints = currentPoints * 0.95;
                 } else if (status === "diamond" && holding >= MIN_HOLDING) {
-                    // 👑 CEO MULTIPLIER (50 invece di 10)
+                    // 👑 CEO MULTIPLIER (50 punti ogni milione per te, 10 per gli altri)
                     const rate = (w.toLowerCase() === CEO_WALLET) ? 50 : 10;
                     updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * rate);
                 }
@@ -84,7 +84,7 @@ async function watch() {
                 await redis.zadd('leaderboard:points', { score: updatedPoints, member: w });
             } catch (e) { continue; }
         }
-        console.log(`🏁 Ciclo completato con indirizzo corretto.`);
+        console.log(`🏁 Ciclo completato: Contratto corretto e Bonus attivo.`);
     } catch (e) { console.error("Errore Watcher:", e.message); }
     setTimeout(watch, 15 * 60 * 1000);
 }
