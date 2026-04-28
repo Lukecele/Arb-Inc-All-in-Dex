@@ -95,60 +95,60 @@ const AboutClient = () => {
         <SectionHeader>
           <h1>About Arbitrage Inception</h1>
           <p>
-            L'ecosistema DeFi su BNB Smart Chain che trasforma il trading di arbitraggio in rendita passiva reale. 
-            Semplice, automatico e focalizzato sulla massimizzazione del valore per gli holder.
+            A next-generation DeFi protocol on BNB Smart Chain designed to capture market inefficiencies 
+            and transform them into consistent BNB rewards for our community.
           </p>
         </SectionHeader>
 
         <Grid>
           <Card>
             <FaChartLine className="icon" />
-            <h3>Cross-DEX Arbitrage</h3>
-            <p>Il nostro protocollo scansiona costantemente i DEX della rete BSC, catturando profitti dalle discrepanze di prezzo e alimentando il Treasury.</p>
+            <h3>DEX Revenue Engine</h3>
+            <p>Our smart contracts scan decentralized exchanges for price gaps. 100% of the profits generated from these arbitrage trades are funneled directly into the Treasury.</p>
           </Card>
           <Card>
             <FaShieldAlt className="icon" />
-            <h3>100% Revenue Flow</h3>
-            <p>Non ci sono divisioni opache: il 100% delle tasse di transazione e dei profitti generati dal DEX finisce direttamente nel Tesoro.</p>
+            <h3>100% Treasury Inflow</h3>
+            <p>Transparency is our core. 100% of the 4% transaction taxes AND 100% of arbitrage revenues go to the Treasury. No hidden splits, no team cuts from rewards.</p>
           </Card>
           <Card>
             <FaClock className="icon" />
-            <h3>Rewards ogni 6 ore</h3>
-            <p>Il Tesoro distribuisce automaticamente l'intero ammontare accumulato sotto forma di BNB a tutti i detentori di ARB Inc ogni 6 ore.</p>
+            <h3>6-Hour Payout Cycle</h3>
+            <p>Efficiency at its peak. The Treasury distributes 100% of its accumulated BNB balance to ARB Inc holders every 6 hours, 4 times a day.</p>
           </Card>
         </Grid>
 
         <TokenomicsBox>
           <StatItem style={{marginBottom: '32px'}}>
-            <div className="label">ARB Inc Total Supply</div>
+            <div className="label">ARB Inc Token Supply</div>
             <div className="value" style={{fontSize: '3.5rem'}}>1,000,000,000</div>
-            <div style={{color: '#a855f7', marginTop: '8px', fontWeight: 'bold'}}>4% Buy/Sell Tax for Treasury</div>
+            <div style={{color: '#a855f7', marginTop: '8px', fontWeight: 'bold'}}>4% Buy/Sell Tax — Sent 100% to Treasury</div>
           </StatItem>
           
           <StatGrid>
             <StatItem>
-              <div className="label">Revenue to Treasury</div>
+              <div className="label">DEX + Tax Revenue</div>
               <div className="value">100%</div>
-              <div style={{fontSize: '0.8rem', color: '#64748b'}}>Total Transparency</div>
+              <div style={{fontSize: '0.8rem', color: '#64748b'}}>To Rewards Treasury</div>
             </StatItem>
             <StatItem>
-              <div className="label">BNB Reward Frequency</div>
-              <div className="value">6 Ore</div>
-              <div style={{fontSize: '0.8rem', color: '#64748b'}}>Continuous Distribution</div>
+              <div className="label">Payout Frequency</div>
+              <div className="value">6 Hours</div>
+              <div style={{fontSize: '0.8rem', color: '#64748b'}}>Continuous BNB Flow</div>
             </StatItem>
             <StatItem>
-              <div className="label">Reward Token</div>
+              <div className="label">Reward Asset</div>
               <div className="value">BNB</div>
-              <div style={{fontSize: '0.8rem', color: '#64748b'}}>Native Assets Only</div>
+              <div style={{fontSize: '0.8rem', color: '#64748b'}}>Direct Native Payouts</div>
             </StatItem>
           </StatGrid>
         </TokenomicsBox>
 
         <CTASection>
-          <h2>Pronto a ricevere BNB?</h2>
-          <p style={{marginBottom: '32px', color: '#94a3b8'}}>Accumula ARB Inc e guarda il tuo bilancio BNB crescere quattro volte al giorno.</p>
-          <Button href="/swap-all">Buy ARB Inc</Button>
-          <Button href="/rewards" style={{background: 'transparent', border: '1px solid #444'}}>Check Dashboard</Button>
+          <h2>Start Earning Native BNB</h2>
+          <p style={{marginBottom: '32px', color: '#94a3b8'}}>Hold ARB Inc tokens and claim your share of the protocol's success every 6 hours.</p>
+          <Button href="/swap-all">Swap Now</Button>
+          <Button href="/rewards" style={{background: 'transparent', border: '1px solid #444'}}>View Dashboard</Button>
         </CTASection>
       </Content>
       <Footer />
