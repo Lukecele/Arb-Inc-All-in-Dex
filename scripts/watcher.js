@@ -11,7 +11,6 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN 
 });
 
-// ✅ IL CONTRATTO ORIGINALE CORRETTO
 const TOKEN_CONTRACT_ADDRESS = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLowerCase();
 const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
@@ -59,22 +58,17 @@ async function watch() {
             try {
                 const currentPoints = parseFloat(await redis.zscore('leaderboard:points', w) || "0");
                 const holding = await contract.balanceOf(ethers.getAddress(w));
-                const lastHoldingStr = await redis.get(`rewards:last_holding:${w}`);
-                const lastHolding = lastHoldingStr ? BigInt(lastHoldingStr) : holding;
                 
-                let status = await redis.get(`rewards:status:${w}`) || "diamond";
-
-                if (holding < lastHolding) {
+                let status = "diamond";
+                if (holding < MIN_HOLDING) {
                     status = "paper";
-                } else if (holding >= MIN_HOLDING) {
-                    status = "diamond";
                 }
 
                 let updatedPoints = currentPoints;
                 if (status === "paper") {
                     updatedPoints = currentPoints * 0.95;
-                } else if (status === "diamond" && holding >= MIN_HOLDING) {
-                    // 👑 CEO MULTIPLIER (50 punti ogni milione per te, 10 per gli altri)
+                } else if (status === "diamond") {
+                    // 👑 BONUS CEO RIPRISTINATO A MANO E BLINDATO
                     const rate = (w.toLowerCase() === CEO_WALLET) ? 50 : 10;
                     updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * rate);
                 }
@@ -84,8 +78,10 @@ async function watch() {
                 await redis.zadd('leaderboard:points', { score: updatedPoints, member: w });
             } catch (e) { continue; }
         }
-        console.log(`🏁 Ciclo completato: Contratto corretto e Bonus attivo.`);
+        console.log(`🏁 Ciclo completato senza errori.`);
     } catch (e) { console.error("Errore Watcher:", e.message); }
+    
+    // 🔥 TIMER BLINDATO A 15 MINUTI
     setTimeout(watch, 15 * 60 * 1000);
 }
 watch();
