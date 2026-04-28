@@ -68,7 +68,6 @@ const Subtitle = styled.p`
 const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
-  @media (max-width: 600px) { flex-direction: column; width: 100%; }
 `;
 
 const PrimaryButton = styled.a`
@@ -166,7 +165,6 @@ const AuditGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
   padding: 0 40px;
-  @media (max-width: 768px) { padding: 0 20px; }
 `;
 
 const AuditCard = styled.div`
@@ -183,10 +181,12 @@ const AuditCard = styled.div`
 `;
 
 const HomePageClient = () => {
-  const [timerDisplay, setTimerDisplay] = useState('');
+  const [timerDisplay, setTimerDisplay] = useState('...');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
     const PROCESSING_TIME = 2 * 60 * 1000; 
@@ -208,7 +208,7 @@ const HomePageClient = () => {
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimerDisplay(`${h}h ${m}m ${s}s`);
+        setTimerDisplay(`${h}h ${m}s`);
       }
     };
 
@@ -216,6 +216,9 @@ const HomePageClient = () => {
     updateTimer();
     return () => clearInterval(interval);
   }, []);
+
+  // Se non siamo ancora montati sul client, non renderizziamo nulla per evitare errori
+  if (!mounted) return null;
 
   return (
     <PageWrapper>
@@ -297,9 +300,6 @@ const HomePageClient = () => {
               <p>Our meritocratic rewards are calculated by a precision frontend engine. This allows for transparent 9-decimal ranking without the risks associated with complex on-chain reward vaults.</p>
             </AuditCard>
           </AuditGrid>
-          <div style={{textAlign: 'center', marginTop: '40px'}}>
-             <PrimaryButton href="#" style={{display: 'inline-flex', background: 'transparent', border: '1px solid #a855f7'}}>View Security Profile</PrimaryButton>
-          </div>
         </AuditSection>
       </Container>
       <Footer />
