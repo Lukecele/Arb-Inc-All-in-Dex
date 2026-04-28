@@ -7,7 +7,8 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const RPC_URL = "https://binance.chainnodes.org"; 
+// Usiamo Ankr: il nodo più affidabile per le dApp
+const RPC_URL = "https://rpc.ankr.com/bsc"; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
@@ -19,11 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try { body = JSON.parse(body); } catch(e) {}
   }
 
-  // 🛠️ IL FIX È QUI: Abbiamo aggiunto body?.walletAddress
   const address = body?.address || body?.wallet || body?.account || body?.walletAddress;
 
   if (!address) {
-    console.log("❌ Errore: Il sito non ha inviato l'indirizzo del wallet!");
     return res.status(400).json({ error: 'Missing address' });
   }
 
@@ -34,11 +33,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`🔍 Controllo: Il wallet ${walletLower} ha ${pendingBalance} BNB su Redis`);
 
     if (pendingBalance < 0.0005) {
-      console.log(`❌ Errore: Saldo troppo basso.`);
       return res.status(400).json({ error: 'Sotto la soglia minima' });
     }
 
-    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+    // 🛠️ FIX DEFINITIVO: StaticJsonRpcProvider con Chain ID 56 hardcodato
+    // Questo impedisce a Ethers di bloccarsi cercando la rete
+    const provider = new ethers.providers.StaticJsonRpcProvider(
+        { url: RPC_URL, timeout: 10000 }, 
+        { chainId: 56, name: 'binance' }
+    );
+    
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
     console.log(`🚀 Tutto ok! Invio transazione a ${address}...`);
@@ -47,9 +51,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       value: ethers.utils.parseEther(pendingBalance.toFixed(18))
     });
 
+    console.log(`⏳ Transazione inviata! Attesa conferma... Hash: ${tx.hash}`);
     await tx.wait();
+    
     await redis.set(`rewards:pending:${walletLower}`, "0");
-    console.log(`✅ Claim completato con successo! Hash: ${tx.hash}`);
+    console.log(`✅ Claim completato con successo!`);
 
     return res.status(200).json({ success: true, hash: tx.hash });
   } catch (error: any) {
