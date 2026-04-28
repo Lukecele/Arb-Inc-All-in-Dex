@@ -33,7 +33,7 @@ async function watch() {
 
             globalIndex += (diff * SAFE_FACTOR) / totalPointsGlobal;
             await redis.set('rewards:global_index', globalIndex.toString());
-            console.log(`📈 Dividendi rilevati: ${diff.toFixed(6)} BNB. Distribuito: ${(diff * SAFE_FACTOR).toFixed(6)}`);
+            console.log(`📈 Dividendi: ${diff.toFixed(6)} BNB. Nuovo Index: ${globalIndex}`);
         }
         await redis.set('rewards:last_balance', balance.toString());
 
@@ -44,37 +44,60 @@ async function watch() {
 
         for (const wallet of allWallets) {
             const walletLower = wallet.toLowerCase();
-            
             if (walletLower === REAL_TREASURY_WALLET || walletLower === TOKEN_CONTRACT_ADDRESS) continue;
 
             try {
                 const currentPoints = parseFloat(await redis.zscore('leaderboard:points', walletLower) || "0");
-                const userIndexStr = await redis.get(`rewards:user_index:${walletLower}`);
-                const userIndex = userIndexStr ? parseFloat(userIndexStr) : globalIndex;
+                const userIndex = parseFloat(await redis.get(`rewards:user_index:${walletLower}`) || globalIndex);
                 const currentPending = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
 
+                // 1. Applichiamo i BNB guadagnati finora
                 const earned = currentPoints * (globalIndex - userIndex);
                 if (earned > 0) {
                     await redis.set(`rewards:pending:${walletLower}`, (currentPending + earned).toString());
                 }
 
+                // 2. Controllo Status Diamond / Paper
                 const holding = await contract.balanceOf(ethers.getAddress(walletLower));
-                let updatedPoints = currentPoints;
+                const lastHoldingStr = await redis.get(`rewards:last_holding:${walletLower}`);
                 
-                if (holding >= MIN_HOLDING) {
-                    // LA TUA REGOLA: 10 punti per ogni milione di token posseduti ad ogni ciclo
+                // Se è la prima volta che lo leggiamo, non lo puniamo subito
+                const lastHolding = lastHoldingStr ? BigInt(lastHoldingStr) : holding; 
+                
+                let status = await redis.get(`rewards:status:${walletLower}`) || "diamond";
+
+                if (holding < lastHolding) {
+                    status = "paper";
+                    console.log(`🩸 ${walletLower} ha venduto! Status: PAPER HANDS.`);
+                } else if (holding > lastHolding && holding >= MIN_HOLDING) {
+                    status = "diamond";
+                    console.log(`💎 ${walletLower} ha comprato! Status: DIAMOND HANDS.`);
+                }
+
+                let updatedPoints = currentPoints;
+
+                if (status === "paper") {
+                    // MALUS: Perde il 5% dei punti correnti
+                    updatedPoints = currentPoints * 0.95;
+                    console.log(`📉 Malus 5% applicato a ${walletLower}. Punti attuali: ${updatedPoints.toFixed(2)}`);
+                } else if (status === "diamond" && holding >= MIN_HOLDING) {
+                    // PREMIO: 10 pt per Milione
                     const millionsHeld = Number(holding / (10n ** 9n)) / 1000000;
                     updatedPoints += (millionsHeld * 10);
                 }
 
+                // Salviamo le modifiche per il prossimo giro
+                await redis.set(`rewards:status:${walletLower}`, status);
+                await redis.set(`rewards:last_holding:${walletLower}`, holding.toString());
                 await redis.zadd('leaderboard:points', { score: updatedPoints, member: walletLower });
                 await redis.set(`rewards:user_index:${walletLower}`, globalIndex.toString());
+                
                 newGlobalTotalPoints += updatedPoints;
             } catch (e) { continue; }
         }
         await redis.set('leaderboard:total_points_sum:global', newGlobalTotalPoints.toString());
-        console.log(`🏁 Fine ciclo. Punti Veri: ${newGlobalTotalPoints.toFixed(2)}`);
-    } catch (e) { console.error("Errore:", e.message); }
+        console.log(`🏁 Ciclo completato. Totale Punti Globali: ${newGlobalTotalPoints.toFixed(2)}`);
+    } catch (e) { console.error("Errore Watcher:", e.message); }
     setTimeout(watch, 15 * 60 * 1000);
 }
 watch();
