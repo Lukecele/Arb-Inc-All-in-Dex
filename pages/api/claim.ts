@@ -23,19 +23,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const walletLower = address.toLowerCase();
 
   try {
-    const pendingBalance = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
+    // 🛡️ FIX TYPESCRIPT: Usiamo String() per forzare il tipo corretto
+    const pendingBalance = parseFloat(String(await redis.get(`rewards:pending:${walletLower}`) || "0"));
 
     if (pendingBalance < 0.0005) {
       return res.status(400).json({ error: 'Saldo insufficiente per il claim' });
     }
 
-    // 🛡️ RESET TOTALE: Azzeriamo BNB pending E Punti classifica
+    // RESET TOTALE: Azzeriamo BNB pending E Punti classifica
     await redis.set(`rewards:pending:${walletLower}`, "0");
     await redis.zadd('leaderboard:points', { score: 0, member: walletLower });
     
-    // Aggiorniamo anche il totale globale dei punti per riflettere la rimozione
-    const currentGlobalPoints = parseFloat(await redis.get('leaderboard:total_points_sum:global') || "0");
-    const pointsToSubtract = parseFloat(await redis.zscore('leaderboard:points', walletLower) || "0");
+    // Aggiorniamo il totale globale forzando le stringhe per TypeScript
+    const currentGlobalPoints = parseFloat(String(await redis.get('leaderboard:total_points_sum:global') || "0"));
+    const pointsToSubtract = parseFloat(String(await redis.zscore('leaderboard:points', walletLower) || "0"));
     await redis.set('leaderboard:total_points_sum:global', Math.max(0, currentGlobalPoints - pointsToSubtract).toString());
 
     const provider = new ethers.providers.StaticJsonRpcProvider(
