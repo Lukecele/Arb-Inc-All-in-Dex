@@ -7,8 +7,8 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// Usiamo Ankr: il nodo più affidabile per le dApp
-const RPC_URL = "https://rpc.ankr.com/bsc"; 
+// 🔄 Torniamo al nodo ufficiale Binance (ora che abbiamo lo scudo!)
+const RPC_URL = "https://bsc-dataseed.binance.org/"; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
@@ -36,10 +36,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Sotto la soglia minima' });
     }
 
-    // 🛠️ FIX DEFINITIVO: StaticJsonRpcProvider con Chain ID 56 hardcodato
-    // Questo impedisce a Ethers di bloccarsi cercando la rete
+    // 🛡️ LO SCUDO: Impedisce l'errore noNetwork anche sul nodo Binance
     const provider = new ethers.providers.StaticJsonRpcProvider(
-        { url: RPC_URL, timeout: 10000 }, 
+        { url: RPC_URL, timeout: 15000 }, 
         { chainId: 56, name: 'binance' }
     );
     
