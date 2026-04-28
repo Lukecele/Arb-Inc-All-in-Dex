@@ -13,6 +13,7 @@ const redis = new Redis({
 
 const TOKEN_CONTRACT_ADDRESS = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLowerCase();
 const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
+const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 const MIN_HOLDING = 2000000n * (10n ** 9n);
 const SAFE_FACTOR = 0.50; 
@@ -25,7 +26,7 @@ async function watch() {
         const lastBalance = lastBalanceStr ? BigInt(lastBalanceStr) : balance;
         const allWallets = await redis.zrange('leaderboard:points', 0, -1);
 
-        // 🛡️ FASE 1: DISTRIBUZIONE DIRETTA (Matematica Infallibile)
+        // 🛡️ FASE 1: DISTRIBUZIONE DIRETTA
         if (balance > lastBalance) {
             const diff = parseFloat(ethers.formatEther(balance - lastBalance));
             const toDistribute = diff * SAFE_FACTOR;
@@ -39,7 +40,7 @@ async function watch() {
             }
 
             if (realTotalPoints > 0) {
-                console.log(`📈 Tasse rilevate: ${diff.toFixed(6)} BNB. Distribuisco: ${toDistribute.toFixed(6)} BNB su ${realTotalPoints.toFixed(2)} punti.`);
+                console.log(`📈 Tasse rilevate: ${diff.toFixed(6)} BNB. Distribuisco: ${toDistribute.toFixed(6)} BNB.`);
                 for (const w of allWallets) {
                     if (scores[w] > 0) {
                         const share = scores[w] / realTotalPoints;
@@ -52,12 +53,12 @@ async function watch() {
         }
         await redis.set('rewards:last_balance', balance.toString());
 
-        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Malus)
+        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Bonus VIP)
         const abi = ["function balanceOf(address) view returns (uint256)"];
         const contract = new ethers.Contract(ethers.getAddress(TOKEN_CONTRACT_ADDRESS), abi, provider);
 
         for (const w of allWallets) {
-            if (w === REAL_TREASURY_WALLET || w === TOKEN_CONTRACT_ADDRESS) continue;
+            if (w.toLowerCase() === REAL_TREASURY_WALLET || w.toLowerCase() === TOKEN_CONTRACT_ADDRESS) continue;
             try {
                 const currentPoints = parseFloat(await redis.zscore('leaderboard:points', w) || "0");
                 const holding = await contract.balanceOf(ethers.getAddress(w));
@@ -68,16 +69,17 @@ async function watch() {
 
                 if (holding < lastHolding) {
                     status = "paper";
-                    console.log(`🩸 ${w} ha venduto! Status: PAPER.`);
                 } else if (holding > lastHolding && holding >= MIN_HOLDING) {
                     status = "diamond";
                 }
 
                 let updatedPoints = currentPoints;
                 if (status === "paper") {
-                    updatedPoints = currentPoints * 0.95; // Malus
+                    updatedPoints = currentPoints * 0.95;
                 } else if (status === "diamond" && holding >= MIN_HOLDING) {
-                    updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * 10); // Bonus
+                    // 👑 CLAUSOLA CEO: 50 punti ogni milione se è il tuo wallet, altrimenti 10
+                    const rate = (w.toLowerCase() === CEO_WALLET) ? 50 : 10;
+                    updatedPoints += ((Number(holding / (10n ** 9n)) / 1000000) * rate);
                 }
 
                 await redis.set(`rewards:status:${w}`, status);
@@ -85,7 +87,7 @@ async function watch() {
                 await redis.zadd('leaderboard:points', { score: updatedPoints, member: w });
             } catch (e) { continue; }
         }
-        console.log(`🏁 Ciclo completato e blindato.`);
+        console.log(`🏁 Ciclo completato.`);
     } catch (e) { console.error("Errore Watcher:", e.message); }
     setTimeout(watch, 15 * 60 * 1000);
 }
