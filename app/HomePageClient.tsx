@@ -1,12 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaClock, FaChartLine, FaArrowRight } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner } from 'react-icons/fa';
 
-// --- STYLED COMPONENTS ---
+const pulse = keyframes`
+  0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
+  50% { opacity: 0.7; border-color: #a855f7; }
+  100% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
+`;
+
 const PageWrapper = styled.div`
   min-height: 100vh;
   background-color: #030014;
@@ -99,7 +104,7 @@ const LivePulseSection = styled.div`
   gap: 20px;
 `;
 
-const PulseCard = styled.div`
+const PulseCard = styled.div<{ $isProcessing?: boolean }>`
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 24px;
@@ -107,8 +112,16 @@ const PulseCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`}
   .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { font-size: 1.8rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .value { 
+    font-size: 1.8rem; 
+    font-weight: 700; 
+    color: ${props => props.$isProcessing ? '#a855f7' : 'white'};
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
 `;
 
@@ -124,14 +137,6 @@ const FeatureCard = styled.div`
   background: rgba(255, 255, 255, 0.01);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 24px;
-  position: relative;
-  overflow: hidden;
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, #a855f7, transparent);
-  }
   h3 { font-size: 1.5rem; margin: 20px 0 12px; }
   p { color: #94a3b8; line-height: 1.6; }
   .icon-box {
@@ -142,97 +147,101 @@ const FeatureCard = styled.div`
 `;
 
 const HomePageClient = () => {
-  const [timeLeft, setTimeLeft] = useState('');
+  const [timerDisplay, setTimerDisplay] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const nextPayout = new Date();
-      
-      const hours = now.getUTCHours();
-      const nextWindow = (Math.floor(hours / 6) + 1) * 6;
-      
-      nextPayout.setUTCHours(nextWindow, 0, 0, 0);
-      
-      const diff = nextPayout.getTime() - now.getTime();
-      const h = Math.floor(diff / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      setTimeLeft(`${h}h ${m}m ${s}s`);
-    }, 1000);
+    // ANCORA SINCRONIZZATA CON BRASILE (UTC-3)
+    const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
+    const INTERVAL = 6 * 60 * 60 * 1000;
+    const PROCESSING_TIME = 2 * 60 * 1000; 
 
-    return () => clearInterval(timer);
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const elapsed = now - ANCHOR_TIME;
+      
+      const cycles = Math.floor(elapsed / INTERVAL);
+      const lastPayout = ANCHOR_TIME + (cycles * INTERVAL);
+      const nextPayout = lastPayout + INTERVAL;
+
+      const timeSinceLast = now - lastPayout;
+
+      if (timeSinceLast >= 0 && timeSinceLast <= PROCESSING_TIME) {
+        setIsProcessing(true);
+        setTimerDisplay('Processing...');
+      } else {
+        setIsProcessing(false);
+        const diff = nextPayout - now;
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimerDisplay(`${h}h ${m}m ${s}s`);
+      }
+    };
+
+    const interval = setInterval(updateTimer, 1000);
+    updateTimer();
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <PageWrapper>
       <Header activePage="/" />
-      
       <Container>
         <Hero>
           <Badge>Protocol Live on BNB Chain</Badge>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>
-            Aggregated liquidity, professional tools, and a transparent 
-            revenue-sharing model powered by our 9-decimal ranking justice.
+            Aggregated liquidity and a transparent 100% revenue-sharing model 
+            powered by our 9-decimal ranking justice.
           </Subtitle>
           <ButtonGroup>
             <PrimaryButton href="/swap-all">
-              Launch Swap <FaArrowRight />
+              Swap Now <FaArrowRight />
             </PrimaryButton>
             <SecondaryButton href="/about">How it Works</SecondaryButton>
           </ButtonGroup>
         </Hero>
 
         <LivePulseSection>
-          <PulseCard>
+          <PulseCard $isProcessing={isProcessing}>
             <span className="label">Next Payout Cycle</span>
-            <span className="value">{timeLeft}</span>
-            <span className="sub">Every 6 Hours</span>
+            <span className="value">
+              {isProcessing && <FaSpinner className="fa-spin" />}
+              {timerDisplay}
+            </span>
+            <span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span>
           </PulseCard>
           <PulseCard>
             <span className="label">Treasury Share</span>
             <span className="value">100%</span>
-            <span className="sub">Fees & Taxes</span>
+            <span className="sub">Taxes & DEX Fees</span>
           </PulseCard>
           <PulseCard>
             <span className="label">Reward Asset</span>
             <span className="value">BNB</span>
-            <span className="sub">Native Distribution</span>
+            <span className="sub">Real-Time Yield</span>
           </PulseCard>
         </LivePulseSection>
 
         <FeatureGrid>
           <FeatureCard>
             <div className="icon-box"><FaExchangeAlt /></div>
-            <h3>Intelligent Aggregator</h3>
-            <p>
-              Our Swap All engine sources liquidity from PancakeSwap, Biswap, 
-              and other major BSC DEXes to guarantee minimal slippage.
-            </p>
+            <h3>Fee Revenue Engine</h3>
+            <p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury for ranked holders.</p>
           </FeatureCard>
-          
           <FeatureCard>
             <div className="icon-box"><FaTrophy /></div>
-            <h3>Ranked Rewards</h3>
-            <p>
-              Rewards are distributed based on our precise on-chain leaderboard. 
-              The more points you earn, the larger your share of the Treasury.
-            </p>
+            <h3>9-Decimal Justice</h3>
+            <p>Our proprietary ranking system ensures rewards are distributed with absolute mathematical precision.</p>
           </FeatureCard>
-
           <FeatureCard>
             <div className="icon-box"><FaShieldAlt /></div>
-            <h3>Protocol Treasury</h3>
-            <p>
-              A fully transparent vault where 100% of platform revenue is 
-              accumulated before being sent back to top-ranked participants.
-            </p>
+            <h3>Full Transparency</h3>
+            <p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p>
           </FeatureCard>
         </FeatureGrid>
       </Container>
-
       <Footer />
     </PageWrapper>
   );
