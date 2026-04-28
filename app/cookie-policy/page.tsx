@@ -177,7 +177,7 @@ export default function CookiePolicyPage() {
           </LogoSection>
           <Nav>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swap">Swap (Custom)</NavLink>
+            <NavLink href="/swap-all">Swap (Custom)</NavLink>
             <NavLink href="/swap-all">Swap All</NavLink>
             <NavLink href="/zap">Zap</NavLink>
             <NavLink href="/bridge">Bridge</NavLink>

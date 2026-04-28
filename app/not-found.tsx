@@ -19,7 +19,7 @@ export default function NotFound() {
             <FaHome size={18} />
             Back to Home
           </StyledLink>
-          <StyledLink href="/swap">
+          <StyledLink href="/swap-all">
             <FaSearch size={18} />
             Go to Swap
           </StyledLink>

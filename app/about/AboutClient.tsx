@@ -544,7 +544,7 @@ export default function AboutClient() {
             Connect your wallet, hold ARB Inc tokens, and earn passive BNB rewards automatically every 12 hours.
           </CTADescription>
           <CTAButtons>
-            <CTAButton href="/swap"><FaRocket /> Start Trading</CTAButton>
+            <CTAButton href="/swap-all"><FaRocket /> Start Trading</CTAButton>
             <CTAButtonSecondary href="/zap">Add Liquidity</CTAButtonSecondary>
           </CTAButtons>
         </CTASection>

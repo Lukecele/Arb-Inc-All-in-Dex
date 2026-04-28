@@ -170,7 +170,7 @@ export default function HomePageClient() {
             </p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
               <Link 
-                href="/swap" 
+                href="/swap-all" 
                 onClick={trackConversion}
                 style={{ background: '#7c3aed', color: 'white', padding: '14px 40px', borderRadius: '100px', fontWeight: 'bold', textDecoration: 'none' }}
               >

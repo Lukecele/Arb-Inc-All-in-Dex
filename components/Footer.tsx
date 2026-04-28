@@ -191,7 +191,7 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
       <FooterGrid>
         <FooterSection>
           <FooterSectionTitle>Protocol</FooterSectionTitle>
-          <FooterLink href="/swap">Swap</FooterLink>
+          <FooterLink href="/swap-all">Swap</FooterLink>
           <FooterLink href="/swap-all">Swap All</FooterLink>
           <FooterLink href="/zap">Zap</FooterLink>
           <FooterLink href="/bridge">Bridge</FooterLink>
