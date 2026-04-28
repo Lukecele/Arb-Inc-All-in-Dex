@@ -4,7 +4,10 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
+
+// INDIRIZZO UFFICIALE ARB INC
+const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 
 const pulse = keyframes`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
@@ -29,7 +32,7 @@ const Container = styled.div`
 `;
 
 const Hero = styled.section`
-  padding: 120px 0 80px;
+  padding: 120px 0 60px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -65,9 +68,43 @@ const Subtitle = styled.p`
   line-height: 1.6;
 `;
 
+const ContractBox = styled.div`
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  max-width: 100%;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+  
+  .addr {
+    font-family: 'Monaco', monospace;
+    font-size: 0.85rem;
+    color: #a855f7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    &:hover { color: white; transform: scale(1.1); }
+  }
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
+  @media (max-width: 600px) { flex-direction: column; width: 100%; }
 `;
 
 const PrimaryButton = styled.a`
@@ -153,13 +190,6 @@ const AuditSection = styled.section`
   margin-bottom: 100px;
 `;
 
-const AuditHeader = styled.div`
-  text-align: center;
-  margin-bottom: 50px;
-  h2 { font-size: 2.5rem; margin-bottom: 16px; }
-  p { color: #94a3b8; max-width: 700px; margin: 0 auto; }
-`;
-
 const AuditGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -184,6 +214,7 @@ const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('...');
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -208,7 +239,7 @@ const HomePageClient = () => {
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimerDisplay(`${h}h ${m}s`);
+        setTimerDisplay(`${h}h ${m}m ${s}s`);
       }
     };
 
@@ -217,7 +248,12 @@ const HomePageClient = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Se non siamo ancora montati sul client, non renderizziamo nulla per evitare errori
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (!mounted) return null;
 
   return (
@@ -225,7 +261,7 @@ const HomePageClient = () => {
       <Header activePage="/" />
       <Container>
         <Hero>
-          <Badge>Protocol Live on BNB Chain</Badge>
+          <Badge>Official Token: ARB Inc</Badge>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>
             Aggregated liquidity and a transparent 100% revenue-sharing model 
@@ -237,6 +273,16 @@ const HomePageClient = () => {
             </PrimaryButton>
             <SecondaryButton href="/about">How it Works</SecondaryButton>
           </ButtonGroup>
+
+          <ContractBox>
+            <span className="addr">{CONTRACT_ADDRESS}</span>
+            <button onClick={copyToClipboard} title="Copy Address">
+              {copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}
+            </button>
+            <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer" title="View on BscScan" style={{color: '#94a3b8', display: 'flex', alignItems: 'center'}}>
+              <FaExternalLinkAlt size={14} />
+            </a>
+          </ContractBox>
         </Hero>
 
         <LivePulseSection>
@@ -279,25 +325,25 @@ const HomePageClient = () => {
         </FeatureGrid>
 
         <AuditSection>
-          <AuditHeader>
-            <h2>Security & Audit</h2>
-            <p>Arbitrage Inception prioritizes safety through strategic simplification and industry-standard integrations.</p>
-          </AuditHeader>
+          <div style={{textAlign: 'center', marginBottom: '50px'}}>
+            <h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2>
+            <p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p>
+          </div>
           <AuditGrid>
             <AuditCard>
               <FaCheckCircle className="icon" />
               <h4>KyberSwap Integration</h4>
-              <p>We do not use custom, unverified smart contracts for trading. By integrating KyberSwap widgets, you inherit the security of a battle-tested aggregator audited by ChainSecurity.</p>
+              <p>We leverage KyberSwap widgets for trading logic, inheriting institutional-grade security audited by ChainSecurity.</p>
             </AuditCard>
             <AuditCard>
               <FaLock className="icon" />
               <h4>Zero-Contract Risk</h4>
-              <p>Core swap logic is non-custodial. Your funds never interact with proprietary custom-coded contracts, eliminating the primary attack surface for DeFi hacks.</p>
+              <p>By avoiding custom-coded swap contracts, we eliminate the primary entry point for hacks and exploits.</p>
             </AuditCard>
             <AuditCard>
               <FaCode className="icon" />
               <h4>Frontend Rewards Logic</h4>
-              <p>Our meritocratic rewards are calculated by a precision frontend engine. This allows for transparent 9-decimal ranking without the risks associated with complex on-chain reward vaults.</p>
+              <p>Rankings are processed by a transparent frontend engine, ensuring 9-decimal precision for every holder.</p>
             </AuditCard>
           </AuditGrid>
         </AuditSection>
