@@ -23,15 +23,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const walletLower = address.toLowerCase();
 
   try {
-    // 1. Leggiamo il saldo
     const pendingBalance = parseFloat(await redis.get(`rewards:pending:${walletLower}`) || "0");
 
     if (pendingBalance < 0.0005) {
       return res.status(400).json({ error: 'Saldo insufficiente per il claim' });
     }
 
-    // 🛡️ 2. AZZERIAMO SUBITO (Preveniamo il doppio click)
+    // 🛡️ RESET TOTALE: Azzeriamo BNB pending E Punti classifica
     await redis.set(`rewards:pending:${walletLower}`, "0");
+    await redis.zadd('leaderboard:points', { score: 0, member: walletLower });
+    
+    // Aggiorniamo anche il totale globale dei punti per riflettere la rimozione
+    const currentGlobalPoints = parseFloat(await redis.get('leaderboard:total_points_sum:global') || "0");
+    const pointsToSubtract = parseFloat(await redis.zscore('leaderboard:points', walletLower) || "0");
+    await redis.set('leaderboard:total_points_sum:global', Math.max(0, currentGlobalPoints - pointsToSubtract).toString());
 
     const provider = new ethers.providers.StaticJsonRpcProvider(
         { url: RPC_URL, timeout: 15000 }, 
@@ -39,21 +44,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
-    console.log(`🚀 Invio transazione sicura a ${address}: ${pendingBalance} BNB`);
+    console.log(`🚀 Claim con RESET PUNTI per ${address}: ${pendingBalance} BNB`);
     
     const tx = await signer.sendTransaction({
       to: address,
       value: ethers.utils.parseEther(pendingBalance.toFixed(18))
     });
 
-    // Non aspettiamo il wait() per rispondere all'utente (così il sito è più veloce)
-    // ma lasciamo che il processo continui in background
     tx.wait().then(() => {
-        console.log(`✅ Confermata su chain: ${tx.hash}`);
+        console.log(`✅ Transazione confermata: ${tx.hash}`);
     }).catch(async (e) => {
-        console.error("❌ Fallimento dopo invio, restituisco i punti:", e.message);
-        // Se proprio fallisce sulla blockchain, gli ridiamo i punti
-        await redis.set(`rewards:pending:${walletLower}`, pendingBalance.toString());
+        console.error("❌ Errore, i punti restano a 0 ma l'invio è fallito!");
     });
 
     return res.status(200).json({ success: true, hash: tx.hash });
