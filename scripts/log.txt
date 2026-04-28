@@ -2366,3 +2366,114 @@ Killed
 
 🕒 [08:30:09] Ciclo di controllo...
 🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ◈ encrypted .env [www.dotenvx.com]
+
+🕒 [08:45:01] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [08:45:09] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [08:45:17] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ override existing { override: true }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+
+🕒 [09:00:01] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:00:08] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:00:17] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:00:24] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+
+🕒 [09:15:01] Ciclo di controllo...
+
+🕒 [09:15:08] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:15:16] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
+
+🕒 [09:15:24] Ciclo di controllo...
+
+🕒 [09:15:32] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+
+🕒 [09:30:01] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:30:09] Ciclo di controllo...
+
+🕒 [09:30:16] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
+
+🕒 [09:30:23] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:30:32] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:30:39] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+
+🕒 [09:45:01] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:45:09] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:45:16] Ciclo di controllo...
+
+🕒 [09:45:23] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:45:31] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
+
+🕒 [09:45:39] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [09:45:47] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ suppress logs { quiet: true }
+
+🕒 [10:00:01] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [10:00:09] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [10:00:16] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [10:00:25] Ciclo di controllo...
+
+🕒 [10:00:31] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
+
+🕒 [10:00:39] Ciclo di controllo...
+
+🕒 [10:00:47] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+
+🕒 [10:00:54] Ciclo di controllo...
+🏁 Ciclo completato e blindato.
+🏁 Ciclo completato e blindato.
