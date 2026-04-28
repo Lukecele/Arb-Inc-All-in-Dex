@@ -97,7 +97,7 @@ export default function RewardsClient() {
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
         <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
-          Points earned from <b>Swaps, Zaps, Limit Orders, Auto-Staking, Tasks, and Referrals</b> increase your share of the BNB collected from platform trading fees!<br/>
+          Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b> &nbsp;|&nbsp; ⚡ Zap: <b>+150 Pts</b> &nbsp;|&nbsp; 🎯 Limit Order: <b>+200 Pts</b><br/>
           <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>Points = Claim Power.</span>
         </p>
 

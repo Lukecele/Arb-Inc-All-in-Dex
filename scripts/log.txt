@@ -3909,3 +3909,11 @@ Killed
 
 🕒 [16:00:01] Ciclo di controllo...
 🏁 Ciclo completato senza errori.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+
+🕒 [16:15:01] Ciclo di controllo...
+
+🕒 [16:15:06] Ciclo di controllo...
+🏁 Ciclo completato. Classifica pulita senza decimali.
+🏁 Ciclo completato senza errori.
