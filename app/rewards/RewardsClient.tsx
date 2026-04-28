@@ -156,12 +156,13 @@ export default function RewardsClient() {
       </div>
 
       {/* 4. NATIVE TASKS */}
-      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Earn Extra Points</h3>
+      <h3 style={{ color: '#f472b6', marginBottom: '5px' }}>🪂 Earn Extra Points</h3>
+      <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '20px' }}>Complete any offer below to earn <b>+250 Points</b> instantly!</p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>{off.title}</div>
-            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ color: '#f472b6', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>Complete Task →</a>
+            <a href={off.link} target="_blank" rel="noopener noreferrer" style={{ background: '#f472b6', color: '#111', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', display: 'inline-block' }}>Complete Task (+250 Pts) →</a>
           </div>
         ))}
       </div>

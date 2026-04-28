@@ -1,37 +1,25 @@
 import { NextResponse } from 'next/server';
-import { redis } from '@/lib/redis';
+import { Redis } from '@upstash/redis';
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || '',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
+});
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const wallet = searchParams.get('tracking_id');
+  const status = searchParams.get('status'); 
   
-  // Il formato userid è: wallet--ref--referrer
-  const userid = searchParams.get('userid') || '';
-  const status = searchParams.get('status');
-  const reward = searchParams.get('reward') || '0';
+  if (!wallet) return new Response("No Wallet", { status: 400 });
 
-  const parts = userid.split('--ref--');
-  const userWallet = parts[0];
-  const referrerWallet = parts[1];
-
-  const amt = Math.floor(parseFloat(reward) * 100);
-
-  // 🛡️ Eseguiamo le operazioni Redis solo se la connessione esiste
-  if (redis && userWallet && userWallet.startsWith('0x') && amt > 0) {
-    try {
-      // 1. Punti pieni all'utente
-      await redis.zincrby('leaderboard:points', amt, userWallet);
-
-      // 2. Bonus 10% al referrer (se esiste e non è l'utente stesso)
-      if (referrerWallet && referrerWallet.startsWith('0x') && referrerWallet !== userWallet) {
-        const bonus = Math.floor(amt * 0.1);
-        if (bonus > 0) {
-          await redis.zincrby('leaderboard:points', bonus, referrerWallet);
-        }
-      }
-    } catch (err) {
-      console.error("Postback Redis Error:", err);
-    }
+  try {
+    const amount = 250;
+    await redis.zincrby('leaderboard:points', amount, wallet.toLowerCase());
+    console.log(`✅ Task CPAGrip completata: +250 Punti a ${wallet}`);
+    return new Response("OK", { status: 200 });
+  } catch (error) {
+    console.error("Errore Postback:", error);
+    return new Response("Error", { status: 500 });
   }
-
-  return NextResponse.json({ received: true });
 }

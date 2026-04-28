@@ -3917,3 +3917,14 @@ Killed
 🕒 [16:15:06] Ciclo di controllo...
 🏁 Ciclo completato. Classifica pulita senza decimali.
 🏁 Ciclo completato senza errori.
+◇ injected env (0) from progetti/arb-inc/.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (4) from progetti/arb-inc/.env.local // tip: ⌁ auth for agents [www.vestauth.com]
+
+🕒 [16:30:01] Ciclo di controllo...
+🏁 Ciclo completato. Classifica pulita senza decimali.
+
+🕒 [16:30:06] Ciclo di controllo...
+
+🕒 [16:30:10] Ciclo di controllo...
+🏁 Ciclo completato. Classifica pulita senza decimali.
+🏁 Ciclo completato senza errori.
