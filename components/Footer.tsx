@@ -16,6 +16,8 @@ const FooterGrid = styled.div`
   @media (min-width: 768px) { grid-template-columns: repeat(3, 1fr); text-align: left; }
 `;
 
+const FooterSection = styled.div``; // <--- Mancava questa!
+
 const FooterSectionTitle = styled.h3` font-size: 12px; font-weight: 700; color: #8B5CF6; margin-bottom: 16px; text-transform: uppercase; `;
 const FooterLink = styled(Link)` display: block; color: #94a3b8; text-decoration: none; padding: 5px 0; &:hover { color: #fff; } `;
 
