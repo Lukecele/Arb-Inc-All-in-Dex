@@ -9,12 +9,12 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 
 export const navItems = [
   { href: '/', label: 'Home' },
-    { label: 'Swap All', href: '/swap-all' },
+  { href: '/swap-all', label: 'Swap All' },
   { href: '/zap', label: 'Zap' },
   { href: '/bridge', label: 'Bridge' },
   { href: '/limit-orders', label: 'Limit Orders' },
   { href: '/rewards', label: 'Rewards' },
-  { href: '/about', label: 'About' },
+  { href: '/#protocol-specs', label: 'Protocol Specs' }, // <-- Ghost Busted!
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -38,11 +38,7 @@ const HeaderInner = styled.div`
   align-items: center;
   padding: 8px 20px;
   height: 64px;
-  
-  @media (min-width: 769px) {
-    padding: 0 24px;
-    height: 72px;
-  }
+  @media (min-width: 769px) { padding: 0 24px; height: 72px; }
 `;
 
 const LogoSection = styled(Link)`
@@ -147,30 +143,18 @@ export default function Header({ showStatus = true, walletSection }: any) {
 
   return (
     <>
-      <a href="#main-content" id="skip-link" className="sr-only focus:not-sr-only">Skip to main content</a>
       <HeaderWrapper>
         <HeaderInner>
           <LogoSection href="/" onClick={() => setMenuOpen(false)}>
             <LogoWrapper>
-              <Image
-                src={LOGO_URL}
-                alt="Logo"
-                width={40}
-                height={40}
-                priority
-                style={{ objectFit: 'cover' }}
-              />
+              <Image src={LOGO_URL} alt="Logo" width={40} height={40} priority style={{ objectFit: 'cover' }} />
             </LogoWrapper>
             <SiteTitle>Arbitrage Inception</SiteTitle>
           </LogoSection>
 
           <Nav>
             {navItems.map((item) => (
-              <NavLinkStyled
-                key={item.href}
-                href={item.href}
-                $active={pathname === item.href}
-              >
+              <NavLinkStyled key={item.href} href={item.href} $active={pathname === item.href}>
                 {item.label}
               </NavLinkStyled>
             ))}
@@ -178,7 +162,7 @@ export default function Header({ showStatus = true, walletSection }: any) {
 
           <RightSection>
             {showStatus && mounted && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase' }}>
                 <StatusDot /> <span className="hidden sm:inline">Active</span>
               </div>
             )}
@@ -197,20 +181,8 @@ export default function Header({ showStatus = true, walletSection }: any) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {navItems.map((item) => (
-            <Link 
-              key={item.href} 
-              href={item.href} 
-              onClick={() => setMenuOpen(false)}
-              style={{ 
-                padding: '16px', 
-                fontSize: '18px', 
-                fontWeight: '600',
-                borderRadius: '12px',
-                background: pathname === item.href ? 'rgba(124, 58, 237, 0.1)' : 'transparent',
-                color: pathname === item.href ? '#8B5CF6' : '#fff', 
-                textDecoration: 'none' 
-              }}
-            >
+            <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
+              style={{ padding: '16px', fontSize: '18px', fontWeight: '600', borderRadius: '12px', background: pathname === item.href ? 'rgba(124, 58, 237, 0.1)' : 'transparent', color: pathname === item.href ? '#8B5CF6' : '#fff', textDecoration: 'none' }}>
               {item.label}
             </Link>
           ))}
