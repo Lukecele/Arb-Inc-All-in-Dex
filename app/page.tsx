@@ -18,7 +18,8 @@ export default function HomePage() {
         borderBottom: '1px solid rgba(139, 92, 246, 0.1)',
         display: 'flex',
         justifyContent: 'center',
-        gap: '30px'
+        gap: '30px',
+        marginBottom: '40px' // Aggiunto margine per distanziare il DEX
       }}>
         <a href="/" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
           TRADING TERMINAL
@@ -28,18 +29,8 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Cointraffic Banner (Top) */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-        <span id="ct_cQd9eSMbdcb"></span>
-      </div>
-
-      {/* 3. Il DEX Aggregator al centro */}
+      {/* 2. Il DEX Aggregator al centro */}
       <HomePageClient />
-
-      {/* 4. Cointraffic Banner (Bottom) */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '40px 0 60px 0' }}>
-        <span id="ct_clEJQkwMj04"></span>
-      </div>
       
     </main>
   )

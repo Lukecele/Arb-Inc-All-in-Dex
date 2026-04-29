@@ -38,7 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
         
-        {/* Cointraffic Unified Code */}
         
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         
