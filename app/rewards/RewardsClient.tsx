@@ -99,11 +99,11 @@ export default function RewardsClient() {
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '20px' }}>
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 20px', borderRadius: '10px' }}>
                 <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#818cf8' }}>{referralCount}</div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Amici Invitati</div>
+                <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Friends Invited</div>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 20px', borderRadius: '10px' }}>
                 <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981' }}>{referralEarnings.toFixed(2)}</div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Punti Guadagnati</div>
+                <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Points Earned</div>
             </div>
         </div>
 
