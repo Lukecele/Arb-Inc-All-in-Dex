@@ -31,7 +31,7 @@ export default function RewardsClient() {
     if (!address) return;
     try {
       // Catturiamo il parametro 'ref' dall'URL se presente
-      const ref = searchParams.get('ref');
+      const ref = searchParams?.get('ref');
       let url = `/api/rewards/stats?wallet=${address.toLowerCase()}`;
       if (ref) url += `&ref=${ref.toLowerCase()}`;
 
