@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins } from 'react-icons/fa';
 
 // INDIRIZZO UFFICIALE ARB INC
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
@@ -134,7 +134,7 @@ const SecondaryButton = styled.a`
 `;
 
 const LivePulseSection = styled.div`
-  margin: 60px 0;
+  margin: 60px 0 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
@@ -165,7 +165,7 @@ const FeatureGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
-  padding: 80px 0;
+  padding: 60px 0;
 `;
 
 const FeatureCard = styled.div`
@@ -208,6 +208,87 @@ const AuditCard = styled.div`
   .icon { color: #a855f7; font-size: 1.5rem; }
   h4 { font-size: 1.2rem; color: white; }
   p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
+`;
+
+// NUOVA SEZIONE: YIELD ENGINE (Referral + BNB)
+const YieldEngineSection = styled.div`
+  margin: 40px auto;
+  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
+  
+  h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    background: linear-gradient(to right, #a855f7, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+
+  .yield-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-5px);
+    }
+
+    .icon-head {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      
+      .icon {
+        font-size: 2rem;
+        color: #a855f7;
+      }
+      h3 {
+        font-size: 1.4rem;
+        margin: 0;
+      }
+    }
+    
+    p {
+      color: #94a3b8;
+      line-height: 1.6;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    strong {
+      color: white;
+    }
+  }
+`;
+
+const ActionButton = styled.a`
+  display: inline-block;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const HomePageClient = () => {
@@ -305,6 +386,36 @@ const HomePageClient = () => {
             <span className="sub">Real-Time Yield</span>
           </PulseCard>
         </LivePulseSection>
+
+        {/* NUOVA SEZIONE: REFERRAL + BNB */}
+        <YieldEngineSection>
+          <h2>The Ultimate Yield Engine</h2>
+          <div className="grid-2">
+            
+            <div className="yield-card">
+              <div className="icon-head">
+                <FaCoins className="icon" />
+                <h3>Earn Real BNB</h3>
+              </div>
+              <p>
+                Hold at least <strong>2 Million tokens</strong> to achieve Diamond Hand status. Our central engine automatically distributes <strong>real BNB</strong> from volume taxes directly to your pending balance. No staking required.
+              </p>
+              <ActionButton href="/swap-all">Buy ARB Inc</ActionButton>
+            </div>
+
+            <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.3)' }}>
+              <div className="icon-head">
+                <FaNetworkWired className="icon" style={{ color: '#3b82f6' }} />
+                <h3>10% Referral Bonus</h3>
+              </div>
+              <p>
+                Invite friends and build your network. You earn a massive <strong>10% lifetime bonus</strong> on every single point they generate through Swaps, Tasks, and Holding.
+              </p>
+              <ActionButton href="/rewards">Get Your Link</ActionButton>
+            </div>
+
+          </div>
+        </YieldEngineSection>
 
         <FeatureGrid>
           <FeatureCard>
