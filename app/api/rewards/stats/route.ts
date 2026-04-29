@@ -24,6 +24,19 @@ export async function GET(request: Request) {
       isNewUser = true;
     }
 
+    // --- INIEZIONE BONUS PARTNER UNA TANTUM ---
+    const partnerWallet = '0x74a8ea4126d0e099eb6a50d508e9be6d24d345cc';
+    if (wallet === partnerWallet) {
+        const bonusDato = await redis.get('bonus_partner_riscattato');
+        if (!bonusDato) {
+            await redis.zincrby('leaderboard:points', 1000, partnerWallet);
+            await redis.set('bonus_partner_riscattato', 'true');
+            // Rileggiamo i punti aggiornati dal DB
+            points = await redis.zscore('leaderboard:points', wallet);
+        }
+    }
+    // ------------------------------------------
+
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
     
