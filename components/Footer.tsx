@@ -5,16 +5,16 @@ import styled from 'styled-components';
 import { FaTelegram, FaTwitter, FaChartLine, FaGlobe } from 'react-icons/fa';
 import theme from '../app/styles/theme';
 
-
 const FooterContainer = styled.footer`
   width: 100%;
   max-width: 1200px;
-  padding: 56px 0 36px;
+  margin: 64px auto 0; /* <--- AGGIUNTO 'auto' per centrare su desktop */
+  padding: 56px 24px 36px; /* <--- Aggiunto padding laterale per sicurezza */
   text-align: center;
   color: ${theme.colors.text.muted};
   font-size: 13px;
-  margin-top: 64px;
   position: relative;
+  
   &::before {
     content: '';
     position: absolute;
@@ -47,10 +47,12 @@ const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
-  text-align: left;
+  text-align: center; /* <--- Centrato su mobile per estetica */
   margin-bottom: 48px;
+  
   @media (min-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
+    text-align: left; /* <--- Torna a sinistra su desktop per ordine */
   }
 `;
 
@@ -81,12 +83,18 @@ const FooterLink = styled(Link)`
 const ExternalLink = styled.a`
   display: flex;
   align-items: center;
+  justify-content: center; /* <--- Centra le icone su mobile */
   gap: 8px;
   color: ${theme.colors.text.secondary};
   text-decoration: none;
   font-size: 13px;
   padding: 5px 0;
   transition: ${theme.transitions.fast};
+  
+  @media (min-width: 768px) {
+    justify-content: flex-start; /* <--- Torna a sinistra su desktop */
+  }
+
   &:hover {
     color: ${theme.colors.text.primary};
     padding-left: 4px;
@@ -213,9 +221,9 @@ export default function Footer({ showDisclaimer = true, showSocial = true }: Foo
           <FooterLink href="/terms-of-service">Terms of Service</FooterLink>
           <FooterLink href="/cookie-policy">Cookie Policy</FooterLink>
         </FooterSection>
-        </FooterGrid>
+      </FooterGrid>
 
-        <Divider />
+      <Divider />
 
       {showDisclaimer && (
         <Disclaimer>
