@@ -14,6 +14,9 @@ const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10
 
+// 🔥 OFFICIAL ARB INC TOKEN ADDRESS
+const ARB_INC_ADDRESS = '0x5ee54869ecd5e752c31af095187326d4a4d50e1c'
+
 const darkTheme = {
   text: '#FFFFFF',
   subText: '#A9A9A9',
@@ -170,7 +173,6 @@ const SwapSection = styled.section`
   width: 100%;
 `
 
-// BADGE UI PER I PUNTI
 const PointsBadge = styled.div`
   background: rgba(40, 224, 185, 0.1);
   color: #28E0B9;
@@ -198,7 +200,9 @@ export default function ClientWrapper() {
   const tokenOutParam = searchParams?.get('tokenOut')
 
   const defaultTokenIn = tokenInParam || undefined
-  const defaultTokenOut = tokenOutParam || undefined
+  
+  // 🔥 AUTO-FILL LOGIC: If no output token in URL, pre-fill with ARB-INC
+  const defaultTokenOut = tokenOutParam || ARB_INC_ADDRESS
 
   useEffect(() => {
     if (wallet && wallet.provider) {
@@ -245,10 +249,10 @@ export default function ClientWrapper() {
     if (!ethersProvider) throw new Error('No wallet')
     const signer = ethersProvider.getSigner()
     
-    // 1. Invia la transazione sulla Blockchain
+    // 1. Send transaction to the Blockchain
     const tx = await signer.sendTransaction(txData)
     
-    // 2. Spara i punti al database e notifica l'utente!
+    // 2. Track points and notify user
     if (walletAddress) {
       try {
         const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
@@ -261,11 +265,11 @@ export default function ClientWrapper() {
             referrerWallet: referrer
           })
         }).then(() => {
-          // ALERT DI SUCCESSO 🎉
+          // 🎉 SUCCESS ALERT
           alert("🎉 Swap Successful! +100 Points added to your Leaderboard!");
         });
       } catch (err) {
-        console.error("Errore salvataggio punti:", err);
+        console.error("Points calculation error:", err);
       }
     }
 
