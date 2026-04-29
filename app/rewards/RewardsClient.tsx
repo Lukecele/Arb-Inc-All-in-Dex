@@ -133,7 +133,7 @@ export default function RewardsClient() {
         </p>
 
         <div style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '5px' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
-        <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? userPoints.toLocaleString() : "0"}</p>
+        <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? userPoints.toLocaleString('en-US') : "0"}</p>
         
         {!address ? (
           <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
@@ -211,7 +211,7 @@ export default function RewardsClient() {
                 <tr key={i} style={{ borderBottom: '1px solid #222', background: address?.toLowerCase() === u.address.toLowerCase() ? 'rgba(250,204,21,0.05)' : 'transparent' }}>
                   <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
                   <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>{u.address.slice(0,6)}...{u.address.slice(-4)}</td>
-                  <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{u.points.toLocaleString()}</td>
+                  <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{u.points.toLocaleString('en-US')}</td>
                 </tr>
               ))}
             </tbody>
