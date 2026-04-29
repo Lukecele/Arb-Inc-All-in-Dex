@@ -50,7 +50,7 @@ const ProfileCard = styled.div`
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    object-cover: cover;
+    object-fit: cover;
     border: 3px solid #a78bfa;
     box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
   }
@@ -110,7 +110,6 @@ export default function ContactPage() {
         <SharedHeader activePage="/contact" />
         
         <MainContent>
-          {/* Profilo Personale */}
           <ProfileCard>
             <img src="/doc.jpg" alt="Luca Celebrano" />
             <div className="info">
