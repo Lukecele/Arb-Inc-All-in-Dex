@@ -46,13 +46,20 @@ const ProfileCard = styled.div`
     text-align: center;
   }
 
-  img {
+  .img-container {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    object-fit: cover;
     border: 3px solid #a78bfa;
     box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .info {
@@ -111,7 +118,9 @@ export default function ContactPage() {
         
         <MainContent>
           <ProfileCard>
-            <img src="/doc.jpg" alt="Luca Celebrano" />
+            <div className="img-container">
+              <img src="/doc.jpg" alt="Luca Celebrano" />
+            </div>
             <div className="info">
               <h3>Medical Student</h3>
               <h1>Luca Celebrano</h1>
