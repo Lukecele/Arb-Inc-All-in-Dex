@@ -37,7 +37,7 @@ export default function Leaderboard() {
                   {user.wallet.slice(0, 6)}...{user.wallet.slice(-4)}
                 </td>
                 <td className="py-4 px-2 text-right font-bold text-yellow-400">
-                  {user.score.toLocaleString('en-US')}
+                  {Math.round(user.score).toLocaleString('en-US')}
                 </td>
               </tr>
             ))}
