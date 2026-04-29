@@ -1,10 +1,20 @@
-import HomePageClient from './HomePageClient'
+import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Arbitrage Inception | Professional DEX Aggregator',
   description: 'High-performance multi-chain DEX aggregator and liquidity terminal on BNB Smart Chain.',
 }
+
+// 🚀 LAZY LOADING: Carica il componente solo sul client (browser) senza bloccare la pagina
+const HomePageClient = dynamic(() => import('./HomePageClient'), { 
+  ssr: false, // Disabilita il Server-Side Rendering per questo componente
+  loading: () => (
+    <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#a855f7' }}>
+      <div className="fa-spin" style={{ fontSize: '2rem' }}>⚙️</div>
+    </div>
+  )
+});
 
 export default function HomePage() {
   return (
@@ -19,7 +29,7 @@ export default function HomePage() {
         display: 'flex',
         justifyContent: 'center',
         gap: '30px',
-        marginBottom: '40px' // Aggiunto margine per distanziare il DEX
+        marginBottom: '40px' 
       }}>
         <a href="/" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
           TRADING TERMINAL
@@ -29,7 +39,7 @@ export default function HomePage() {
         </a>
       </nav>
 
-      {/* 2. Il DEX Aggregator al centro */}
+      {/* 2. Il contenuto viene caricato dinamicamente */}
       <HomePageClient />
       
     </main>
