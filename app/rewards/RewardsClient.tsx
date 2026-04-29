@@ -30,7 +30,6 @@ export default function RewardsClient() {
   const fetchRewardsData = async () => {
     if (!address) return;
     try {
-      // Catturiamo il parametro 'ref' dall'URL se presente
       const ref = searchParams?.get('ref');
       let url = `/api/rewards/stats?wallet=${address.toLowerCase()}`;
       if (ref) url += `&ref=${ref.toLowerCase()}`;
@@ -63,7 +62,7 @@ export default function RewardsClient() {
       setLoading(false);
     };
     fetchStats();
-  }, [address, searchParams]); // Riesegue se cambia il wallet o il link referral
+  }, [address, searchParams]);
 
   const handleClaim = async () => {
     if (!address) return;
@@ -91,11 +90,10 @@ export default function RewardsClient() {
   return (
     <div style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       
-      {/* 1. REFERRAL - DINAMICO */}
+      {/* 1. REFERRAL SECTION */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h3 style={{ margin: '0 0 10px 0' }}>Invite & Earn 10% 🚀</h3>
         
-        {/* Statistiche Referral Reali */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '20px' }}>
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 20px', borderRadius: '10px' }}>
                 <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#818cf8' }}>{referralCount}</div>
@@ -119,7 +117,6 @@ export default function RewardsClient() {
                 <input readOnly value={referralLink} style={{ background: '#000', color: '#818cf8', padding: '10px', borderRadius: '5px', width: '60%', border: '1px solid #333', fontSize: '12px' }} />
                 <button onClick={() => { navigator.clipboard.writeText(referralLink); setCopied(true); setTimeout(()=>setCopied(false), 2000); }} style={{ background: '#4f46e5', border: 'none', color: 'white', padding: '10px', borderRadius: '5px', cursor: 'pointer', minWidth: '80px' }}>{copied ? 'Copied' : 'Copy'}</button>
             </div>
-            <p style={{ fontSize: '11px', color: '#4338ca', marginTop: '5px' }}>Share this link to grow your dividends share!</p>
           </div>
         )}
       </div>
@@ -127,16 +124,11 @@ export default function RewardsClient() {
       {/* 2. DIVIDENDS BOX */}
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
-        <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
-          Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b> &nbsp;|&nbsp; ⚡ Zap: <b>+150 Pts</b> &nbsp;|&nbsp; 🎯 Limit Order: <b>+200 Pts</b><br/>
-          <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>Points = Claim Power.</span>
-        </p>
-
         <div style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '5px' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
         <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? Math.round(userPoints).toLocaleString('en-US') : "0"}</p>
         
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
+          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET</button>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <button 
@@ -154,37 +146,50 @@ export default function RewardsClient() {
             >
               {claimLoading ? 'Processing...' : claimableBnb < 0.002 ? 'MIN. 0.002 BNB TO CLAIM' : 'CLAIM BNB NOW'}
             </button>
-            
-            {claimableBnb < 0.002 && (
-              <div style={{ fontSize: '12px', color: '#94a3b8', maxWidth: '450px', lineHeight: '1.4', marginTop: '5px' }}>
-                <span style={{ color: '#facc15' }}>⚠️ Security Note:</span> A minimum threshold of 0.002 BNB is required to cover blockchain gas fees.
-              </div>
-            )}
           </div>
         )}
-        {claimStatus && <p style={{ fontSize: '12px', marginTop: '10px', color: claimStatus.includes('✅') ? '#10b981' : '#ef4444' }}>{claimStatus}</p>}
       </div>
 
-      {/* Il resto del codice (Diamond/Paper, Tasks, Leaderboard) rimane identico */}
-      {/* ... (per brevità non ripeto tutto, ma il file salvato conterrà le sezioni originali) ... */}
-      
-      {/* 3. DIAMOND VS PAPER HANDS */}
+      {/* 3. IMPROVED STATUS LEGEND */}
       <div style={{ background: '#000', border: '1px solid #333', padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
-        <h3 style={{ textAlign: 'center', color: '#10b981', marginTop: 0 }}>🛡️ Diamond Hands Protection</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
-          <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid #10b981', padding: '15px', borderRadius: '12px' }}>
-            <h4 style={{ color: '#10b981', margin: '0 0 10px 0' }}>✅ Diamond Status</h4>
-            <p style={{ fontSize: '13px', color: '#a7f3d0' }}>Hold 2M+ Tokens: Earn 10pt/1M automatically every 15 minutes.</p>
+        <h3 style={{ textAlign: 'center', color: '#fff', marginTop: 0, marginBottom: '20px' }}>📊 Rank Justice System</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          
+          <div style={{ 
+            background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1), rgba(0, 0, 0, 0))', 
+            border: '1px solid #10b981', 
+            padding: '20px', 
+            borderRadius: '12px'
+          }}>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}>💎</div>
+            <h4 style={{ color: '#10b981', margin: '0 0 10px 0', fontSize: '18px' }}>Diamond Hand</h4>
+            <ul style={{ paddingLeft: '20px', fontSize: '13px', color: '#a7f3d0', lineHeight: '1.6' }}>
+              <li><b>Requirement:</b> Hold 2M+ $ARB-INC.</li>
+              <li><b>Dividend:</b> Eligible for Real BNB payouts.</li>
+              <li><b>Yield:</b> Passive points (+10 pts per 1M / 15m).</li>
+            </ul>
           </div>
-          <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid #ef4444', padding: '15px', borderRadius: '12px' }}>
-            <h4 style={{ color: '#ef4444', margin: '0 0 10px 0' }}>🩸 Paper Hands Penalty</h4>
-            <p style={{ fontSize: '13px', color: '#fca5a5' }}>If you sell after being Diamond: lose 5% of your points every 15 mins.</p>
+
+          <div style={{ 
+            background: 'linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(0, 0, 0, 0))', 
+            border: '1px solid #ef4444', 
+            padding: '20px', 
+            borderRadius: '12px' 
+          }}>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}>🧻</div>
+            <h4 style={{ color: '#ef4444', margin: '0 0 10px 0', fontSize: '18px' }}>Paper Hand</h4>
+            <ul style={{ paddingLeft: '20px', fontSize: '13px', color: '#fca5a5', lineHeight: '1.6' }}>
+              <li><b>Trigger:</b> Selling any amount or holding &lt; 2M.</li>
+              <li><b>Dividend:</b> BNB payouts are DISABLED.</li>
+              <li><b>Penalty:</b> -5% Total Points every 15 minutes.</li>
+            </ul>
           </div>
+
         </div>
       </div>
 
-      {/* 4. NATIVE TASKS */}
-      <h3 style={{ color: '#f472b6', marginBottom: '5px' }}>🪂 Earn Extra Points</h3>
+      {/* 4. TASKS & LEADERBOARD (Original Logic) */}
+      <h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Earn Extra Points</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
@@ -194,7 +199,6 @@ export default function RewardsClient() {
         ))}
       </div>
 
-      {/* 5. LEADERBOARD */}
       <div style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
         <h3 style={{ color: '#facc15', marginTop: 0 }}>🏆 Top 100 Farmers</h3>
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
