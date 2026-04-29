@@ -16,26 +16,24 @@ export async function GET(request: Request) {
 
   try {
     let points = await redis.zscore('leaderboard:points', wallet);
-    let isNewUser = false;
-
+    
     if (points === null) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
-      isNewUser = true;
     }
 
     // --- INIEZIONE BONUS PARTNER UNA TANTUM ---
     const partnerWallet = '0x74a8ea4126d0e099eb6a50d508e9be6d24d345cc';
     if (wallet === partnerWallet) {
-        const bonusDato = await redis.get('bonus_partner_riscattato');
-        if (!bonusDato) {
-            await redis.zincrby('leaderboard:points', 1000, partnerWallet);
-            await redis.set('bonus_partner_riscattato', 'true');
-            // Rileggiamo i punti aggiornati dal DB
-            points = await redis.zscore('leaderboard:points', wallet);
+        const check = await redis.get("bonus_0x74a8_done");
+        if (!check) {
+            await redis.zincrby("leaderboard:points", 1000, partnerWallet);
+            await redis.set("bonus_0x74a8_done", "true");
+            // Aggiorniamo i punti per la risposta immediata
+            const newScore = await redis.zscore("leaderboard:points", partnerWallet);
+            points = newScore !== null ? newScore : points;
         }
     }
-    // ------------------------------------------
 
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
@@ -46,14 +44,8 @@ export async function GET(request: Request) {
     }
 
     const userIndex = parseFloat(String(userIndexStr));
-    
-    // 🔥 LA PATCH È QUI: Leggiamo i BNB congelati nel salvadanaio
     const pendingBnb = parseFloat(String(await redis.get(`rewards:pending:${wallet}`) || '0'));
-    
-    // Calcoliamo i BNB nuovi generati DALL'ULTIMO aggiornamento
     const currentClaimable = Number(points) * (globalIndex - userIndex);
-
-    // Il totale è: Salvadanaio + Nuovi BNB
     const totalClaimable = pendingBnb + Math.max(0, currentClaimable);
 
     return NextResponse.json({ 
@@ -62,6 +54,7 @@ export async function GET(request: Request) {
     });
 
   } catch (error) {
+    console.error("Stats Error:", error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
