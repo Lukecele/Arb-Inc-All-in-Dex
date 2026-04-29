@@ -15,20 +15,19 @@ const TOKEN_CONTRACT_ADDRESS = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLo
 const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
-// RPC Ufficiale e stabile
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
 const MIN_HOLDING = 2000000n * (10n ** 9n); // 2 Milioni minimo
 const SAFE_FACTOR = 0.50; 
 
 async function watch() {
-    console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale...`);
+    console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale (Referral Ready)...`);
     try {
         const balance = await provider.getBalance(ethers.getAddress(REAL_TREASURY_WALLET));
         const lastBalanceStr = await redis.get('rewards:last_balance');
         const lastBalance = lastBalanceStr ? BigInt(lastBalanceStr) : balance;
         const allWallets = await redis.zrange('leaderboard:points', 0, -1);
 
-        // 🛡️ FASE 1: DISTRIBUZIONE DIRETTA (Matematica Infallibile al 50%)
+        // 🛡️ FASE 1: DISTRIBUZIONE DIRETTA BNB
         if (balance > lastBalance) {
             const diff = parseFloat(ethers.formatEther(balance - lastBalance));
             const toDistribute = diff * SAFE_FACTOR;
@@ -42,7 +41,7 @@ async function watch() {
             }
 
             if (realTotalPoints > 0 && diff > 0) {
-                console.log(`📈 Tasse rilevate: ${diff.toFixed(6)} BNB. Distribuisco: ${toDistribute.toFixed(6)} BNB su ${realTotalPoints.toFixed(2)} punti.`);
+                console.log(`📈 Tasse rilevate: ${diff.toFixed(6)} BNB. Distribuisco: ${toDistribute.toFixed(6)} BNB.`);
                 for (const w of allWallets) {
                     if (scores[w] > 0) {
                         const share = scores[w] / realTotalPoints;
@@ -52,15 +51,12 @@ async function watch() {
                     }
                 }
             }
-        } else {
-            console.log("😴 Nessuna nuova tassa rilevata nel Treasury.");
         }
         
-        // Aggiorniamo sempre l'ultimo bilancio
         await redis.set('rewards:last_balance', balance.toString());
 
-        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Malus)
-        console.log("🔄 Scansione Holding e Assegnazione Punti...");
+        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Referral)
+        console.log("🔄 Scansione Holding e Assegnazione Punti + Bonus Referral...");
         const abi = ["function balanceOf(address) view returns (uint256)"];
         const contract = new ethers.Contract(ethers.getAddress(TOKEN_CONTRACT_ADDRESS), abi, provider);
         
@@ -79,19 +75,28 @@ async function watch() {
 
                 if (holding < lastHolding) {
                     status = "paper";
-                    console.log(`🩸 ${lowerW} ha venduto! Status: PAPER (-5%).`);
+                    console.log(`🩸 ${lowerW} ha venduto! Malus 5%.`);
                 } else if (holding > lastHolding && holding >= MIN_HOLDING) {
                     status = "diamond";
                 }
 
                 let updatedPoints = currentPoints;
                 if (status === "paper") {
-                    updatedPoints = currentPoints * 0.95; // Malus 5%
+                    updatedPoints = currentPoints * 0.95;
                 } else if (status === "diamond" && holding >= MIN_HOLDING) {
-                    // 🔥 Multiplier dinamico: 50x per il CEO, 10x per gli altri
                     const multiplier = (lowerW === CEO_WALLET) ? 50 : 10;
                     const pointsGained = (Number(holding / (10n ** 9n)) / 1000000) * multiplier;
                     updatedPoints += pointsGained;
+
+                    // --- 🚀 LOGICA REFERRAL BONUS ---
+                    const parent = await redis.get(`ref:parent:${lowerW}`);
+                    if (parent) {
+                        const bonus = pointsGained * 0.10; // 10% di commissione al padre
+                        await redis.zincrby('leaderboard:points', bonus, parent);
+                        await redis.incrbyfloat(`ref:earnings:${parent}`, bonus);
+                        // Logghiamo solo se il bonus è significativo per non intasare il terminale
+                        if (bonus > 0.001) console.log(`🎁 Bonus: ${bonus.toFixed(4)} pts a ${parent} (invito ${lowerW})`);
+                    }
                 }
 
                 await redis.set(`rewards:status:${lowerW}`, status);
@@ -102,13 +107,11 @@ async function watch() {
             } catch (e) { continue; }
         }
 
-        // Sincronizziamo il totale per gli altri script
         await redis.set('leaderboard:total_points_sum:global', newGlobalSum.toString());
-        console.log(`🏁 Ciclo completato e blindato. Nuova somma globale: ${newGlobalSum.toFixed(2)}`);
+        console.log(`🏁 Ciclo completato. Somma globale: ${newGlobalSum.toFixed(2)}`);
 
     } catch (e) { console.error("❌ Errore Watcher:", e.message); }
     
-    // Riparte tra 15 minuti esatti
     setTimeout(watch, 15 * 60 * 1000);
 }
 

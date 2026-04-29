@@ -9,6 +9,7 @@ const redis = new Redis({
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const wallet = searchParams.get('wallet')?.toLowerCase();
+  const ref = searchParams.get('ref')?.toLowerCase(); // L'indirizzo di chi ha invitato
 
   if (!wallet) {
     return NextResponse.json({ error: 'Wallet address required' }, { status: 400 });
@@ -17,24 +18,28 @@ export async function GET(request: Request) {
   try {
     let points = await redis.zscore('leaderboard:points', wallet);
     
+    // 1. REGISTRAZIONE NUOVO UTENTE + REFERRAL
     if (points === null) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
-    }
 
-    // --- INIEZIONE BONUS PARTNER UNA TANTUM ---
-    const partnerWallet = '0x74a8ea4126d0e099eb6a50d508e9be6d24d345cc';
-    if (wallet === partnerWallet) {
-        const check = await redis.get("bonus_0x74a8_done");
-        if (!check) {
-            await redis.zincrby("leaderboard:points", 1000, partnerWallet);
-            await redis.set("bonus_0x74a8_done", "true");
-            // Aggiorniamo i punti per la risposta immediata
-            const newScore = await redis.zscore("leaderboard:points", partnerWallet);
-            points = newScore !== null ? newScore : points;
+      // Se c'è un referrer e non è l'utente stesso
+      if (ref && ref !== wallet && ref.startsWith('0x')) {
+        // Controlliamo se l'utente ha già un "padre" (per evitare sovrascritture)
+        const hasParent = await redis.get(`ref:parent:${wallet}`);
+        if (!hasParent) {
+          await redis.set(`ref:parent:${wallet}`, ref);
+          await redis.sadd(`ref:children:${ref}`, wallet); // Aggiunge il figlio alla lista del padre
+          console.log(`🔗 Referral: ${wallet} invitato da ${ref}`);
         }
+      }
     }
 
+    // 2. RECUPERO STATISTICHE REFERRAL
+    const referralCount = await redis.scard(`ref:children:${wallet}`) || 0;
+    const referralEarnings = await redis.get(`ref:earnings:${wallet}`) || 0;
+
+    // --- LOGICA REWARDS ESISTENTE ---
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     let userIndexStr = await redis.get(`rewards:user_index:${wallet}`);
     
@@ -50,7 +55,9 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ 
       points: Number(points), 
-      claimable: totalClaimable 
+      claimable: totalClaimable,
+      referralCount: Number(referralCount),
+      referralEarnings: Number(referralEarnings)
     });
 
   } catch (error) {
