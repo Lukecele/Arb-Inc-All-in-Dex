@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins } from 'react-icons/fa';
 
-// INDIRIZZO UFFICIALE ARB INC
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 
 const pulse = keyframes`
@@ -210,7 +209,6 @@ const AuditCard = styled.div`
   p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
 `;
 
-// NUOVA SEZIONE: YIELD ENGINE (Referral + BNB)
 const YieldEngineSection = styled.div`
   margin: 40px auto;
   background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
@@ -296,9 +294,23 @@ const HomePageClient = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
+  
+  // NUOVO STATO: Dati dinamici dal DB
+  const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
 
   useEffect(() => {
     setMounted(true);
+    
+    // FETCH DEI DATI REALI DAL DB
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        if(data.totalPoints) {
+          setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
+        }
+      })
+      .catch(err => console.error("Errore fetch stats:", err));
+
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
     const PROCESSING_TIME = 2 * 60 * 1000; 
@@ -375,19 +387,22 @@ const HomePageClient = () => {
             </span>
             <span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span>
           </PulseCard>
+          
+          {/* CONTATORE DINAMICO: PUNTI TOTALI */}
           <PulseCard>
-            <span className="label">Treasury Share</span>
-            <span className="value">100%</span>
-            <span className="sub">Taxes & DEX Fees</span>
+            <span className="label">Total Points Generated</span>
+            <span className="value" style={{ color: '#3b82f6' }}>{liveStats.points}</span>
+            <span className="sub">Active Ecosystem Rewards</span>
           </PulseCard>
+
+          {/* CONTATORE DINAMICO: SALUTE TESORO */}
           <PulseCard>
-            <span className="label">Reward Asset</span>
-            <span className="value">BNB</span>
-            <span className="sub">Real-Time Yield</span>
+            <span className="label">Treasury Health</span>
+            <span className="value" style={{ color: '#22c55e' }}>{liveStats.health}</span>
+            <span className="sub">100% Backed by Real BNB</span>
           </PulseCard>
         </LivePulseSection>
 
-        {/* NUOVA SEZIONE: REFERRAL + BNB */}
         <YieldEngineSection>
           <h2>The Ultimate Yield Engine</h2>
           <div className="grid-2">
