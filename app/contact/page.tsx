@@ -31,6 +31,37 @@ const MainContent = styled.main`
   color: #ffffff;
 `
 
+const ProfileCard = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-cover: cover;
+    border: 3px solid #a78bfa;
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+  }
+
+  .info {
+    h1 { font-size: 1.8rem; margin-bottom: 5px; color: #ffffff; }
+    h3 { font-size: 0.9rem; color: #a78bfa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    p { color: #8a8a9a; line-height: 1.5; font-size: 1rem; }
+  }
+`
+
 const ContactCard = styled.div`
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -38,7 +69,37 @@ const ContactCard = styled.div`
   padding: 28px 24px;
   margin-bottom: 16px;
   h2 { color: #a78bfa; font-size: 1.05rem; margin-bottom: 14px; }
-  a { color: #34d399; text-decoration: none; }
+  a { 
+    color: #34d399; 
+    text-decoration: none; 
+    transition: opacity 0.2s;
+    &:hover { opacity: 0.8; }
+  }
+`
+
+const SocialGrid = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+
+  a {
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #a78bfa;
+    }
+  }
 `
 
 export default function ContactPage() {
@@ -48,14 +109,18 @@ export default function ContactPage() {
       <Container>
         <SharedHeader activePage="/contact" />
         
-        {/* Banner UNICO 3 */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '30px 0 10px 0', minHeight: '250px' }}>
-          <span id="ct_cTsuCksMpJ3"></span>
-        </div>
-
         <MainContent>
-          <h1>Contact Us</h1>
-          <p style={{ color: '#8a8a9a', marginBottom: '30px' }}>Reach out to us through our official channels.</p>
+          {/* Profilo Personale */}
+          <ProfileCard>
+            <img src="/doc.jpg" alt="Luca Celebrano" />
+            <div className="info">
+              <h3>Medical Student</h3>
+              <h1>Luca Celebrano</h1>
+              <p>Medical student passionate about decentralized finance and arbitrage systems. Bridging the gap between medical precision and technological innovation.</p>
+            </div>
+          </ProfileCard>
+
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>Contact Channels</h2>
 
           <ContactCard>
             <h2>📧 Email Support</h2>
@@ -63,18 +128,15 @@ export default function ContactPage() {
           </ContactCard>
 
           <ContactCard>
-            <h2>📱 Community</h2>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-              <a href="https://t.me/ArbitrageInception" target="_blank" style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>Telegram</a>
-              <a href="https://x.com/Arbitrageincept" target="_blank" style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>Twitter</a>
-            </div>
+            <h2>📱 Community & Social</h2>
+            <SocialGrid>
+              <a href="https://t.me/ArbitrageInception" target="_blank">Telegram</a>
+              <a href="https://x.com/Arbitrageincept" target="_blank">Twitter</a>
+              <a href="https://www.facebook.com/luca.celebrano" target="_blank">Facebook</a>
+              <a href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank">LinkedIn</a>
+            </SocialGrid>
           </ContactCard>
         </MainContent>
-
-        {/* Banner UNICO 4 */}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 40px 0', minHeight: '250px' }}>
-          <span id="ct_ct6kxn0fBVV"></span>
-        </div>
 
         <SharedFooter />
       </Container>
