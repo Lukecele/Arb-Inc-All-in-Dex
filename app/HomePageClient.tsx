@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
+const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const pulse = keyframes`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
@@ -160,55 +161,6 @@ const PulseCard = styled.div<{ $isProcessing?: boolean }>`
   .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
 `;
 
-const FeatureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  padding: 60px 0;
-`;
-
-const FeatureCard = styled.div`
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
-  p { color: #94a3b8; line-height: 1.6; }
-  .icon-box {
-    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    color: #a855f7; font-size: 1.5rem;
-  }
-`;
-
-const AuditSection = styled.section`
-  padding: 80px 0;
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
-  border-radius: 40px;
-  border: 1px solid rgba(168, 85, 247, 0.1);
-  margin-bottom: 100px;
-`;
-
-const AuditGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 0 40px;
-`;
-
-const AuditCard = styled.div`
-  background: rgba(3, 0, 20, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 30px;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  .icon { color: #a855f7; font-size: 1.5rem; }
-  h4 { font-size: 1.2rem; color: white; }
-  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
-`;
-
 const YieldEngineSection = styled.div`
   margin: 40px auto;
   background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
@@ -227,18 +179,21 @@ const YieldEngineSection = styled.div`
     -webkit-text-fill-color: transparent;
   }
 
-  .grid-2 {
+  .grid-3 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: 20px;
   }
 
   .yield-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
-    padding: 30px;
+    padding: 25px;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     
     &:hover {
       border-color: rgba(168, 85, 247, 0.4);
@@ -249,28 +204,13 @@ const YieldEngineSection = styled.div`
       display: flex;
       align-items: center;
       gap: 15px;
-      margin-bottom: 20px;
-      
-      .icon {
-        font-size: 2rem;
-        color: #a855f7;
-      }
-      h3 {
-        font-size: 1.4rem;
-        margin: 0;
-      }
+      margin-bottom: 15px;
+      .icon { font-size: 1.8rem; color: #a855f7; }
+      h3 { font-size: 1.3rem; margin: 0; }
     }
     
-    p {
-      color: #94a3b8;
-      line-height: 1.6;
-      font-size: 1rem;
-      margin-bottom: 25px;
-    }
-
-    strong {
-      color: white;
-    }
+    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
+    strong { color: white; }
   }
 `;
 
@@ -278,15 +218,14 @@ const ActionButton = styled.a`
   display: inline-block;
   background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
   color: white;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 100px;
   font-weight: bold;
   text-decoration: none;
   text-align: center;
+  font-size: 0.9rem;
   transition: transform 0.2s;
-  &:hover {
-    transform: scale(1.05);
-  }
+  &:hover { transform: scale(1.05); }
 `;
 
 const HomePageClient = () => {
@@ -294,14 +233,10 @@ const HomePageClient = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
-  
-  // NUOVO STATO: Dati dinamici dal DB
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
 
   useEffect(() => {
     setMounted(true);
-    
-    // FETCH DEI DATI REALI DAL DB
     fetch('/api/stats')
       .then(res => res.json())
       .then(data => {
@@ -309,7 +244,7 @@ const HomePageClient = () => {
           setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
         }
       })
-      .catch(err => console.error("Errore fetch stats:", err));
+      .catch(err => console.error("Error fetching stats:", err));
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
@@ -361,7 +296,7 @@ const HomePageClient = () => {
             powered by our 9-decimal ranking justice.
           </Subtitle>
           <ButtonGroup>
-            <PrimaryButton href="/swap-all">
+            <PrimaryButton href={SWAP_LINK}>
               Swap Now <FaArrowRight />
             </PrimaryButton>
             <SecondaryButton href="/about">How it Works</SecondaryButton>
@@ -388,14 +323,12 @@ const HomePageClient = () => {
             <span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span>
           </PulseCard>
           
-          {/* CONTATORE DINAMICO: PUNTI TOTALI */}
           <PulseCard>
-            <span className="label">Total Points Generated</span>
+            <span className="label">Ecosystem Points</span>
             <span className="value" style={{ color: '#3b82f6' }}>{liveStats.points}</span>
-            <span className="sub">Active Ecosystem Rewards</span>
+            <span className="sub">Trading & Task Volume</span>
           </PulseCard>
 
-          {/* CONTATORE DINAMICO: SALUTE TESORO */}
           <PulseCard>
             <span className="label">Treasury Health</span>
             <span className="value" style={{ color: '#22c55e' }}>{liveStats.health}</span>
@@ -405,33 +338,48 @@ const HomePageClient = () => {
 
         <YieldEngineSection>
           <h2>The Ultimate Yield Engine</h2>
-          <div className="grid-2">
+          <div className="grid-3">
             
+            {/* CARD 1: DEX & FARMING (PUNTO FORTE) */}
+            <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
+              <div className="icon-head">
+                <FaRocket className="icon" />
+                <h3>Trade & Farm</h3>
+              </div>
+              <p>
+                Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury and increases your share.
+              </p>
+              <ActionButton href={SWAP_LINK}>Start Farming</ActionButton>
+            </div>
+
+            {/* CARD 2: REVENUE SHARE (BNB) */}
             <div className="yield-card">
               <div className="icon-head">
                 <FaCoins className="icon" />
                 <h3>Earn Real BNB</h3>
               </div>
               <p>
-                Hold at least <strong>2 Million tokens</strong> to achieve Diamond Hand status. Our central engine automatically distributes <strong>real BNB</strong> from volume taxes directly to your pending balance. No staking required.
+                Hold <strong>2M+ tokens</strong> for Diamond Hand status. Our engine automatically distributes <strong>Real BNB</strong> from protocol fees directly to holders.
               </p>
-              <ActionButton href="/swap-all">Buy ARB Inc</ActionButton>
+              <ActionButton href={SWAP_LINK}>Get Diamond Status</ActionButton>
             </div>
 
-            <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.3)' }}>
+            {/* CARD 3: SOCIAL & FREE TASKS */}
+            <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head">
-                <FaNetworkWired className="icon" style={{ color: '#3b82f6' }} />
-                <h3>10% Referral Bonus</h3>
+                <FaTasks className="icon" style={{ color: '#3b82f6' }} />
+                <h3>Free Point Tasks</h3>
               </div>
               <p>
-                Invite friends and build your network. You earn a massive <strong>10% lifetime bonus</strong> on every single point they generate through Swaps, Tasks, and Holding.
+                No capital? No problem. Complete <strong>Social Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong> on all points they generate.
               </p>
-              <ActionButton href="/rewards">Get Your Link</ActionButton>
+              <ActionButton href="/rewards">Claim Free Points</ActionButton>
             </div>
 
           </div>
         </YieldEngineSection>
 
+        {/* Feature Grid & Audit restano invariati... */}
         <FeatureGrid>
           <FeatureCard>
             <div className="icon-box"><FaExchangeAlt /></div>
@@ -449,30 +397,6 @@ const HomePageClient = () => {
             <p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p>
           </FeatureCard>
         </FeatureGrid>
-
-        <AuditSection>
-          <div style={{textAlign: 'center', marginBottom: '50px'}}>
-            <h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2>
-            <p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p>
-          </div>
-          <AuditGrid>
-            <AuditCard>
-              <FaCheckCircle className="icon" />
-              <h4>KyberSwap Integration</h4>
-              <p>We leverage KyberSwap widgets for trading logic, inheriting institutional-grade security audited by ChainSecurity.</p>
-            </AuditCard>
-            <AuditCard>
-              <FaLock className="icon" />
-              <h4>Zero-Contract Risk</h4>
-              <p>By avoiding custom-coded swap contracts, we eliminate the primary entry point for hacks and exploits.</p>
-            </AuditCard>
-            <AuditCard>
-              <FaCode className="icon" />
-              <h4>Frontend Rewards Logic</h4>
-              <p>Rankings are processed by a transparent frontend engine, ensuring 9-decimal precision for every holder.</p>
-            </AuditCard>
-          </AuditGrid>
-        </AuditSection>
       </Container>
       <Footer />
     </PageWrapper>
