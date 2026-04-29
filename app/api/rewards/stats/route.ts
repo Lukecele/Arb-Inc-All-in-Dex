@@ -18,24 +18,27 @@ export async function GET(request: Request) {
   try {
     let points = await redis.zscore('leaderboard:points', wallet);
     
-    // 1. REGISTRAZIONE NUOVO UTENTE + REFERRAL
+    // 1. REGISTRAZIONE NUOVO UTENTE (se non esiste)
     if (points === null) {
       await redis.zadd('leaderboard:points', { score: 0, member: wallet });
       points = 0;
+    }
 
-      // Se c'è un referrer e non è l'utente stesso
-      if (ref && ref !== wallet && ref.startsWith('0x')) {
-        // Controlliamo se l'utente ha già un "padre" (per evitare sovrascritture)
-        const hasParent = await redis.get(`ref:parent:${wallet}`);
-        if (!hasParent) {
-          await redis.set(`ref:parent:${wallet}`, ref);
-          await redis.sadd(`ref:children:${ref}`, wallet); // Aggiunge il figlio alla lista del padre
-          console.log(`🔗 Referral: ${wallet} invitato da ${ref}`);
-        }
+    // 2. LOGICA REFERRAL UNIVERSALE (Sia nuovi che vecchi utenti)
+    // Se c'è un referrer nell'URL e non è l'utente stesso...
+    if (ref && ref !== wallet && ref.startsWith('0x')) {
+      // Controlliamo se l'utente ha GIÀ un "padre" per non sovrascriverlo
+      const hasParent = await redis.get(`ref:parent:${wallet}`);
+      
+      // Se NON ha un padre, lo leghiamo a chi lo ha invitato ORA
+      if (!hasParent) {
+        await redis.set(`ref:parent:${wallet}`, ref);
+        await redis.sadd(`ref:children:${ref}`, wallet);
+        console.log(`🔗 Referral Universale: ${wallet} si è legato a ${ref}`);
       }
     }
 
-    // 2. RECUPERO STATISTICHE REFERRAL
+    // 3. RECUPERO STATISTICHE REFERRAL PER LA DASHBOARD
     const referralCount = await redis.scard(`ref:children:${wallet}`) || 0;
     const referralEarnings = await redis.get(`ref:earnings:${wallet}`) || 0;
 
