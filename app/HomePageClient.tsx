@@ -228,6 +228,55 @@ const ActionButton = styled.a`
   &:hover { transform: scale(1.05); }
 `;
 
+const FeatureGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 60px 0;
+`;
+
+const FeatureCard = styled.div`
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
+  p { color: #94a3b8; line-height: 1.6; }
+  .icon-box {
+    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    color: #a855f7; font-size: 1.5rem;
+  }
+`;
+
+const AuditSection = styled.section`
+  padding: 80px 0;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
+  border-radius: 40px;
+  border: 1px solid rgba(168, 85, 247, 0.1);
+  margin-bottom: 100px;
+`;
+
+const AuditGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 0 40px;
+`;
+
+const AuditCard = styled.div`
+  background: rgba(3, 0, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  .icon { color: #a855f7; font-size: 1.5rem; }
+  h4 { font-size: 1.2rem; color: white; }
+  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
+`;
+
 const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('...');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -340,7 +389,6 @@ const HomePageClient = () => {
           <h2>The Ultimate Yield Engine</h2>
           <div className="grid-3">
             
-            {/* CARD 1: DEX & FARMING (PUNTO FORTE) */}
             <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
               <div className="icon-head">
                 <FaRocket className="icon" />
@@ -352,7 +400,6 @@ const HomePageClient = () => {
               <ActionButton href={SWAP_LINK}>Start Farming</ActionButton>
             </div>
 
-            {/* CARD 2: REVENUE SHARE (BNB) */}
             <div className="yield-card">
               <div className="icon-head">
                 <FaCoins className="icon" />
@@ -364,7 +411,6 @@ const HomePageClient = () => {
               <ActionButton href={SWAP_LINK}>Get Diamond Status</ActionButton>
             </div>
 
-            {/* CARD 3: SOCIAL & FREE TASKS */}
             <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head">
                 <FaTasks className="icon" style={{ color: '#3b82f6' }} />
@@ -379,7 +425,6 @@ const HomePageClient = () => {
           </div>
         </YieldEngineSection>
 
-        {/* Feature Grid & Audit restano invariati... */}
         <FeatureGrid>
           <FeatureCard>
             <div className="icon-box"><FaExchangeAlt /></div>
@@ -397,6 +442,30 @@ const HomePageClient = () => {
             <p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p>
           </FeatureCard>
         </FeatureGrid>
+
+        <AuditSection>
+          <div style={{textAlign: 'center', marginBottom: '50px'}}>
+            <h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2>
+            <p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p>
+          </div>
+          <AuditGrid>
+            <AuditCard>
+              <FaCheckCircle className="icon" />
+              <h4>KyberSwap Integration</h4>
+              <p>We leverage KyberSwap widgets for trading logic, inheriting institutional-grade security audited by ChainSecurity.</p>
+            </AuditCard>
+            <AuditCard>
+              <FaLock className="icon" />
+              <h4>Zero-Contract Risk</h4>
+              <p>By avoiding custom-coded swap contracts, we eliminate the primary entry point for hacks and exploits.</p>
+            </AuditCard>
+            <AuditCard>
+              <FaCode className="icon" />
+              <h4>Frontend Rewards Logic</h4>
+              <p>Rankings are processed by a transparent frontend engine, ensuring 9-decimal precision for every holder.</p>
+            </AuditCard>
+          </AuditGrid>
+        </AuditSection>
       </Container>
       <Footer />
     </PageWrapper>
