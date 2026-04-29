@@ -13,13 +13,13 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { userWallet, type, referrerWallet, txHash } = body;
-
+    let { userWallet, type, txHash } = body;
+    
     if (!userWallet) return NextResponse.json({ success: false, error: "No wallet" }, { status: 400 });
+    userWallet = userWallet.toLowerCase();
 
-    // 🚨 SISTEMA ANTI-FARMING: Controlla se questa specifica transazione/ordine ha già ricevuto punti
+    // 🚨 SISTEMA ANTI-FARMING
     if (txHash) {
-      // 'nx: true' significa "Salva solo se non esiste già"
       const isNewTransaction = await redis.set(`processed_tx:${txHash}`, 'true', { nx: true });
       if (!isNewTransaction) {
         console.log(`[BLOCCATO] Tentativo di claim doppio per tx/order: ${txHash}`);
@@ -30,18 +30,19 @@ export async function POST(req: Request) {
     let points = 0;
     if (type === 'swap') points = 100;
     if (type === 'zap') points = 150;
-    if (type === 'limit') points = 200; // I 200 punti sudati!
+    if (type === 'limit') points = 200;
     if (points === 0) return NextResponse.json({ success: false, error: "Invalid type" }, { status: 400 });
 
     // 1. Assegna punti base
     await redis.zincrby('leaderboard:points', points, userWallet);
 
-    // 2. Assegna il bonus Referrer del 10%
-    if (referrerWallet && referrerWallet !== userWallet) {
-      const bonus = Math.floor(points * 0.10);
-      if (bonus > 0) {
-        await redis.zincrby('leaderboard:points', bonus, referrerWallet);
-      }
+    // 2. Assegna il bonus Referrer usando il Database (Infallibile)
+    const parent = await redis.get(`ref:parent:${userWallet}`);
+    if (parent) {
+      const bonus = points * 0.10;
+      await redis.zincrby('leaderboard:points', bonus, parent as string);
+      await redis.incrbyfloat(`ref:earnings:${parent}`, bonus);
+      console.log(`🎁 Bonus DEX: +${bonus} punti a ${parent} (invito di ${userWallet})`);
     }
 
     return NextResponse.json({ success: true, pointsAdded: points });

@@ -8,15 +8,27 @@ const redis = new Redis({
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const wallet = searchParams.get('tracking_id');
+  const wallet = searchParams.get('tracking_id')?.toLowerCase();
   const status = searchParams.get('status'); 
   
   if (!wallet) return new Response("No Wallet", { status: 400 });
 
   try {
     const amount = 250;
-    await redis.zincrby('leaderboard:points', amount, wallet.toLowerCase());
+    
+    // 1. Assegna Punti all'utente
+    await redis.zincrby('leaderboard:points', amount, wallet);
     console.log(`✅ Task CPAGrip completata: +250 Punti a ${wallet}`);
+
+    // 2. Bonus Referral
+    const parent = await redis.get(`ref:parent:${wallet}`);
+    if (parent) {
+      const bonus = amount * 0.10; // 25 punti
+      await redis.zincrby('leaderboard:points', bonus, parent as string);
+      await redis.incrbyfloat(`ref:earnings:${parent}`, bonus);
+      console.log(`🎁 Bonus Task: +${bonus} punti a ${parent} (invito di ${wallet})`);
+    }
+
     return new Response("OK", { status: 200 });
   } catch (error) {
     console.error("Errore Postback:", error);
