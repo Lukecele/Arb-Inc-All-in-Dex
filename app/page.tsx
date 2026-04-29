@@ -6,9 +6,8 @@ export const metadata: Metadata = {
   description: 'High-performance multi-chain DEX aggregator and liquidity terminal on BNB Smart Chain.',
 }
 
-// 🚀 LAZY LOADING: Carica il componente solo sul client (browser) senza bloccare la pagina
+// 🚀 LAZY LOADING: Divide il bundle pesante per evitare crash, rispettando Vercel
 const HomePageClient = dynamic(() => import('./HomePageClient'), { 
-  ssr: false, // Disabilita il Server-Side Rendering per questo componente
   loading: () => (
     <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#a855f7' }}>
       <div className="fa-spin" style={{ fontSize: '2rem' }}>⚙️</div>
