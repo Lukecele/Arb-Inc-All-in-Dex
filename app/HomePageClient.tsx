@@ -366,7 +366,6 @@ const HomePageClient = () => {
 
     const fetchBalances = async () => {
       try {
-        // AGGIUNTI TIPI PER EVITARE ERRORE DI BUILD NEXT.JS
         const rpcBody = (method: string, params: (string | object)[]) => JSON.stringify({ 
           jsonrpc: '2.0', 
           method, 
@@ -382,12 +381,18 @@ const HomePageClient = () => {
         const dataAccBnb = await resAccBnb.json();
         if(dataAccBnb.result) setAccBnb((Number(BigInt(dataAccBnb.result)) / 1e18).toFixed(4));
 
+        // FIX DECIMALI: Cambiato da 1e18 a 1e9 per riflettere il vero balance del token ARB Inc
         const resAccTokens = await fetch('https://bsc-dataseed.binance.org/', { 
           method: 'POST', 
           body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) 
         });
         const dataAccTokens = await resAccTokens.json();
-        if(dataAccTokens.result) setAccTokens((Number(BigInt(dataAccTokens.result)) / 1e18).toLocaleString(undefined, {maximumFractionDigits: 0}));
+        if(dataAccTokens.result && dataAccTokens.result !== '0x') {
+           const tokens = Number(BigInt(dataAccTokens.result)) / 1e9;
+           setAccTokens(tokens.toLocaleString(undefined, {maximumFractionDigits: 0}));
+        } else {
+           setAccTokens("0");
+        }
 
       } catch (e) { console.error('Blockchain Fetch Error:', e); }
     };
