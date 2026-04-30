@@ -16,3 +16,4 @@ data/
 *.mp4
 scripts/.env
 .env.local
+.env*.local
