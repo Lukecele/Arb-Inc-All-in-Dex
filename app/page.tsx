@@ -1,46 +1,5 @@
-import dynamic from 'next/dynamic'
-import type { Metadata } from 'next'
+import HomePageClient from './HomePageClient';
 
-export const metadata: Metadata = {
-  title: 'Arbitrage Inception | Professional DEX Aggregator',
-  description: 'High-performance multi-chain DEX aggregator and liquidity terminal on BNB Smart Chain.',
-}
-
-// 🚀 LAZY LOADING: Divide il bundle pesante per evitare crash, rispettando Vercel
-const HomePageClient = dynamic(() => import('./HomePageClient'), { 
-  loading: () => (
-    <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#a855f7' }}>
-      <div className="fa-spin" style={{ fontSize: '2rem' }}>⚙️</div>
-    </div>
-  )
-});
-
-export default function HomePage() {
-  return (
-    <main style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#050508' }}>
-      
-      {/* 1. Navigazione */}
-      <nav style={{ 
-        width: '100%', 
-        padding: '20px 0', 
-        textAlign: 'center', 
-        borderBottom: '1px solid rgba(139, 92, 246, 0.1)',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '30px',
-        marginBottom: '40px' 
-      }}>
-        <a href="/" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
-          TRADING TERMINAL
-        </a>
-        <a href="/rewards" style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 'bold', letterSpacing: '1px', fontSize: '12px', textDecoration: 'none' }}>
-          ECOSYSTEM REWARDS
-        </a>
-      </nav>
-
-      {/* 2. Il contenuto viene caricato dinamicamente */}
-      <HomePageClient />
-      
-    </main>
-  )
+export default function Page() {
+  return <HomePageClient />;
 }
