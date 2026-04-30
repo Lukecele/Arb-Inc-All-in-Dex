@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye, FaWallet, FaLayerGroup, FaChartLine } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye, FaWallet, FaLayerGroup, FaChartLine, FaWater } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-const TOKEN_LOGO_LARGE = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
+// Usa il logo che mi hai inviato (assicurati di averlo in /public/logo-token.png)
+const TOKEN_LOGO_IMAGE = "/logo-token.png"; 
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -71,7 +72,7 @@ const BigLogoWrapper = styled.div`
   margin-bottom: 40px;
   animation: ${float} 4s ease-in-out infinite;
   filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.6));
-  img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(168, 85, 247, 0.5); }
+  img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(168, 85, 247, 0.5); object-fit: cover; }
 `;
 
 const Title = styled.h1`
@@ -270,6 +271,7 @@ const HomePageClient = () => {
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [tokenVolume24h, setTokenVolume24h] = useState<number | null>(null);
+  const [tokenLiquidity, setTokenLiquidity] = useState<number | null>(null);
   const [treasuryBnb, setTreasuryBnb] = useState('...');
   const [accBnb, setAccBnb] = useState('...');
   const [accTokens, setAccTokens] = useState('...');
@@ -283,7 +285,9 @@ const HomePageClient = () => {
         const dataDex = await resDex.json();
         if (dataDex.pairs) {
           const totalVol = dataDex.pairs.reduce((acc: number, pair: any) => acc + (pair.volume?.h24 || 0), 0);
+          const totalLiq = dataDex.pairs.reduce((acc: number, pair: any) => acc + (pair.liquidity?.usd || 0), 0);
           setTokenVolume24h(totalVol);
+          setTokenLiquidity(totalLiq);
         }
 
         const rpcBody = (method: string, params: (string | object)[]) => JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 });
@@ -333,7 +337,7 @@ const HomePageClient = () => {
       <Container>
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
-          <BigLogoWrapper><img src={TOKEN_LOGO_LARGE} alt="ARB Inc Logo" /></BigLogoWrapper>
+          <BigLogoWrapper><img src={TOKEN_LOGO_IMAGE} alt="ARB Inc Logo" /></BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
@@ -351,11 +355,19 @@ const HomePageClient = () => {
           </div>
           <PulseCard>
             <div className="header-row"><span className="label">Trading Volume (24h)</span><LiveIndicator><div className="dot"></div>Live</LiveIndicator></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '20px 0' }}>
-              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Aggregated Token Volume</span>
-              <span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '2rem' }}>
-                {tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={24} />}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '15px 0' }}>
+              <div>
+                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Aggregated Token Volume</span>
+                <span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '1.8rem', display: 'block' }}>
+                  {tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={20} />}
+                </span>
+              </div>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '5px' }}><FaWater size={10} /> Total Token Liquidity</span>
+                <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                  {tokenLiquidity !== null ? `$${tokenLiquidity.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={14} />}
+                </span>
+              </div>
             </div>
             <span className="sub" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FaChartLine /> Real-time Market Data</span>
           </PulseCard>
@@ -368,7 +380,6 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '6px' }}>DefiLlama Stats</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
             </div>
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
