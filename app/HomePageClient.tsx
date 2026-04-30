@@ -7,12 +7,19 @@ import Footer from '../components/Footer';
 import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
+const TREASURY_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const pulse = keyframes`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
   50% { opacity: 0.7; border-color: #a855f7; }
   100% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
+`;
+
+const livePulse = keyframes`
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 `;
 
 const PageWrapper = styled.div`
@@ -149,9 +156,18 @@ const PulseCard = styled.div<{ $isProcessing?: boolean }>`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  height: 100%;
   ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`}
+  
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
   .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+  
   .value { 
     font-size: 1.8rem; 
     font-weight: 700; 
@@ -160,7 +176,63 @@ const PulseCard = styled.div<{ $isProcessing?: boolean }>`
     align-items: center;
     gap: 10px;
   }
+  
   .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
+  
+  .verify-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.2s;
+    &:hover { color: #22c55e; }
+  }
+
+  .defillama-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    padding: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-top: auto;
+    transition: all 0.2s;
+    &:hover {
+      background: rgba(34, 197, 94, 0.25);
+      transform: translateY(-2px);
+    }
+  }
+`;
+
+const LiveIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #22c55e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    animation: ${livePulse} 2s infinite;
+  }
 `;
 
 const YieldEngineSection = styled.div`
@@ -172,9 +244,9 @@ const YieldEngineSection = styled.div`
   box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
   h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
+  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
     .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
-    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
+    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
   }
 `;
 
@@ -278,12 +350,29 @@ const HomePageClient = () => {
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
+  
+  // Stato per le metriche DefiLlama (inizializzate a 0, così spariscono automaticamente se non ci sono dati)
+  const [llamaStats, setLlamaStats] = useState({ tvl: 0, fees: 0, revenue: 0, holdersRevenue: 0 });
 
   useEffect(() => {
     setMounted(true);
+    
+    // 1. Fetch delle tue statistiche interne (punti e health)
     fetch('/api/stats').then(res => res.json()).then(data => {
       if(data.totalPoints) setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
+      // Se vuoi, puoi passare i dati llama dal tuo backend aggiungendoli in /api/stats
+      if(data.llamaStats) setLlamaStats(data.llamaStats);
     }).catch(err => console.error(err));
+
+    // 2. Fetch automatico e diretto da DefiLlama (nessuno sforzo per te!)
+    fetch('https://api.llama.fi/protocol/arbitrage-inc')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.tvl && data.tvl.length > 0) {
+          const currentTvl = data.tvl[data.tvl.length - 1].totalLiquidityUSD;
+          setLlamaStats(prev => ({ ...prev, tvl: currentTvl }));
+        }
+      }).catch(e => console.log('DefiLlama fetch non riuscito, verranno mostrati dati interni', e));
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
@@ -342,9 +431,63 @@ const HomePageClient = () => {
         </Hero>
 
         <LivePulseSection>
-          <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span></PulseCard>
-          <PulseCard><span className="label">Ecosystem Points</span><span className="value" style={{ color: '#3b82f6' }}>{liveStats.points}</span><span className="sub">Trading & Task Volume</span></PulseCard>
-          <PulseCard><span className="label">Treasury Health</span><span className="value" style={{ color: '#22c55e' }}>{liveStats.health}</span><span className="sub">100% Backed by Real BNB</span></PulseCard>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <PulseCard $isProcessing={isProcessing}>
+              <span className="label">Next Payout Cycle</span>
+              <span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span>
+              <span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span>
+            </PulseCard>
+            <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>
+              Go to Rewards
+            </ActionButton>
+          </div>
+          
+          <PulseCard>
+            <div className="header-row">
+              <span className="label">Ecosystem Points</span>
+              <LiveIndicator><div className="dot"></div>Live</LiveIndicator>
+            </div>
+            <span className="value" style={{ color: '#3b82f6', textShadow: '0 0 15px rgba(59, 130, 246, 0.4)' }}>
+              {liveStats.points}
+            </span>
+            <span className="sub" style={{ color: '#94a3b8' }}>Real-time Trading & Task Volume</span>
+          </PulseCard>
+          
+          <PulseCard>
+            <div className="header-row">
+              <span className="label">Treasury & Revenue</span>
+              <FaShieldAlt style={{color: '#22c55e', fontSize: '1.2rem'}} />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span className="value" style={{ color: '#22c55e', textShadow: '0 0 15px rgba(34, 197, 94, 0.4)' }}>
+                {liveStats.health}
+              </span>
+            </div>
+
+            {/* Box Dinamico delle Metriche */}
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', margin: '8px 0', flexGrow: 1 }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Verified Metrics</div>
+              
+              {llamaStats.tvl > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>TVL</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.tvl.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
+              {llamaStats.fees > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>Total Fees</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.fees.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
+              {llamaStats.revenue > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>Revenue</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.revenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
+              {llamaStats.holdersRevenue > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#a855f7'}}>Holders Rev.</span> <span style={{ color: '#a855f7', fontWeight: 'bold' }}>${llamaStats.holdersRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
+              
+              {(llamaStats.tvl === 0 && llamaStats.fees === 0 && llamaStats.revenue === 0 && llamaStats.holdersRevenue === 0) && (
+                  <div style={{ fontSize: '0.8rem', color: '#64748b', fontStyle: 'italic', textAlign: 'center', marginTop: '6px' }}>Fetching from DefiLlama...</div>
+              )}
+            </div>
+            
+            <a href="https://defillama.com/protocol/arbitrage-inc?holdersRevenue=true&fees=true&revenue=true" target="_blank" rel="noreferrer" className="defillama-btn">
+              🦙 Verify on DefiLlama
+            </a>
+            
+            <div style={{textAlign: 'center', marginTop: '6px'}}>
+              <a href={`https://bscscan.com/address/${TREASURY_ADDRESS}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.75rem'}}>
+                <FaExternalLinkAlt size={10} /> View Smart Contract
+              </a>
+            </div>
+          </PulseCard>
         </LivePulseSection>
 
         <YieldEngineSection>
@@ -353,17 +496,14 @@ const HomePageClient = () => {
             <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
               <div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div>
               <p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p>
-              <ActionButton href={SWAP_LINK}>Start Farming</ActionButton>
             </div>
             <div className="yield-card">
               <div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div>
               <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p>
-              <ActionButton href={SWAP_LINK}>Get Diamond Status</ActionButton>
             </div>
             <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div>
-              <p>No capital? No problem. Complete <strong>Social Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p>
-              <ActionButton href="/rewards">Claim Free Points</ActionButton>
+              <p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p>
             </div>
           </div>
         </YieldEngineSection>
