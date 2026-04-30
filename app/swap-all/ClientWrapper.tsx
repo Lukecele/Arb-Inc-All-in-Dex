@@ -9,10 +9,12 @@ import styled, { createGlobalStyle } from 'styled-components'
 import theme from '../styles/theme'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
+import { FaCopy, FaCheckCircle } from 'react-icons/fa'
 
 const BSC_CHAIN_ID = 56
 const FEE_RECEIVER = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7'
 const FEE_PCM = 10
+const ARB_CONTRACT = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"
 
 const darkTheme = {
   text: '#FFFFFF',
@@ -184,6 +186,50 @@ const PointsBadge = styled.div`
   letter-spacing: 0.5px;
 `
 
+const WarningBox = styled.div`
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  line-height: 1.4;
+`
+
+const ContractBox = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 13px;
+  .addr { 
+    font-family: 'Monaco', monospace; 
+    color: #a855f7; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    margin-left: 8px;
+    margin-right: 12px;
+  }
+  button { 
+    background: none; 
+    border: none; 
+    color: #94a3b8; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    display: flex; 
+    align-items: center; 
+    &:hover { color: white; transform: scale(1.1); } 
+  }
+`
+
 export default function ClientWrapper() {
   const searchParams = useSearchParams()
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
@@ -192,6 +238,7 @@ export default function ClientWrapper() {
 
   const [ethersProvider, setEthersProvider] = useState<ethers.providers.Web3Provider | null>(null)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
 
   const tokenInParam = searchParams?.get('tokenIn')
   const tokenOutParam = searchParams?.get('tokenOut')
@@ -268,6 +315,12 @@ export default function ClientWrapper() {
     return tx.hash
   }, [ethersProvider, walletAddress])
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(ARB_CONTRACT);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
       <GlobalStyle />
@@ -311,6 +364,21 @@ export default function ClientWrapper() {
           
           <SwapWrapper>
             <PointsBadge>🚀 Earn 100 Points & 10% Referral Bonus per swap!</PointsBadge>
+            
+            <WarningBox>
+              ⚠️ <strong>Buying ARB Inc?</strong> Click the settings icon ⚙️ below and manually set your <strong>Max Slippage to 8%</strong> to account for the token tax.
+            </WarningBox>
+
+            <ContractBox>
+              <div style={{display: 'flex', alignItems: 'center', overflow: 'hidden'}}>
+                <span style={{color: '#a1a1aa', fontWeight: 'bold'}}>ARB Inc:</span>
+                <span className="addr">{ARB_CONTRACT}</span>
+              </div>
+              <button onClick={copyToClipboard} title="Copy Contract">
+                {copied ? <FaCheckCircle style={{color: '#22c55e', fontSize: '16px'}} /> : <FaCopy style={{fontSize: '16px'}} />}
+              </button>
+            </ContractBox>
+
             <SwapScroller>
               <SwapSection>
                 <Widget
