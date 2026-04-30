@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye, FaWallet } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
-const TREASURY_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
+const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const pulse = keyframes`
@@ -350,21 +350,40 @@ const HomePageClient = () => {
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
-  
-  // Stato per le metriche DefiLlama (inizializzate a 0, così spariscono automaticamente se non ci sono dati)
+  const [treasuryBnb, setTreasuryBnb] = useState('...');
   const [llamaStats, setLlamaStats] = useState({ tvl: 0, fees: 0, revenue: 0, holdersRevenue: 0 });
 
   useEffect(() => {
     setMounted(true);
     
-    // 1. Fetch delle tue statistiche interne (punti e health)
     fetch('/api/stats').then(res => res.json()).then(data => {
       if(data.totalPoints) setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
-      // Se vuoi, puoi passare i dati llama dal tuo backend aggiungendoli in /api/stats
       if(data.llamaStats) setLlamaStats(data.llamaStats);
     }).catch(err => console.error(err));
 
-    // 2. Fetch automatico e diretto da DefiLlama (nessuno sforzo per te!)
+    const fetchTreasuryBalance = async () => {
+      try {
+        const response = await fetch('https://bsc-dataseed.binance.org/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'eth_getBalance',
+            params: [TREASURY_WALLET, 'latest'],
+            id: 1
+          })
+        });
+        const data = await response.json();
+        if (data.result) {
+          const wei = BigInt(data.result);
+          const bnb = (Number(wei) / 1e18).toFixed(4);
+          setTreasuryBnb(bnb);
+        }
+      } catch (e) { console.error('RPC Error:', e); }
+    };
+    fetchTreasuryBalance();
+    const balanceInterval = setInterval(fetchTreasuryBalance, 60000);
+
     fetch('https://api.llama.fi/protocol/arbitrage-inc')
       .then(res => res.json())
       .then(data => {
@@ -372,7 +391,7 @@ const HomePageClient = () => {
           const currentTvl = data.tvl[data.tvl.length - 1].totalLiquidityUSD;
           setLlamaStats(prev => ({ ...prev, tvl: currentTvl }));
         }
-      }).catch(e => console.log('DefiLlama fetch non riuscito, verranno mostrati dati interni', e));
+      }).catch(e => console.log('DefiLlama sync in progress...'));
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
@@ -400,7 +419,7 @@ const HomePageClient = () => {
     };
     const interval = setInterval(updateTimer, 1000);
     updateTimer();
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); clearInterval(balanceInterval); };
   }, []);
 
   const copyToClipboard = () => {
@@ -458,33 +477,32 @@ const HomePageClient = () => {
               <span className="label">Treasury & Revenue</span>
               <FaShieldAlt style={{color: '#22c55e', fontSize: '1.2rem'}} />
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span className="value" style={{ color: '#22c55e', textShadow: '0 0 15px rgba(34, 197, 94, 0.4)' }}>
-                {liveStats.health}
-              </span>
+
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Real-Time Wallet Balance</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', alignItems: 'center' }}>
+                <span style={{color: '#94a3b8'}}>Backed Liquidity</span> 
+                <span style={{ color: '#facc15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <FaCoins size={14} /> 
+                  {treasuryBnb === '...' ? <FaSpinner className="fa-spin" size={12}/> : `${treasuryBnb} BNB`}
+                </span>
+              </div>
             </div>
 
-            {/* Box Dinamico delle Metriche */}
-            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', margin: '8px 0', flexGrow: 1 }}>
-              <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Verified Metrics</div>
-              
-              {llamaStats.tvl > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>TVL</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.tvl.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
-              {llamaStats.fees > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>Total Fees</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.fees.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
-              {llamaStats.revenue > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#94a3b8'}}>Revenue</span> <span style={{ color: 'white', fontWeight: 'bold' }}>${llamaStats.revenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
-              {llamaStats.holdersRevenue > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{color: '#a855f7'}}>Holders Rev.</span> <span style={{ color: '#a855f7', fontWeight: 'bold' }}>${llamaStats.holdersRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></div>}
-              
-              {(llamaStats.tvl === 0 && llamaStats.fees === 0 && llamaStats.revenue === 0 && llamaStats.holdersRevenue === 0) && (
-                  <div style={{ fontSize: '0.8rem', color: '#64748b', fontStyle: 'italic', textAlign: 'center', marginTop: '6px' }}>Fetching from DefiLlama...</div>
-              )}
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>DefiLlama Metrics</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>TVL</span> <span style={{ color: 'white', fontWeight: 'bold' }}>{llamaStats.tvl > 0 ? `$${llamaStats.tvl.toLocaleString()}` : 'Aggregating...'}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Fees</span> <span style={{ color: 'white', fontWeight: 'bold' }}>{llamaStats.fees > 0 ? `$${llamaStats.fees.toLocaleString()}` : 'Aggregating...'}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#a855f7'}}>Holders Rev.</span> <span style={{ color: '#a855f7', fontWeight: 'bold' }}>{llamaStats.holdersRevenue > 0 ? `$${llamaStats.holdersRevenue.toLocaleString()}` : 'Aggregating...'}</span></div>
             </div>
             
             <a href="https://defillama.com/protocol/arbitrage-inc?holdersRevenue=true&fees=true&revenue=true" target="_blank" rel="noreferrer" className="defillama-btn">
-              🦙 Verify on DefiLlama
+              🦙 Open DefiLlama
             </a>
             
-            <div style={{textAlign: 'center', marginTop: '6px'}}>
-              <a href={`https://bscscan.com/address/${TREASURY_ADDRESS}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.75rem'}}>
-                <FaExternalLinkAlt size={10} /> View Smart Contract
+            <div style={{textAlign: 'center', marginTop: '4px'}}>
+              <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.75rem'}}>
+                <FaExternalLinkAlt size={10} /> View Treasury Wallet
               </a>
             </div>
           </PulseCard>
@@ -499,7 +517,7 @@ const HomePageClient = () => {
             </div>
             <div className="yield-card">
               <div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div>
-              <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p>
+              <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees direttamente ai detentori.</p>
             </div>
             <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div>
@@ -525,15 +543,15 @@ const HomePageClient = () => {
         <FeatureGrid>
           <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
           <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor ogni inflow. 100% delle tasse e commissioni sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
         </FeatureGrid>
 
         <AuditSection>
-          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2><p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p></div>
+          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2><p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizza la sicurezza attraverso la semplificazione strategica.</p></div>
           <AuditGrid>
-            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>We leverage KyberSwap widgets for trading logic, audited by ChainSecurity.</p></AuditCard>
-            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>By avoiding custom swap contracts, we eliminate the primary entry point for hacks.</p></AuditCard>
-            <AuditCard><FaCode className="icon" /><h4>Frontend Rewards Logic</h4><p>Rankings are processed by a transparent frontend engine with 9-decimal precision.</p></AuditCard>
+            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>Usiamo i widget di KyberSwap per la logica di trading, certificata da ChainSecurity.</p></AuditCard>
+            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>Evitando contratti di swap custom, eliminiamo il principale punto di ingresso per gli hack.</p></AuditCard>
+            <AuditCard><FaCode className="icon" /><h4>Frontend Rewards Logic</h4><p>I ranking sono processati da un motore trasparente con precisione a 9 decimali.</p></AuditCard>
           </AuditGrid>
         </AuditSection>
       </Container>
