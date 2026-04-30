@@ -11,7 +11,7 @@ const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  padding-left: 300px; /* <--- Match con Sidebar */
+  padding-left: 300px;
   background-color: #030014;
   color: white;
   font-family: 'Inter', sans-serif;
@@ -19,7 +19,7 @@ const PageWrapper = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 1000px; /* <--- Più stretto per eleganza */
+  max-width: 1000px;
   margin: 0 auto;
   padding: 60px 20px;
 `;
@@ -40,7 +40,7 @@ const HomePageClient = () => {
 
   useEffect(() => {
     setMounted(true);
-    fetch('/api/stats').then(r => r.json()).then(d => setStats({ points: d.totalPoints, health: d.treasuryHealth }));
+    fetch('/api/stats').then(r => r.json()).then(d => setStats({ points: d.totalPoints || "0", health: d.treasuryHealth || "100%" }));
   }, []);
 
   if (!mounted) return null;
@@ -50,7 +50,7 @@ const HomePageClient = () => {
       <Header />
       <Container>
         <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
-        <p style={{textAlign:'center', color:'#94a3b8', marginBottom:'40px'}}>Aggregated liquidity and 100% revenue-sharing.</p>
+        <p style={{textAlign:'center', color:'#94a3b8', marginBottom:'40px'}}>Aggregated liquidity and 100% revenue-sharing model.</p>
         
         <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))', gap:'20px', marginBottom:'60px'}}>
            <div style={{background:'rgba(255,255,255,0.03)', padding:'24px', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.05)'}}>
@@ -63,16 +63,25 @@ const HomePageClient = () => {
            </div>
         </div>
 
-        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'20px'}}>
+        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'20px', marginBottom: '60px'}}>
           <div style={{background:'rgba(168, 85, 247, 0.05)', padding:'30px', borderRadius:'20px', border:'1px solid rgba(168, 85, 247, 0.2)'}}>
             <FaRocket style={{fontSize:'24px', color:'#a855f7', marginBottom:'15px'}}/>
-            <h3>Trade & Farm</h3>
-            <p style={{color:'#94a3b8', fontSize:'14px'}}>Swap, Zap or Limit Orders. Fuel the treasury and earn points.</p>
+            <h3 style={{marginBottom:'10px'}}>Trade & Farm</h3>
+            <p style={{color:'#94a3b8', fontSize:'14px'}}>Swap, Zap or Limit Orders. Fuel the treasury and earn points with every action.</p>
           </div>
           <div style={{background:'rgba(59, 130, 246, 0.05)', padding:'30px', borderRadius:'20px', border:'1px solid rgba(59, 130, 246, 0.2)'}}>
             <FaCoins style={{fontSize:'24px', color:'#3b82f6', marginBottom:'15px'}}/>
-            <h3>Real BNB Rewards</h3>
-            <p style={{color:'#94a3b8', fontSize:'14px'}}>Hold 2M+ tokens for Diamond Status and earn real BNB.</p>
+            <h3 style={{marginBottom:'10px'}}>Real BNB Rewards</h3>
+            <p style={{color:'#94a3b8', fontSize:'14px'}}>Hold 2M+ tokens for Diamond Status and earn real BNB from protocol fees.</p>
+          </div>
+        </div>
+
+        <div style={{background:'rgba(255,255,255,0.02)', padding:'40px', borderRadius:'24px', border:'1px solid rgba(255,255,255,0.05)', textAlign:'center'}}>
+          <h2 style={{marginBottom:'30px'}}>Protocol Specs</h2>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'20px'}}>
+              <div><FaChartPie style={{color:'#a855f7', fontSize:'20px'}}/><div style={{fontSize:'12px', color:'#64748b'}}>TAX</div><div style={{fontSize:'20px', fontWeight:'bold'}}>4%</div></div>
+              <div><FaClock style={{color:'#a855f7', fontSize:'20px'}}/><div style={{fontSize:'12px', color:'#64748b'}}>SYNC</div><div style={{fontSize:'20px', fontWeight:'bold'}}>6H</div></div>
+              <div><FaBullseye style={{color:'#a855f7', fontSize:'20px'}}/><div style={{fontSize:'12px', color:'#64748b'}}>PRECISION</div><div style={{fontSize:'20px', fontWeight:'bold'}}>9 Dec</div></div>
           </div>
         </div>
       </Container>

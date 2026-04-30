@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { 
-  FaBars, FaHome, FaExchangeAlt, FaBolt, 
+  FaBars, FaTimes, FaHome, FaExchangeAlt, FaBolt, 
   FaLink, FaClock, FaGem, FaEnvelope, FaChevronRight 
 } from 'react-icons/fa';
 
@@ -23,7 +23,7 @@ const navItems = [
 const SidebarWrapper = styled.aside<{ $isOpen: boolean }>`
   position: fixed;
   left: 0; top: 0; bottom: 0;
-  width: 300px; /* <--- Sidebar ingrandita */
+  width: 300px;
   background: rgba(7, 7, 21, 0.98);
   backdrop-filter: blur(20px);
   border-right: 1px solid rgba(124, 58, 237, 0.2);
@@ -51,7 +51,7 @@ const NavLinkStyled = styled(Link)<{ $active?: boolean }>`
   padding: 14px 18px; border-radius: 12px;
   color: ${props => props.$active ? '#fff' : '#94a3b8'};
   background: ${props => props.$active ? 'rgba(124, 58, 237, 0.15)' : 'transparent'};
-  text-decoration: none; font-size: 16px; /* <--- Font più grande */
+  text-decoration: none; font-size: 16px;
   font-weight: 600; transition: all 0.2s;
   &:hover { color: #fff; background: rgba(255, 255, 255, 0.05); transform: translateX(4px); }
   .icon-text { display: flex; align-items: center; gap: 14px; svg { font-size: 20px; } }
