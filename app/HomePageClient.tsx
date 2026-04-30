@@ -10,7 +10,8 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-const TOKEN_LOGO_PATH = "/logo.webp"; 
+// Logo DexScreener ad alta risoluzione
+const TOKEN_LOGO_URL = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -70,13 +71,15 @@ const Badge = styled.div`
 const BigLogoWrapper = styled.div`
   margin-bottom: 40px;
   animation: ${float} 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.4)) contrast(1.1);
+  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
+  
   img {
-    width: 180px;
-    height: 180px;
+    width: 220px; /* Aumentato per leggere le scritte interne */
+    height: 220px;
     border-radius: 50%;
+    border: 2px solid rgba(168, 85, 247, 0.3);
     object-fit: contain;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+    background: #000;
   }
 `;
 
@@ -335,6 +338,7 @@ const HomePageClient = () => {
     return () => { clearInterval(interval); clearInterval(tInterval); };
   }, []);
 
+  const copyToClipboard = () => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); };
   if (!mounted) return null;
 
   return (
@@ -344,14 +348,14 @@ const HomePageClient = () => {
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
           <BigLogoWrapper>
-            <img src={TOKEN_LOGO_PATH} alt="Arbitrage Inception Logo" />
+            <img src={TOKEN_LOGO_URL} alt="ARB Inc High-Res Logo" />
           </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
           <ContractBox>
             <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={() => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); }}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
           </ContractBox>
         </Hero>
@@ -361,7 +365,6 @@ const HomePageClient = () => {
             <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
             <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>Go to Rewards</ActionButton>
           </div>
-          
           <PulseCard>
             <div className="header-row"><span className="label">Trading Volume (24h)</span><LiveIndicator><div className="dot"></div>Live</LiveIndicator></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '15px 0' }}>
@@ -380,7 +383,6 @@ const HomePageClient = () => {
             </div>
             <span className="sub" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FaChartLine /> Real-time Market Data</span>
           </PulseCard>
-          
           <PulseCard>
             <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
@@ -390,6 +392,7 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#64748b', textTransform: 'uppercase', marginBottom: '6px'}}>DefiLlama Stats</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
             </div>
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
