@@ -164,6 +164,21 @@ const ActionButton = styled.a`
   display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
 `;
 
+const YieldEngineSection = styled.div`
+  margin: 40px auto;
+  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
+  h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
+    .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
+    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
+  }
+`;
+
 const ProtocolSpecsSection = styled.section`
   padding: 80px 0;
   text-align: center;
@@ -195,14 +210,49 @@ const SpecCard = styled.div`
   .desc { font-size: 0.8rem; color: #94a3b8; }
 `;
 
+const FeatureGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 60px 0;
+`;
+
+const FeatureCard = styled.div`
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
+  p { color: #94a3b8; line-height: 1.6; }
+  .icon-box {
+    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    color: #a855f7; font-size: 1.5rem;
+  }
+`;
+
 const AuditSection = styled.section`
   padding: 80px 0;
   background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
   border-radius: 40px;
   border: 1px solid rgba(168, 85, 247, 0.1);
   margin-bottom: 100px;
-  h2 { font-size: 2.2rem; margin-bottom: 50px; text-align: center; }
+  h2 { font-size: 2.5rem; margin-bottom: 16px; text-align: center; }
+  p.audit-sub { color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 50px; }
   .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 0 40px; }
+`;
+
+const AuditCard = styled.div`
+  background: rgba(3, 0, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  .icon { color: #a855f7; font-size: 1.5rem; }
+  h4 { font-size: 1.2rem; color: white; }
+  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
 `;
 
 const HomePageClient = () => {
@@ -210,12 +260,12 @@ const HomePageClient = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
-  
   const [tokenVolume24h, setTokenVolume24h] = useState<number | null>(null);
   const [dexVolume24h, setDexVolume24h] = useState<number | null>(null);
   const [treasuryBnb, setTreasuryBnb] = useState('...');
   const [accBnb, setAccBnb] = useState('...');
   const [accTokens, setAccTokens] = useState('...');
+  const volume30d = 27863;
 
   useEffect(() => {
     setMounted(true);
@@ -227,7 +277,6 @@ const HomePageClient = () => {
           const totalVol = dataDex.pairs.reduce((acc: number, pair: any) => acc + (pair.volume?.h24 || 0), 0);
           setTokenVolume24h(totalVol);
         }
-
         const resLlama = await fetch('https://api.llama.fi/protocol/arbitrage-inc');
         const dataLlama = await resLlama.json();
         if (dataLlama && dataLlama.total24h) setDexVolume24h(dataLlama.total24h);
@@ -271,6 +320,7 @@ const HomePageClient = () => {
     return () => { clearInterval(interval); clearInterval(tInterval); };
   }, []);
 
+  const copyToClipboard = () => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   if (!mounted) return null;
 
   return (
@@ -284,7 +334,7 @@ const HomePageClient = () => {
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
           <ContractBox>
             <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={() => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); }}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
           </ContractBox>
         </Hero>
@@ -300,17 +350,33 @@ const HomePageClient = () => {
               <div><span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>Token Volume (All Pools)</span><span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '1.6rem' }}>{tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={16} />}</span></div>
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}><span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>DEX Aggregator Volume</span><span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>{dexVolume24h !== null ? `$${dexVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={14} />}</span></div>
             </div>
+            <span className="sub" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FaChartLine /> Real-time Market Data</span>
           </PulseCard>
           <PulseCard>
             <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
-            <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px' }}>
+            <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
               <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '6px' }}>Accumulator (Pending)</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb} BNB</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '6px' }}>DefiLlama Stats</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
+            </div>
+            <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
+            <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}><a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Treasury Wallet</a><a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Accumulator Wallet</a></div>
           </PulseCard>
         </LivePulseSection>
+
+        <YieldEngineSection>
+          <h2>The Ultimate Yield Engine</h2>
+          <div className="grid-3">
+            <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}><div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div><p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p></div>
+            <div className="yield-card"><div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div><p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p></div>
+            <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}><div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div><p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p></div>
+          </div>
+        </YieldEngineSection>
 
         <ProtocolSpecsSection id="protocol-specs">
           <h2>Protocol Transparency</h2>
@@ -322,12 +388,19 @@ const HomePageClient = () => {
           </div>
         </ProtocolSpecsSection>
 
+        <FeatureGrid>
+          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></FeatureCard>
+        </FeatureGrid>
+
         <AuditSection>
           <h2>Security & Audit</h2>
+          <p className="audit-sub">Arbitrage Inception prioritizes safety through strategic simplification.</p>
           <div className="audit-grid">
-            <PulseCard><h4>KyberSwap Integration</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Leveraging KyberSwap widgets for audited trading logic by ChainSecurity.</p></PulseCard>
-            <PulseCard><h4>Zero-Contract Risk</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Eliminating main hack entry points by avoiding custom swap contracts.</p></PulseCard>
-            <PulseCard><h4>Frontend Rewards Logic</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Rankings processed by a transparent engine with 9-decimal precision.</p></PulseCard>
+            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>We leverage KyberSwap widgets for trading logic, audited by ChainSecurity.</p></AuditCard>
+            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>By avoiding custom swap contracts, we eliminate the primary entry point for hacks.</p></AuditCard>
+            <AuditCard><FaCode className="icon" /><h4>Frontend Rewards Logic</h4><p>Rankings are processed by a transparent frontend engine with 9-decimal precision.</p></AuditCard>
           </div>
         </AuditSection>
       </Container>
