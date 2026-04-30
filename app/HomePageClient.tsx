@@ -275,6 +275,7 @@ const ProtocolSpecsSection = styled.section`
   h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .supply-box { margin-bottom: 50px; 
     .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+    /* FIX MOBILE: Cambiato in 1B per evitare overflow */
     .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
     .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
   }
@@ -381,7 +382,6 @@ const HomePageClient = () => {
         const dataAccBnb = await resAccBnb.json();
         if(dataAccBnb.result) setAccBnb((Number(BigInt(dataAccBnb.result)) / 1e18).toFixed(4));
 
-        // FIX DECIMALI: Cambiato da 1e18 a 1e9 per riflettere il vero balance del token ARB Inc
         const resAccTokens = await fetch('https://bsc-dataseed.binance.org/', { 
           method: 'POST', 
           body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) 
@@ -555,7 +555,7 @@ const HomePageClient = () => {
           <h2>Protocol Transparency</h2>
           <div className="supply-box">
             <span className="label">Total Supply</span>
-            <span className="value">1,000,000,000</span>
+            <span className="value">1 Billion</span>
             <span className="sub">4% Buy/Sell Tax for Rewards</span>
           </div>
           <div className="spec-grid">
@@ -568,7 +568,7 @@ const HomePageClient = () => {
         <FeatureGrid>
           <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>Il 100% delle commissioni di trading dal nostro aggregatore DEX fluisce direttamente nella Tesoreria.</p></FeatureCard>
           <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Il nostro sistema di ranking proprietario garantisce che i premi siano distribuiti con precisione matematica.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitora ogni inflow. Il 100% delle tasse e commissioni del protocollo sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor ogni inflow. Il 100% delle tasse e commissioni del protocollo sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
         </FeatureGrid>
 
         <AuditSection>
