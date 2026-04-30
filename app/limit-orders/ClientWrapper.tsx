@@ -284,9 +284,15 @@ export default function ClientWrapper() {
       <MainGrid>
         <Card>
           <CardTitle>Place Limit Order</CardTitle>
+          
           {/* BANNER 200 PUNTI */}
-          <div style={{background:'rgba(244,114,182,0.1)', color:'#F472B6', padding:'10px', borderRadius:'8px', fontSize:'12px', fontWeight:'bold', marginBottom:'15px', textAlign:'center', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid rgba(244,114,182,0.3)'}}>
+          <div style={{background:'rgba(244,114,182,0.1)', color:'#F472B6', padding:'10px', borderRadius:'8px', fontSize:'12px', fontWeight:'bold', marginBottom:'10px', textAlign:'center', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid rgba(244,114,182,0.3)'}}>
             🏆 Earn 200 Points Upon Execution
+          </div>
+
+          {/* BANNER WBNB WARNING */}
+          <div style={{background:'rgba(245, 158, 11, 0.1)', color:'#f59e0b', padding:'10px', borderRadius:'8px', fontSize:'12px', fontWeight:'500', marginBottom:'15px', textAlign:'center', border: '1px solid rgba(245, 158, 11, 0.3)', lineHeight: '1.4'}}>
+            ⚠️ <strong>NOTE:</strong> Please use <strong>WBNB</strong> instead of native BNB for limit orders, as required by the KyberSwap mechanism.
           </div>
           
           <InputGroup>
