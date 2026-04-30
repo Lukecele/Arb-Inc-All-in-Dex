@@ -1,3 +1,4 @@
+'use client';
 import dynamic from 'next/dynamic';
 
 const ClientLimitOrdersPage = dynamic(() => import('./ClientWrapper'), { 
