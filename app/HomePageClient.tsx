@@ -10,9 +10,11 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
+
+// 1. LOGO LOCALE (SICURO)
 const TOKEN_LOGO_PATH = "/logo.webp"; 
+// 2. LINK UTILI
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
-// Link diretto alle info di PancakeSwap per mostrare l'elenco di tutte le pool
 const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
 
 const float = keyframes`
@@ -135,6 +137,7 @@ const SecondaryButton = styled.a`
   &:hover { background: rgba(255, 255, 255, 0.1); }
 `;
 
+// AGGIUNTA: Container per il box contratto e il badge TokenSniffer
 const ContractContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -157,6 +160,7 @@ const ContractBox = styled.div`
   button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
 `;
 
+// AGGIUNTA: Stile del bottone TokenSniffer
 const AuditBadgeLink = styled.a`
   display: inline-flex;
   align-items: center;
@@ -376,7 +380,7 @@ const HomePageClient = () => {
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
           <BigLogoWrapper>
-            <img src={TOKEN_LOGO_PATH} alt="Arbitrage Inception Logo" />
+            <img src={TOKEN_LOGO_PATH} alt="ARB Inc Logo" />
           </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
