@@ -10,8 +10,8 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-// Logo DexScreener ad alta risoluzione
 const TOKEN_LOGO_URL = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
+const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -74,7 +74,7 @@ const BigLogoWrapper = styled.div`
   filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
   
   img {
-    width: 220px; /* Aumentato per leggere le scritte interne */
+    width: 220px;
     height: 220px;
     border-radius: 50%;
     border: 2px solid rgba(168, 85, 247, 0.3);
@@ -133,8 +133,15 @@ const SecondaryButton = styled.a`
   &:hover { background: rgba(255, 255, 255, 0.1); }
 `;
 
-const ContractBox = styled.div`
+const ContractContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   margin-top: 30px;
+`;
+
+const ContractBox = styled.div`
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(168, 85, 247, 0.2);
   padding: 12px 20px;
@@ -146,6 +153,25 @@ const ContractBox = styled.div`
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
   .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
+`;
+
+const AuditBadgeLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.2s;
+  &:hover {
+    background: rgba(34, 197, 94, 0.2);
+    transform: translateY(-2px);
+  }
 `;
 
 const LivePulseSection = styled.div`
@@ -353,11 +379,18 @@ const HomePageClient = () => {
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
-          <ContractBox>
-            <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
-            <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
-          </ContractBox>
+          
+          <ContractContainer>
+            <ContractBox>
+              <span className="addr">{CONTRACT_ADDRESS}</span>
+              <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+              <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
+            </ContractBox>
+            <AuditBadgeLink href={TOKEN_SNIFFER_LINK} target="_blank" rel="noreferrer">
+              <FaShieldAlt /> Audit on TokenSniffer
+            </AuditBadgeLink>
+          </ContractContainer>
+
         </Hero>
 
         <LivePulseSection>
