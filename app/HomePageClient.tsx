@@ -110,36 +110,18 @@ const ContractBox = styled.div`
   }
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 16px;
-  @media (max-width: 600px) { flex-direction: column; width: 100%; }
-`;
-
-const PrimaryButton = styled.a`
-  background: #a855f7;
+const ActionButton = styled.a`
+  display: inline-block;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
   color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
+  padding: 10px 20px;
+  border-radius: 100px;
   font-weight: bold;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  &:hover { background: #9333ea; transform: translateY(-2px); }
-`;
-
-const SecondaryButton = styled.a`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s;
-  &:hover { background: rgba(255, 255, 255, 0.1); }
+  text-align: center;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  &:hover { transform: scale(1.05); }
 `;
 
 const LivePulseSection = styled.div`
@@ -281,20 +263,6 @@ const SpecCard = styled.div`
   .desc { font-size: 0.8rem; color: #94a3b8; }
 `;
 
-const ActionButton = styled.a`
-  display: inline-block;
-  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 100px;
-  font-weight: bold;
-  text-decoration: none;
-  text-align: center;
-  font-size: 0.9rem;
-  transition: transform 0.2s;
-  &:hover { transform: scale(1.05); }
-`;
-
 const FeatureGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -351,14 +319,15 @@ const HomePageClient = () => {
   const [copied, setCopied] = useState(false);
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
   const [treasuryBnb, setTreasuryBnb] = useState('...');
-  const [llamaStats, setLlamaStats] = useState({ tvl: 0, fees: 0, revenue: 0, holdersRevenue: 0 });
+  
+  // Statistiche hardcoded per pulizia estrema
+  const volume30d = 27863;
 
   useEffect(() => {
     setMounted(true);
     
     fetch('/api/stats').then(res => res.json()).then(data => {
       if(data.totalPoints) setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
-      if(data.llamaStats) setLlamaStats(data.llamaStats);
     }).catch(err => console.error(err));
 
     const fetchTreasuryBalance = async () => {
@@ -383,15 +352,6 @@ const HomePageClient = () => {
     };
     fetchTreasuryBalance();
     const balanceInterval = setInterval(fetchTreasuryBalance, 60000);
-
-    fetch('https://api.llama.fi/protocol/arbitrage-inc')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.tvl && data.tvl.length > 0) {
-          const currentTvl = data.tvl[data.tvl.length - 1].totalLiquidityUSD;
-          setLlamaStats(prev => ({ ...prev, tvl: currentTvl }));
-        }
-      }).catch(e => console.log('DefiLlama sync in progress...'));
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
@@ -438,7 +398,7 @@ const HomePageClient = () => {
           <Badge>Official Token: ARB Inc</Badge>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
-          <ButtonGroup>
+          <ButtonGroup style={{ display: 'flex', gap: '16px' }}>
             <PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton>
             <SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton>
           </ButtonGroup>
@@ -474,7 +434,7 @@ const HomePageClient = () => {
           
           <PulseCard>
             <div className="header-row">
-              <span className="label">Treasury & Revenue</span>
+              <span className="label">Treasury Wallet</span>
               <FaShieldAlt style={{color: '#22c55e', fontSize: '1.2rem'}} />
             </div>
 
@@ -490,10 +450,11 @@ const HomePageClient = () => {
             </div>
 
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>DefiLlama Metrics</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>TVL</span> <span style={{ color: 'white', fontWeight: 'bold' }}>{llamaStats.tvl > 0 ? `$${llamaStats.tvl.toLocaleString()}` : 'Aggregating...'}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Fees</span> <span style={{ color: 'white', fontWeight: 'bold' }}>{llamaStats.fees > 0 ? `$${llamaStats.fees.toLocaleString()}` : 'Aggregating...'}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#a855f7'}}>Holders Rev.</span> <span style={{ color: '#a855f7', fontWeight: 'bold' }}>{llamaStats.holdersRevenue > 0 ? `$${llamaStats.holdersRevenue.toLocaleString()}` : 'Aggregating...'}</span></div>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>DefiLlama Stats</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <span style={{color: '#94a3b8'}}>30d Volume</span> 
+                <span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span>
+              </div>
             </div>
             
             <a href="https://defillama.com/protocol/arbitrage-inc?holdersRevenue=true&fees=true&revenue=true" target="_blank" rel="noreferrer" className="defillama-btn">
