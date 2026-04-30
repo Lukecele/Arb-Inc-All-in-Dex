@@ -275,7 +275,6 @@ const ProtocolSpecsSection = styled.section`
   h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .supply-box { margin-bottom: 50px; 
     .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
-    /* FIX MOBILE: Cambiato in 1B per evitare overflow */
     .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
     .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
   }
@@ -538,15 +537,15 @@ const HomePageClient = () => {
           <div className="grid-3">
             <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
               <div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div>
-              <p>Stack points with ogni azione: <strong>Swap (100), Zap (150)</strong> o <strong>Limit Orders (200)</strong>. Ogni trade alimenta la tesoreria.</p>
+              <p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p>
             </div>
             <div className="yield-card">
               <div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div>
-              <p>Holda <strong>2M+ token</strong> per lo Status Diamond. Il nostro motore distribuisce <strong>Real BNB</strong> direttamente ai detentori.</p>
+              <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p>
             </div>
             <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div>
-              <p>Senza capitale? Nessun problema. Completa <strong>Free Tasks</strong> e invita amici per guadagnare un <strong>10% Lifetime Bonus</strong>.</p>
+              <p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p>
             </div>
           </div>
         </YieldEngineSection>
@@ -566,17 +565,17 @@ const HomePageClient = () => {
         </ProtocolSpecsSection>
 
         <FeatureGrid>
-          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>Il 100% delle commissioni di trading dal nostro aggregatore DEX fluisce direttamente nella Tesoreria.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Il nostro sistema di ranking proprietario garantisce che i premi siano distribuiti con precisione matematica.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor ogni inflow. Il 100% delle tasse e commissioni del protocollo sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></FeatureCard>
         </FeatureGrid>
 
         <AuditSection>
-          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2><p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizza la sicurezza attraverso la semplificazione strategica.</p></div>
+          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2><p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p></div>
           <AuditGrid>
-            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>Usiamo i widget di KyberSwap per la logica di trading, certificata da ChainSecurity.</p></AuditCard>
-            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>Evitando contratti di swap custom, eliminiamo il principale punto di ingresso per gli hack.</p></AuditCard>
-            <AuditCard><FaCode className="icon" /><h4>Frontend Rewards Logic</h4><p>I ranking sono processati da un motore trasparente con precisione a 9 decimali.</p></AuditCard>
+            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>We leverage KyberSwap widgets for trading logic, audited by ChainSecurity.</p></AuditCard>
+            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>By avoiding custom swap contracts, we eliminate the primary entry point for hacks.</p></AuditCard>
+            <AuditCard><FaLock className="icon" /><h4>Frontend Rewards Logic</h4><p>Rankings are processed by a transparent frontend engine with 9-decimal precision.</p></AuditCard>
           </AuditGrid>
         </AuditSection>
       </Container>
