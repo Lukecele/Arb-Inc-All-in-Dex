@@ -9,29 +9,29 @@ import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
-const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-// Usiamo il logo webp che è già presente nel tuo progetto
+const SWAP_LINK = \`/swap-all?tokenOut=${CONTRACT_ADDRESS}\`;
+// Usiamo il logo brandizzato che hai già caricato nel progetto
 const TOKEN_LOGO_PATH = "/logo.webp"; 
 
-const float = keyframes`
+const float = keyframes\`
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
-`;
+\`;
 
-const pulse = keyframes`
+const pulse = keyframes\`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
   50% { opacity: 0.7; border-color: #a855f7; }
   100% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
-`;
+\`;
 
-const livePulse = keyframes`
+const livePulse = keyframes\`
   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
   70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-`;
+\`;
 
-const PageWrapper = styled.div`
+const PageWrapper = styled.div\`
   min-height: 100vh;
   padding-left: 300px; 
   background-color: #030014;
@@ -41,23 +41,23 @@ const PageWrapper = styled.div`
   color: white;
   font-family: 'Inter', sans-serif;
   @media (max-width: 991px) { padding-left: 0; padding-top: 64px; }
-`;
+\`;
 
-const Container = styled.div`
+const Container = styled.div\`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-`;
+\`;
 
-const Hero = styled.section`
+const Hero = styled.section\`
   padding: 100px 0 60px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+\`;
 
-const Badge = styled.div`
+const Badge = styled.div\`
   background: rgba(168, 85, 247, 0.1);
   border: 1px solid rgba(168, 85, 247, 0.3);
   color: #a855f7;
@@ -66,21 +66,24 @@ const Badge = styled.div`
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 30px;
-`;
+\`;
 
-const BigLogoWrapper = styled.div`
+const BigLogoWrapper = styled.div\`
   margin-bottom: 40px;
-  animation: ${float} 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+  animation: \${float} 4s ease-in-out infinite;
+  /* Effetto Glow Premium per migliorare la qualità visiva */
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.4)) contrast(1.1);
+  
   img {
-    width: 160px;
-    height: 160px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     object-fit: contain;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
   }
-`;
+\`;
 
-const Title = styled.h1`
+const Title = styled.h1\`
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 800;
   line-height: 1.1;
@@ -88,23 +91,23 @@ const Title = styled.h1`
   background: linear-gradient(to bottom, #fff 40%, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-`;
+\`;
 
-const Subtitle = styled.p`
+const Subtitle = styled.p\`
   font-size: 1.25rem;
   color: #94a3b8;
   max-width: 600px;
   margin-bottom: 40px;
   line-height: 1.6;
-`;
+\`;
 
-const ButtonGroup = styled.div`
+const ButtonGroup = styled.div\`
   display: flex;
   gap: 16px;
   @media (max-width: 600px) { flex-direction: column; width: 100%; }
-`;
+\`;
 
-const PrimaryButton = styled.a`
+const PrimaryButton = styled.a\`
   background: #a855f7;
   color: white;
   padding: 16px 32px;
@@ -116,9 +119,9 @@ const PrimaryButton = styled.a`
   gap: 8px;
   transition: all 0.2s;
   &:hover { background: #9333ea; transform: translateY(-2px); }
-`;
+\`;
 
-const SecondaryButton = styled.a`
+const SecondaryButton = styled.a\`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
@@ -128,9 +131,9 @@ const SecondaryButton = styled.a`
   text-decoration: none;
   transition: all 0.2s;
   &:hover { background: rgba(255, 255, 255, 0.1); }
-`;
+\`;
 
-const ContractBox = styled.div`
+const ContractBox = styled.div\`
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(168, 85, 247, 0.2);
@@ -143,16 +146,16 @@ const ContractBox = styled.div`
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
   .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
-`;
+\`;
 
-const LivePulseSection = styled.div`
+const LivePulseSection = styled.div\`
   margin: 60px 0 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
-`;
+\`;
 
-const PulseCard = styled.div<{ $isProcessing?: boolean }>`
+const PulseCard = styled.div<{ \$isProcessing?: boolean }>\`
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 24px;
@@ -161,25 +164,25 @@ const PulseCard = styled.div<{ $isProcessing?: boolean }>`
   flex-direction: column;
   gap: 12px;
   height: 100%;
-  ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`}
+  \${props => props.\$isProcessing && \`animation: \${pulse} 2s infinite; border-color: #a855f7;\`}
   .header-row { display: flex; justify-content: space-between; align-items: center; }
   .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { font-size: 1.8rem; font-weight: 700; color: ${props => props.$isProcessing ? '#a855f7' : 'white'}; display: flex; align-items: center; gap: 10px; }
+  .value { font-size: 1.8rem; font-weight: 700; color: \${props => props.\$isProcessing ? '#a855f7' : 'white'}; display: flex; align-items: center; gap: 10px; }
   .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
   .verify-link { display: inline-flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.8rem; text-decoration: none; transition: color 0.2s; &:hover { color: #22c55e; } }
   .defillama-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 10px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-top: auto; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.25); transform: translateY(-2px); } }
-`;
+\`;
 
-const LiveIndicator = styled.div`
+const LiveIndicator = styled.div\`
   display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;
-  .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; animation: ${livePulse} 2s infinite; }
-`;
+  .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; animation: \${livePulse} 2s infinite; }
+\`;
 
-const ActionButton = styled.a`
+const ActionButton = styled.a\`
   display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
-`;
+\`;
 
-const YieldEngineSection = styled.div`
+const YieldEngineSection = styled.div\`
   margin: 40px auto;
   background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
   border: 1px solid rgba(168, 85, 247, 0.3);
@@ -192,9 +195,9 @@ const YieldEngineSection = styled.div`
     .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
     p { color: #94a3b8; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
   }
-`;
+\`;
 
-const ProtocolSpecsSection = styled.section`
+const ProtocolSpecsSection = styled.section\`
   padding: 80px 0;
   text-align: center;
   background: rgba(168, 85, 247, 0.02);
@@ -208,9 +211,9 @@ const ProtocolSpecsSection = styled.section`
     .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
   }
   .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 20px; }
-`;
+\`;
 
-const SpecCard = styled.div`
+const SpecCard = styled.div\`
   background: rgba(255, 255, 255, 0.03);
   padding: 30px;
   border-radius: 24px;
@@ -223,16 +226,16 @@ const SpecCard = styled.div`
   .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
   .value { font-size: 1.6rem; font-weight: 800; color: white; }
   .desc { font-size: 0.8rem; color: #94a3b8; }
-`;
+\`;
 
-const FeatureGrid = styled.div`
+const FeatureGrid = styled.div\`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   padding: 60px 0;
-`;
+\`;
 
-const FeatureCard = styled.div`
+const FeatureCard = styled.div\`
   padding: 40px;
   background: rgba(255, 255, 255, 0.01);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -244,9 +247,9 @@ const FeatureCard = styled.div`
     border-radius: 12px; display: flex; align-items: center; justify-content: center;
     color: #a855f7; font-size: 1.5rem;
   }
-`;
+\`;
 
-const AuditSection = styled.section`
+const AuditSection = styled.section\`
   padding: 80px 0;
   background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
   border-radius: 40px;
@@ -255,9 +258,9 @@ const AuditSection = styled.section`
   h2 { font-size: 2.5rem; margin-bottom: 16px; text-align: center; }
   p.audit-sub { color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 50px; }
   .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 0 40px; }
-`;
+\`;
 
-const AuditCard = styled.div`
+const AuditCard = styled.div\`
   background: rgba(3, 0, 20, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 30px;
@@ -268,7 +271,7 @@ const AuditCard = styled.div`
   .icon { color: #a855f7; font-size: 1.5rem; }
   h4 { font-size: 1.2rem; color: white; }
   p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
-`;
+\`;
 
 const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('...');
@@ -287,7 +290,7 @@ const HomePageClient = () => {
     setMounted(true);
     const fetchData = async () => {
       try {
-        const resDex = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${CONTRACT_ADDRESS}`);
+        const resDex = await fetch(\`https://api.dexscreener.com/latest/dex/tokens/\${CONTRACT_ADDRESS}\`);
         const dataDex = await resDex.json();
         if (dataDex.pairs) {
           const totalVol = dataDex.pairs.reduce((acc: number, pair: any) => acc + (pair.volume?.h24 || 0), 0);
@@ -327,7 +330,7 @@ const HomePageClient = () => {
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
-        setTimerDisplay(`${h}h ${m}m ${s}s`);
+        setTimerDisplay(\`\${h}h \${m}m \${s}s\`);
       }
     };
     const tInterval = setInterval(updateTimer, 1000);
@@ -344,7 +347,7 @@ const HomePageClient = () => {
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
           <BigLogoWrapper>
-            <img src={TOKEN_LOGO_PATH} alt="ARB Inc Logo" />
+            <img src={TOKEN_LOGO_PATH} alt="Arbitrage Inception Logo" />
           </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
@@ -352,13 +355,13 @@ const HomePageClient = () => {
           <ContractBox>
             <span className="addr">{CONTRACT_ADDRESS}</span>
             <button onClick={() => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); }}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
-            <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
+            <a href={\`https://bscscan.com/token/\${CONTRACT_ADDRESS}\`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
           </ContractBox>
         </Hero>
 
         <LivePulseSection>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
+            <PulseCard \$isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
             <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>Go to Rewards</ActionButton>
           </div>
           
@@ -368,13 +371,13 @@ const HomePageClient = () => {
               <div>
                 <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Aggregated Token Volume</span>
                 <span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '1.8rem', display: 'block' }}>
-                  {tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={20} />}
+                  {tokenVolume24h !== null ? \`$\${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}\` : <FaSpinner className="fa-spin" size={20} />}
                 </span>
               </div>
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}>
                 <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '5px' }}><FaWater size={10} /> Total Token Liquidity</span>
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>
-                  {tokenLiquidity !== null ? `$${tokenLiquidity.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={14} />}
+                  {tokenLiquidity !== null ? \`$\${tokenLiquidity.toLocaleString(undefined, {maximumFractionDigits: 0})}\` : <FaSpinner className="fa-spin" size={14} />}
                 </span>
               </div>
             </div>
@@ -390,10 +393,11 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#64748b', textTransform: 'uppercase', marginBottom: '6px'}}>DefiLlama Stats</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>\${volume30d.toLocaleString()}</span></div>
             </div>
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
-            <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}><a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Treasury Wallet</a><a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Accumulator Wallet</a></div>
+            <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}><a href={\`https://bscscan.com/address/\${TREASURY_WALLET}\`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Treasury Wallet</a><a href={\`https://bscscan.com/address/\${ACCUMULATOR_WALLET}\`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Accumulator Wallet</a></div>
           </PulseCard>
         </LivePulseSection>
 
