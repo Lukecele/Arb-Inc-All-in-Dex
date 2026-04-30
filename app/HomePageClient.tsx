@@ -10,10 +10,10 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-const TOKEN_LOGO_URL = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
+const TOKEN_LOGO_PATH = "/logo.webp"; 
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
-// Usa GeckoTerminal per vedere tutte le pool in modo molto chiaro
-const ALL_POOLS_LINK = `https://www.geckoterminal.com/bsc/tokens/${CONTRACT_ADDRESS}`;
+// Link diretto alle info di PancakeSwap per mostrare l'elenco di tutte le pool
+const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -376,7 +376,7 @@ const HomePageClient = () => {
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
           <BigLogoWrapper>
-            <img src={TOKEN_LOGO_URL} alt="ARB Inc High-Res Logo" />
+            <img src={TOKEN_LOGO_PATH} alt="Arbitrage Inception Logo" />
           </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
@@ -418,7 +418,7 @@ const HomePageClient = () => {
               </div>
             </div>
             <a href={ALL_POOLS_LINK} target="_blank" rel="noreferrer" className="verify-link" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: 'auto' }}>
-              <FaChartLine /> View All Pools on GeckoTerminal <FaExternalLinkAlt size={10} />
+              <FaChartLine /> View All Pools on PancakeSwap <FaExternalLinkAlt size={10} />
             </a>
           </PulseCard>
           
