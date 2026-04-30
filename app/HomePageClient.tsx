@@ -10,7 +10,14 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
-const TOKEN_LOGO = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png";
+// Usiamo l'URL di DexScreener che è ad alta risoluzione
+const TOKEN_LOGO_LARGE = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
+
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
 
 const pulse = keyframes`
   0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
@@ -43,7 +50,7 @@ const Container = styled.div`
 `;
 
 const Hero = styled.section`
-  padding: 120px 0 60px;
+  padding: 100px 0 60px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -58,11 +65,20 @@ const Badge = styled.div`
   border-radius: 100px;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  img { width: 20px; height: 20px; border-radius: 50%; }
+  margin-bottom: 30px;
+`;
+
+const BigLogoWrapper = styled.div`
+  margin-bottom: 40px;
+  animation: ${float} 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.4));
+  
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid rgba(168, 85, 247, 0.5);
+  }
 `;
 
 const Title = styled.h1`
@@ -164,21 +180,6 @@ const ActionButton = styled.a`
   display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
 `;
 
-const YieldEngineSection = styled.div`
-  margin: 40px auto;
-  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
-  h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
-    .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
-    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
-  }
-`;
-
 const ProtocolSpecsSection = styled.section`
   padding: 80px 0;
   text-align: center;
@@ -210,27 +211,6 @@ const SpecCard = styled.div`
   .desc { font-size: 0.8rem; color: #94a3b8; }
 `;
 
-const FeatureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  padding: 60px 0;
-`;
-
-const FeatureCard = styled.div`
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
-  p { color: #94a3b8; line-height: 1.6; }
-  .icon-box {
-    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    color: #a855f7; font-size: 1.5rem;
-  }
-`;
-
 const AuditSection = styled.section`
   padding: 80px 0;
   background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
@@ -260,6 +240,7 @@ const HomePageClient = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
+  
   const [tokenVolume24h, setTokenVolume24h] = useState<number | null>(null);
   const [dexVolume24h, setDexVolume24h] = useState<number | null>(null);
   const [treasuryBnb, setTreasuryBnb] = useState('...');
@@ -320,7 +301,6 @@ const HomePageClient = () => {
     return () => { clearInterval(interval); clearInterval(tInterval); };
   }, []);
 
-  const copyToClipboard = () => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   if (!mounted) return null;
 
   return (
@@ -328,13 +308,16 @@ const HomePageClient = () => {
       <Header activePage="/" />
       <Container>
         <Hero>
-          <Badge><img src={TOKEN_LOGO} alt="Logo" />Official Token: ARB Inc</Badge>
+          <Badge>Official Token: ARB Inc</Badge>
+          <BigLogoWrapper>
+            <img src={TOKEN_LOGO_LARGE} alt="ARB Inc High Resolution Logo" />
+          </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
           <ContractBox>
             <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+            <button onClick={() => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); }}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
           </ContractBox>
         </Hero>
