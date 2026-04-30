@@ -10,8 +10,8 @@ const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
+// Logo DexScreener ad alta risoluzione
 const TOKEN_LOGO_URL = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
-const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -133,15 +133,8 @@ const SecondaryButton = styled.a`
   &:hover { background: rgba(255, 255, 255, 0.1); }
 `;
 
-const ContractContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-`;
-
 const ContractBox = styled.div`
+  margin-top: 30px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(168, 85, 247, 0.2);
   padding: 12px 20px;
@@ -153,25 +146,6 @@ const ContractBox = styled.div`
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
   .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
-`;
-
-const AuditBadgeLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #22c55e;
-  padding: 8px 16px;
-  border-radius: 100px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s;
-  &:hover {
-    background: rgba(34, 197, 94, 0.2);
-    transform: translateY(-2px);
-  }
 `;
 
 const LivePulseSection = styled.div`
@@ -379,18 +353,11 @@ const HomePageClient = () => {
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
-          
-          <ContractContainer>
-            <ContractBox>
-              <span className="addr">{CONTRACT_ADDRESS}</span>
-              <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
-              <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
-            </ContractBox>
-            <AuditBadgeLink href={TOKEN_SNIFFER_LINK} target="_blank" rel="noreferrer">
-              <FaShieldAlt /> Audit on TokenSniffer
-            </AuditBadgeLink>
-          </ContractContainer>
-
+          <ContractBox>
+            <span className="addr">{CONTRACT_ADDRESS}</span>
+            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+            <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
+          </ContractBox>
         </Hero>
 
         <LivePulseSection>
@@ -398,6 +365,7 @@ const HomePageClient = () => {
             <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
             <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>Go to Rewards</ActionButton>
           </div>
+          
           <PulseCard>
             <div className="header-row"><span className="label">Trading Volume (24h)</span><LiveIndicator><div className="dot"></div>Live</LiveIndicator></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '15px 0' }}>
@@ -414,8 +382,11 @@ const HomePageClient = () => {
                 </span>
               </div>
             </div>
-            <span className="sub" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FaChartLine /> Real-time Market Data</span>
+            <a href={`https://dexscreener.com/bsc/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer" className="sub verify-link" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FaChartLine /> View All Pools on DexScreener <FaExternalLinkAlt size={10} />
+            </a>
           </PulseCard>
+          
           <PulseCard>
             <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
