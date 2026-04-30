@@ -70,8 +70,8 @@ const Badge = styled.div`
 const BigLogoWrapper = styled.div`
   margin-bottom: 40px;
   animation: ${float} 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.4));
-  img { width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(168, 85, 247, 0.5); }
+  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.6));
+  img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(168, 85, 247, 0.5); }
 `;
 
 const Title = styled.h1`
@@ -98,21 +98,6 @@ const ButtonGroup = styled.div`
   @media (max-width: 600px) { flex-direction: column; width: 100%; }
 `;
 
-const ContractBox = styled.div`
-  margin-top: 30px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  padding: 12px 20px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  max-width: 100%;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
-  .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
-`;
-
 const PrimaryButton = styled.a`
   background: #a855f7;
   color: white;
@@ -137,6 +122,21 @@ const SecondaryButton = styled.a`
   text-decoration: none;
   transition: all 0.2s;
   &:hover { background: rgba(255, 255, 255, 0.1); }
+`;
+
+const ContractBox = styled.div`
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  max-width: 100%;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+  .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
 `;
 
 const LivePulseSection = styled.div`
@@ -173,6 +173,21 @@ const ActionButton = styled.a`
   display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
 `;
 
+const YieldEngineSection = styled.div`
+  margin: 40px auto;
+  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
+  h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
+    .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
+    p { color: #94a3b8; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
+  }
+`;
+
 const ProtocolSpecsSection = styled.section`
   padding: 80px 0;
   text-align: center;
@@ -202,6 +217,27 @@ const SpecCard = styled.div`
   .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
   .value { font-size: 1.6rem; font-weight: 800; color: white; }
   .desc { font-size: 0.8rem; color: #94a3b8; }
+`;
+
+const FeatureGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 60px 0;
+`;
+
+const FeatureCard = styled.div`
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
+  p { color: #94a3b8; line-height: 1.6; }
+  .icon-box {
+    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    color: #a855f7; font-size: 1.5rem;
+  }
 `;
 
 const AuditSection = styled.section`
@@ -332,6 +368,7 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '6px' }}>DefiLlama Stats</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
             </div>
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
@@ -357,6 +394,12 @@ const HomePageClient = () => {
             <SpecCard><FaBullseye className="icon" /><span className="label">Ranking Precision</span><span className="value">9 Decimals</span><span className="desc">Fair & Precise math</span></SpecCard>
           </div>
         </ProtocolSpecsSection>
+
+        <FeatureGrid>
+          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></FeatureCard>
+        </FeatureGrid>
 
         <AuditSection>
           <h2>Security & Audit</h2>
