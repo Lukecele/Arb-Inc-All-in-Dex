@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const ErrorWrapper = styled.div`
@@ -32,10 +32,27 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
+  const [isHydrationError, setIsHydrationError] = useState(false);
 
+  useEffect(() => {
+    const msg = (error.message || '').toLowerCase();
+    
+    // Se l'errore è causato dall'idratazione (Web3, Metamask, LocalStorage), 
+    // lo filtriamo per non far apparire la schermata all'utente.
+    if (msg.includes('hydration') || msg.includes('mismatch') || msg.includes('text content did not match')) {
+      setIsHydrationError(true);
+      reset(); // Forza l'allineamento automatico silente
+    } else {
+      console.error(error);
+    }
+  }, [error, reset]);
+
+  // Se è un fantasma transitorio, mostra un micro-sfondo nero senza far lampeggiare il testo
+  if (isHydrationError) {
+    return <div style={{ background: '#030014', height: '100vh', width: '100vw' }} />;
+  }
+
+  // Altrimenti (se è un errore vero del codice), mostra la UI cyberpunk
   return (
     <ErrorWrapper>
       <h2 style={{fontSize: '2rem'}}>Stabilizing Protocol...</h2>

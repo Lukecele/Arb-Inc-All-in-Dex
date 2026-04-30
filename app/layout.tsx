@@ -35,12 +35,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }}>
-        
-        
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }} suppressHydrationWarning>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
-        
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
             <ErrorBoundary>
@@ -48,7 +45,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </ErrorBoundary>
           </ClientWeb3Provider>
         </StyledComponentsRegistry>
-        
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
