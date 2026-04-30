@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye, FaWallet } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye, FaWallet, FaLayerGroup } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
+const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; // Wallet accumulo tasse
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const pulse = keyframes`
@@ -77,7 +78,6 @@ const Subtitle = styled.p`
   line-height: 1.6;
 `;
 
-// DEFINIZIONE MANCANTE RIPRISTINATA
 const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
@@ -353,6 +353,10 @@ const HomePageClient = () => {
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
   const [treasuryBnb, setTreasuryBnb] = useState('...');
   
+  // Stati per Accumulatore Tasse
+  const [accBnb, setAccBnb] = useState('...');
+  const [accTokens, setAccTokens] = useState('...');
+
   const volume30d = 27863;
 
   useEffect(() => {
@@ -362,28 +366,33 @@ const HomePageClient = () => {
       if(data.totalPoints) setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
     }).catch(err => console.error(err));
 
-    const fetchTreasuryBalance = async () => {
+    const fetchBalances = async () => {
       try {
-        const response = await fetch('https://bsc-dataseed.binance.org/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_getBalance',
-            params: [TREASURY_WALLET, 'latest'],
-            id: 1
-          })
+        const rpcBody = (method, params) => JSON.stringify({ jsonrpc: '2.0', method, params, id: Math.floor(Math.random()*1000) });
+        
+        // 1. BNB Treasury
+        const resTreasury = await fetch('https://bsc-dataseed.binance.org/', { method: 'POST', body: rpcBody('eth_getBalance', [TREASURY_WALLET, 'latest']) });
+        const dataTreasury = await resTreasury.json();
+        if(dataTreasury.result) setTreasuryBnb((Number(BigInt(dataTreasury.result)) / 1e18).toFixed(4));
+
+        // 2. BNB Accumulatore
+        const resAccBnb = await fetch('https://bsc-dataseed.binance.org/', { method: 'POST', body: rpcBody('eth_getBalance', [ACCUMULATOR_WALLET, 'latest']) });
+        const dataAccBnb = await resAccBnb.json();
+        if(dataAccBnb.result) setAccBnb((Number(BigInt(dataAccBnb.result)) / 1e18).toFixed(4));
+
+        // 3. Token Accumulatore (balanceOf)
+        const resAccTokens = await fetch('https://bsc-dataseed.binance.org/', { 
+          method: 'POST', 
+          body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) 
         });
-        const data = await response.json();
-        if (data.result) {
-          const wei = BigInt(data.result);
-          const bnb = (Number(wei) / 1e18).toFixed(4);
-          setTreasuryBnb(bnb);
-        }
-      } catch (e) { console.error('RPC Error:', e); }
+        const dataAccTokens = await resAccTokens.json();
+        if(dataAccTokens.result) setAccTokens((Number(BigInt(dataAccTokens.result)) / 1e18).toLocaleString(undefined, {maximumFractionDigits: 0}));
+
+      } catch (e) { console.error('Blockchain Fetch Error:', e); }
     };
-    fetchTreasuryBalance();
-    const balanceInterval = setInterval(fetchTreasuryBalance, 60000);
+
+    fetchBalances();
+    const balanceInterval = setInterval(fetchBalances, 60000);
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
@@ -471,13 +480,28 @@ const HomePageClient = () => {
             </div>
 
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Real-Time Wallet Balance</div>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Real-Time Treasury Balance</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', alignItems: 'center' }}>
                 <span style={{color: '#94a3b8'}}>Backed Liquidity</span> 
                 <span style={{ color: '#facc15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <FaCoins size={14} /> 
                   {treasuryBnb === '...' ? <FaSpinner className="fa-spin" size={12}/> : `${treasuryBnb} BNB`}
                 </span>
+              </div>
+            </div>
+
+            {/* BOX ACCUMULATORE TASSE */}
+            <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FaLayerGroup size={10} /> Tax Accumulator (Pending)
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '4px' }}>
+                <span style={{color: '#94a3b8'}}>Pending BNB</span> 
+                <span style={{ color: 'white', fontWeight: 'bold' }}>{accBnb} BNB</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <span style={{color: '#94a3b8'}}>Pending Tokens</span> 
+                <span style={{ color: 'white', fontWeight: 'bold' }}>{accTokens} ARB</span>
               </div>
             </div>
 
@@ -493,9 +517,12 @@ const HomePageClient = () => {
               🦙 Open DefiLlama
             </a>
             
-            <div style={{textAlign: 'center', marginTop: '4px'}}>
-              <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.75rem'}}>
-                <FaExternalLinkAlt size={10} /> View Treasury Wallet
+            <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}>
+              <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}>
+                <FaExternalLinkAlt size={8} /> View Treasury Wallet
+              </a>
+              <a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}>
+                <FaExternalLinkAlt size={8} /> View Accumulator Wallet
               </a>
             </div>
           </PulseCard>
@@ -506,15 +533,15 @@ const HomePageClient = () => {
           <div className="grid-3">
             <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
               <div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div>
-              <p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p>
+              <p>Stack points with ogni azione: <strong>Swap (100), Zap (150)</strong> o <strong>Limit Orders (200)</strong>. Ogni trade alimenta la tesoreria.</p>
             </div>
             <div className="yield-card">
               <div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div>
-              <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees direttamente ai detentori.</p>
+              <p>Holda <strong>2M+ token</strong> per lo Status Diamond. Il nostro motore distribuisce <strong>Real BNB</strong> direttamente ai detentori.</p>
             </div>
             <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
               <div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div>
-              <p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p>
+              <p>Senza capitale? Nessun problema. Completa <strong>Free Tasks</strong> e invita amici per guadagnare un <strong>10% Lifetime Bonus</strong>.</p>
             </div>
           </div>
         </YieldEngineSection>
@@ -534,9 +561,9 @@ const HomePageClient = () => {
         </ProtocolSpecsSection>
 
         <FeatureGrid>
-          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor ogni inflow. 100% delle tasse e commissioni sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>Il 100% delle commissioni di trading dal nostro aggregatore DEX fluisce direttamente nella Tesoreria.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Il nostro sistema di ranking proprietario garantisce che i premi siano distribuiti con precisione matematica.</p></FeatureCard>
+          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitora ogni inflow. Il 100% delle tasse e commissioni del protocollo sono visibili e distribuite ogni 6 ore.</p></FeatureCard>
         </FeatureGrid>
 
         <AuditSection>
