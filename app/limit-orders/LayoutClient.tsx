@@ -1,7 +1,7 @@
 'use client';
 import styled from 'styled-components';
 
-const LayoutWrapper = styled.div`
+const StyledLayout = styled.div`
   padding-left: 300px;
   min-height: 100vh;
   background-color: #030014;
@@ -11,6 +11,6 @@ const LayoutWrapper = styled.div`
   }
 `;
 
-export default function ZapLayout({ children }: { children: React.ReactNode }) {
-  return <LayoutWrapper>{children}</LayoutWrapper>;
+export default function LayoutClient({ children }: { children: React.ReactNode }) {
+  return <StyledLayout>{children}</StyledLayout>;
 }

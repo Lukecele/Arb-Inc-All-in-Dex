@@ -1,14 +1,10 @@
-'use client'
+import dynamic from 'next/dynamic';
 
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
-
-const ClientLimitOrdersPage = dynamic(() => import('./ClientWrapper'), { ssr: false })
+const ClientLimitOrdersPage = dynamic(() => import('./ClientWrapper'), { 
+  ssr: false,
+  loading: () => <div style={{padding: '100px', textAlign: 'center', color: '#94a3b8'}}>Initializing Limit Orders...</div>
+});
 
 export default function LimitOrdersPage() {
-  return (
-    <Suspense fallback={<div style={{ color: '#fff', textAlign: 'center', padding: '100px' }}>Loading Limit Orders...</div>}>
-      <ClientLimitOrdersPage />
-    </Suspense>
-  )
+  return <ClientLimitOrdersPage />;
 }
