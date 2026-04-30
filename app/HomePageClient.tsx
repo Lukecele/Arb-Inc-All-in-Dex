@@ -77,6 +77,13 @@ const Subtitle = styled.p`
   line-height: 1.6;
 `;
 
+// DEFINIZIONE MANCANTE RIPRISTINATA
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 16px;
+  @media (max-width: 600px) { flex-direction: column; width: 100%; }
+`;
+
 const ContractBox = styled.div`
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.03);
@@ -110,18 +117,30 @@ const ContractBox = styled.div`
   }
 `;
 
-const ActionButton = styled.a`
-  display: inline-block;
-  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+const PrimaryButton = styled.a`
+  background: #a855f7;
   color: white;
-  padding: 10px 20px;
-  border-radius: 100px;
+  padding: 16px 32px;
+  border-radius: 12px;
   font-weight: bold;
   text-decoration: none;
-  text-align: center;
-  font-size: 0.9rem;
-  transition: transform 0.2s;
-  &:hover { transform: scale(1.05); }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  &:hover { background: #9333ea; transform: translateY(-2px); }
+`;
+
+const SecondaryButton = styled.a`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.2s;
+  &:hover { background: rgba(255, 255, 255, 0.1); }
 `;
 
 const LivePulseSection = styled.div`
@@ -215,6 +234,20 @@ const LiveIndicator = styled.div`
     border-radius: 50%;
     animation: ${livePulse} 2s infinite;
   }
+`;
+
+const ActionButton = styled.a`
+  display: inline-block;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  &:hover { transform: scale(1.05); }
 `;
 
 const YieldEngineSection = styled.div`
@@ -320,7 +353,6 @@ const HomePageClient = () => {
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
   const [treasuryBnb, setTreasuryBnb] = useState('...');
   
-  // Statistiche hardcoded per pulizia estrema
   const volume30d = 27863;
 
   useEffect(() => {
