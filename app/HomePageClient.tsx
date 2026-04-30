@@ -1,400 +1,80 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaCoins, FaRocket, FaTasks, FaChartPie, FaClock, FaBullseye } from 'react-icons/fa';
+import { FaRocket, FaCoins, FaTasks, FaChartPie, FaClock, FaBullseye } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
-const pulse = keyframes`
-  0% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
-  50% { opacity: 0.7; border-color: #a855f7; }
-  100% { opacity: 1; border-color: rgba(168, 85, 247, 0.3); }
-`;
-
 const PageWrapper = styled.div`
   min-height: 100vh;
+  padding-left: 300px; /* <--- Match con Sidebar */
   background-color: #030014;
-  background-image: 
-    radial-gradient(circle at 50% -20%, #2e1065 0%, transparent 50%),
-    radial-gradient(circle at 0% 100%, #1e1b4b 0%, transparent 30%);
   color: white;
   font-family: 'Inter', sans-serif;
+  @media (max-width: 991px) { padding-left: 0; padding-top: 64px; }
 `;
 
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 1000px; /* <--- Più stretto per eleganza */
   margin: 0 auto;
-  padding: 0 20px;
-`;
-
-const Hero = styled.section`
-  padding: 120px 0 60px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Badge = styled.span`
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  color: #a855f7;
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 24px;
+  padding: 60px 20px;
 `;
 
 const Title = styled.h1`
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 24px;
+  text-align: center;
+  margin-bottom: 20px;
   background: linear-gradient(to bottom, #fff 40%, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
 
-const Subtitle = styled.p`
-  font-size: 1.25rem;
-  color: #94a3b8;
-  max-width: 600px;
-  margin-bottom: 40px;
-  line-height: 1.6;
-`;
-
-const ContractBox = styled.div`
-  margin-top: 30px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  padding: 12px 20px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  max-width: 100%;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
-  
-  .addr {
-    font-family: 'Monaco', monospace;
-    font-size: 0.85rem;
-    color: #a855f7;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  button {
-    background: none;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    &:hover { color: white; transform: scale(1.1); }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 16px;
-  @media (max-width: 600px) { flex-direction: column; width: 100%; }
-`;
-
-const PrimaryButton = styled.a`
-  background: #a855f7;
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  &:hover { background: #9333ea; transform: translateY(-2px); }
-`;
-
-const SecondaryButton = styled.a`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s;
-  &:hover { background: rgba(255, 255, 255, 0.1); }
-`;
-
-const LivePulseSection = styled.div`
-  margin: 60px 0 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-`;
-
-const PulseCard = styled.div<{ $isProcessing?: boolean }>`
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 24px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`}
-  .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { 
-    font-size: 1.8rem; 
-    font-weight: 700; 
-    color: ${props => props.$isProcessing ? '#a855f7' : 'white'};
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
-`;
-
-const YieldEngineSection = styled.div`
-  margin: 40px auto;
-  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
-  h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
-    .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
-    p { color: #94a3b8; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
-  }
-`;
-
-const ProtocolSpecsSection = styled.section`
-  padding: 80px 0;
-  text-align: center;
-  background: rgba(168, 85, 247, 0.02);
-  border-radius: 40px;
-  border: 1px solid rgba(168, 85, 247, 0.1);
-  margin: 60px 0;
-  h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .supply-box { margin-bottom: 50px; 
-    .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
-    .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
-    .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
-  }
-  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 20px; }
-`;
-
-const SpecCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  .icon { font-size: 1.5rem; color: #a855f7; }
-  .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { font-size: 1.6rem; font-weight: 800; color: white; }
-  .desc { font-size: 0.8rem; color: #94a3b8; }
-`;
-
-const ActionButton = styled.a`
-  display: inline-block;
-  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 100px;
-  font-weight: bold;
-  text-decoration: none;
-  text-align: center;
-  font-size: 0.9rem;
-  transition: transform 0.2s;
-  &:hover { transform: scale(1.05); }
-`;
-
-const FeatureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  padding: 60px 0;
-`;
-
-const FeatureCard = styled.div`
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
-  p { color: #94a3b8; line-height: 1.6; }
-  .icon-box {
-    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    color: #a855f7; font-size: 1.5rem;
-  }
-`;
-
-const AuditSection = styled.section`
-  padding: 80px 0;
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
-  border-radius: 40px;
-  border: 1px solid rgba(168, 85, 247, 0.1);
-  margin-bottom: 100px;
-`;
-
-const AuditGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 0 40px;
-`;
-
-const AuditCard = styled.div`
-  background: rgba(3, 0, 20, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 30px;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  .icon { color: #a855f7; font-size: 1.5rem; }
-  h4 { font-size: 1.2rem; color: white; }
-  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
-`;
-
 const HomePageClient = () => {
-  const [timerDisplay, setTimerDisplay] = useState('...');
-  const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
+  const [stats, setStats] = useState({ points: "...", health: "..." });
 
   useEffect(() => {
     setMounted(true);
-    fetch('/api/stats').then(res => res.json()).then(data => {
-      if(data.totalPoints) setLiveStats({ points: data.totalPoints, health: data.treasuryHealth });
-    }).catch(err => console.error(err));
-
-    const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
-    const INTERVAL = 6 * 60 * 60 * 1000;
-    const PROCESSING_TIME = 2 * 60 * 1000; 
-
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const elapsed = now - ANCHOR_TIME;
-      const cycles = Math.floor(elapsed / INTERVAL);
-      const lastPayout = ANCHOR_TIME + (cycles * INTERVAL);
-      const nextPayout = lastPayout + INTERVAL;
-      const timeSinceLast = now - lastPayout;
-
-      if (timeSinceLast >= 0 && timeSinceLast <= PROCESSING_TIME) {
-        setIsProcessing(true);
-        setTimerDisplay('Processing...');
-      } else {
-        setIsProcessing(false);
-        const diff = nextPayout - now;
-        const h = Math.floor(diff / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimerDisplay(`${h}h ${m}m ${s}s`);
-      }
-    };
-    const interval = setInterval(updateTimer, 1000);
-    updateTimer();
-    return () => clearInterval(interval);
+    fetch('/api/stats').then(r => r.json()).then(d => setStats({ points: d.totalPoints, health: d.treasuryHealth }));
   }, []);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(CONTRACT_ADDRESS);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   if (!mounted) return null;
 
   return (
     <PageWrapper>
-      <Header activePage="/" />
+      <Header />
       <Container>
-        <Hero>
-          <Badge>Official Token: ARB Inc</Badge>
-          <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
-          <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
-          <ButtonGroup>
-            <PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton>
-            <SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton>
-          </ButtonGroup>
-          <ContractBox>
-            <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
-            <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
-          </ContractBox>
-        </Hero>
+        <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
+        <p style={{textAlign:'center', color:'#94a3b8', marginBottom:'40px'}}>Aggregated liquidity and 100% revenue-sharing.</p>
+        
+        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))', gap:'20px', marginBottom:'60px'}}>
+           <div style={{background:'rgba(255,255,255,0.03)', padding:'24px', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.05)'}}>
+             <div style={{color:'#64748b', fontSize:'12px', textTransform:'uppercase', marginBottom:'8px'}}>Ecosystem Points</div>
+             <div style={{fontSize:'24px', fontWeight:'bold', color:'#3b82f6'}}>{stats.points}</div>
+           </div>
+           <div style={{background:'rgba(255,255,255,0.03)', padding:'24px', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.05)'}}>
+             <div style={{color:'#64748b', fontSize:'12px', textTransform:'uppercase', marginBottom:'8px'}}>Treasury Health</div>
+             <div style={{fontSize:'24px', fontWeight:'bold', color:'#10b981'}}>{stats.health}</div>
+           </div>
+        </div>
 
-        <LivePulseSection>
-          <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">{isProcessing ? 'RevShare in Progress' : 'Global Sync (BRT)'}</span></PulseCard>
-          <PulseCard><span className="label">Ecosystem Points</span><span className="value" style={{ color: '#3b82f6' }}>{liveStats.points}</span><span className="sub">Trading & Task Volume</span></PulseCard>
-          <PulseCard><span className="label">Treasury Health</span><span className="value" style={{ color: '#22c55e' }}>{liveStats.health}</span><span className="sub">100% Backed by Real BNB</span></PulseCard>
-        </LivePulseSection>
-
-        <YieldEngineSection>
-          <h2>The Ultimate Yield Engine</h2>
-          <div className="grid-3">
-            <div className="yield-card" style={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
-              <div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div>
-              <p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p>
-              <ActionButton href={SWAP_LINK}>Start Farming</ActionButton>
-            </div>
-            <div className="yield-card">
-              <div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div>
-              <p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p>
-              <ActionButton href={SWAP_LINK}>Get Diamond Status</ActionButton>
-            </div>
-            <div className="yield-card" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
-              <div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div>
-              <p>No capital? No problem. Complete <strong>Social Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p>
-              <ActionButton href="/rewards">Claim Free Points</ActionButton>
-            </div>
+        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'20px'}}>
+          <div style={{background:'rgba(168, 85, 247, 0.05)', padding:'30px', borderRadius:'20px', border:'1px solid rgba(168, 85, 247, 0.2)'}}>
+            <FaRocket style={{fontSize:'24px', color:'#a855f7', marginBottom:'15px'}}/>
+            <h3>Trade & Farm</h3>
+            <p style={{color:'#94a3b8', fontSize:'14px'}}>Swap, Zap or Limit Orders. Fuel the treasury and earn points.</p>
           </div>
-        </YieldEngineSection>
-
-        {/* NUOVA SEZIONE TOKENOMICS (Dalla pagina About) */}
-        <ProtocolSpecsSection id="protocol-specs">
-          <h2>Protocol Transparency</h2>
-          <div className="supply-box">
-            <span className="label">Total Supply</span>
-            <span className="value">1,000,000,000</span>
-            <span className="sub">4% Buy/Sell Tax for Rewards</span>
+          <div style={{background:'rgba(59, 130, 246, 0.05)', padding:'30px', borderRadius:'20px', border:'1px solid rgba(59, 130, 246, 0.2)'}}>
+            <FaCoins style={{fontSize:'24px', color:'#3b82f6', marginBottom:'15px'}}/>
+            <h3>Real BNB Rewards</h3>
+            <p style={{color:'#94a3b8', fontSize:'14px'}}>Hold 2M+ tokens for Diamond Status and earn real BNB.</p>
           </div>
-          <div className="spec-grid">
-            <SpecCard><FaChartPie className="icon" /><span className="label">Fee Destination</span><span className="value">100%</span><span className="desc">To Ranked Treasury</span></SpecCard>
-            <SpecCard><FaClock className="icon" /><span className="label">Reward Frequency</span><span className="value">6 Hours</span><span className="desc">Automated Distribution</span></SpecCard>
-            <SpecCard><FaBullseye className="icon" /><span className="label">Ranking Precision</span><span className="value">9 Decimals</span><span className="desc">Fair & Precise math</span></SpecCard>
-          </div>
-        </ProtocolSpecsSection>
-
-        <FeatureGrid>
-          <FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></FeatureCard>
-          <FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></FeatureCard>
-        </FeatureGrid>
-
-        <AuditSection>
-          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem', marginBottom: '16px'}}>Security & Audit</h2><p style={{color: '#94a3b8', maxWidth: '700px', margin: '0 auto'}}>Arbitrage Inception prioritizes safety through strategic simplification.</p></div>
-          <AuditGrid>
-            <AuditCard><FaCheckCircle className="icon" /><h4>KyberSwap Integration</h4><p>We leverage KyberSwap widgets for trading logic, audited by ChainSecurity.</p></AuditCard>
-            <AuditCard><FaLock className="icon" /><h4>Zero-Contract Risk</h4><p>By avoiding custom swap contracts, we eliminate the primary entry point for hacks.</p></AuditCard>
-            <AuditCard><FaCode className="icon" /><h4>Frontend Rewards Logic</h4><p>Rankings are processed by a transparent frontend engine with 9-decimal precision.</p></AuditCard>
-          </AuditGrid>
-        </AuditSection>
+        </div>
       </Container>
       <Footer />
     </PageWrapper>
