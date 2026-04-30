@@ -8,7 +8,7 @@ import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, 
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
-const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; // Wallet accumulo tasse
+const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
 const pulse = keyframes`
@@ -352,8 +352,6 @@ const HomePageClient = () => {
   const [copied, setCopied] = useState(false);
   const [liveStats, setLiveStats] = useState({ points: "...", health: "..." });
   const [treasuryBnb, setTreasuryBnb] = useState('...');
-  
-  // Stati per Accumulatore Tasse
   const [accBnb, setAccBnb] = useState('...');
   const [accTokens, setAccTokens] = useState('...');
 
@@ -368,19 +366,22 @@ const HomePageClient = () => {
 
     const fetchBalances = async () => {
       try {
-        const rpcBody = (method, params) => JSON.stringify({ jsonrpc: '2.0', method, params, id: Math.floor(Math.random()*1000) });
+        // AGGIUNTI TIPI PER EVITARE ERRORE DI BUILD NEXT.JS
+        const rpcBody = (method: string, params: (string | object)[]) => JSON.stringify({ 
+          jsonrpc: '2.0', 
+          method, 
+          params, 
+          id: Math.floor(Math.random()*1000) 
+        });
         
-        // 1. BNB Treasury
         const resTreasury = await fetch('https://bsc-dataseed.binance.org/', { method: 'POST', body: rpcBody('eth_getBalance', [TREASURY_WALLET, 'latest']) });
         const dataTreasury = await resTreasury.json();
         if(dataTreasury.result) setTreasuryBnb((Number(BigInt(dataTreasury.result)) / 1e18).toFixed(4));
 
-        // 2. BNB Accumulatore
         const resAccBnb = await fetch('https://bsc-dataseed.binance.org/', { method: 'POST', body: rpcBody('eth_getBalance', [ACCUMULATOR_WALLET, 'latest']) });
         const dataAccBnb = await resAccBnb.json();
         if(dataAccBnb.result) setAccBnb((Number(BigInt(dataAccBnb.result)) / 1e18).toFixed(4));
 
-        // 3. Token Accumulatore (balanceOf)
         const resAccTokens = await fetch('https://bsc-dataseed.binance.org/', { 
           method: 'POST', 
           body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) 
@@ -490,7 +491,6 @@ const HomePageClient = () => {
               </div>
             </div>
 
-            {/* BOX ACCUMULATORE TASSE */}
             <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
               <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <FaLayerGroup size={10} /> Tax Accumulator (Pending)
