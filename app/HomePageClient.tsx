@@ -164,69 +164,96 @@ const ActionButton = styled.a`
   display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
 `;
 
+const ProtocolSpecsSection = styled.section`
+  padding: 80px 0;
+  text-align: center;
+  background: rgba(168, 85, 247, 0.02);
+  border-radius: 40px;
+  border: 1px solid rgba(168, 85, 247, 0.1);
+  margin: 60px 0;
+  h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .supply-box { margin-bottom: 50px; 
+    .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+    .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
+    .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
+  }
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 20px; }
+`;
+
+const SpecCard = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  padding: 30px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  .icon { font-size: 1.5rem; color: #a855f7; }
+  .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .value { font-size: 1.6rem; font-weight: 800; color: white; }
+  .desc { font-size: 0.8rem; color: #94a3b8; }
+`;
+
+const AuditSection = styled.section`
+  padding: 80px 0;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
+  border-radius: 40px;
+  border: 1px solid rgba(168, 85, 247, 0.1);
+  margin-bottom: 100px;
+  h2 { font-size: 2.2rem; margin-bottom: 50px; text-align: center; }
+  .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 0 40px; }
+`;
+
 const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('...');
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   
-  // LIVE VOLUMES
   const [tokenVolume24h, setTokenVolume24h] = useState<number | null>(null);
   const [dexVolume24h, setDexVolume24h] = useState<number | null>(null);
-
   const [treasuryBnb, setTreasuryBnb] = useState('...');
   const [accBnb, setAccBnb] = useState('...');
   const [accTokens, setAccTokens] = useState('...');
 
   useEffect(() => {
     setMounted(true);
-
-    const fetchAllData = async () => {
+    const fetchData = async () => {
       try {
-        // 1. Fetch Token Volume (Aggregated pools) from DexScreener
-        const resDexScreener = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${CONTRACT_ADDRESS}`);
-        const dataDex = await resDexScreener.json();
+        const resDex = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${CONTRACT_ADDRESS}`);
+        const dataDex = await resDex.json();
         if (dataDex.pairs) {
           const totalVol = dataDex.pairs.reduce((acc: number, pair: any) => acc + (pair.volume?.h24 || 0), 0);
           setTokenVolume24h(totalVol);
         }
 
-        // 2. Fetch Aggregator Volume from DefiLlama
         const resLlama = await fetch('https://api.llama.fi/protocol/arbitrage-inc');
         const dataLlama = await resLlama.json();
         if (dataLlama && dataLlama.total24h) setDexVolume24h(dataLlama.total24h);
 
-        // 3. Blockchain Balances
         const rpcBody = (method: string, params: (string | object)[]) => JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 });
         const rpcUrl = 'https://bsc-dataseed.binance.org/';
-
-        const [resTreasury, resAccBnb, resAccTokens] = await Promise.all([
+        const [resT, resAB, resAT] = await Promise.all([
           fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_getBalance', [TREASURY_WALLET, 'latest']) }),
           fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_getBalance', [ACCUMULATOR_WALLET, 'latest']) }),
           fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) })
         ]);
-
-        const dTreasury = await resTreasury.json();
-        if(dTreasury.result) setTreasuryBnb((Number(BigInt(dTreasury.result)) / 1e18).toFixed(4));
-
-        const dAccBnb = await resAccBnb.json();
-        if(dAccBnb.result) setAccBnb((Number(BigInt(dAccBnb.result)) / 1e18).toFixed(4));
-
-        const dAccTokens = await resAccTokens.json();
-        if(dAccTokens.result && dAccTokens.result !== '0x') setAccTokens((Number(BigInt(dAccTokens.result)) / 1e9).toLocaleString(undefined, {maximumFractionDigits: 0}));
-
-      } catch (e) { console.error('Data Fetch Error:', e); }
+        const dT = await resT.json(); if(dT.result) setTreasuryBnb((Number(BigInt(dT.result)) / 1e18).toFixed(4));
+        const dAB = await resAB.json(); if(dAB.result) setAccBnb((Number(BigInt(dAB.result)) / 1e18).toFixed(4));
+        const dAT = await resAT.json(); if(dAT.result && dAT.result !== '0x') setAccTokens((Number(BigInt(dAT.result)) / 1e9).toLocaleString(undefined, {maximumFractionDigits: 0}));
+      } catch (e) { console.error(e); }
     };
-
-    fetchAllData();
-    const interval = setInterval(fetchAllData, 60000);
+    fetchData();
+    const interval = setInterval(fetchData, 60000);
 
     const ANCHOR_TIME = new Date('2026-04-28T10:03:00-03:00').getTime();
     const INTERVAL = 6 * 60 * 60 * 1000;
     const updateTimer = () => {
       const now = new Date().getTime();
       const elapsed = now - ANCHOR_TIME;
-      const lastPayout = ANCHOR_TIME + (Math.floor(elapsed / INTERVAL) * INTERVAL);
+      const cycles = Math.floor(elapsed / INTERVAL);
+      const lastPayout = ANCHOR_TIME + (cycles * INTERVAL);
       const nextPayout = lastPayout + INTERVAL;
       const timeSinceLast = now - lastPayout;
       if (timeSinceLast >= 0 && timeSinceLast <= 120000) { setIsProcessing(true); setTimerDisplay('Processing...'); }
@@ -239,12 +266,11 @@ const HomePageClient = () => {
         setTimerDisplay(`${h}h ${m}m ${s}s`);
       }
     };
-    const timerInterval = setInterval(updateTimer, 1000);
+    const tInterval = setInterval(updateTimer, 1000);
     updateTimer();
-    return () => { clearInterval(interval); clearInterval(timerInterval); };
+    return () => { clearInterval(interval); clearInterval(tInterval); };
   }, []);
 
-  const copyToClipboard = () => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   if (!mounted) return null;
 
   return (
@@ -252,63 +278,37 @@ const HomePageClient = () => {
       <Header activePage="/" />
       <Container>
         <Hero>
-          <Badge><img src={TOKEN_LOGO} alt="ARB" />Official Token: ARB Inc</Badge>
+          <Badge><img src={TOKEN_LOGO} alt="Logo" />Official Token: ARB Inc</Badge>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
-          <ButtonGroup style={{ display: 'flex', gap: '16px' }}>
-            <PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton>
-            <SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton>
-          </ButtonGroup>
+          <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
           <ContractBox>
             <span className="addr">{CONTRACT_ADDRESS}</span>
-            <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+            <button onClick={() => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); }}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
           </ContractBox>
         </Hero>
 
         <LivePulseSection>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <PulseCard $isProcessing={isProcessing}>
-              <span className="label">Next Payout Cycle</span>
-              <span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span>
-              <span className="sub">Global Sync (BRT)</span>
-            </PulseCard>
+            <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
             <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>Go to Rewards</ActionButton>
           </div>
-          
           <PulseCard>
             <div className="header-row"><span className="label">Trading Volume (24h)</span><LiveIndicator><div className="dot"></div>Live</LiveIndicator></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '10px 0' }}>
-              <div>
-                <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>Token Volume (All Pools)</span>
-                <span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '1.6rem' }}>
-                  {tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={16} />}
-                </span>
-              </div>
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}>
-                <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>DEX Aggregator Volume</span>
-                <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>
-                  {dexVolume24h !== null ? `$${dexVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={14} />}
-                </span>
-              </div>
+              <div><span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>Token Volume (All Pools)</span><span style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: '1.6rem' }}>{tokenVolume24h !== null ? `$${tokenVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={16} />}</span></div>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}><span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>DEX Aggregator Volume</span><span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>{dexVolume24h !== null ? `$${dexVolume24h.toLocaleString(undefined, {maximumFractionDigits: 0})}` : <FaSpinner className="fa-spin" size={14} />}</span></div>
             </div>
-            <span className="sub" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FaChartLine /> Real-time Market Data</span>
           </PulseCard>
-          
           <PulseCard>
-            <div className="header-row"><span className="label">Treasury & Taxes</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
-            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', alignItems: 'center' }}>
-                <span style={{color: '#94a3b8'}}>Treasury Balance</span> 
-                <span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span>
-              </div>
-            </div>
+            <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
             <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px' }}>
               <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '6px' }}>Accumulator (Pending)</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span> <span style={{ color: 'white' }}>{accBnb}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending Tokens</span> <span style={{ color: 'white' }}>{accTokens}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens}</span></div>
             </div>
-            <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
           </PulseCard>
         </LivePulseSection>
 
@@ -323,8 +323,8 @@ const HomePageClient = () => {
         </ProtocolSpecsSection>
 
         <AuditSection>
-          <div style={{textAlign: 'center', marginBottom: '50px'}}><h2 style={{fontSize: '2.5rem'}}>Security & Audit</h2></div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', padding: '0 40px' }}>
+          <h2>Security & Audit</h2>
+          <div className="audit-grid">
             <PulseCard><h4>KyberSwap Integration</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Leveraging KyberSwap widgets for audited trading logic by ChainSecurity.</p></PulseCard>
             <PulseCard><h4>Zero-Contract Risk</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Eliminating main hack entry points by avoiding custom swap contracts.</p></PulseCard>
             <PulseCard><h4>Frontend Rewards Logic</h4><p style={{color:'#94a3b8', fontSize:'0.9rem'}}>Rankings processed by a transparent engine with 9-decimal precision.</p></PulseCard>
