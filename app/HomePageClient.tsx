@@ -75,15 +75,7 @@ const BigLogoWrapper = styled.div`
   margin-bottom: 40px;
   animation: ${float} 4s ease-in-out infinite;
   filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
-  
-  img {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 2px solid rgba(168, 85, 247, 0.3);
-    object-fit: contain;
-    background: #000;
-  }
+  img { width: 220px; height: 220px; border-radius: 50%; border: 2px solid rgba(168, 85, 247, 0.3); object-fit: contain; background: #000; }
 `;
 
 const Title = styled.h1`
@@ -96,211 +88,26 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
 `;
 
-const Subtitle = styled.p`
-  font-size: 1.25rem;
-  color: #94a3b8;
-  max-width: 600px;
-  margin-bottom: 40px;
-  line-height: 1.6;
-`;
+const Subtitle = styled.p`font-size: 1.25rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; line-height: 1.6;`;
+const ButtonGroup = styled.div`display: flex; gap: 16px; @media (max-width: 600px) { flex-direction: column; width: 100%; }`;
+const PrimaryButton = styled.a`background: #a855f7; color: white; padding: 16px 32px; border-radius: 12px; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s; &:hover { background: #9333ea; transform: translateY(-2px); }`;
+const SecondaryButton = styled.a`background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 16px 32px; border-radius: 12px; font-weight: bold; text-decoration: none; transition: all 0.2s; &:hover { background: rgba(255, 255, 255, 0.1); }`;
+const ContractContainer = styled.div`display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px;`;
+const ContractBox = styled.div`background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(168, 85, 247, 0.2); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; max-width: 100%; box-shadow: 0 0 20px rgba(168, 85, 247, 0.1); .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }`;
+const AuditBadgeLink = styled.a`display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 8px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: bold; text-decoration: none; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.2); transform: translateY(-2px); }`;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 16px;
-  @media (max-width: 600px) { flex-direction: column; width: 100%; }
-`;
+const LivePulseSection = styled.div`margin: 60px 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;`;
+const PulseCard = styled.div<{ $isProcessing?: boolean }>`background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 24px; border-radius: 20px; display: flex; flex-direction: column; gap: 12px; height: 100%; ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`} .header-row { display: flex; justify-content: space-between; align-items: center; } .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; } .value { font-size: 1.8rem; font-weight: 700; color: ${props => props.$isProcessing ? '#a855f7' : 'white'}; display: flex; align-items: center; gap: 10px; } .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; } .verify-link { display: inline-flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.8rem; text-decoration: none; transition: color 0.2s; &:hover { color: #22c55e; } } .defillama-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 10px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-top: auto; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.25); transform: translateY(-2px); } }`;
+const LiveIndicator = styled.div`display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px; .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; animation: ${livePulse} 2s infinite; }`;
+const ActionButton = styled.a`display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }`;
 
-const PrimaryButton = styled.a`
-  background: #a855f7;
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  &:hover { background: #9333ea; transform: translateY(-2px); }
-`;
-
-const SecondaryButton = styled.a`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s;
-  &:hover { background: rgba(255, 255, 255, 0.1); }
-`;
-
-const ContractContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-`;
-
-const ContractBox = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  padding: 12px 20px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  max-width: 100%;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
-  .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }
-`;
-
-const AuditBadgeLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #22c55e;
-  padding: 8px 16px;
-  border-radius: 100px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s;
-  &:hover {
-    background: rgba(34, 197, 94, 0.2);
-    transform: translateY(-2px);
-  }
-`;
-
-const LivePulseSection = styled.div`
-  margin: 60px 0 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-`;
-
-const PulseCard = styled.div<{ $isProcessing?: boolean }>`
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 24px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`}
-  .header-row { display: flex; justify-content: space-between; align-items: center; }
-  .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { font-size: 1.8rem; font-weight: 700; color: ${props => props.$isProcessing ? '#a855f7' : 'white'}; display: flex; align-items: center; gap: 10px; }
-  .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; }
-  .verify-link { display: inline-flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.8rem; text-decoration: none; transition: color 0.2s; &:hover { color: #22c55e; } }
-  .defillama-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 10px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-top: auto; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.25); transform: translateY(-2px); } }
-`;
-
-const LiveIndicator = styled.div`
-  display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;
-  .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; animation: ${livePulse} 2s infinite; }
-`;
-
-const ActionButton = styled.a`
-  display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }
-`;
-
-const YieldEngineSection = styled.div`
-  margin: 40px auto;
-  background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15);
-  h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-  .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); }
-    .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } }
-    p { color: #94a3b8; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; }
-  }
-`;
-
-const ProtocolSpecsSection = styled.section`
-  padding: 80px 0;
-  text-align: center;
-  background: rgba(168, 85, 247, 0.02);
-  border-radius: 40px;
-  border: 1px solid rgba(168, 85, 247, 0.1);
-  margin: 60px 0;
-  h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .supply-box { margin-bottom: 50px; 
-    .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
-    .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
-    .sub { color: #facc15; font-weight: bold; font-size: 1rem; }
-  }
-  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 20px; }
-`;
-
-const SpecCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  .icon { font-size: 1.5rem; color: #a855f7; }
-  .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-  .value { font-size: 1.6rem; font-weight: 800; color: white; }
-  .desc { font-size: 0.8rem; color: #94a3b8; }
-`;
-
-const FeatureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  padding: 60px 0;
-`;
-
-const FeatureCard = styled.div`
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  h3 { font-size: 1.5rem; margin: 20px 0 12px; }
-  p { color: #94a3b8; line-height: 1.6; }
-  .icon-box {
-    width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    color: #a855f7; font-size: 1.5rem;
-  }
-`;
-
-const AuditSection = styled.section`
-  padding: 80px 0;
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
-  border-radius: 40px;
-  border: 1px solid rgba(168, 85, 247, 0.1);
-  margin-bottom: 100px;
-  h2 { font-size: 2.5rem; margin-bottom: 16px; text-align: center; }
-  p.audit-sub { color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 50px; }
-  .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 0 40px; }
-`;
-
-const AuditCard = styled.div`
-  background: rgba(3, 0, 20, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 30px;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  .icon { color: #a855f7; font-size: 1.5rem; }
-  h4 { font-size: 1.2rem; color: white; }
-  p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
-`;
+const YieldEngineSection = styled.div`margin: 40px auto; background: linear-gradient(145deg, rgba(16, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.9) 100%); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(168, 85, 247, 0.15); h2 { text-align: center; font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; } .yield-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 25px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: flex-start; &:hover { border-color: rgba(168, 85, 247, 0.4); transform: translateY(-5px); } .icon-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; .icon { font-size: 1.8rem; color: #a855f7; } h3 { font-size: 1.3rem; margin: 0; } } p { color: #94a3b8; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; flex-grow: 1; } }`;
+const ProtocolSpecsSection = styled.section`padding: 80px 0; text-align: center; background: rgba(168, 85, 247, 0.02); border-radius: 40px; border: 1px solid rgba(168, 85, 247, 0.1); margin: 60px 0; h2 { font-size: 2.2rem; margin-bottom: 50px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .supply-box { margin-bottom: 50px; .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; } .value { font-size: 3.5rem; font-weight: 900; color: #a855f7; display: block; margin: 10px 0; text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); } .sub { color: #facc15; font-weight: bold; font-size: 1rem; } } .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 20px; }`;
+const SpecCard = styled.div`background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; align-items: center; gap: 12px; .icon { font-size: 1.5rem; color: #a855f7; } .label { color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; } .value { font-size: 1.6rem; font-weight: 800; color: white; } .desc { font-size: 0.8rem; color: #94a3b8; }`;
+const FeatureGrid = styled.div`display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; padding: 60px 0;`;
+const FeatureCard = styled.div`padding: 40px; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; h3 { font-size: 1.5rem; margin: 20px 0 12px; } p { color: #94a3b8; line-height: 1.6; } .icon-box { width: 48px; height: 48px; background: rgba(168, 85, 247, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #a855f7; font-size: 1.5rem; }`;
+const AuditSection = styled.section`padding: 80px 0; background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%); border-radius: 40px; border: 1px solid rgba(168, 85, 247, 0.1); margin-bottom: 100px; h2 { font-size: 2.5rem; margin-bottom: 16px; text-align: center; } p.audit-sub { color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 50px; } .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 0 40px; }`;
+const AuditCard = styled.div`background: rgba(3, 0, 20, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 24px; display: flex; flex-direction: column; gap: 15px; .icon { color: #a855f7; font-size: 1.5rem; } h4 { font-size: 1.2rem; color: white; } p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }`;
 
 const HomePageClient = () => {
   const [timerDisplay, setTimerDisplay] = useState('...');
@@ -315,7 +122,6 @@ const HomePageClient = () => {
   const [accTokens, setAccTokens] = useState('...');
   const volume30d = 27863;
 
-  const [bnbPendingAll, setBnbPendingAll] = useState('...');
   const [protocolDebt, setProtocolDebt] = useState('...');
 
   useEffect(() => {
@@ -345,7 +151,6 @@ const HomePageClient = () => {
         const statsRes = await fetch('/api/stats');
         if (statsRes.ok) {
           const statsData = await statsRes.json();
-          setBnbPendingAll(statsData.totalPending || '0.0000');
           setProtocolDebt(statsData.protocolDebt || '0.0000');
         }
 
@@ -379,6 +184,29 @@ const HomePageClient = () => {
   }, []);
 
   const copyToClipboard = () => { navigator.clipboard.writeText(CONTRACT_ADDRESS); setCopied(true); setTimeout(()=>setCopied(false),2000); };
+  
+  // CALCOLO HEALTH CHECK AL VOLO
+  const debtNum = parseFloat(protocolDebt);
+  const treasuryNum = parseFloat(treasuryBnb);
+  let ratioStr = "...";
+  let statusStr = "Analyzing...";
+  let statusColor = "#94a3b8";
+
+  if (!isNaN(debtNum) && !isNaN(treasuryNum) && treasuryNum > 0) {
+      const ratio = (debtNum / treasuryNum) * 100;
+      ratioStr = ratio.toFixed(2) + "%";
+      if (ratio <= 55) {
+          statusStr = "✅ SECURE";
+          statusColor = "#22c55e"; 
+      } else if (ratio <= 90) {
+          statusStr = "⚠️ WARNING";
+          statusColor = "#facc15"; 
+      } else {
+          statusStr = "🚨 DANGER";
+          statusColor = "#ef4444"; 
+      }
+  }
+
   if (!mounted) return null;
 
   return (
@@ -444,10 +272,12 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
 
+            {/* BLOCCO DIAGNOSTICA IN TEMPO REALE */}
             <div style={{ background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
               <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '6px' }}>Protocol Health</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Global Pending Rewards</span><span style={{ color: 'white', fontWeight: 'bold' }}>{bnbPendingAll} BNB</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Protocol Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Total User Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Utilization Ratio</span><span style={{ color: 'white', fontWeight: 'bold' }}>{ratioStr}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>System Status</span><span style={{ color: statusColor, fontWeight: 'bold' }}>{statusStr}</span></div>
             </div>
 
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
