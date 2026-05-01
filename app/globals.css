@@ -45,3 +45,14 @@ main {
   content-visibility: auto;
   contain-intrinsic-size: 1px 1000px;
 }
+
+/* Impedisce a Google Translate di rompere i widget Web3 */
+.notranslate {
+}
+
+
+/* Impedisce a Google Translate di rompere i widget Web3 */
+.notranslate {
+  translate: no !important;
+}
+

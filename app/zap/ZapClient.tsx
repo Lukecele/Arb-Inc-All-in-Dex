@@ -43,7 +43,7 @@ export default function ZapClient() {
         <h2 style={{color: '#fff', marginBottom: '20px', fontSize: '1.5rem'}}>Liquidity Zap</h2>
         <WidgetWrapper>
           {/* Inserisci qui il tuo <iframe /> o componente KyberSwap */}
-          <div style={{height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
+          <div className="notranslate" style={{height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
              KyberSwap Zap Widget
           </div>
         </WidgetWrapper>
