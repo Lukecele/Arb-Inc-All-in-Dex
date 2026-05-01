@@ -77,7 +77,7 @@ const BigLogoWrapper = styled.div`
   img { width: 220px; height: 220px; border-radius: 50%; border: 2px solid rgba(168, 85, 247, 0.3); object-fit: contain; background: #000; }
 `;
 
-const Title = styled.h1` margin-top: 20px;
+const Title = styled.h1`
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 800;
   line-height: 1.1;
@@ -279,9 +279,6 @@ const HomePageClient = () => {
       <Container>
         <Hero>
           <Badge>Official Token: ARB Inc</Badge>
-          <BigLogoWrapper>
-            <img src={TOKEN_LOGO_URL} alt="ARB Inc High-Res Logo" />
-          </BigLogoWrapper>
           <Title>Unlocking Meritocratic<br />DeFi Yields</Title>
           <Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</Subtitle>
           <ButtonGroup><PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></PrimaryButton><SecondaryButton href="#protocol-specs">Technical Specs</SecondaryButton></ButtonGroup>
@@ -306,6 +303,12 @@ const HomePageClient = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <PulseCard $isProcessing={isProcessing}>
               <span className="label">Next Payout Cycle</span>
+              <span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span>
+              <span className="sub" style={{marginBottom: '15px'}}>Global Sync (BRT)</span>
+              
+              <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '15px', marginTop: 'auto' }}>
+                <div style={{ fontSize: '0.75rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '1px' }}>Accumulator (Pending)</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb} BNB</span></div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
               </div>
               <a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{marginTop: '10px', alignSelf: 'center'}}><FaExternalLinkAlt size={10} /> View Accumulator Wallet</a>
