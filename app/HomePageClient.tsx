@@ -315,6 +315,9 @@ const HomePageClient = () => {
   const [accTokens, setAccTokens] = useState('...');
   const volume30d = 27863;
 
+  const [bnbPendingAll, setBnbPendingAll] = useState('...');
+  const [protocolDebt, setProtocolDebt] = useState('...');
+
   useEffect(() => {
     setMounted(true);
     const fetchData = async () => {
@@ -338,6 +341,14 @@ const HomePageClient = () => {
         const dT = await resT.json(); if(dT.result) setTreasuryBnb((Number(BigInt(dT.result)) / 1e18).toFixed(4));
         const dAB = await resAB.json(); if(dAB.result) setAccBnb((Number(BigInt(dAB.result)) / 1e18).toFixed(4));
         const dAT = await resAT.json(); if(dAT.result && dAT.result !== '0x') setAccTokens((Number(BigInt(dAT.result)) / 1e9).toLocaleString(undefined, {maximumFractionDigits: 0}));
+
+        const statsRes = await fetch('/api/stats');
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setBnbPendingAll(statsData.totalPending || '0.0000');
+          setProtocolDebt(statsData.protocolDebt || '0.0000');
+        }
+
       } catch (e) { console.error(e); }
     };
     fetchData();
@@ -426,15 +437,24 @@ const HomePageClient = () => {
           <PulseCard>
             <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
+            
             <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
               <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '6px' }}>Accumulator (Pending)</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb} BNB</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
             </div>
+
+            <div style={{ background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
+              <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '6px' }}>Protocol Health</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Global Pending Rewards</span><span style={{ color: 'white', fontWeight: 'bold' }}>{bnbPendingAll} BNB</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Protocol Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
+            </div>
+
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#64748b', textTransform: 'uppercase', marginBottom: '6px'}}>DefiLlama Stats</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
             </div>
+            
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
             <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}><a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Treasury Wallet</a><a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Accumulator Wallet</a></div>
           </PulseCard>
