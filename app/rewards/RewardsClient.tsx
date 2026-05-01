@@ -102,7 +102,7 @@ export default function RewardsClient() {
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
 
   return (
-    <div  style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', width: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
+    <div  style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', width: '100%', boxSizing: 'border-box', margin: '0 auto', overflowX: 'hidden', overflowWrap: 'break-word' }}>
       
       {/* 1. REFERRAL - DINAMICO */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
@@ -140,7 +140,7 @@ export default function RewardsClient() {
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
         <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
-          Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b> &nbsp;|&nbsp; ⚡ Zap: <b>+150 Pts</b> &nbsp;|&nbsp; 🎯 Limit Order: <b>+200 Pts</b><br/>
+          Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b>  |  ⚡ Zap: <b>+150 Pts</b>  |  🎯 Limit Order: <b>+200 Pts</b><br/>
           <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>Points = Claim Power.</span>
         </p>
 
