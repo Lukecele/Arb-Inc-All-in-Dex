@@ -37,13 +37,13 @@ const WidgetWrapper = styled.div`
 
 export default function ZapClient() {
   return (
-    <PageWrapper className="notranslate">
+    <PageWrapper className="notranslate" translate="no">
       <Header />
       <WidgetSection>
         <h2 style={{color: '#fff', marginBottom: '20px', fontSize: '1.5rem'}}>Liquidity Zap</h2>
         <WidgetWrapper>
           {/* Inserisci qui il tuo <iframe /> o componente KyberSwap */}
-          <div className="notranslate" style={{height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
+          <div className="notranslate" translate="no" style={{height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
              KyberSwap Zap Widget
           </div>
         </WidgetWrapper>

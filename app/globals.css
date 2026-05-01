@@ -72,3 +72,13 @@ button,
   translate: no !important;
 }
 
+
+/* Protezione per selettori token e modali che usano i Portal */
+[role="dialog"], 
+[class*="modal"], 
+[class*="popup"], 
+[class*="dropdown"],
+[class*="Menu"] {
+  translate: no !important;
+}
+

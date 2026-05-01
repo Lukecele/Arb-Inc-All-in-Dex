@@ -28,12 +28,12 @@ const WidgetWrapper = styled.div`
 
 export default function LimitOrderClient() {
   return (
-    <PageWrapper className="notranslate">
+    <PageWrapper className="notranslate" translate="no">
       <Header />
-      <div className="notranslate" style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <div className="notranslate" translate="no" style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <WidgetWrapper>
            {/* Inserisci qui il widget Limit Order */}
-           <div className="notranslate" style={{height: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
+           <div className="notranslate" translate="no" style={{height: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
              KyberSwap Limit Orders
            </div>
         </WidgetWrapper>
