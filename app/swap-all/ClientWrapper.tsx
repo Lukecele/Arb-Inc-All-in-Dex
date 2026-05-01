@@ -382,7 +382,7 @@ export default function ClientWrapper() {
 
             <SwapScroller>
               <SwapSection>
-                <Widget
+                <Widget width={480}
                   client="arbitrage-inception"
                   theme={darkTheme}
                   tokenList={[]}
