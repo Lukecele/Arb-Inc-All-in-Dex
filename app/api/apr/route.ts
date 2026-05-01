@@ -17,33 +17,33 @@ export async function GET() {
         next: { revalidate: 60 }
     });
     
+    if (!res.ok) {
+        return NextResponse.json({ apr: "0.00", error: `DexScreener API Status: ${res.status}` });
+    }
+
     const textData = await res.text();
     let data;
     try { 
         data = JSON.parse(textData); 
     } catch (e) {
-        return NextResponse.json({ apr: "0.00" }); 
+        return NextResponse.json({ apr: "0.00", error: "DexScreener non ha restituito JSON valido (forse Rate Limit)" }); 
     }
 
     if (!data || !data.pairs || data.pairs.length === 0) {
-       return NextResponse.json({ apr: "0.00" });
+       return NextResponse.json({ apr: "0.00", error: "Nessuna pair trovata per questo token su DexScreener" });
     }
 
-    // 1. Prezzo del token (preso dalla pool principale, di solito la prima)
     const tokenPriceUsd = parseFloat(data.pairs[0].priceUsd || "0");
-    if (tokenPriceUsd === 0) return NextResponse.json({ apr: "0.00" });
+    if (tokenPriceUsd === 0) return NextResponse.json({ apr: "0.00", error: "Prezzo token = 0" });
 
-    // 2. 🛡️ FIX MULTI-POOL: Sommiamo il volume di TUTTE le pools esistenti
     let totalVolume24hUsd = 0;
     for (const pair of data.pairs) {
         totalVolume24hUsd += parseFloat(pair.volume?.h24 || "0");
     }
 
-    // 3. Calcolo dei Premi Generati (sul volume TOTALE)
     const dailyRewardsUsd = totalVolume24hUsd * (REWARD_TAX_PERCENTAGE / 100);
     const yearlyRewardsUsd = dailyRewardsUsd * 365;
 
-    // 4. Recupero Holding dei Partecipanti (Capitale in gara)
     const wallets = await redis.zrange('leaderboard:points', 0, -1);
     let totalParticipatingTokens = 0;
 
@@ -55,19 +55,18 @@ export async function GET() {
             if (h && h !== "null" && String(h).trim() !== "") {
                 try {
                     totalParticipatingTokens += Number(BigInt(String(h))) / (10 ** 9);
-                } catch (e) {
-                    // Ignora silente
-                }
+                } catch (e) { }
             }
         }
     }
 
     const totalParticipatingUsd = totalParticipatingTokens * tokenPriceUsd;
 
-    // 5. Matematica APR Finale
     let globalApr = 0;
     if (totalParticipatingUsd > 0) {
         globalApr = (yearlyRewardsUsd / totalParticipatingUsd) * 100;
+    } else {
+        return NextResponse.json({ apr: "0.00", error: "Total Participating USD è 0. Nessun utente ha token in holding nel DB." });
     }
 
     if (globalApr > 9999999) globalApr = 9999999;
@@ -83,6 +82,6 @@ export async function GET() {
 
   } catch (error: any) {
     console.error("❌ Errore API APR Globale:", error);
-    return NextResponse.json({ apr: "0.00" }, { status: 200 }); 
+    return NextResponse.json({ apr: "0.00", error: "Errore interno (catch finale)" }, { status: 200 }); 
   }
 }
