@@ -29,15 +29,21 @@ export async function GET() {
        return NextResponse.json({ apr: "0.00" });
     }
 
-    const pair = data.pairs[0];
-    const volume24hUsd = parseFloat(pair.volume?.h24 || "0");
-    const tokenPriceUsd = parseFloat(pair.priceUsd || "0");
-
+    // 1. Prezzo del token (preso dalla pool principale, di solito la prima)
+    const tokenPriceUsd = parseFloat(data.pairs[0].priceUsd || "0");
     if (tokenPriceUsd === 0) return NextResponse.json({ apr: "0.00" });
 
-    const dailyRewardsUsd = volume24hUsd * (REWARD_TAX_PERCENTAGE / 100);
+    // 2. 🛡️ FIX MULTI-POOL: Sommiamo il volume di TUTTE le pools esistenti
+    let totalVolume24hUsd = 0;
+    for (const pair of data.pairs) {
+        totalVolume24hUsd += parseFloat(pair.volume?.h24 || "0");
+    }
+
+    // 3. Calcolo dei Premi Generati (sul volume TOTALE)
+    const dailyRewardsUsd = totalVolume24hUsd * (REWARD_TAX_PERCENTAGE / 100);
     const yearlyRewardsUsd = dailyRewardsUsd * 365;
 
+    // 4. Recupero Holding dei Partecipanti (Capitale in gara)
     const wallets = await redis.zrange('leaderboard:points', 0, -1);
     let totalParticipatingTokens = 0;
 
@@ -46,12 +52,11 @@ export async function GET() {
         const holdings = await redis.mget(...keys);
         
         for (const h of holdings) {
-            // 🛡️ FIX: Controlla che h esista e non sia "null" prima di fare conti matematici
             if (h && h !== "null" && String(h).trim() !== "") {
                 try {
                     totalParticipatingTokens += Number(BigInt(String(h))) / (10 ** 9);
                 } catch (e) {
-                    // Ignora silenziosamente portafogli con dati corrotti
+                    // Ignora silente
                 }
             }
         }
@@ -59,6 +64,7 @@ export async function GET() {
 
     const totalParticipatingUsd = totalParticipatingTokens * tokenPriceUsd;
 
+    // 5. Matematica APR Finale
     let globalApr = 0;
     if (totalParticipatingUsd > 0) {
         globalApr = (yearlyRewardsUsd / totalParticipatingUsd) * 100;
@@ -69,7 +75,7 @@ export async function GET() {
     return NextResponse.json({ 
         apr: globalApr.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         metrics: {
-            volume24h: volume24hUsd,
+            volume24h: totalVolume24hUsd,
             dailyRewardsUsd: dailyRewardsUsd,
             participatingUsd: totalParticipatingUsd
         }
