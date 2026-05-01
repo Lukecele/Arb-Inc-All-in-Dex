@@ -64,7 +64,7 @@ async function fetchBalance(tokenAddr: string, wallet: string, provider: any): P
   } catch { return '0'; }
 }
 
-const Container = styled.div`min-height: 100vh; background: #000; padding: 12px; @media (min-width: 640px) { padding: 16px 24px; }`;
+const Container = styled.div`min-height: 100vh; max-width: 100vw; overflow-x: hidden; box-sizing: border-box; background: #000; padding: 12px; @media (min-width: 640px) { padding: 16px 24px; }`;
 const PageHeader = styled.div`display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;`;
 const Title = styled.h1`font-size: 20px; font-weight: 700; color: #fff;`;
 const DescriptionCard = styled.div`background: #18181b; border: 1px solid #3f3f46; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; color: #a1a1aa; font-size: 13px;`;
@@ -322,7 +322,7 @@ export default function ClientWrapper() {
           {orders.length === 0 ? <EmptyState>No orders found</EmptyState> : (
             <div>
               {orders.map(o => (
-                <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px'}}>
+                <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px', wordBreak: 'break-word'}}>
                   <div style={{minWidth:0}}><div style={{color:'#fff',fontWeight:500}}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div><div style={{color:'#a1a1aa',fontSize:13}}>{formatNumber(o.makingAmount)} {getSym(o.makerAsset)}</div></div>
                   <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
                     <div style={{textAlign:'right'}}><div style={{color:'#F472B6',fontWeight:500}}>{(parseFloat(o.takingAmount)/parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div><div style={{color: o.status.toLowerCase() === 'filled' ? '#22c55e' : '#20B8CD',fontSize:12}}>{o.status}</div></div>
