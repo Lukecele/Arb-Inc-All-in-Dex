@@ -64,3 +64,17 @@ main, .page-container, [class*="Wrapper"] {
 iframe, .widget-container, #lifi-widget {
   max-width: 100% !important;
 }
+
+/* FIX: Salva i bottoni dei Token (es. BNB) dal word-break globale */
+button, 
+button span, 
+button div,
+[role="button"],
+[role="button"] span,
+[role="button"] div,
+.kyberswap-widget button * {
+  word-break: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  white-space: nowrap !important;
+}
