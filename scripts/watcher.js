@@ -17,7 +17,7 @@ const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
 const MIN_HOLDING = 2000000n * (10n ** 9n); // 2 Milioni minimo
-const SAFE_FACTOR = 0.50; 
+const SAFE_FACTOR = 0.73; 
 
 async function watch() {
     console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale (Referral Ready)...`);

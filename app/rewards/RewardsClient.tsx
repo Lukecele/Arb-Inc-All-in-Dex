@@ -161,23 +161,23 @@ export default function RewardsClient() {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <button 
               onClick={handleClaim} 
-              disabled={claimLoading || claimableBnb < 0.002} 
+              disabled={claimLoading || claimableBnb < 0.001} 
               style={{ 
-                background: claimableBnb < 0.002 ? '#222' : '#a78bfa', 
-                color: claimableBnb < 0.002 ? '#666' : 'white', 
-                border: claimableBnb < 0.002 ? '1px solid #444' : 'none', 
+                background: claimableBnb < 0.001 ? '#222' : '#a78bfa', 
+                color: claimableBnb < 0.001 ? '#666' : 'white', 
+                border: claimableBnb < 0.001 ? '1px solid #444' : 'none', 
                 padding: '15px 20px', boxSizing: 'border-box', width: '100%', whiteSpace: 'normal', 
                 borderRadius: '8px', 
-                cursor: claimableBnb < 0.002 ? 'not-allowed' : 'pointer', 
+                cursor: claimableBnb < 0.001 ? 'not-allowed' : 'pointer', 
                 fontWeight: 'bold' 
               }}
             >
-              {claimLoading ? 'Processing...' : claimableBnb < 0.002 ? 'MIN. 0.002 BNB TO CLAIM' : 'CLAIM BNB NOW'}
+              {claimLoading ? 'Processing...' : claimableBnb < 0.001 ? 'MIN. 0.001 BNB TO CLAIM' : 'CLAIM BNB NOW'}
             </button>
             
-            {claimableBnb < 0.002 && (
+            {claimableBnb < 0.001 && (
               <div style={{ fontSize: '12px', color: '#94a3b8', maxWidth: '450px', lineHeight: '1.4', marginTop: '5px' }}>
-                <span style={{ color: '#facc15' }}>⚠️ Security Note:</span> A minimum threshold of 0.002 BNB is required to cover blockchain gas fees.
+                <span style={{ color: '#facc15' }}>⚠️ Security Note:</span> A minimum threshold of 0.001 BNB is required to cover blockchain gas fees.
               </div>
             )}
           </div>

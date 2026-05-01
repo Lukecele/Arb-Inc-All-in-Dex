@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   try {
     const { wallet } = await request.json();
     const walletLower = wallet.toLowerCase();
-    const MIN_CLAIM = 0.002;
+    const MIN_CLAIM = 0.001;
 
     const points = parseFloat(String(await redis.zscore('leaderboard:points', walletLower) || '0'));
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
