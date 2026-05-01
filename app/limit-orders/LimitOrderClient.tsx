@@ -28,7 +28,7 @@ const WidgetWrapper = styled.div`
 
 export default function LimitOrderClient() {
   return (
-    <PageWrapper className="notranslate" translate="no">
+    <PageWrapper>
       <Header />
       <div className="notranslate" translate="no" style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <WidgetWrapper>

@@ -37,7 +37,7 @@ const WidgetWrapper = styled.div`
 
 export default function ZapClient() {
   return (
-    <PageWrapper className="notranslate" translate="no">
+    <PageWrapper>
       <Header />
       <WidgetSection>
         <h2 style={{color: '#fff', marginBottom: '20px', fontSize: '1.5rem'}}>Liquidity Zap</h2>

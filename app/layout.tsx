@@ -81,6 +81,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
+      <script dangerouslySetInnerHTML={{ __html: ` 
+        const obs = new MutationObserver((ms) => { 
+          ms.forEach((m) => { 
+            m.addedNodes.forEach((n) => { 
+              if (n.nodeType === 1 && (n.classList?.contains("ks-modal") || n.tagName === "DIALOG" || n.innerHTML.includes("0x"))) { 
+                n.setAttribute("translate", "no"); 
+                n.classList.add("notranslate"); 
+              } 
+            }); 
+          }); 
+        }); 
+        obs.observe(document.body, { childList: true, subtree: true }); 
+      ` }} />
       </body>
     </html>
   )
