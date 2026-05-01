@@ -8,6 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import CookieConsent from '../components/CookieConsent';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { ClientWeb3Provider } from '../components/ClientWeb3Provider';
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,6 +39,38 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }} suppressHydrationWarning>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
+        
+        {/* Container per il selettore lingua di Google */}
+        <div id="google_translate_element" style={{ 
+          position: 'fixed', 
+          bottom: '80px', 
+          right: '20px', 
+          zIndex: 10000,
+          backgroundColor: 'rgba(13, 13, 20, 0.8)',
+          borderRadius: '8px',
+          padding: '5px'
+        }}></div>
+
+        {/* Script di Inizializzazione */}
+        <Script id="google-translate-config" strategy="afterInteractive">
+          {`
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'it,en,es,fr,pt,de',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              }, 'google_translate_element');
+            }
+          `}
+        </Script>
+
+        {/* Caricamento Script Google */}
+        <Script 
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" 
+          strategy="afterInteractive" 
+        />
+
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
             <ErrorBoundary>
