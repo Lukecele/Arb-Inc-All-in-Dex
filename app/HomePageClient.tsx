@@ -13,6 +13,7 @@ const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C";
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
+const volume30d = 27863; // Dato hardcoded ripristinato
 
 const HomePageClient = () => {
   const [mounted, setMounted] = useState(false);
@@ -27,7 +28,6 @@ const HomePageClient = () => {
     setTimeout(() => setCopied(false), 2000); 
   };
 
-  // Health Calculation Logic (Intact)
   const debtNum = parseFloat(data.protocolDebt);
   const treasuryNum = parseFloat(data.treasuryBnb);
   let ratioStr = "...", statusStr = "Analyzing...", statusColor = "#94a3b8";
@@ -104,6 +104,13 @@ const HomePageClient = () => {
             <a href={ALL_POOLS_LINK} target="_blank" rel="noreferrer" className="verify-link" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '10px' }}>
               <FaChartLine /> View All Pools on PancakeSwap <FaExternalLinkAlt size={10} />
             </a>
+            
+            {/* Blocco DefiLlama ripristinato */}
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '12px', marginTop: 'auto', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#64748b', textTransform: 'uppercase'}}>DefiLlama Stats</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
+            </div>
+            
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
           </S.PulseCard>
           

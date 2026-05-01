@@ -29,7 +29,7 @@ export const useProtocolData = (CONTRACT_ADDRESS: string, TREASURY_WALLET: strin
         
         const [resT, resAB, resAT] = await Promise.all([
           fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_getBalance', [TREASURY_WALLET, 'latest']) }),
-          fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_balance', [ACCUMULATOR_WALLET, 'latest']) }).catch(() => fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_getBalance', [ACCUMULATOR_WALLET, 'latest']) })),
+          fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_getBalance', [ACCUMULATOR_WALLET, 'latest']) }),
           fetch(rpcUrl, { method: 'POST', body: rpcBody('eth_call', [{ to: CONTRACT_ADDRESS, data: '0x70a08231' + ACCUMULATOR_WALLET.substring(2).padStart(64, '0') }, 'latest']) })
         ]);
 
