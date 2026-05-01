@@ -375,7 +375,7 @@ export default function ClientWrapper() {
                 <span style={{color: '#a1a1aa', fontWeight: 'bold'}}>ARB Inc:</span>
                 <span className="addr">{ARB_CONTRACT}</span>
               </div>
-              <button onClick={copyToClipboard} title="Copy Contract">
+              <button onClick={copyToClipboard} aria-label="Copy Contract Address" title="Copy Contract">
                 {copied ? <FaCheckCircle style={{color: '#22c55e', fontSize: '16px'}} /> : <FaCopy style={{fontSize: '16px'}} />}
               </button>
             </ContractBox>

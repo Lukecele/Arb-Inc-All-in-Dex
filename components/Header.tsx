@@ -66,7 +66,7 @@ export default function Header({ walletSection }: any) {
     <>
       <MobileHeader>
         <Link href="/" style={{color:'#fff', fontWeight:800, textDecoration:'none'}}>ARB INC</Link>
-        <button onClick={()=>setIsOpen(true)} style={{background:'none', border:'none', color:'#fff', fontSize:'24px'}}><FaBars /></button>
+        <button aria-label="Open Menu" onClick={()=>setIsOpen(true)} style={{background:'none', border:'none', color:'#fff', fontSize:'24px'}}><FaBars /></button>
       </MobileHeader>
       {isOpen && <div onClick={()=>setIsOpen(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:998}} />}
       <SidebarWrapper $isOpen={isOpen}>
