@@ -56,3 +56,19 @@ main {
   translate: no !important;
 }
 
+
+/* Protezione extra per indirizzi e bottoni dinamici */
+.addr, button, [class*="Button"] {
+  translate: no !important;
+}
+
+
+/* Protezione Definitiva Web3 contro i crash di Google Translate */
+.notranslate, 
+button, 
+.addr,
+[class*="addr"],
+[class*="Address"] {
+  translate: no !important;
+}
+
