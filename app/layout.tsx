@@ -54,7 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Script di Inizializzazione */}
         <Script id="google-translate-config" strategy="afterInteractive">
           {`
-            function googleTranslateElementInit() {
               new google.translate.TranslateElement({
                 pageLanguage: 'en',
                 includedLanguages: 'it,en,es,fr,pt,de',
@@ -67,7 +66,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Caricamento Script Google */}
         <Script 
-          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" 
           strategy="afterInteractive" 
         />
 
