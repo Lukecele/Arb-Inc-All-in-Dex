@@ -11,7 +11,6 @@ const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f";
 const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C"; 
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 
-// LOGO DEXSCREENER GIGANTE (220px) CON TESTI LEGGIBILI
 const TOKEN_LOGO_URL = "https://dd.dexscreener.com/ds-data/tokens/bsc/0x5ee54869ecd5e752c31af095187326d4a4d50e1c.png?size=lg&key=96342c";
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
@@ -236,11 +235,24 @@ const HomePageClient = () => {
         </Hero>
 
         <LivePulseSection>
+          {/* COLONNA 1: TIMER + ACCUMULATOR */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <PulseCard $isProcessing={isProcessing}><span className="label">Next Payout Cycle</span><span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span><span className="sub">Global Sync (BRT)</span></PulseCard>
+            <PulseCard $isProcessing={isProcessing}>
+              <span className="label">Next Payout Cycle</span>
+              <span className="value">{isProcessing && <FaSpinner className="fa-spin" />}{timerDisplay}</span>
+              <span className="sub" style={{marginBottom: '15px'}}>Global Sync (BRT)</span>
+              
+              <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '15px', marginTop: 'auto' }}>
+                <div style={{ fontSize: '0.75rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '1px' }}>Accumulator (Pending)</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb} BNB</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
+              </div>
+              <a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{marginTop: '10px', alignSelf: 'center'}}><FaExternalLinkAlt size={10} /> View Accumulator Wallet</a>
+            </PulseCard>
             <ActionButton href="/rewards" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: '16px', fontSize: '1rem' }}>Go to Rewards</ActionButton>
           </div>
           
+          {/* COLONNA 2: TRADING VOLUME + DEFILLAMA */}
           <PulseCard>
             <div className="header-row"><span className="label">Trading Volume (24h)</span><LiveIndicator><div className="dot"></div>Live</LiveIndicator></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '15px 0' }}>
@@ -257,36 +269,36 @@ const HomePageClient = () => {
                 </span>
               </div>
             </div>
-            <a href={ALL_POOLS_LINK} target="_blank" rel="noreferrer" className="verify-link" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: 'auto' }}>
+            <a href={ALL_POOLS_LINK} target="_blank" rel="noreferrer" className="verify-link" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '10px' }}>
               <FaChartLine /> View All Pools on PancakeSwap <FaExternalLinkAlt size={10} />
             </a>
-          </PulseCard>
-          
-          <PulseCard>
-            <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
-            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', margin: '4px 0' }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}><span style={{color: '#94a3b8'}}>Live Balance</span><span style={{ color: '#facc15', fontWeight: 'bold' }}>{treasuryBnb} BNB</span></div></div>
-            
-            <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ fontSize: '0.7rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '6px' }}>Accumulator (Pending)</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{accBnb} BNB</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>Pending ARB</span><span style={{ color: 'white' }}>{accTokens} ARB</span></div>
-            </div>
 
-            {/* BLOCCO DIAGNOSTICA IN TEMPO REALE */}
-            <div style={{ background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '6px' }}>Protocol Health</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Total User Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#94a3b8'}}>Utilization Ratio</span><span style={{ color: 'white', fontWeight: 'bold' }}>{ratioStr}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>System Status</span><span style={{ color: statusColor, fontWeight: 'bold' }}>{statusStr}</span></div>
-            </div>
-
-            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px', marginTop: '-4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#64748b', textTransform: 'uppercase', marginBottom: '6px'}}>DefiLlama Stats</span></div>
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '15px', marginTop: 'auto', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#64748b', textTransform: 'uppercase'}}>DefiLlama Stats</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
             </div>
-            
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
-            <div style={{textAlign: 'center', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px'}}><a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Treasury Wallet</a><a href={`https://bscscan.com/address/${ACCUMULATOR_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{fontSize: '0.7rem'}}><FaExternalLinkAlt size={8} /> View Accumulator Wallet</a></div>
+          </PulseCard>
+          
+          {/* COLONNA 3: TREASURY LIVE BALANCE + PROTOCOL HEALTH */}
+          <PulseCard>
+            <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
+            
+            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', margin: '15px 0' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{color: '#94a3b8', fontSize: '0.9rem'}}>Live Balance</span>
+                <span style={{ color: '#facc15', fontWeight: 'bold', fontSize: '1.8rem' }}>{treasuryBnb} BNB</span>
+              </div>
+            </div>
+
+            <div style={{ background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '12px', padding: '15px', marginTop: 'auto' }}>
+              <div style={{ fontSize: '0.75rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '1px' }}>Protocol Health</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Total User Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Utilization Ratio</span><span style={{ color: 'white', fontWeight: 'bold' }}>{ratioStr}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>System Status</span><span style={{ color: statusColor, fontWeight: 'bold' }}>{statusStr}</span></div>
+            </div>
+            
+            <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{marginTop: '10px', alignSelf: 'center'}}><FaExternalLinkAlt size={10} /> View Treasury Wallet</a>
           </PulseCard>
         </LivePulseSection>
 
