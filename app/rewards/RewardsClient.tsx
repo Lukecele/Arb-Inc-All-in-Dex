@@ -105,7 +105,7 @@ export default function RewardsClient() {
     <div  style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', width: '100%', boxSizing: 'border-box', margin: '0 auto', overflowX: 'hidden', overflowWrap: 'break-word' }}>
       
       {/* 1. REFERRAL - DINAMICO */}
-      <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
+      <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', boxSizing: 'border-box', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h3 style={{ margin: '0 0 10px 0' }}>Invite & Earn 10% 🚀</h3>
         
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '20px' }}>
@@ -137,7 +137,7 @@ export default function RewardsClient() {
       </div>
 
       {/* 2. DIVIDENDS BOX */}
-      <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', boxSizing: 'border-box', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
         <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
           Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b>  |  ⚡ Zap: <b>+150 Pts</b>  |  🎯 Limit Order: <b>+200 Pts</b><br/>
@@ -156,7 +156,7 @@ export default function RewardsClient() {
         <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? Math.round(userPoints).toLocaleString('en-US') : "0"}</p>
         
         {!address ? (
-          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 40px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
+          <button onClick={() => connect()} style={{ background: '#a78bfa', color: 'white', border: 'none', padding: '15px 20px', boxSizing: 'border-box', width: '100%', whiteSpace: 'normal', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>CONNECT WALLET TO START</button>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <button 
@@ -166,7 +166,7 @@ export default function RewardsClient() {
                 background: claimableBnb < 0.002 ? '#222' : '#a78bfa', 
                 color: claimableBnb < 0.002 ? '#666' : 'white', 
                 border: claimableBnb < 0.002 ? '1px solid #444' : 'none', 
-                padding: '15px 40px', 
+                padding: '15px 20px', boxSizing: 'border-box', width: '100%', whiteSpace: 'normal', 
                 borderRadius: '8px', 
                 cursor: claimableBnb < 0.002 ? 'not-allowed' : 'pointer', 
                 fontWeight: 'bold' 
@@ -186,7 +186,7 @@ export default function RewardsClient() {
       </div>
 
       {/* 3. DIAMOND VS PAPER HANDS */}
-      <div style={{ background: '#000', border: '1px solid #333', padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
+      <div style={{ background: '#000', border: '1px solid #333', padding: '25px', boxSizing: 'border-box', borderRadius: '16px', marginBottom: '30px' }}>
         <h3 style={{ textAlign: 'center', color: '#10b981', marginTop: 0 }}>🛡️ Diamond Hands Protection</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginTop: '20px' }}>
           <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid #10b981', padding: '15px', borderRadius: '12px' }}>
@@ -212,9 +212,9 @@ export default function RewardsClient() {
       </div>
 
       {/* 5. LEADERBOARD */}
-      <div style={{ background: '#111', border: '1px solid #333', padding: '25px', borderRadius: '16px' }}>
+      <div style={{ background: '#111', border: '1px solid #333', padding: '25px', boxSizing: 'border-box', borderRadius: '16px' }}>
         <h3 style={{ color: '#facc15', marginTop: 0 }}>🏆 Top 100 Farmers</h3>
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ color: '#666', textAlign: 'left', fontSize: '12px', borderBottom: '1px solid #222' }}>
