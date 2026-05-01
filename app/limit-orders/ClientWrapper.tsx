@@ -72,7 +72,7 @@ const HeaderRight = styled.div`display: flex; gap: 12px; align-items: center; fl
 const ChainBadge = styled.div`display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #18181b; border: 1px solid #27272a; border-radius: 20px; color: #a1a1aa; font-size: 13px;`;
 const WalletBadge = styled.div`padding: 6px 12px; background: #27272a; border-radius: 8px; color: #a1a1aa; font-size: 13px;`;
 const MainGrid = styled.div`display: grid; gap: 16px; @media (min-width: 900px) { grid-template-columns: 420px 1fr; gap: 24px; }`;
-const Card = styled.div`background: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 16px;`;
+const Card = styled.div`background: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 16px; max-width: 100%; box-sizing: border-box; overflow-x: hidden;`;
 const CardTitle = styled.h2`font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px;`;
 const InputGroup = styled.div`margin-bottom: 12px;`;
 const InputLabel = styled.div`font-size: 12px; color: #a1a1aa; margin-bottom: 6px;`;
@@ -88,7 +88,7 @@ const MarketBtn = styled.button`padding: 10px 14px; background: #20B8CD; border:
 const RateRow = styled.div`display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: #a1a1aa;`;
 const ExpirySelect = styled.select`width: 100%; padding: 12px; background: #27272a; border: 1px solid #3f3f46; border-radius: 12px; color: #fff; font-size: 14px; cursor: pointer; margin-top: 12px;`;
 const SubmitBtn = styled.button`width: 100%; padding: 14px; background: #20B8CD; border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; &:disabled { opacity: 0.5; }`;
-const TabsRow = styled.div`display: flex; gap: 4px; margin-bottom: 16px;`;
+const TabsRow = styled.div`display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px;`;
 const Tab = styled.button<{ $active: boolean }>`padding: 8px 16px; background: ${p => p.$active ? '#27272a' : 'transparent'}; border: none; border-radius: 8px; color: ${p => p.$active ? '#fff' : '#a1a1aa'}; font-size: 13px; cursor: pointer;`;
 const EmptyState = styled.div`text-align: center; padding: 40px; color: #71717a;`;
 const Modal = styled.div`position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000;`;
@@ -306,7 +306,7 @@ export default function ClientWrapper() {
           </InputGroup>
           <RateBox>
             <RateLabel><span>Sell {sellToken.symbol} at rate</span></RateLabel>
-            <div style={{display:'flex',gap:8}}><RateInput type="number" placeholder="0.0" value={rate} onChange={e=>handleRate(e.target.value)} /><MarketBtn onClick={handleMarket}>Market</MarketBtn></div>
+            <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}><RateInput type="number" placeholder="0.0" value={rate} onChange={e=>handleRate(e.target.value)} /><MarketBtn onClick={handleMarket}>Market</MarketBtn></div>
           </RateBox>
           <div style={{marginTop:12}}>
             <span style={{fontSize:13,color:'#a1a1aa',display:'block',marginBottom:6}}>Expires in</span>
@@ -324,7 +324,7 @@ export default function ClientWrapper() {
               {orders.map(o => (
                 <div key={o.id} style={{padding:'12px',borderBottom:'1px solid #27272a',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px', wordBreak: 'break-word'}}>
                   <div style={{minWidth:0}}><div style={{color:'#fff',fontWeight:500}}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div><div style={{color:'#a1a1aa',fontSize:13}}>{formatNumber(o.makingAmount)} {getSym(o.makerAsset)}</div></div>
-                  <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
+                  <div style={{display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap',flexShrink:1}}>
                     <div style={{textAlign:'right'}}><div style={{color:'#F472B6',fontWeight:500}}>{(parseFloat(o.takingAmount)/parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div><div style={{color: o.status.toLowerCase() === 'filled' ? '#22c55e' : '#20B8CD',fontSize:12}}>{o.status}</div></div>
                     {o.status.toLowerCase() !== 'filled' && (
                       <button type="button" onClick={() => handleCancel(o.id)} disabled={cancellingId === o.id} style={{padding:'6px 12px',background:'#ef4444',border:'none',borderRadius:6,color:'#fff',fontSize:12,cursor:'pointer'}}>{cancellingId === o.id ? '...' : 'Cancel'}</button>
