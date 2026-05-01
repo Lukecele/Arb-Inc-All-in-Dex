@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
 
+// Diciamo a Next.js di NON cercare di rendere statica questa API durante la build
+export const dynamic = 'force-dynamic';
+
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL || '',
   token: process.env.UPSTASH_REDIS_REST_TOKEN || ''
 });
-
-// Cache abilitata: esegue il calcolo solo 1 volta al minuto per non pesare sul DB
-export const revalidate = 60;
 
 export async function GET() {
   try {
@@ -21,12 +21,11 @@ export async function GET() {
       }
     }
 
-    // 2. Calcolo Debito Totale / Pending BNB (basato su health_check.js)
+    // 2. Calcolo Debito Totale / Pending BNB
     let totalPending = 0;
     const wallets = await redis.zrange('leaderboard:points', 0, -1);
     
     if (wallets && wallets.length > 0) {
-      // Per non intasare l'API di Upstash, facciamo query a blocchi di 100
       const chunkSize = 100;
       for (let i = 0; i < wallets.length; i += chunkSize) {
           const chunk = wallets.slice(i, i + chunkSize);
