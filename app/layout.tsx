@@ -54,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Script di Inizializzazione */}
         <Script id="google-translate-config" strategy="afterInteractive">
           {`
+              function googleTranslateElementInit() {
               new google.translate.TranslateElement({
                 pageLanguage: 'en',
                 includedLanguages: 'it,en,es,fr,pt,de',
@@ -65,9 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         {/* Caricamento Script Google */}
-        <Script 
-          strategy="afterInteractive" 
-        />
+        <Script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="afterInteractive" />
 
         <StyledComponentsRegistry>
           <ClientWeb3Provider>
@@ -80,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
       <script dangerouslySetInnerHTML={{ __html: ` 
+          const obs = new MutationObserver((ms) => {
           ms.forEach((m) => { 
             m.addedNodes.forEach((n) => { 
               if (n.nodeType === 1 && (n.classList?.contains("ks-modal") || n.tagName === "DIALOG" || n.innerHTML.includes("0x"))) { 
