@@ -1,6 +1,7 @@
 'use client'
 
-import { Widget } from '@kyberswap/widgets'
+import dynamic from 'next/dynamic';
+const Widget = dynamic(() => import('@kyberswap/widgets').then(mod => mod.Widget), { ssr: false, loading: () => <div className='h-[400px] w-full animate-pulse bg-gray-800 rounded-xl' /> })
 import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
 import { ethers } from 'ethers'
 import { useState, useEffect, useCallback } from 'react'
