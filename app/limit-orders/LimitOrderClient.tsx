@@ -30,10 +30,10 @@ export default function LimitOrderClient() {
   return (
     <PageWrapper>
       <Header />
-      <div className="notranslate" translate="no" style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <div   style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <WidgetWrapper>
            {/* Inserisci qui il widget Limit Order */}
-           <div className="notranslate" translate="no" style={{height: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
+           <div   style={{height: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
              KyberSwap Limit Orders
            </div>
         </WidgetWrapper>

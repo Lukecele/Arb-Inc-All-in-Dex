@@ -82,7 +82,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
       <script dangerouslySetInnerHTML={{ __html: ` 
-        const obs = new MutationObserver((ms) => { 
           ms.forEach((m) => { 
             m.addedNodes.forEach((n) => { 
               if (n.nodeType === 1 && (n.classList?.contains("ks-modal") || n.tagName === "DIALOG" || n.innerHTML.includes("0x"))) { 

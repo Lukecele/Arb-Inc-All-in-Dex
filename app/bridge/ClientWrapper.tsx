@@ -81,12 +81,12 @@ function handleWidgetReady() {
 export default function ClientWrapper() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   return (
-    <div className="notranslate" style={{ width: '100%', minHeight: '100vh', background: '#050508' }}>
+    <div  style={{ width: '100%', minHeight: '100vh', background: '#050508' }}>
       <Header activePage="/bridge" />
 
       {/* Main content */}
-      <div className="notranslate" style={{ padding: '24px 16px' }}>
-        <div className="notranslate" style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
+      <div  style={{ padding: '24px 16px' }}>
+        <div  style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
           <h1 style={{
             color: '#fff',
             marginBottom: 8,
@@ -102,7 +102,7 @@ export default function ClientWrapper() {
           </p>
 
           {/* Info box */}
-          <div className="notranslate" style={{
+          <div  style={{
             background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%)',
             border: '1px solid rgba(139, 92, 246, 0.2)',
             borderRadius: 16,
@@ -115,7 +115,7 @@ export default function ClientWrapper() {
             position: 'relative',
             overflow: 'hidden',
           }}>
-            <div className="notranslate" style={{
+            <div  style={{
               position: 'absolute',
               top: 0,
               left: 0,
@@ -132,7 +132,7 @@ export default function ClientWrapper() {
           </div>
 
           {/* Mayan Finance Widget container */}
-          <div className="notranslate" style={{
+          <div  style={{
             borderRadius: 20,
             overflow: 'hidden',
             border: '1px solid rgba(255, 255, 255, 0.06)',
@@ -143,11 +143,11 @@ export default function ClientWrapper() {
             justifyContent: 'center',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
           }}>
-            <div className="notranslate" id="mayan_widget" style={{ width: '100%' }} />
+            <div  id="mayan_widget" style={{ width: '100%' }} />
           </div>
 
           {/* Why use section */}
-          <div className="notranslate" style={{
+          <div  style={{
             marginTop: 40,
             padding: 24,
             background: 'rgba(255, 255, 255, 0.02)',

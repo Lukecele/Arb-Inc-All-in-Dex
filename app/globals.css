@@ -9,7 +9,6 @@ html, body { translate: yes !important; }
 .timer,
 [class*="Address"],
 [class*="Balance"] {
-  translate: no !important;
 }
 
 /* 3. Proteggi i Widget tecnici e i bottoni (che se tradotti crashano) */
@@ -19,10 +18,8 @@ button,
 [class*="widget"], 
 [class*="Widget"],
 .kyber-widget {
-  translate: no !important;
 }
 
 /* 4. Forza i selettori dei token a restare in inglese */
 [class*="modal"], [class*="popup"], [class*="dropdown"] {
-  translate: no !important;
 }
