@@ -1,22 +1,28 @@
+/* 1. Permetti la traduzione globale */
+html, body { translate: yes !important; }
 
-/* 1. Lascia che Google traduca il testo normale */
-body { translate: yes !important; }
-
-/* 2. Proteggi solo gli elementi "sensibili" di React */
-.notranslate,
-[translate="no"],
-button,
-.addr,
+/* 2. Proteggi solo i dati numerici e gli indirizzi */
+/* Usiamo le classi che hai già nel codice */
+.addr, 
+.value, 
+.sub, 
+.timer,
 [class*="Address"],
-[class*="modal"],
-[class*="popup"],
-[role="dialog"] {
+[class*="Balance"] {
   translate: no !important;
 }
 
-/* 3. Evita che i numeri della Dashboard vengano tradotti */
-[class*="value"], 
-[class*="sub"] {
+/* 3. Proteggi i Widget tecnici e i bottoni (che se tradotti crashano) */
+iframe, 
+button, 
+[role="dialog"], 
+[class*="widget"], 
+[class*="Widget"],
+.kyber-widget {
   translate: no !important;
 }
 
+/* 4. Forza i selettori dei token a restare in inglese */
+[class*="modal"], [class*="popup"], [class*="dropdown"] {
+  translate: no !important;
+}

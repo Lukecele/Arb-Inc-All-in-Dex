@@ -370,7 +370,7 @@ export default function ClientWrapper() {
             </WarningBox>
 
             <ContractBox>
-              <div className="notranslate" translate="no" style={{display: 'flex', alignItems: 'center', overflow: 'hidden'}}>
+              <div   style={{display: 'flex', alignItems: 'center', overflow: 'hidden'}}>
                 <span style={{color: '#a1a1aa', fontWeight: 'bold'}}>ARB Inc:</span>
                 <span className="addr">{ARB_CONTRACT}</span>
               </div>
