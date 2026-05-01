@@ -46,9 +46,14 @@ export default function RewardsClient() {
   };
 
   useEffect(() => {
+    // 🛡️ FIX 1: Dati Utente isolati e sicuri! Non dipendono più dal resto della pagina.
+    if (address) fetchRewardsData();
+
     const fetchStats = async () => {
       setLoading(true);
       const fetchWallet = address || '0x0000000000000000000000000000000000000000';
+      
+      // 🛡️ FIX 2: Dati base (Offerte e Leaderboard)
       try {
         const resOffers = await fetch(`/api/offers?wallet=${fetchWallet}`);
         const dataOffers = await resOffers.json();
@@ -57,13 +62,17 @@ export default function RewardsClient() {
         const resLeader = await fetch(`/api/leaderboard`);
         const dataLeader = await resLeader.json();
         if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
-        
-        const resApr = await fetch('/api/apr');
-        const dataApr = await resApr.json();
-        if (dataApr.apr) setGlobalApr(dataApr.apr + '%');
+      } catch (err) { console.error("Error fetching generic data:", err); }
 
-        if (address) fetchRewardsData();
-      } catch (err) { console.error(err); }
+      // 🛡️ FIX 3: APR Isolato. Se fallisce, muore da solo e non fa danni al resto!
+      try {
+        const resApr = await fetch('/api/apr');
+        if (resApr.ok) {
+            const dataApr = await resApr.json();
+            if (dataApr.apr) setGlobalApr(dataApr.apr + '%');
+        }
+      } catch(e) { console.error("Error fetching APR:", e); }
+
       setLoading(false);
     };
     fetchStats();
