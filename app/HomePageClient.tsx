@@ -91,8 +91,66 @@ const Subtitle = styled.p`font-size: 1.25rem; color: #94a3b8; max-width: 600px; 
 const ButtonGroup = styled.div`display: flex; gap: 16px; @media (max-width: 600px) { flex-direction: column; width: 100%; }`;
 const PrimaryButton = styled.a`background: #a855f7; color: white; padding: 16px 32px; border-radius: 12px; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s; &:hover { background: #9333ea; transform: translateY(-2px); }`;
 const SecondaryButton = styled.a`background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 16px 32px; border-radius: 12px; font-weight: bold; text-decoration: none; transition: all 0.2s; &:hover { background: rgba(255, 255, 255, 0.1); }`;
-const ContractContainer = styled.div`display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px;`;
-const ContractBox = styled.div`background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(168, 85, 247, 0.2); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; max-width: 100%; box-shadow: 0 0 20px rgba(168, 85, 247, 0.1); .addr { font-family: 'Monaco', monospace; font-size: 0.85rem; color: #a855f7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } button { background: none; border: none; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; &:hover { color: white; transform: scale(1.1); } }`;
+
+const ContractContainer = styled.div`
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 12px; 
+  margin-top: 30px; 
+  width: 100%; /* Importante per dare un limite al figlio */
+`;
+
+// 🛡️ IL FIX MOBILE È QUI
+const ContractBox = styled.div`
+  background: rgba(255, 255, 255, 0.03); 
+  border: 1px solid rgba(168, 85, 247, 0.2); 
+  padding: 12px 20px; 
+  border-radius: 12px; 
+  display: flex; 
+  align-items: center; 
+  gap: 15px; 
+  
+  /* REGOLE CHIAVE PER CONTENERE L'INDIRIZZO */
+  width: 100%; 
+  max-width: 600px; /* Un po' più largo su desktop */
+  box-sizing: border-box; /* I padding non si sommano alla width */
+  
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1); 
+
+  .addr { 
+    font-family: 'Monaco', monospace; 
+    font-size: 0.85rem; 
+    color: #a855f7; 
+    
+    /* REGOLE CHIAVE PER TRONCARE IL TESTO */
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    flex: 1; /* Il testo occupa lo spazio rimanente... */
+    min-width: 0; /* ...ma questo gli permette di rimpicciolirsi! TRUCCO FLEXBOX */
+  } 
+
+  /* Evitiamo che i pulsanti vengano schiacciati */
+  .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0; /* I pulsanti non si restringono mai */
+  }
+
+  button, a { 
+    background: none; 
+    border: none; 
+    color: #94a3b8; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    display: flex; 
+    align-items: center; 
+    &:hover { color: white; transform: scale(1.1); } 
+  }
+`;
+
 const AuditBadgeLink = styled.a`display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 8px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: bold; text-decoration: none; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.2); transform: translateY(-2px); }`;
 
 const LivePulseSection = styled.div`margin: 60px 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;`;
@@ -231,8 +289,10 @@ const HomePageClient = () => {
           <ContractContainer>
             <ContractBox>
               <span className="addr">{CONTRACT_ADDRESS}</span>
-              <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
-              <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
+              <div className="actions">
+                  <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
+                  <a href={`https://bscscan.com/token/${CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer"><FaExternalLinkAlt size={14} /></a>
+              </div>
             </ContractBox>
             <AuditBadgeLink href={TOKEN_SNIFFER_LINK} target="_blank" rel="noreferrer">
               <FaShieldAlt /> Audit on TokenSniffer
