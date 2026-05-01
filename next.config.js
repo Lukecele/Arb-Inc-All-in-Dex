@@ -1,16 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  compiler: { styledComponents: true },
-  experimental: { optimizePackageImports: ['react-icons'] },
-  async redirects() {
+  reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
+  async headers() {
     return [
       {
-        source: '/swap',
-        destination: '/swap-all',
-        permanent: true,
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' [https://www.googletagmanager.com](https://www.googletagmanager.com) [https://vercel.live](https://vercel.live);",
+          },
+        ],
       },
     ]
-  }
+  },
 }
 
 module.exports = nextConfig
