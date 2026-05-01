@@ -102,7 +102,7 @@ export default function RewardsClient() {
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
 
   return (
-    <div  style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <div  style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', width: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
       
       {/* 1. REFERRAL - DINAMICO */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
@@ -188,7 +188,7 @@ export default function RewardsClient() {
       {/* 3. DIAMOND VS PAPER HANDS */}
       <div style={{ background: '#000', border: '1px solid #333', padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
         <h3 style={{ textAlign: 'center', color: '#10b981', marginTop: 0 }}>🛡️ Diamond Hands Protection</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginTop: '20px' }}>
           <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid #10b981', padding: '15px', borderRadius: '12px' }}>
             <h4 style={{ color: '#10b981', margin: '0 0 10px 0' }}>✅ Diamond Status</h4>
             <p style={{ fontSize: '13px', color: '#a7f3d0' }}>Hold 2M+ Tokens: Earn 10pt/1M automatically every 15 minutes.</p>
@@ -202,7 +202,7 @@ export default function RewardsClient() {
 
       {/* 4. NATIVE TASKS */}
       <h3 style={{ color: '#f472b6', marginBottom: '5px' }}>🪂 Earn Extra Points</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '20px', marginBottom: '40px' }}>
         {offers.map((off, i) => (
           <div key={i} style={{ background: '#111', border: '1px solid #333', padding: '20px', borderRadius: '12px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>{off.title}</div>
