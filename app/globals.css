@@ -1,84 +1,22 @@
-/* Reset e Base */
-* {
-  box-sizing: border-box;
-}
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #050508;
-}
+/* 1. Lascia che Google traduca il testo normale */
+body { translate: yes !important; }
 
-/* La magia dello Skip Link: invisibile ma focusabile */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-.sr-only.focus\:not-sr-only:focus {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 9999;
-  width: auto;
-  height: auto;
-  padding: 15px 25px;
-  background: linear-gradient(135deg, #8B5CF6, #EC4899);
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 12px;
-  outline: 4px solid white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  clip: auto;
-}
-
-/* Ottimizzazione Rendering */
-main {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1000px;
-}
-
-/* Impedisce a Google Translate di rompere i widget Web3 */
-.notranslate {
-}
-
-
-/* Impedisce a Google Translate di rompere i widget Web3 */
-.notranslate {
-  translate: no !important;
-}
-
-
-/* Protezione extra per indirizzi e bottoni dinamici */
-.addr, button, [class*="Button"] {
-  translate: no !important;
-}
-
-
-/* Protezione Definitiva Web3 contro i crash di Google Translate */
-.notranslate, 
-button, 
+/* 2. Proteggi solo gli elementi "sensibili" di React */
+.notranslate,
+[translate="no"],
+button,
 .addr,
-[class*="addr"],
-[class*="Address"] {
+[class*="Address"],
+[class*="modal"],
+[class*="popup"],
+[role="dialog"] {
   translate: no !important;
 }
 
-
-/* Protezione per selettori token e modali che usano i Portal */
-[role="dialog"], 
-[class*="modal"], 
-[class*="popup"], 
-[class*="dropdown"],
-[class*="Menu"] {
+/* 3. Evita che i numeri della Dashboard vengano tradotti */
+[class*="value"], 
+[class*="sub"] {
   translate: no !important;
 }
 
