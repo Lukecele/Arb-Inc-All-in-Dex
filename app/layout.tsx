@@ -86,7 +86,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             m.addedNodes.forEach((n) => { 
               if (n.nodeType === 1 && (n.classList?.contains("ks-modal") || n.tagName === "DIALOG" || n.innerHTML.includes("0x"))) { 
                 n.setAttribute("translate", "no"); 
-                n.classList.add("notranslate"); 
               } 
             }); 
           }); 
