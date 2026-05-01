@@ -1,25 +1,33 @@
-/* 1. Permetti la traduzione globale */
-html, body { translate: yes !important; }
-
-/* 2. Proteggi solo i dati numerici e gli indirizzi */
-/* Usiamo le classi che hai già nel codice */
-.addr, 
-.value, 
-.sub, 
-.timer,
-[class*="Address"],
-[class*="Balance"] {
+/* Reset di emergenza per il layout */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* 3. Proteggi i Widget tecnici e i bottoni (che se tradotti crashano) */
-iframe, 
-button, 
-[role="dialog"], 
-[class*="widget"], 
-[class*="Widget"],
-.kyber-widget {
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
-/* 4. Forza i selettori dei token a restare in inglese */
-[class*="modal"], [class*="popup"], [class*="dropdown"] {
+/* Fix per le immagini e i video giganti */
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Assicuriamoci che il PageWrapper sia centrato */
+main, section, [class*="PageWrapper"] {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Protezione per le card dei Rewards che esplodono */
+[class*="Card"], [class*="PulseCard"] {
+  max-width: 100% !important;
+  word-wrap: break-word;
 }
