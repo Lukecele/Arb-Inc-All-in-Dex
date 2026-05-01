@@ -274,7 +274,7 @@ const HomePageClient = () => {
   if (!mounted) return null;
 
   return (
-    <PageWrapper>
+    <PageWrapper className="notranslate">
       <Header activePage="/" />
       <Container>
         <Hero>

@@ -102,7 +102,7 @@ export default function RewardsClient() {
   const referralLink = address ? `${window.location.origin}/rewards?ref=${address}` : '';
 
   return (
-    <div style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <div className="notranslate" style={{ color: 'white', fontFamily: 'sans-serif', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       
       {/* 1. REFERRAL - DINAMICO */}
       <div style={{ background: '#1e1b4b', border: '1px solid #4338ca', padding: '25px', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
