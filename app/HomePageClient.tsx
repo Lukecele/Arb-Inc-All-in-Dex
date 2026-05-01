@@ -122,6 +122,7 @@ const HomePageClient = () => {
   const volume30d = 27863;
 
   const [protocolDebt, setProtocolDebt] = useState('...');
+  const [globalApr, setGlobalApr] = useState('...');
 
   useEffect(() => {
     setMounted(true);
@@ -151,6 +152,12 @@ const HomePageClient = () => {
         if (statsRes.ok) {
           const statsData = await statsRes.json();
           setProtocolDebt(statsData.protocolDebt || '0.0000');
+        }
+
+        const aprRes = await fetch('/api/apr');
+        if (aprRes.ok) {
+          const aprData = await aprRes.json();
+          if (aprData.apr) setGlobalApr(aprData.apr + '%');
         }
 
       } catch (e) { console.error(e); }
@@ -275,12 +282,12 @@ const HomePageClient = () => {
 
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '15px', marginTop: 'auto', marginBottom: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#64748b', textTransform: 'uppercase'}}>DefiLlama Stats</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>\${volume30d.toLocaleString()}</span></div>
             </div>
             <a href="https://defillama.com/protocol/arbitrage-inc" target="_blank" rel="noreferrer" className="defillama-btn">🦙 Open DefiLlama</a>
           </PulseCard>
           
-          {/* COLONNA 3: TREASURY LIVE BALANCE + PROTOCOL HEALTH */}
+          {/* COLONNA 3: TREASURY LIVE BALANCE + PROTOCOL HEALTH + APR */}
           <PulseCard>
             <div className="header-row"><span className="label">Treasury Wallet</span><FaShieldAlt style={{color: '#22c55e'}} /></div>
             
@@ -296,6 +303,14 @@ const HomePageClient = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Total User Debt</span><span style={{ color: '#ef4444', fontWeight: 'bold' }}>{protocolDebt} BNB</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Utilization Ratio</span><span style={{ color: 'white', fontWeight: 'bold' }}>{ratioStr}</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}><span style={{color: '#94a3b8'}}>System Status</span><span style={{ color: statusColor, fontWeight: 'bold' }}>{statusStr}</span></div>
+            </div>
+
+            {/* BOX APR ESPLOSIVO */}
+            <div style={{ background: 'rgba(250, 204, 21, 0.15)', border: '1px solid rgba(250, 204, 21, 0.4)', borderRadius: '12px', padding: '15px', marginTop: '10px', textAlign: 'center', boxShadow: '0 0 20px rgba(250,204,21,0.1)' }}>
+              <div style={{ fontSize: '0.8rem', color: '#facc15', textTransform: 'uppercase', marginBottom: '5px', letterSpacing: '2px', fontWeight: 'bold' }}>Current Global APR</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#fff', textShadow: '0 0 15px rgba(250,204,21,0.5)' }}>
+                {globalApr} <span style={{fontSize: '1.8rem'}}>🔥</span>
+              </div>
             </div>
             
             <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{marginTop: '10px', alignSelf: 'center'}}><FaExternalLinkAlt size={10} /> View Treasury Wallet</a>

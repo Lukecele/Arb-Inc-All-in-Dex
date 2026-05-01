@@ -24,6 +24,7 @@ export default function RewardsClient() {
   
   const [claimLoading, setClaimLoading] = useState(false);
   const [claimStatus, setClaimStatus] = useState('');
+  const [globalApr, setGlobalApr] = useState('...');
 
   const address = wallet?.accounts?.[0]?.address || connectedWallets?.[0]?.accounts?.[0]?.address;
 
@@ -57,6 +58,10 @@ export default function RewardsClient() {
         const dataLeader = await resLeader.json();
         if (dataLeader.leaderboard) setLeaderboard(dataLeader.leaderboard);
         
+        const resApr = await fetch('/api/apr');
+        const dataApr = await resApr.json();
+        if (dataApr.apr) setGlobalApr(dataApr.apr + '%');
+
         if (address) fetchRewardsData();
       } catch (err) { console.error(err); }
       setLoading(false);
@@ -129,6 +134,14 @@ export default function RewardsClient() {
           Boost your rank to increase your share of the BNB trading fees!<br/><br/><b>🟣 Active DEX Rewards:</b><br/>🔄 Swap: <b>+100 Pts</b> &nbsp;|&nbsp; ⚡ Zap: <b>+150 Pts</b> &nbsp;|&nbsp; 🎯 Limit Order: <b>+200 Pts</b><br/>
           <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>Points = Claim Power.</span>
         </p>
+
+        {/* BOX APR REWARDS */}
+        <div style={{ background: 'rgba(250, 204, 21, 0.1)', border: '1px solid #facc15', padding: '15px 30px', borderRadius: '12px', display: 'inline-block', marginBottom: '25px', boxShadow: '0 0 20px rgba(250, 204, 21, 0.15)' }}>
+           <div style={{ fontSize: '13px', color: '#facc15', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>Real-Time Global APR</div>
+           <div style={{ fontSize: '38px', color: '#fff', fontWeight: '900', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+             {globalApr} <span style={{fontSize: '28px'}}>🔥</span>
+           </div>
+        </div>
 
         <div style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '5px' }}>{address ? claimableBnb.toFixed(6) : "0.000000"} BNB</div>
         <p style={{ color: '#a78bfa', fontSize: '14px', marginBottom: '25px' }}>Your Total Points: {address ? Math.round(userPoints).toLocaleString('en-US') : "0"}</p>
