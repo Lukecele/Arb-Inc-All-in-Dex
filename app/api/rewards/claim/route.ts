@@ -13,14 +13,12 @@ export async function POST(request: Request) {
     const walletLower = wallet.toLowerCase();
     const MIN_CLAIM = 0.002;
 
-    // 1. Recupero dati da Redis
     const points = parseFloat(String(await redis.zscore('leaderboard:points', walletLower) || '0'));
     const globalIndex = parseFloat(String(await redis.get('rewards:global_index') || '0'));
     const userIndexStr = await redis.get(`rewards:user_index:${walletLower}`);
     const userIndex = userIndexStr !== null ? parseFloat(String(userIndexStr)) : globalIndex;
     const pendingBnb = parseFloat(String(await redis.get(`rewards:pending:${walletLower}`) || '0'));
 
-    // 2. Calcolo totale
     const currentClaimable = points * (globalIndex - userIndex);
     const totalToPay = pendingBnb + Math.max(0, currentClaimable);
 
@@ -28,20 +26,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Sotto soglia: ${totalToPay.toFixed(6)}` }, { status: 400 });
     }
 
-    // 3. Setup Blockchain con PRIVATE_KEY (come da tuo Vercel)
     const provider = new (ethers as any).providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-    
     const privKey = process.env.PRIVATE_KEY;
-    if (!privKey) {
-      console.error("ERRORE: Variabile PRIVATE_KEY non trovata!");
-      throw new Error("Errore configurazione server (Key missing)");
-    }
+    if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 
     const signer = new (ethers as any).Wallet(privKey, provider);
     
-    console.log(`Invio ${totalToPay} BNB a ${walletLower}...`);
-
-    // 4. Invio transazione reale
     const tx = await signer.sendTransaction({
       to: walletLower,
       value: (ethers as any).utils.parseEther(totalToPay.toFixed(18))
@@ -49,14 +39,14 @@ export async function POST(request: Request) {
 
     await tx.wait();
 
-    // 5. Reset database
+    // --- 🛡️ FIX: NON AZZERIAMO PIÙ I PUNTI ---
+    // Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
     await redis.set(`rewards:pending:${walletLower}`, "0");
     await redis.set(`rewards:user_index:${walletLower}`, globalIndex.toString());
 
     return NextResponse.json({ success: true, txHash: tx.hash });
 
   } catch (error: any) {
-    console.error('Dettaglio Errore Claim:', error.message);
     return NextResponse.json({ error: error.message || 'Errore interno' }, { status: 500 });
   }
 }
