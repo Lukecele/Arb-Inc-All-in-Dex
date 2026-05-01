@@ -1,22 +1,38 @@
-"use client";
+'use client'
 
-import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { Web3OnboardProvider, init } from '@web3-onboard/react'
+import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
 
-const DynamicWeb3 = dynamic(
-  () => import('./Web3Provider').then(mod => mod.Web3Provider),
-  { ssr: false }
-);
+const injected = injectedModule()
+const walletConnect = walletConnectModule({
+  projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'b03ed6d8451c1e05022897815db0ad0b',
+  requiredChains: [56],
+  optionalChains: [1, 137, 42161, 8453, 10],
+  dappUrl: process.env.NEXT_PUBLIC_DAPP_URL || 'https://arbitrage-inc.exchange'
+})
 
-export const ClientWeb3Provider = ({ children }: { children: React.ReactNode }) => {
-  const [load, setLoad] = useState(false);
+const web3Onboard = init({
+  wallets: [injected, walletConnect],
+  chains: [
+    {
+      id: '0x38',
+      token: 'BNB',
+      label: 'BNB Smart Chain',
+      rpcUrl: 'https://bsc.publicnode.com',
+    },
+  ],
+  appMetadata: {
+    name: 'Arbitrage Inception',
+    icon: 'https://arbitrage-inc.exchange/favicon.ico',
+    description: 'DEX Aggregator on BNB Chain',
+  }
+})
 
-  useEffect(() => {
-    // Carichiamo il grosso del JS solo dopo che la pagina è pronta
-    const timer = setTimeout(() => setLoad(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!load) return <>{children}</>;
-  return <DynamicWeb3>{children}</DynamicWeb3>;
-};
+export function ClientWeb3Provider({ children }: { children: React.ReactNode }) {
+  return (
+    <Web3OnboardProvider web3Onboard={web3Onboard}>
+      {children}
+    </Web3OnboardProvider>
+  )
+}

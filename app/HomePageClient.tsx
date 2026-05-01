@@ -35,14 +35,14 @@ const livePulse = keyframes`
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  padding-left: 300px; 
+  padding-left: 260px; 
   background-color: #030014;
   background-image: 
     radial-gradient(circle at 50% -20%, #2e1065 0%, transparent 50%),
     radial-gradient(circle at 0% 100%, #1e1b4b 0%, transparent 30%);
   color: white;
   font-family: 'Inter', sans-serif;
-  @media (max-width: 991px) { padding-left: 0; padding-top: 64px; }
+  @media (max-width: 1024px) { padding-left: 0; padding-top: 64px; }
 `;
 
 const Container = styled.div`
@@ -52,7 +52,7 @@ const Container = styled.div`
 `;
 
 const Hero = styled.section`
-  padding: 100px 0 60px;
+  padding: 40px 0 50px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -74,7 +74,7 @@ const BigLogoWrapper = styled.div`
   margin-bottom: 40px;
   animation: ${float} 4s ease-in-out infinite;
   filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
-  img { width: 220px; height: 220px; border-radius: 50%; border: 2px solid rgba(168, 85, 247, 0.3); object-fit: contain; background: #000; }
+  img { width: 160px; height: 160px; border-radius: 50%; border: 2px solid rgba(168, 85, 247, 0.3); object-fit: contain; background: #000; }
 `;
 
 const Title = styled.h1`
@@ -153,7 +153,7 @@ const ContractBox = styled.div`
 
 const AuditBadgeLink = styled.a`display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 8px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: bold; text-decoration: none; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.2); transform: translateY(-2px); }`;
 
-const LivePulseSection = styled.div`margin: 60px 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;`;
+const LivePulseSection = styled.div`margin: 40px 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;`;
 const PulseCard = styled.div<{ $isProcessing?: boolean }>`background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 24px; border-radius: 20px; display: flex; flex-direction: column; gap: 12px; height: 100%; ${props => props.$isProcessing && `animation: ${pulse} 2s infinite; border-color: #a855f7;`} .header-row { display: flex; justify-content: space-between; align-items: center; } .label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; } .value { font-size: 1.8rem; font-weight: 700; color: ${props => props.$isProcessing ? '#a855f7' : 'white'}; display: flex; align-items: center; gap: 10px; } .sub { color: #a855f7; font-size: 0.8rem; font-weight: 600; } .verify-link { display: inline-flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.8rem; text-decoration: none; transition: color 0.2s; &:hover { color: #22c55e; } } .defillama-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 10px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-top: auto; transition: all 0.2s; &:hover { background: rgba(34, 197, 94, 0.25); transform: translateY(-2px); } }`;
 const LiveIndicator = styled.div`display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px; .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; animation: ${livePulse} 2s infinite; }`;
 const ActionButton = styled.a`display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem; transition: transform 0.2s; &:hover { transform: scale(1.05); }`;

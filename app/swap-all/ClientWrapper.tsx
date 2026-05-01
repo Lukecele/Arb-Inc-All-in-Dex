@@ -31,6 +31,8 @@ const darkTheme = {
   error: '#FF537B',
   fontFamily: 'Work Sans',
   borderRadius: '16px',
+  buttonRadius: "999px",
+  boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.04)",
   buttonRadius: '999px',
   boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.04)',
 }
@@ -138,7 +140,7 @@ const MainContent = styled.main`
 
 const SwapWrapper = styled.div`
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   margin: 0 auto;
   background: ${theme.colors.glass.light};
   border-radius: ${theme.borderRadius.lg};
@@ -157,7 +159,7 @@ const SwapWrapper = styled.div`
 
 const SwapScroller = styled.div`
   display: inline-block;
-  width: 400px;
+  width: 480px;
   transform-origin: top left;
   @media (max-width: 480px) {
     width: 480px;
