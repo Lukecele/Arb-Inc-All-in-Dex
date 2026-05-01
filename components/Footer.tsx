@@ -39,7 +39,7 @@ export default function Footer() {
         <FooterSection>
           <FooterSectionTitle>Community</FooterSectionTitle>
           <FooterLink href="/rewards">Rewards</FooterLink>
-          <a href="https://t.me/ArbitrageInception" style={{display:'block', color:'#94a3b8', textDecoration:'none', padding:'5px 0'}}>Telegram</a>
+          <a href="https://t.me/ArbitrageInception" aria-label="Telegram" style={{display:'block', color:'#94a3b8', textDecoration:'none', padding:'5px 0'}}>Telegram</a>
           <a href="https://x.com/Arbitrageincept" style={{display:'block', color:'#94a3b8', textDecoration:'none', padding:'5px 0'}}>Twitter</a>
         </FooterSection>
         <FooterSection>

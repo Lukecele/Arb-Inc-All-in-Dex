@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 // Importiamo il Widget in modo dinamico per evitare errori SSR con Next.js
-const Widget = dynamic(() => import('@kyberswap/widgets').then(mod => mod.Widget), { ssr: false, loading: () => <div className='h-[400px] w-full animate-pulse bg-gray-800 rounded-xl' /> })
+const Widget = dynamic(() => import('@kyberswap/widgets').then(mod => mod.Widget), { ssr: false, loading: () => <div style={{ height: '400px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', animation: 'pulse 2s infinite' }}>Loading Aggregator...</div> })
 import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
 import { ethers } from 'ethers'
 import { useState, useEffect, useCallback } from 'react'
