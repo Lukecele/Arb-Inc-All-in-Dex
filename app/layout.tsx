@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -37,8 +38,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+    <head>
+      <link rel="preconnect" href="https://rsms.me" />
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <Script id="gtm-script" strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-H6XYJKW0CX" />
+      <Script id="gtm-config" strategy="lazyOnload">{`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "G-H6XYJKW0CX");`}</Script>
+    </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }} suppressHydrationWarning>
-        <a href="#main-content" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to content</a>
+        <a href="#main-content" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>Skip to content</a>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         
         
