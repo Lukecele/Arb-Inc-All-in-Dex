@@ -37,22 +37,22 @@ const Container = styled.div`
   max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center;
 `
 const SwapWrapper = styled.div`
-  width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.02); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px; overflow-x: auto;
+  width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.02); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px;
+  display: flex; flex-direction: column; align-items: center;
   @media (max-width: 480px) { padding: 8px; border-radius: 16px; }
 `
 const PointsBadge = styled.div`
-  background: rgba(40, 224, 185, 0.1); color: #28E0B9; border: 1px solid rgba(40, 224, 185, 0.2); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 12px; text-transform: uppercase;
+  background: rgba(40, 224, 185, 0.1); color: #28E0B9; border: 1px solid rgba(40, 224, 185, 0.2); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 12px; text-transform: uppercase; width: 100%;
 `
 const WarningBadge = styled.div`
-  background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; width: 100%;
 `
 const ContractBox = styled.div`
-  background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(168, 85, 247, 0.2); padding: 10px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+  background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(168, 85, 247, 0.2); padding: 10px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%;
   .addr { font-family: monospace; color: #a855f7; font-size: 12px; }
   button { background: none; border: none; color: #64748b; cursor: pointer; &:hover { color: white; } }
 `
 
-// FIX 1: Aggiunto boxShadow obbligatorio
 const kyberTheme = {
   text: '#FFFFFF', subText: '#A9A9A9', primary: '#1C1C1C', dialog: '#1C1C1C', 
   secondary: '#0F0F0F', interactive: '#292929', stroke: '#333333', 
@@ -65,8 +65,25 @@ export default function ClientWrapper() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [copied, setCopied] = useState(false)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  
+  // FIX: Stato dinamico per la larghezza del widget
+  const [widgetWidth, setWidgetWidth] = useState<number>(480)
 
   useEffect(() => { setWalletAddress(wallet?.accounts[0]?.address || null) }, [wallet])
+
+  // FIX: Calcola la larghezza reale dello schermo meno i bordini (padding)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 520) {
+        setWidgetWidth(window.innerWidth - 40) // 40px è lo spazio per non toccare i bordi del telefono
+      } else {
+        setWidgetWidth(480) // Su PC rimane bello largo
+      }
+    }
+    handleResize() // Esegui subito al caricamento
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(ARB_CONTRACT); setCopied(true); setTimeout(() => setCopied(false), 2000)
@@ -122,12 +139,12 @@ export default function ClientWrapper() {
               <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             </ContractBox>
 
-            {/* FIX 2 e 3: width numerico e connectedAccount sempre presente */}
-            <div style={{ width: '100%', minWidth: '320px' }}>
+            {/* FIX: Usiamo la variabile di stato per la larghezza */}
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
               <Widget
                 client="arbitrage-inception" 
                 theme={kyberTheme} 
-                width={480} 
+                width={widgetWidth} 
                 tokenList={[]} 
                 rpcUrl="https://bsc.publicnode.com" 
                 chainId={BSC_CHAIN_ID}
