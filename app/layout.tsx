@@ -1,4 +1,3 @@
-import Script from "next/script";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
