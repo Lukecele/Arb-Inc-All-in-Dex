@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic';
-import { useConnectWallet, useWallets } from '@web3-onboard/react'
+import { useConnectWallet } from '@web3-onboard/react'
 import { ethers } from 'ethers'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
@@ -11,7 +11,11 @@ import { FaCopy, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa'
 
 const Widget = dynamic(() => import('@kyberswap/widgets').then(mod => mod.Widget), { 
   ssr: false, 
-  loading: () => <div style={{ height: '480px', width: '100%', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Aggregator...</div> 
+  loading: () => (
+    <div style={{ height: '480px', width: '100%', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
+      Loading Aggregator...
+    </div>
+  )
 })
 
 const BSC_CHAIN_ID = 56
@@ -33,7 +37,7 @@ const Container = styled.div`
   max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center;
 `
 const SwapWrapper = styled.div`
-  width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.02); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px;
+  width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.02); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px; overflow-x: auto;
   @media (max-width: 480px) { padding: 8px; border-radius: 16px; }
 `
 const PointsBadge = styled.div`
@@ -47,11 +51,14 @@ const ContractBox = styled.div`
   .addr { font-family: monospace; color: #a855f7; font-size: 12px; }
   button { background: none; border: none; color: #64748b; cursor: pointer; &:hover { color: white; } }
 `
+
+// FIX 1: Aggiunto boxShadow obbligatorio
 const kyberTheme = {
   text: '#FFFFFF', subText: '#A9A9A9', primary: '#1C1C1C', dialog: '#1C1C1C', 
   secondary: '#0F0F0F', interactive: '#292929', stroke: '#333333', 
   accent: '#a855f7', success: '#22c55e', warning: '#facc15', error: '#ef4444',
-  fontFamily: 'Inter', borderRadius: '16px', buttonRadius: '12px'
+  fontFamily: 'Inter', borderRadius: '16px', buttonRadius: '12px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.04)' 
 }
 
 export default function ClientWrapper() {
@@ -105,27 +112,31 @@ export default function ClientWrapper() {
 
           <SwapWrapper>
             <PointsBadge>🚀 +100 Points per Swap</PointsBadge>
-            
             <WarningBadge>
               <FaExclamationTriangle style={{ fontSize: '18px', flexShrink: 0, marginTop: '2px' }} />
-              <div>
-                <strong>Tax Token Notice:</strong> When swapping Arbitrage Inception (ARB INC), please set your slippage to <strong>8%</strong> to ensure the transaction processes successfully due to tokenomics.
-              </div>
+              <div><strong>Tax Token Notice:</strong> When swapping Arbitrage Inception (ARB INC), please set your slippage to <strong>8%</strong> to ensure the transaction processes successfully due to tokenomics.</div>
             </WarningBadge>
 
             <ContractBox>
               <span className="addr">ARB Inc: {ARB_CONTRACT.slice(0,10)}...</span>
-              <button onClick={copyToClipboard}>
-                {copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}
-              </button>
+              <button onClick={copyToClipboard}>{copied ? <FaCheckCircle style={{color: '#22c55e'}} /> : <FaCopy />}</button>
             </ContractBox>
 
-            <Widget
-              client="arbitrage-inception" theme={kyberTheme} width="100%" tokenList={[]} rpcUrl="https://bsc.publicnode.com" chainId={BSC_CHAIN_ID}
-              connectedAccount={walletAddress ? { address: walletAddress, chainId: BSC_CHAIN_ID } : undefined}
-              onSubmitTx={handleSubmitTx} enableRoute={true}
-              feeSetting={{ feeAmount: FEE_PCM, feeReceiver: FEE_RECEIVER, chargeFeeBy: 'currency_out', isInBps: true }}
-            />
+            {/* FIX 2 e 3: width numerico e connectedAccount sempre presente */}
+            <div style={{ width: '100%', minWidth: '320px' }}>
+              <Widget
+                client="arbitrage-inception" 
+                theme={kyberTheme} 
+                width={480} 
+                tokenList={[]} 
+                rpcUrl="https://bsc.publicnode.com" 
+                chainId={BSC_CHAIN_ID}
+                connectedAccount={{ address: walletAddress || undefined, chainId: BSC_CHAIN_ID }}
+                onSubmitTx={handleSubmitTx} 
+                enableRoute={true}
+                feeSetting={{ feeAmount: FEE_PCM, feeReceiver: FEE_RECEIVER, chargeFeeBy: 'currency_out', isInBps: true }}
+              />
+            </div>
           </SwapWrapper>
         </Container>
         <Footer />
