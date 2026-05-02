@@ -98,13 +98,13 @@ export default function Footer() {
     <FooterContainer>
       <TopSection>
         <SocialLinks>
-          <SocialIcon href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+          <SocialIcon href="https://t.me/ArbitrageInception" aria-label="Join our Telegram" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
             <FaTelegramPlane />
           </SocialIcon>
-          <SocialIcon href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <SocialIcon href="https://x.com/Arbitrageincept" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
             <FaTwitter />
           </SocialIcon>
-          <SocialIcon href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <SocialIcon href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" aria-label="View Source on GitHub" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <FaGithub />
           </SocialIcon>
           <SocialIcon href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">

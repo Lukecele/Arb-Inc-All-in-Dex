@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -7,7 +8,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import CookieConsent from '../components/CookieConsent';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { ClientWeb3Provider } from '../components/ClientWeb3Provider';
+import ClientWeb3Provider from '../components/ClientWeb3Provider';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#050508' }} suppressHydrationWarning>
+        <a href="#main-content" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to content</a>
         <GoogleAnalytics gaId="G-H6XYJKW0CX" />
         
         

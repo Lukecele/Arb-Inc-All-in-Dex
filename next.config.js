@@ -4,6 +4,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  experimental: {
+    optimizePackageImports: ["react-icons", "ethers"],
+    styledComponents: true,
+  },
   async headers() {
     return [
       {
