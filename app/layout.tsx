@@ -1,4 +1,4 @@
-import Script from "next/script";
+import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -9,7 +9,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import CookieConsent from '../components/CookieConsent';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ClientWeb3Provider from '../components/ClientWeb3Provider';
-import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
