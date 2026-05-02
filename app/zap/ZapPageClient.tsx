@@ -166,7 +166,7 @@ export default function ZapPageClient() {
     })
     
     if (address) {
-      const referrer = window.localStorage.getItem('arb_inc_referrer') || '';
+      const referrer = typeof window !== 'undefined' ? window.localStorage.getItem('arb_inc_referrer') || '' : '';
       fetch('/api/dex-reward', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -213,7 +213,7 @@ export default function ZapPageClient() {
                     chainId={chainId as ChainId.Bsc}
                     poolType={mapStringToPoolType(selectedPool.poolType)}
                     poolAddress={selectedPool.address}
-                    connectedAccount={address ? { address, chainId } : undefined}
+                    connectedAccount={{ address: address || undefined, chainId: chainId }}
                     source="arbitrage-inception"
                     feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
                     onConnectWallet={() => connect()}
