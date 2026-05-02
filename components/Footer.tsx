@@ -1,10 +1,11 @@
 'use client'
 import React from 'react'
 import styled from 'styled-components'
+import { FaGithub, FaTelegramPlane, FaTwitter, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa'
 
 const FooterContainer = styled.footer`
   width: 100%;
-  padding: 3rem 2rem 1rem;
+  padding: 3rem 2rem 1.5rem;
   background: #030014;
   border-top: 1px solid rgba(139, 92, 246, 0.1);
   margin-top: 4rem;
@@ -12,7 +13,62 @@ const FooterContainer = styled.footer`
   flex-direction: column;
   align-items: center;
   color: #94a3b8;
-  font-size: 0.85rem;
+`
+
+const TopSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: 1000px;
+`
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+const SocialIcon = styled.a`
+  color: #94a3b8;
+  font-size: 1.5rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:hover {
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+    border-color: rgba(168, 85, 247, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+  }
+`
+
+const ContactLink = styled.a`
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+
+  &:hover {
+    color: #a855f7;
+    background: rgba(255, 255, 255, 0.03);
+  }
 `
 
 const DisclaimerBox = styled.div`
@@ -24,6 +80,7 @@ const DisclaimerBox = styled.div`
   margin-bottom: 2rem;
   line-height: 1.6;
   text-align: justify;
+  font-size: 0.85rem;
   
   strong { color: #a855f7; font-weight: 600; }
   
@@ -32,15 +89,39 @@ const DisclaimerBox = styled.div`
 
 const Copyright = styled.div`
   text-align: center;
-  margin-top: 1rem;
+  font-size: 0.85rem;
   opacity: 0.7;
 `
 
 export default function Footer() {
   return (
     <FooterContainer>
+      <TopSection>
+        <SocialLinks>
+          <SocialIcon href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <FaTelegramPlane />
+          </SocialIcon>
+          <SocialIcon href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+            <FaTwitter />
+          </SocialIcon>
+          <SocialIcon href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <FaGithub />
+          </SocialIcon>
+          <SocialIcon href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <FaLinkedin />
+          </SocialIcon>
+          <SocialIcon href="https://www.facebook.com/luca.celebrano" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <FaFacebook />
+          </SocialIcon>
+        </SocialLinks>
+        
+        <ContactLink href="https://arbitrage-inc.exchange/contact">
+          <FaEnvelope /> Contact Us
+        </ContactLink>
+      </TopSection>
+
       <DisclaimerBox>
-        <strong>Risk Disclaimer & Terms of Use:</strong> Arbitrage Inception is a decentralized application (dApp) operating as an interface to interact with third-party smart contracts (e.g., KyberSwap, Mayan Finance, PancakeSwap, and <strong>Limit Orders protocols</strong>). We do not custody your funds, nor do we manage the underlying liquidity pools. Trading digital assets involves significant risk, including the possible loss of all invested funds. Smart contracts may contain vulnerabilities. By using this interface, you acknowledge that you are doing so entirely at your own risk. Arbitrage Inception and its developers assume no liability for any losses, hacks, slippage issues, or network failures. 
+        <strong>Risk Disclaimer & Terms of Use:</strong> Arbitrage Inception is a decentralized application (dApp) operating as an interface to interact with third-party smart contracts (e.g., KyberSwap, Mayan Finance, PancakeSwap, and Limit Orders protocols). We do not custody your funds, nor do we manage the underlying liquidity pools. Trading digital assets involves significant risk, including the possible loss of all invested funds. Smart contracts may contain vulnerabilities. By using this interface, you acknowledge that you are doing so entirely at your own risk. Arbitrage Inception and its developers assume no liability for any losses, hacks, slippage issues, or network failures. 
         <br /><br />
         <strong>Tax Token Notice:</strong> When trading $ARB INC or other tax tokens, please ensure your slippage is set correctly (e.g., <strong>8%</strong>) to account for tokenomics and prevent transaction failures. Always do your own research (DYOR) before interacting with any decentralized protocol.
       </DisclaimerBox>
