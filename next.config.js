@@ -5,8 +5,7 @@ const nextConfig = {
     styledComponents: true,
   },
   experimental: {
-    optimizePackageImports: ["react-icons", "ethers"],
-    styledComponents: true,
+    optimizePackageImports: ['react-icons', 'ethers'],
   },
   async headers() {
     return [
@@ -15,7 +14,8 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live https://mayan.finance https://*.mayan.finance https://*.kyberswap.com; connect-src 'self' https://bsc-dataseed.binance.org https://api.dexscreener.com https://*.mayan.finance https://*.kyberswap.com https://rpc.ankr.com https://*.vercel-storage.com https://*.walletconnect.com https://*.sentry.io https://bsc.publicnode.com; frame-src 'self' https://mayan.finance https://*.mayan.finance https://*.kyberswap.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline';",
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live https://*.walletconnect.com https://*.walletconnect.org https://*.web3modal.org https://mayan.finance https://*.mayan.finance https://*.kyberswap.com; connect-src 'self' https://bsc-dataseed.binance.org https://api.dexscreener.com https://*.mayan.finance https://*.kyberswap.com https://rpc.ankr.com https://*.vercel-storage.com https://*.walletconnect.com https://*.walletconnect.org https://*.web3modal.org https://*.sentry.io https://bsc.publicnode.com https://*.google-analytics.com https://region1.google-analytics.com; frame-src 'self' https://mayan.finance https://*.mayan.finance https://*.kyberswap.com https://vercel.live https://*.walletconnect.com https://*.walletconnect.org https://*.web3modal.org; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data: https: https://rsms.me;",
           },
         ],
       },
