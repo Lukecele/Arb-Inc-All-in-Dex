@@ -1,35 +1,54 @@
 'use client'
 
+import React from 'react'
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 
+// 1. Initialize supported wallets
 const injected = injectedModule()
+
 const walletConnect = walletConnectModule({
-  projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'b03ed6d8451c1e05022897815db0ad0b',
-  requiredChains: [56],
-  optionalChains: [1, 137, 42161, 8453, 10],
-  dappUrl: process.env.NEXT_PUBLIC_DAPP_URL || 'https://arbitrage-inc.exchange'
+  // Using the projectId recovered from your previous setup
+  projectId: 'b03ed6d8451c1e05022897815db0ad0b', 
+  dappUrl: 'https://arbitrage-inc.exchange'
 })
 
-const web3Onboard = init({
-  wallets: [injected, walletConnect],
-  chains: [
-    {
-      id: '0x38',
-      token: 'BNB',
-      label: 'BNB Smart Chain',
-      rpcUrl: 'https://bsc.publicnode.com',
-    },
-  ],
-  appMetadata: {
-    name: 'Arbitrage Inception',
-    icon: 'https://arbitrage-inc.exchange/favicon.ico',
-    description: 'DEX Aggregator on BNB Chain',
+const wallets = [injected, walletConnect]
+
+// 2. Configure blockchain (BSC)
+const chains = [
+  {
+    id: '0x38', // 56 in hex
+    token: 'BNB',
+    label: 'BNB Smart Chain',
+    rpcUrl: 'https://bsc.publicnode.com'
   }
+]
+
+// 3. App metadata for the connection modal
+const appMetadata = {
+  name: 'Arbitrage Inception',
+  icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#a855f7"/></svg>', 
+  description: 'The Ultimate DEX Aggregator on BSC',
+  recommendedInjectedWallets: [
+    { name: 'MetaMask', url: 'https://metamask.io' },
+    { name: 'Trust Wallet', url: 'https://trustwallet.com' }
+  ]
+}
+
+// 4. Global initialization
+const web3Onboard = init({
+  wallets,
+  chains,
+  appMetadata,
+  connect: {
+    autoConnectLastWallet: true,
+  },
+  theme: 'dark' 
 })
 
-export function ClientWeb3Provider({ children }: { children: React.ReactNode }) {
+export default function ClientWeb3Provider({ children }: { children: React.ReactNode }) {
   return (
     <Web3OnboardProvider web3Onboard={web3Onboard}>
       {children}
