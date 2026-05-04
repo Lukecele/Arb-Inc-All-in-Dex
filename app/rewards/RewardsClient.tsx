@@ -213,7 +213,7 @@ export default function RewardsClient() {
                     background: isMe ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
                     borderLeft: isMe ? '4px solid #facc15' : 'none'
                   }}>
-                    <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1} {isMe && "(YOU)"}</td>
+                    <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
                     <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>{u.address.slice(0,6)}...{u.address.slice(-4)}</td>
                     <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{Math.round(u.points).toLocaleString('en-US')}</td>
                   </tr>
