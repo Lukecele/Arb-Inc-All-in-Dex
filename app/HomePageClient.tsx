@@ -49,7 +49,7 @@ const HomePageClient = () => {
         <S.Hero>
           <S.Badge>Official Token: ARB Inc</S.Badge>
           <S.Title>Unlocking Meritocratic<br />DeFi Yields</S.Title>
-          <S.Subtitle>Sustainable growth through an 80% Reward Share and 20% Treasury allocation, powered by 9-decimal precision.</S.Subtitle>
+          <S.Subtitle>100% of generated fees flow directly into the Treasury: 80% is distributed to holders, and 20% fuels project growth.</S.Subtitle>
           <S.ButtonGroup>
             <S.PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></S.PrimaryButton>
             <S.SecondaryButton href="#protocol-specs">Technical Specs</S.SecondaryButton>
@@ -153,14 +153,14 @@ const HomePageClient = () => {
           <h2>Protocol Transparency</h2>
           <div className="supply-box"><span className="label">Total Supply</span><span className="value">1 Billion</span><span className="sub">4% Buy/Sell Tax for Rewards</span></div>
           <div className="spec-grid">
-            <S.SpecCard><FaChartPie className="icon" /><span className="label">Reward Split</span><span className="value">80/20</span><span className="desc">80% Holders / 20% Treasury</span></S.SpecCard>
+            <S.SpecCard><FaChartPie className="icon" /><span className="label">Fee Routing</span><span className="value">100%</span><span className="desc">To Treasury (80% Users / 20% Project)</span></S.SpecCard>
             <S.SpecCard><FaClock className="icon" /><span className="label">Reward Frequency</span><span className="value">6 Hours</span><span className="desc">Automated Distribution</span></S.SpecCard>
             <S.SpecCard><FaBullseye className="icon" /><span className="label">Ranking Precision</span><span className="value">9 Decimals</span><span className="desc">Fair & Precise math</span></S.SpecCard>
           </div>
         </S.ProtocolSpecsSection>
 
         <S.FeatureGrid>
-          <S.FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled into the Reward & Treasury system.</p></S.FeatureCard>
+          <S.FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled into the Central Treasury.</p></S.FeatureCard>
           <S.FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision to the last decimal.</p></S.FeatureCard>
           <S.FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Season Reset</h3><p>To keep the competition fresh, the leaderboard and points reset on the <strong>1st and 15th</strong> of every month.</p></S.FeatureCard>
         </S.FeatureGrid>

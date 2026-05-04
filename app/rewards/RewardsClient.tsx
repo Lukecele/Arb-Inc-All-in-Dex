@@ -136,7 +136,7 @@ export default function RewardsClient() {
       <div style={{ background: 'linear-gradient(135deg, #2e1065, #000)', border: '1px solid #a78bfa', padding: '30px', boxSizing: 'border-box', borderRadius: '16px', textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#a78bfa', margin: '0 0 15px 0' }}>💎 BNB Dividends Pool</h2>
         <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
-          Sustainable growth model: <b>80%</b> to Holders / <b>20%</b> to Treasury.<br/>
+          <b>100%</b> of fees go to the Treasury: <b>80%</b> distributed to Holders and <b>20%</b> reserved for project growth.<br/>
           Boost your rank to increase your share of the BNB trading fees!<br/><br/>
           <b>🟣 Active DEX Rewards:</b><br/>
           🔄 Swap: <b>+100 Pts</b> | ⚡ Zap: <b>+150 Pts</b> | 🎯 Limit: <b>+200 Pts</b>
