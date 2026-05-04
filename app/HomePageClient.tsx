@@ -49,11 +49,24 @@ const HomePageClient = () => {
         <S.Hero>
           <S.Badge>Official Token: ARB Inc</S.Badge>
           <S.Title>Unlocking Meritocratic<br />DeFi Yields</S.Title>
-          <S.Subtitle>100% of generated protocol revenues flow directly into the Treasury: 80% is distributed to holders, and 20% fuels project growth.</S.Subtitle>
+          <S.Subtitle>Powered by 3 sustainable revenue streams. 100% of generated fees flow directly into the Treasury: 80% distributed to holders, 20% fuels project growth.</S.Subtitle>
           <S.ButtonGroup>
             <S.PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></S.PrimaryButton>
             <S.SecondaryButton href="#protocol-specs">Technical Specs</S.SecondaryButton>
           </S.ButtonGroup>
+
+          {/* NEW PROMINENT REVENUE STREAMS BADGES */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '15px', marginTop: '25px', marginBottom: '10px' }}>
+            <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.4)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem', color: '#93c5fd', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+              <FaCoins /> 4% Token Tax
+            </div>
+            <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.4)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem', color: '#d8b4fe', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+              <FaExchangeAlt /> 0.1% DEX Fee
+            </div>
+            <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.4)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem', color: '#86efac', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+              <FaTasks /> Free Tasks Income
+            </div>
+          </div>
           
           <S.ContractContainer>
             <S.ContractBox>
@@ -137,6 +150,11 @@ const HomePageClient = () => {
               <div style={{ fontSize: '0.8rem', color: '#facc15', textTransform: 'uppercase', marginBottom: '5px', fontWeight: 'bold' }}>Current Global APR</div>
               <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#fff' }}>{data.globalApr} 🔥</div>
             </div>
+            
+            {/* NEW TREASURY LINK */}
+            <a href={`https://bscscan.com/address/${TREASURY_WALLET}`} target="_blank" rel="noreferrer" className="verify-link" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', marginTop: '15px' }}>
+              <FaExternalLinkAlt size={10} /> View Treasury Wallet
+            </a>
           </S.PulseCard>
         </S.LivePulseSection>
 
