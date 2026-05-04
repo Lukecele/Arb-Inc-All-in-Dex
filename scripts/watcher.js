@@ -16,11 +16,11 @@ const REAL_TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowe
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
-const MIN_HOLDING = 2000000n * (10n ** 9n); // 2 Milioni minimo
+// FEATURE 2: Nessun limite minimo richiesto.
 const SAFE_FACTOR = 0.73; 
 
 async function watch() {
-    console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale (Referral Ready)...`);
+    console.log(`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale (No Min Limit)...`);
     try {
         const balance = await provider.getBalance(ethers.getAddress(REAL_TREASURY_WALLET));
         const lastBalanceStr = await redis.get('rewards:last_balance');
@@ -55,8 +55,8 @@ async function watch() {
         
         await redis.set('rewards:last_balance', balance.toString());
 
-        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Referral)
-        console.log("🔄 Scansione Holding e Assegnazione Punti + Bonus Referral...");
+        // 💎 FASE 2: AGGIORNAMENTO PUNTI (Holding & Referral - PROPORZIONALE)
+        console.log("🔄 Scansione Holding (Nessun Limite Minimo)...");
         const abi = ["function balanceOf(address) view returns (uint256)"];
         const contract = new ethers.Contract(ethers.getAddress(TOKEN_CONTRACT_ADDRESS), abi, provider);
         
@@ -76,14 +76,15 @@ async function watch() {
                 if (holding < lastHolding) {
                     status = "paper";
                     console.log(`🩸 ${lowerW} ha venduto! Malus 5%.`);
-                } else if (holding > lastHolding && holding >= MIN_HOLDING) {
+                } else if (holding > lastHolding && holding > 0n) {
                     status = "diamond";
                 }
 
                 let updatedPoints = currentPoints;
                 if (status === "paper") {
                     updatedPoints = currentPoints * 0.95;
-                } else if (status === "diamond" && holding >= MIN_HOLDING) {
+                } else if (status === "diamond" && holding > 0n) {
+                    // Feature 2: Se hai > 0 token, guadagni punti proporzionali.
                     const multiplier = (lowerW === CEO_WALLET) ? 50 : 10;
                     const pointsGained = (Number(holding / (10n ** 9n)) / 1000000) * multiplier;
                     updatedPoints += pointsGained;
@@ -91,11 +92,10 @@ async function watch() {
                     // --- 🚀 LOGICA REFERRAL BONUS ---
                     const parent = await redis.get(`ref:parent:${lowerW}`);
                     if (parent) {
-                        const bonus = pointsGained * 0.10; // 10% di commissione al padre
+                        const bonus = pointsGained * 0.10; 
                         await redis.zincrby('leaderboard:points', bonus, parent);
                         await redis.incrbyfloat(`ref:earnings:${parent}`, bonus);
-                        // Logghiamo solo se il bonus è significativo per non intasare il terminale
-                        if (bonus > 0.001) console.log(`🎁 Bonus: ${bonus.toFixed(4)} pts a ${parent} (invito ${lowerW})`);
+                        if (bonus > 0.001) console.log(`🎁 Bonus: ${bonus.toFixed(4)} pts a ${parent}`);
                     }
                 }
 

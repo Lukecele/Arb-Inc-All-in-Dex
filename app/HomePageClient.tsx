@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useProtocolData } from '../hooks/useProtocolData';
 import * as S from './HomePageStyles';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaChartLine, FaWater, FaRocket, FaCoins, FaTasks, FaChartPie, FaClock, FaBullseye } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaChartLine, FaWater, FaRocket, FaCoins, FaTasks, FaChartPie, FaClock, FaBullseye, FaCalendarAlt } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
@@ -13,7 +13,7 @@ const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C";
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
-const volume30d = 27863; // Dato hardcoded ripristinato
+const volume30d = 27863;
 
 const HomePageClient = () => {
   const [mounted, setMounted] = useState(false);
@@ -49,7 +49,7 @@ const HomePageClient = () => {
         <S.Hero>
           <S.Badge>Official Token: ARB Inc</S.Badge>
           <S.Title>Unlocking Meritocratic<br />DeFi Yields</S.Title>
-          <S.Subtitle>Aggregated liquidity and a transparent 100% revenue-sharing model powered by our 9-decimal ranking justice.</S.Subtitle>
+          <S.Subtitle>Sustainable growth through an 80% Reward Share and 20% Treasury allocation, powered by 9-decimal precision.</S.Subtitle>
           <S.ButtonGroup>
             <S.PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></S.PrimaryButton>
             <S.SecondaryButton href="#protocol-specs">Technical Specs</S.SecondaryButton>
@@ -75,6 +75,12 @@ const HomePageClient = () => {
               <span className="label">Next Payout Cycle</span>
               <span className="value">{data.isProcessing && <FaSpinner className="fa-spin" />}{data.timerDisplay}</span>
               <span className="sub" style={{marginBottom: '15px'}}>Global Sync (BRT)</span>
+              
+              <div style={{ background: 'rgba(250, 204, 21, 0.1)', border: '1px solid rgba(250, 204, 21, 0.3)', borderRadius: '12px', padding: '12px', marginBottom: '15px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#facc15', textTransform: 'uppercase', marginBottom: '5px', display: 'flex', alignItems: 'center', gap: '5px' }}><FaCalendarAlt /> Season Schedule</div>
+                <div style={{ fontSize: '0.85rem', color: 'white' }}>Leaderboard resets on the <strong>1st</strong> and <strong>15th</strong></div>
+              </div>
+
               <div style={{ background: 'rgba(168, 85, 247, 0.05)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '15px', marginTop: 'auto' }}>
                 <div style={{ fontSize: '0.75rem', color: '#a855f7', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '1px' }}>Accumulator (Pending)</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}><span style={{color: '#94a3b8'}}>Pending BNB</span><span style={{ color: 'white' }}>{data.accBnb} BNB</span></div>
@@ -105,7 +111,6 @@ const HomePageClient = () => {
               <FaChartLine /> View All Pools on PancakeSwap <FaExternalLinkAlt size={10} />
             </a>
             
-            {/* Blocco DefiLlama ripristinato */}
             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '12px', marginTop: 'auto', marginBottom: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}><span style={{color: '#64748b', textTransform: 'uppercase'}}>DefiLlama Stats</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}><span style={{color: '#94a3b8'}}>30d Volume</span><span style={{ color: 'white', fontWeight: 'bold' }}>${volume30d.toLocaleString()}</span></div>
@@ -139,7 +144,7 @@ const HomePageClient = () => {
           <h2>The Ultimate Yield Engine</h2>
           <div className="grid-3">
             <div className="yield-card"><div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div><p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p></div>
-            <div className="yield-card"><div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div><p>Hold <strong>2M+ tokens</strong> for Diamond Status. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to holders.</p></div>
+            <div className="yield-card"><div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div><p>No minimum holding. Every token generates points every 15 minutes. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to all holders.</p></div>
             <div className="yield-card"><div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div><p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p></div>
           </div>
         </S.YieldEngineSection>
@@ -148,16 +153,16 @@ const HomePageClient = () => {
           <h2>Protocol Transparency</h2>
           <div className="supply-box"><span className="label">Total Supply</span><span className="value">1 Billion</span><span className="sub">4% Buy/Sell Tax for Rewards</span></div>
           <div className="spec-grid">
-            <S.SpecCard><FaChartPie className="icon" /><span className="label">Fee Destination</span><span className="value">100%</span><span className="desc">To Ranked Treasury</span></S.SpecCard>
+            <S.SpecCard><FaChartPie className="icon" /><span className="label">Reward Split</span><span className="value">80/20</span><span className="desc">80% Holders / 20% Treasury</span></S.SpecCard>
             <S.SpecCard><FaClock className="icon" /><span className="label">Reward Frequency</span><span className="value">6 Hours</span><span className="desc">Automated Distribution</span></S.SpecCard>
             <S.SpecCard><FaBullseye className="icon" /><span className="label">Ranking Precision</span><span className="value">9 Decimals</span><span className="desc">Fair & Precise math</span></S.SpecCard>
           </div>
         </S.ProtocolSpecsSection>
 
         <S.FeatureGrid>
-          <S.FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled directly into the Treasury.</p></S.FeatureCard>
-          <S.FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision.</p></S.FeatureCard>
-          <S.FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Full Transparency</h3><p>Monitor every inflow. 100% of protocol taxes and fees are visible and distributed every 6 hours.</p></S.FeatureCard>
+          <S.FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled into the Reward & Treasury system.</p></S.FeatureCard>
+          <S.FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision to the last decimal.</p></S.FeatureCard>
+          <S.FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Season Reset</h3><p>To keep the competition fresh, the leaderboard and points reset on the <strong>1st and 15th</strong> of every month.</p></S.FeatureCard>
         </S.FeatureGrid>
 
         <S.AuditSection>
