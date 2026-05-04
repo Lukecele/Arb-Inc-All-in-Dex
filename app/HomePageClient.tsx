@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useProtocolData } from '../hooks/useProtocolData';
 import * as S from './HomePageStyles';
-import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaChartLine, FaWater, FaRocket, FaCoins, FaTasks, FaChartPie, FaClock, FaBullseye, FaCalendarAlt } from 'react-icons/fa';
+import { FaExchangeAlt, FaTrophy, FaShieldAlt, FaArrowRight, FaSpinner, FaLock, FaCheckCircle, FaCode, FaCopy, FaExternalLinkAlt, FaChartLine, FaWater, FaRocket, FaCoins, FaTasks, FaChartPie, FaClock, FaBullseye, FaCalendarAlt, FaMoneyBillWave } from 'react-icons/fa';
 
 const CONTRACT_ADDRESS = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c"; 
 const TREASURY_WALLET = "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f"; 
@@ -49,7 +49,7 @@ const HomePageClient = () => {
         <S.Hero>
           <S.Badge>Official Token: ARB Inc</S.Badge>
           <S.Title>Unlocking Meritocratic<br />DeFi Yields</S.Title>
-          <S.Subtitle>100% of generated fees flow directly into the Treasury: 80% is distributed to holders, and 20% fuels project growth.</S.Subtitle>
+          <S.Subtitle>100% of generated protocol revenues flow directly into the Treasury: 80% is distributed to holders, and 20% fuels project growth.</S.Subtitle>
           <S.ButtonGroup>
             <S.PrimaryButton href={SWAP_LINK}>Swap Now <FaArrowRight /></S.PrimaryButton>
             <S.SecondaryButton href="#protocol-specs">Technical Specs</S.SecondaryButton>
@@ -143,7 +143,7 @@ const HomePageClient = () => {
         <S.YieldEngineSection>
           <h2>The Ultimate Yield Engine</h2>
           <div className="grid-3">
-            <div className="yield-card"><div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div><p>Stack points with every action: <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p></div>
+            <div className="yield-card"><div className="icon-head"><FaRocket className="icon" /><h3>Trade & Farm</h3></div><p>Stack points with every action (<strong>0.1% DEX fee</strong>): <strong>Swap (100), Zap (150)</strong> or <strong>Limit Orders (200)</strong>. Every trade fuels the treasury.</p></div>
             <div className="yield-card"><div className="icon-head"><FaCoins className="icon" /><h3>Earn Real BNB</h3></div><p>No minimum holding. Every token generates points every 15 minutes. Our engine distributes <strong>Real BNB</strong> from protocol fees directly to all holders.</p></div>
             <div className="yield-card"><div className="icon-head"><FaTasks className="icon" style={{ color: '#3b82f6' }} /><h3>Free Point Tasks</h3></div><p>No capital? No problem. Complete <strong>Free Tasks</strong> and invite friends to earn a <strong>10% Lifetime Bonus</strong>.</p></div>
           </div>
@@ -153,14 +153,14 @@ const HomePageClient = () => {
           <h2>Protocol Transparency</h2>
           <div className="supply-box"><span className="label">Total Supply</span><span className="value">1 Billion</span><span className="sub">4% Buy/Sell Tax for Rewards</span></div>
           <div className="spec-grid">
-            <S.SpecCard><FaChartPie className="icon" /><span className="label">Fee Routing</span><span className="value">100%</span><span className="desc">To Treasury (80% Users / 20% Project)</span></S.SpecCard>
+            <S.SpecCard><FaChartPie className="icon" /><span className="label">Revenue Routing</span><span className="value">100%</span><span className="desc">To Treasury (80% Users / 20% Project)</span></S.SpecCard>
             <S.SpecCard><FaClock className="icon" /><span className="label">Reward Frequency</span><span className="value">6 Hours</span><span className="desc">Automated Distribution</span></S.SpecCard>
             <S.SpecCard><FaBullseye className="icon" /><span className="label">Ranking Precision</span><span className="value">9 Decimals</span><span className="desc">Fair & Precise math</span></S.SpecCard>
           </div>
         </S.ProtocolSpecsSection>
 
         <S.FeatureGrid>
-          <S.FeatureCard><div className="icon-box"><FaExchangeAlt /></div><h3>Fee Revenue Engine</h3><p>100% of trading fees from our DEX aggregator are funneled into the Central Treasury.</p></S.FeatureCard>
+          <S.FeatureCard><div className="icon-box"><FaMoneyBillWave /></div><h3>Diversified Revenue</h3><p>The Treasury is fueled by 3 distinct streams: a <strong>4% Token Tax</strong> (Buy/Sell), a highly competitive <strong>0.1% DEX Fee</strong>, and <strong>Free Tasks Income</strong>.</p></S.FeatureCard>
           <S.FeatureCard><div className="icon-box"><FaTrophy /></div><h3>9-Decimal Justice</h3><p>Our proprietary ranking system ensures rewards are distributed with mathematical precision to the last decimal.</p></S.FeatureCard>
           <S.FeatureCard><div className="icon-box"><FaShieldAlt /></div><h3>Season Reset</h3><p>To keep the competition fresh, the leaderboard and points reset on the <strong>1st and 15th</strong> of every month.</p></S.FeatureCard>
         </S.FeatureGrid>
