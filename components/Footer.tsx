@@ -170,10 +170,9 @@ export default function Footer() {
 			</DisclaimerBox>
 
 			<LegalLinks>
-				<a href="/privacy-policy">Terms of Service</a>
+				<a href="/terms">Terms of Service</a>
           <a href="/privacy-policy">
             Privacy Policy</a>
-				<a href="/terms-of-service">Terms of Service</a>
 				<a href="/cookie-policy">Cookie Policy</a>
 				<a
 					href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
