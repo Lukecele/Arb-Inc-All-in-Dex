@@ -1,10 +1,10 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
+
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+
+
 import ClientWeb3Provider from "../components/ClientWeb3Provider";
 import CookieConsent from "../components/CookieConsent";
 import ErrorBoundary from "../components/ErrorBoundary";
@@ -72,7 +72,7 @@ export default function RootLayout({
 				>
 					Skip to content
 				</a>
-				<GoogleAnalytics gaId="G-H6XYJKW0CX" />
+				
 
 				<StyledComponentsRegistry>
 					<ClientWeb3Provider>
@@ -80,8 +80,8 @@ export default function RootLayout({
 					</ClientWeb3Provider>
 				</StyledComponentsRegistry>
 				<CookieConsent />
-				<Analytics />
-				<SpeedInsights />
+				
+				
 				<script
 					dangerouslySetInnerHTML={{
 						__html: ` 
