@@ -206,6 +206,7 @@ export default function RewardsClient() {
              Reset: 1st & 15th of month
           </span>
         </div>
+        <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '10px', lineHeight: '1.5' }}>⚠️ The wallet marked as <strong style={{ color: '#a855f7' }}>Team</strong> belongs to the protocol founder. It participates in the leaderboard and receives a 0.1% DEX commission. All participation is transparent and on-chain verifiable.</p>
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
