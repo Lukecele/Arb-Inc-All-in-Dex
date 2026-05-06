@@ -91,8 +91,7 @@ const HomePageClient = () => {
 					</S.Title>
 					<S.Subtitle>
 						Powered by 3 sustainable revenue streams. 100% of generated fees
-						flow directly into the Treasury: 80% distributed to holders, 20%
-						fuels project growth.
+						flow directly into the Treasury: 100% distributed to holders via the protocol treasury.
 					</S.Subtitle>
 					<S.ButtonGroup>
 						<S.PrimaryButton href={SWAP_LINK}>
@@ -623,7 +622,7 @@ const HomePageClient = () => {
 							<span className="label">Revenue Routing</span>
 							<span className="value">100%</span>
 							<span className="desc">
-								To Treasury (80% Users / 20% Project)
+								To Treasury (100% to Holders)
 							</span>
 						</S.SpecCard>
 						<S.SpecCard>
