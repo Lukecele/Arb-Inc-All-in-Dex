@@ -104,7 +104,7 @@ export default function Footer() {
           <SocialIcon href="https://x.com/Arbitrageincept" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer">
             <FaTwitter />
           </SocialIcon>
-          <SocialIcon href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" aria-label="View Source on GitHub" target="_blank" rel="noopener noreferrer">
+          <SocialIcon href="#/Arb-Inc-All-in-Dex" aria-label="View Source on GitHub" target="_blank" rel="noopener noreferrer">
             <FaGithub />
           </SocialIcon>
           <SocialIcon href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -129,6 +129,7 @@ export default function Footer() {
       <Copyright>
         © {new Date().getFullYear()} Arbitrage Inception. All rights reserved.
       </Copyright>
+<p style={{fontSize: "0.7rem", opacity: 0.6, marginTop: "1rem"}}>APR is estimated based on protocol revenue and is not guaranteed. This interface is open-source and decentralized. No IP tracking is performed.</p>
     </FooterContainer>
   )
 }
