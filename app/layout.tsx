@@ -6,7 +6,8 @@ import "./globals.css";
 
 
 import ClientWeb3Provider from "../components/ClientWeb3Provider";
-import CookieConsent from "../components/CookieConsent";
+import CookieConsent from '../components/CookieConsent';
+import EEADisclaimer from '../components/EEADisclaimer';
 import ErrorBoundary from "../components/ErrorBoundary";
 import StyledComponentsRegistry from "../lib/registry";
 
@@ -80,6 +81,7 @@ export default function RootLayout({
 					</ClientWeb3Provider>
 				</StyledComponentsRegistry>
 				<CookieConsent />
+        <EEADisclaimer />
 				
 				
 				<script

@@ -170,7 +170,9 @@ export default function Footer() {
 			</DisclaimerBox>
 
 			<LegalLinks>
-				<a href="/privacy-policy">Privacy Policy</a>
+				<a href="/privacy-policy">Terms of Service</a>
+          <a href="/privacy-policy">
+            Privacy Policy</a>
 				<a href="/terms-of-service">Terms of Service</a>
 				<a href="/cookie-policy">Cookie Policy</a>
 				<a

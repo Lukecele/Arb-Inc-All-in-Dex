@@ -47,7 +47,7 @@ const mayanConfig = {
 		uri: "https://arbitrage-inc.exchange",
 	},
 	solanaReferrerAddress: "FNRBnEp9g2Zfw9qtEyVbzyFe7sDwaXKsPB8hHw2kXrZi",
-	evmReferrerAddress: "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7",
+	evmReferrerAddress: "0x66BB01F14229E2179bAD84D52A69C0e4628dE63f",
 	referrerBps: 30,
 	sourceChains: [
 		"bsc",

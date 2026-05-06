@@ -338,7 +338,7 @@ export default function RewardsClient() {
 							fontWeight: "bold",
 						}}
 					>
-						Real-Time Global APR
+						Real-Time Global APR*
 					</div>
 					<div style={{ fontSize: "38px", color: "#fff", fontWeight: "900" }}>
 						{globalApr} 🔥

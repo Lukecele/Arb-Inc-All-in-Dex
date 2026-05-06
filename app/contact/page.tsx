@@ -21,6 +21,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px 15px;
+  padding-left: 275px;
+  @media (max-width: 1024px) {
+    padding-left: 15px;
+    padding-top: 70px;
+  }
 `;
 
 const MainContent = styled.main`
