@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import styled from 'styled-components'
-import { FaGithub, FaTelegramPlane, FaTwitter, FaLinkedin, FaFacebook, FaEnvelope } from 'react-icons/fa'
+import { FaGithub, FaTelegramPlane, FaTwitter } from 'react-icons/fa'
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -43,7 +43,6 @@ const SocialIcon = styled.a`
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-
   &:hover {
     color: #a855f7;
     background: rgba(168, 85, 247, 0.1);
@@ -53,7 +52,7 @@ const SocialIcon = styled.a`
   }
 `
 
-const ContactLink = styled.a`
+const CommunityLink = styled.a`
   color: #94a3b8;
   text-decoration: none;
   font-size: 0.95rem;
@@ -64,7 +63,6 @@ const ContactLink = styled.a`
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-
   &:hover {
     color: #a855f7;
     background: rgba(255, 255, 255, 0.03);
@@ -81,10 +79,23 @@ const DisclaimerBox = styled.div`
   line-height: 1.6;
   text-align: justify;
   font-size: 0.85rem;
-  
   strong { color: #a855f7; font-weight: 600; }
-  
   @media (max-width: 768px) { padding: 1rem; font-size: 0.75rem; }
+`
+
+const LegalLinks = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  font-size: 0.8rem;
+  a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+    &:hover { color: #a855f7; }
+  }
 `
 
 const Copyright = styled.div`
@@ -98,38 +109,46 @@ export default function Footer() {
     <FooterContainer>
       <TopSection>
         <SocialLinks>
-          <SocialIcon href="https://t.me/ArbitrageInception" aria-label="Join our Telegram" target="_blank" rel="noopener noreferrer">
+          <SocialIcon href="https://t.me/ArbitrageInception" aria-label="Telegram Community" target="_blank" rel="noopener noreferrer">
             <FaTelegramPlane />
           </SocialIcon>
-          <SocialIcon href="https://x.com/Arbitrageincept" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer">
+          <SocialIcon href="https://x.com/Arbitrageincept" aria-label="Follow on X" target="_blank" rel="noopener noreferrer">
             <FaTwitter />
           </SocialIcon>
-          <SocialIcon href="#/Arb-Inc-All-in-Dex" aria-label="View Source on GitHub" target="_blank" rel="noopener noreferrer">
+          <SocialIcon href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" aria-label="Open Source on GitHub (MIT)" target="_blank" rel="noopener noreferrer">
             <FaGithub />
           </SocialIcon>
-          <SocialIcon href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <FaLinkedin />
-          </SocialIcon>
-          <SocialIcon href="https://www.facebook.com/luca.celebrano" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <FaFacebook />
-          </SocialIcon>
         </SocialLinks>
-        
-        <ContactLink href="https://arbitrage-inc.exchange/contact">
-          <FaEnvelope /> Contact Us
-        </ContactLink>
+
+        <CommunityLink href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">
+          <FaTelegramPlane /> Community Support
+        </CommunityLink>
       </TopSection>
 
       <DisclaimerBox>
-        <strong>Risk Disclaimer & Terms of Use:</strong> Arbitrage Inception is a decentralized application (dApp) operating as an interface to interact with third-party smart contracts (e.g., KyberSwap, Mayan Finance, PancakeSwap, and Limit Orders protocols). We do not custody your funds, nor do we manage the underlying liquidity pools. Trading digital assets involves significant risk, including the possible loss of all invested funds. Smart contracts may contain vulnerabilities. By using this interface, you acknowledge that you are doing so entirely at your own risk. Arbitrage Inception and its developers assume no liability for any losses, hacks, slippage issues, or network failures. 
+        <strong>Risk Disclaimer &amp; Terms of Use:</strong> Arbitrage Inception is a permissionless, open-source decentralized application (dApp) that acts as an interface to interact with third-party smart contracts (KyberSwap, Mayan Finance, PancakeSwap, Limit Orders protocols). No individual or entity custodies funds or manages underlying liquidity pools. Trading digital assets involves significant risk, including possible loss of all invested funds. Smart contracts may contain vulnerabilities. By using this interface you acknowledge doing so entirely at your own risk. No liability is assumed for losses, hacks, slippage, or network failures.
         <br /><br />
-        <strong>Tax Token Notice:</strong> When trading $ARB INC or other tax tokens, please ensure your slippage is set correctly (e.g., <strong>8%</strong>) to account for tokenomics and prevent transaction failures. Always do your own research (DYOR) before interacting with any decentralized protocol.
+        <strong>Tax Token Notice:</strong> When trading $ARB INC or other tax tokens, set slippage correctly (e.g. <strong>8%</strong>) to account for tokenomics and prevent transaction failures. Always DYOR before interacting with any decentralized protocol.
+        <br /><br />
+        <strong>MiCA Notice (Reg. EU 2023/1114):</strong> This interface is not a Virtual Asset Service Provider (VASP), broker, or regulated financial entity. It is permissionless open-source software. Use is at the user&apos;s sole risk and responsibility.
       </DisclaimerBox>
-      
+
+      <LegalLinks>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms-of-service">Terms of Service</a>
+        <a href="/cookie-policy">Cookie Policy</a>
+        <a href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+      </LegalLinks>
+
       <Copyright>
-        © {new Date().getFullYear()} Arbitrage Inception. All rights reserved.
+        © {new Date().getFullYear()} Arbitrage Inception Contributors —{' '}
+        <a href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" style={{ color: '#a855f7' }}>
+          MIT License
+        </a>
       </Copyright>
-<p style={{fontSize: "0.7rem", opacity: 0.6, marginTop: "1rem"}}>APR is estimated based on protocol revenue and is not guaranteed. This interface is open-source and decentralized. No IP tracking is performed.</p>
+      <p style={{ fontSize: '0.7rem', opacity: 0.6, marginTop: '1rem', textAlign: 'center' }}>
+        APR is estimated based on protocol revenue and is not guaranteed. This interface is open-source and decentralized. No IP tracking is performed.
+      </p>
     </FooterContainer>
   )
 }

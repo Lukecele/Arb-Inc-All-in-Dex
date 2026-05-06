@@ -31,42 +31,18 @@ const MainContent = styled.main`
   color: #ffffff;
 `
 
-const ProfileCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  padding: 30px;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  
-  @media (max-width: 600px) {
-    flex-direction: column;
-    text-align: center;
-  }
+const PageTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ffffff;
+`
 
-  .img-container {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 3px solid #a78bfa;
-    box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .info {
-    h1 { font-size: 1.8rem; margin-bottom: 5px; color: #ffffff; }
-    h3 { font-size: 0.9rem; color: #a78bfa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    p { color: #8a8a9a; line-height: 1.5; font-size: 1rem; }
-  }
+const PageSubtitle = styled.p`
+  color: #94a3b8;
+  margin-bottom: 36px;
+  font-size: 1rem;
+  line-height: 1.6;
 `
 
 const ContactCard = styled.div`
@@ -75,10 +51,23 @@ const ContactCard = styled.div`
   border-radius: 20px;
   padding: 28px 24px;
   margin-bottom: 16px;
-  h2 { color: #a78bfa; font-size: 1.05rem; margin-bottom: 14px; }
-  a { 
-    color: #34d399; 
-    text-decoration: none; 
+
+  h2 {
+    color: #a78bfa;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  a {
+    color: #34d399;
+    text-decoration: none;
     transition: opacity 0.2s;
     &:hover { opacity: 0.8; }
   }
@@ -87,7 +76,6 @@ const ContactCard = styled.div`
 const SocialGrid = styled.div`
   display: flex;
   gap: 12px;
-  margin-top: 15px;
   flex-wrap: wrap;
 
   a {
@@ -95,18 +83,35 @@ const SocialGrid = styled.div`
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     font-size: 0.9rem;
-    color: #ffffff !important;
+    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
     transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(168, 85, 247, 0.1);
       border-color: #a78bfa;
     }
   }
+`
+
+const OpenSourceNote = styled.div`
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+
+  h3 { color: #a855f7; font-size: 1rem; margin-bottom: 10px; }
+
+  p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  a { color: #34d399; text-decoration: none; }
 `
 
 export default function ContactPage() {
@@ -115,35 +120,70 @@ export default function ContactPage() {
       <GlobalStyle />
       <Container>
         <SharedHeader activePage="/contact" />
-        
+
         <MainContent>
-          <ProfileCard>
-            <div className="img-container">
-              <img src="/doc.jpg" alt="Luca Celebrano" />
-            </div>
-            <div className="info">
-              <h3>Medical Student</h3>
-              <h1>Luca Celebrano</h1>
-              <p>Medical student passionate about decentralized finance and arbitrage systems. Bridging the gap between medical precision and technological innovation.</p>
-            </div>
-          </ProfileCard>
-
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>Contact Channels</h2>
+          <PageTitle>Contact &amp; Support</PageTitle>
+          <PageSubtitle>
+            Arbitrage Inception is an anonymous, open-source project with no central team.
+            All support is handled through community channels below.
+          </PageSubtitle>
 
           <ContactCard>
-            <h2>📧 Email Support</h2>
-            <a href="mailto:luca.celebrano1@gmail.com">luca.celebrano1@gmail.com</a>
-          </ContactCard>
-
-          <ContactCard>
-            <h2>📱 Community & Social</h2>
+            <h2>💬 Community Support (Primary)</h2>
+            <p>
+              The Telegram community is the fastest way to get help, report issues,
+              or discuss the protocol. Questions are answered by community members and contributors.
+            </p>
             <SocialGrid>
-              <a href="https://t.me/ArbitrageInception" target="_blank">Telegram</a>
-              <a href="https://x.com/Arbitrageincept" target="_blank">Twitter</a>
-              <a href="https://www.facebook.com/luca.celebrano" target="_blank">Facebook</a>
-              <a href="https://www.linkedin.com/in/luca-celebrano-24a289247" target="_blank">LinkedIn</a>
+              <a href="https://t.me/ArbitrageInception" target="_blank" rel="noopener noreferrer">
+                Telegram Community
+              </a>
+              <a href="https://x.com/Arbitrageincept" target="_blank" rel="noopener noreferrer">
+                X / Twitter
+              </a>
             </SocialGrid>
           </ContactCard>
+
+          <ContactCard>
+            <h2>🐛 Bug Reports &amp; Contributions</h2>
+            <p>
+              Found a bug or want to contribute? The codebase is fully open-source under the MIT License.
+              Open an issue or pull request directly on GitHub.
+            </p>
+            <SocialGrid>
+              <a href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/issues" target="_blank" rel="noopener noreferrer">
+                GitHub Issues
+              </a>
+              <a href="https://github.com/Lukecele/Arb-Inc-All-in-Dex" target="_blank" rel="noopener noreferrer">
+                Source Code
+              </a>
+            </SocialGrid>
+          </ContactCard>
+
+          <ContactCard>
+            <h2>🔒 Security Disclosures</h2>
+            <p>
+              For responsible disclosure of security vulnerabilities, open a confidential issue
+              on GitHub or reach out privately via Telegram to community moderators.
+            </p>
+            <p style={{ color: '#ef4444', marginBottom: 0 }}>
+              <strong>Warning:</strong> Arbitrage Inception will never ask for your private keys,
+              seed phrases, or wallet passwords. Beware of impersonators.
+            </p>
+          </ContactCard>
+
+          <OpenSourceNote>
+            <h3>🔓 Open Source by Design</h3>
+            <p>
+              This project has no identifiable developers, no company, and no central authority.
+              The code is released under the{' '}
+              <a href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+                MIT License
+              </a>
+              , meaning anyone can inspect, fork, deploy, or improve it freely.
+              Transparency is the only accountability — read the code.
+            </p>
+          </OpenSourceNote>
         </MainContent>
 
         <SharedFooter />
