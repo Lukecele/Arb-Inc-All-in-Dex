@@ -122,8 +122,7 @@ export default function CookieConsent() {
 		<Banner $visible={visible} role="dialog" aria-label="Cookie consent">
 			<Content>
 				<Text>
-					This site uses essential cookies for functionality and optional
-					analytics cookies. Please choose your preference. You can change your
+					This site uses only strictly necessary cookies for functionality. No analytics or tracking cookies are used. You can change your
 					choice at any time. <a href="/cookie-policy">Learn more</a>
 				</Text>
 				<Buttons>
