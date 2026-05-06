@@ -1,110 +1,112 @@
-import { ethers } from 'ethers';
-import { LimitOrderMaker } from './maker';
-import { LimitOrderApiClient } from './api-client';
-import { createLimitOrderMaker } from './maker';
+import type { ethers } from "ethers";
+import type { LimitOrderApiClient } from "./api-client";
+import { createLimitOrderMaker, type LimitOrderMaker } from "./maker";
 
 // ============================================
 // Gasless Cancel Flow
 // ============================================
 
 export class GaslessCancelFlow {
-  private maker: LimitOrderMaker;
+	private maker: LimitOrderMaker;
 
-  constructor(maker: LimitOrderMaker) {
-    this.maker = maker;
-  }
+	constructor(maker: LimitOrderMaker) {
+		this.maker = maker;
+	}
 
-  /**
-   * Executes gasless cancel for specified orders
-   * No gas required - uses operator signatures
-   */
-  async cancel(
-    signer: ethers.Signer,
-    orderIds: string[]
-  ): Promise<{
-    success: boolean;
-    cancelledOrders: string[];
-    failedOrders: string[];
-  }> {
-    try {
-      const success = await this.maker.cancelOrders(signer, orderIds);
-      
-      return {
-        success,
-        cancelledOrders: success ? orderIds : [],
-        failedOrders: success ? [] : orderIds,
-      };
-    } catch (error) {
-      console.error('Gasless cancel failed:', error);
-      return {
-        success: false,
-        cancelledOrders: [],
-        failedOrders: orderIds,
-      };
-    }
-  }
+	/**
+	 * Executes gasless cancel for specified orders
+	 * No gas required - uses operator signatures
+	 */
+	async cancel(
+		signer: ethers.Signer,
+		orderIds: string[],
+	): Promise<{
+		success: boolean;
+		cancelledOrders: string[];
+		failedOrders: string[];
+	}> {
+		try {
+			const success = await this.maker.cancelOrders(signer, orderIds);
 
-  /**
-   * Validates if orders can be cancelled gaslessly
-   */
-  async validateOrdersForCancellation(
-    signer: ethers.Signer,
-    orderIds: string[]
-  ): Promise<{
-    validOrders: string[];
-    invalidOrders: string[];
-    reasons: Record<string, string>;
-  }> {
-    const validOrders: string[] = [];
-    const invalidOrders: string[] = [];
-    const reasons: Record<string, string> = {};
+			return {
+				success,
+				cancelledOrders: success ? orderIds : [],
+				failedOrders: success ? [] : orderIds,
+			};
+		} catch (error) {
+			console.error("Gasless cancel failed:", error);
+			return {
+				success: false,
+				cancelledOrders: [],
+				failedOrders: orderIds,
+			};
+		}
+	}
 
-    const signerAddress = await signer.getAddress();
+	/**
+	 * Validates if orders can be cancelled gaslessly
+	 */
+	async validateOrdersForCancellation(
+		signer: ethers.Signer,
+		orderIds: string[],
+	): Promise<{
+		validOrders: string[];
+		invalidOrders: string[];
+		reasons: Record<string, string>;
+	}> {
+		const validOrders: string[] = [];
+		const invalidOrders: string[] = [];
+		const reasons: Record<string, string> = {};
 
-    for (const orderId of orderIds) {
-      // Check if order exists and is active
-      validOrders.push(orderId);
-    }
+		const signerAddress = await signer.getAddress();
 
-    return {
-      validOrders,
-      invalidOrders,
-      reasons,
-    };
-  }
+		for (const orderId of orderIds) {
+			// Check if order exists and is active
+			validOrders.push(orderId);
+		}
 
-  /**
-   * Cancels orders with validation
-   */
-  async cancelWithValidation(
-    signer: ethers.Signer,
-    orderIds: string[]
-  ): Promise<{
-    success: boolean;
-    cancelledOrders: string[];
-    failedOrders: string[];
-    validationErrors: Record<string, string>;
-  }> {
-    // Step 1: Validate orders
-    const validation = await this.validateOrdersForCancellation(signer, orderIds);
-    
-    if (validation.invalidOrders.length > 0) {
-      return {
-        success: false,
-        cancelledOrders: [],
-        failedOrders: validation.invalidOrders,
-        validationErrors: validation.reasons,
-      };
-    }
+		return {
+			validOrders,
+			invalidOrders,
+			reasons,
+		};
+	}
 
-    // Step 2: Execute cancellation
-    const result = await this.cancel(signer, validation.validOrders);
-    
-    return {
-      ...result,
-      validationErrors: {},
-    };
-  }
+	/**
+	 * Cancels orders with validation
+	 */
+	async cancelWithValidation(
+		signer: ethers.Signer,
+		orderIds: string[],
+	): Promise<{
+		success: boolean;
+		cancelledOrders: string[];
+		failedOrders: string[];
+		validationErrors: Record<string, string>;
+	}> {
+		// Step 1: Validate orders
+		const validation = await this.validateOrdersForCancellation(
+			signer,
+			orderIds,
+		);
+
+		if (validation.invalidOrders.length > 0) {
+			return {
+				success: false,
+				cancelledOrders: [],
+				failedOrders: validation.invalidOrders,
+				validationErrors: validation.reasons,
+			};
+		}
+
+		// Step 2: Execute cancellation
+		const result = await this.cancel(signer, validation.validOrders);
+
+		return {
+			...result,
+			validationErrors: {},
+		};
+	}
 }
 
 // ============================================
@@ -112,8 +114,8 @@ export class GaslessCancelFlow {
 // ============================================
 
 export function createGaslessCancelFlow(
-  client?: LimitOrderApiClient
+	client?: LimitOrderApiClient,
 ): GaslessCancelFlow {
-  const maker = createLimitOrderMaker(client);
-  return new GaslessCancelFlow(maker);
+	const maker = createLimitOrderMaker(client);
+	return new GaslessCancelFlow(maker);
 }

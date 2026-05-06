@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { theme } from '../../app/styles/theme';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { theme } from "../../app/styles/theme";
 
 // ============================================
 // Styled Components
@@ -137,23 +137,23 @@ const PreviewValue = styled.span`
 // ============================================
 
 interface TokenOption {
-  address: string;
-  symbol: string;
-  decimals: number;
+	address: string;
+	symbol: string;
+	decimals: number;
 }
 
 interface LimitOrderFormProps {
-  availableTokens: TokenOption[];
-  onSubmit: (order: OrderFormData) => void;
-  isLoading?: boolean;
+	availableTokens: TokenOption[];
+	onSubmit: (order: OrderFormData) => void;
+	isLoading?: boolean;
 }
 
 export interface OrderFormData {
-  makerAsset: string;
-  takerAsset: string;
-  makingAmount: string;
-  takingAmount: string;
-  expiredAt: number;
+	makerAsset: string;
+	takerAsset: string;
+	makingAmount: string;
+	takingAmount: string;
+	expiredAt: number;
 }
 
 // ============================================
@@ -161,12 +161,12 @@ export interface OrderFormData {
 // ============================================
 
 const EXPIRY_OPTIONS = [
-  { label: '1 hour', value: 3600 },
-  { label: '6 hours', value: 21600 },
-  { label: '12 hours', value: 43200 },
-  { label: '1 day', value: 86400 },
-  { label: '3 days', value: 259200 },
-  { label: '7 days', value: 604800 },
+	{ label: "1 hour", value: 3600 },
+	{ label: "6 hours", value: 21600 },
+	{ label: "12 hours", value: 43200 },
+	{ label: "1 day", value: 86400 },
+	{ label: "3 days", value: 259200 },
+	{ label: "7 days", value: 604800 },
 ];
 
 // ============================================
@@ -174,217 +174,226 @@ const EXPIRY_OPTIONS = [
 // ============================================
 
 export const LimitOrderForm: React.FC<LimitOrderFormProps> = ({
-  availableTokens,
-  onSubmit,
-  isLoading = false,
+	availableTokens,
+	onSubmit,
+	isLoading = false,
 }) => {
-  const [makerAsset, setMakerAsset] = useState('');
-  const [takerAsset, setTakerAsset] = useState('');
-  const [makingAmount, setMakingAmount] = useState('');
-  const [takingAmount, setTakingAmount] = useState('');
-  const [expiry, setExpiry] = useState(3600);
-  const [showPreview, setShowPreview] = useState(false);
+	const [makerAsset, setMakerAsset] = useState("");
+	const [takerAsset, setTakerAsset] = useState("");
+	const [makingAmount, setMakingAmount] = useState("");
+	const [takingAmount, setTakingAmount] = useState("");
+	const [expiry, setExpiry] = useState(3600);
+	const [showPreview, setShowPreview] = useState(false);
 
-  const selectedMakerToken = availableTokens.find(t => t.address === makerAsset);
-  const selectedTakerToken = availableTokens.find(t => t.address === takerAsset);
+	const selectedMakerToken = availableTokens.find(
+		(t) => t.address === makerAsset,
+	);
+	const selectedTakerToken = availableTokens.find(
+		(t) => t.address === takerAsset,
+	);
 
-  const isValid = makerAsset && takerAsset && makingAmount && takingAmount && makerAsset !== takerAsset;
+	const isValid =
+		makerAsset &&
+		takerAsset &&
+		makingAmount &&
+		takingAmount &&
+		makerAsset !== takerAsset;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!isValid) return;
-    
-    const expiredAt = Math.floor(Date.now() / 1000) + expiry;
-    
-    onSubmit({
-      makerAsset,
-      takerAsset,
-      makingAmount,
-      takingAmount,
-      expiredAt,
-    });
-  };
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
 
-  const handlePreview = () => {
-    if (isValid) {
-      setShowPreview(true);
-    }
-  };
+		if (!isValid) return;
 
-  const handleBackToEdit = () => {
-    setShowPreview(false);
-  };
+		const expiredAt = Math.floor(Date.now() / 1000) + expiry;
 
-  // Calculate price per token
-  const pricePerToken = React.useMemo(() => {
-    if (!makingAmount || !takingAmount || !selectedMakerToken || !selectedTakerToken) {
-      return '0';
-    }
-    
-    const makingAmountNum = parseFloat(makingAmount);
-    const takingAmountNum = parseFloat(takingAmount);
-    
-    if (makingAmountNum === 0) return '0';
-    
-    return (takingAmountNum / makingAmountNum).toFixed(6);
-  }, [makingAmount, takingAmount, selectedMakerToken, selectedTakerToken]);
+		onSubmit({
+			makerAsset,
+			takerAsset,
+			makingAmount,
+			takingAmount,
+			expiredAt,
+		});
+	};
 
-  if (showPreview) {
-    return (
-      <FormContainer>
-        <Title>Order Preview</Title>
-        
-        <PreviewSection>
-          <PreviewRow>
-            <PreviewLabel>You pay:</PreviewLabel>
-            <PreviewValue>
-              {makingAmount} {selectedMakerToken?.symbol}
-            </PreviewValue>
-          </PreviewRow>
-          
-          <PreviewRow>
-            <PreviewLabel>You receive:</PreviewLabel>
-            <PreviewValue>
-              {takingAmount} {selectedTakerToken?.symbol}
-            </PreviewValue>
-          </PreviewRow>
-          
-          <PreviewRow>
-            <PreviewLabel>Price:</PreviewLabel>
-            <PreviewValue>
-              1 {selectedMakerToken?.symbol} = {pricePerToken} {selectedTakerToken?.symbol}
-            </PreviewValue>
-          </PreviewRow>
-          
-          <PreviewRow>
-            <PreviewLabel>Expires:</PreviewLabel>
-            <PreviewValue>
-              {EXPIRY_OPTIONS.find(o => o.value === expiry)?.label}
-            </PreviewValue>
-          </PreviewRow>
-          
-          <PreviewRow>
-            <PreviewLabel>Dev Fee:</PreviewLabel>
-            <PreviewValue>
-              0.1% (included in amounts)
-            </PreviewValue>
-          </PreviewRow>
-        </PreviewSection>
-        
-        <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-          <Button 
-            type="button" 
-            onClick={handleBackToEdit}
-            style={{ background: theme.colors.background.tertiary }}
-          >
-            Back
-          </Button>
-          <Button 
-            type="button" 
-            onClick={handleSubmit}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating...' : 'Create Order'}
-          </Button>
-        </div>
-      </FormContainer>
-    );
-  }
+	const handlePreview = () => {
+		if (isValid) {
+			setShowPreview(true);
+		}
+	};
 
-  return (
-    <FormContainer>
-      <Title>Create Limit Order</Title>
-      
-      <form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="makerAsset">You pay (Token)</Label>
-          <Select
-            id="makerAsset"
-            value={makerAsset}
-            onChange={(e) => setMakerAsset(e.target.value)}
-            required
-          >
-            <option value="">Select token</option>
-            {availableTokens.map((token) => (
-              <option key={token.address} value={token.address}>
-                {token.symbol}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
-        
-        <FormGroup>
-          <Label htmlFor="makingAmount">Amount</Label>
-          <Input
-            id="makingAmount"
-            type="number"
-            step="any"
-            min="0"
-            placeholder="0.0"
-            value={makingAmount}
-            onChange={(e) => setMakingAmount(e.target.value)}
-            required
-          />
-        </FormGroup>
-        
-        <FormGroup>
-          <Label htmlFor="takerAsset">You receive (Token)</Label>
-          <Select
-            id="takerAsset"
-            value={takerAsset}
-            onChange={(e) => setTakerAsset(e.target.value)}
-            required
-          >
-            <option value="">Select token</option>
-            {availableTokens.map((token) => (
-              <option key={token.address} value={token.address}>
-                {token.symbol}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
-        
-        <FormGroup>
-          <Label htmlFor="takingAmount">Amount</Label>
-          <Input
-            id="takingAmount"
-            type="number"
-            step="any"
-            min="0"
-            placeholder="0.0"
-            value={takingAmount}
-            onChange={(e) => setTakingAmount(e.target.value)}
-            required
-          />
-        </FormGroup>
-        
-        <FormGroup>
-          <Label htmlFor="expiry">Expires in</Label>
-          <Select
-            id="expiry"
-            value={expiry}
-            onChange={(e) => setExpiry(Number(e.target.value))}
-          >
-            {EXPIRY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
-        
-        <Button 
-          type="button" 
-          onClick={handlePreview}
-          disabled={!isValid}
-          style={{ marginTop: '16px' }}
-        >
-          Preview Order
-        </Button>
-      </form>
-    </FormContainer>
-  );
+	const handleBackToEdit = () => {
+		setShowPreview(false);
+	};
+
+	// Calculate price per token
+	const pricePerToken = React.useMemo(() => {
+		if (
+			!makingAmount ||
+			!takingAmount ||
+			!selectedMakerToken ||
+			!selectedTakerToken
+		) {
+			return "0";
+		}
+
+		const makingAmountNum = parseFloat(makingAmount);
+		const takingAmountNum = parseFloat(takingAmount);
+
+		if (makingAmountNum === 0) return "0";
+
+		return (takingAmountNum / makingAmountNum).toFixed(6);
+	}, [makingAmount, takingAmount, selectedMakerToken, selectedTakerToken]);
+
+	if (showPreview) {
+		return (
+			<FormContainer>
+				<Title>Order Preview</Title>
+
+				<PreviewSection>
+					<PreviewRow>
+						<PreviewLabel>You pay:</PreviewLabel>
+						<PreviewValue>
+							{makingAmount} {selectedMakerToken?.symbol}
+						</PreviewValue>
+					</PreviewRow>
+
+					<PreviewRow>
+						<PreviewLabel>You receive:</PreviewLabel>
+						<PreviewValue>
+							{takingAmount} {selectedTakerToken?.symbol}
+						</PreviewValue>
+					</PreviewRow>
+
+					<PreviewRow>
+						<PreviewLabel>Price:</PreviewLabel>
+						<PreviewValue>
+							1 {selectedMakerToken?.symbol} = {pricePerToken}{" "}
+							{selectedTakerToken?.symbol}
+						</PreviewValue>
+					</PreviewRow>
+
+					<PreviewRow>
+						<PreviewLabel>Expires:</PreviewLabel>
+						<PreviewValue>
+							{EXPIRY_OPTIONS.find((o) => o.value === expiry)?.label}
+						</PreviewValue>
+					</PreviewRow>
+
+					<PreviewRow>
+						<PreviewLabel>Dev Fee:</PreviewLabel>
+						<PreviewValue>0.1% (included in amounts)</PreviewValue>
+					</PreviewRow>
+				</PreviewSection>
+
+				<div style={{ display: "flex", gap: "12px", marginTop: "24px" }}>
+					<Button
+						type="button"
+						onClick={handleBackToEdit}
+						style={{ background: theme.colors.background.tertiary }}
+					>
+						Back
+					</Button>
+					<Button type="button" onClick={handleSubmit} disabled={isLoading}>
+						{isLoading ? "Creating..." : "Create Order"}
+					</Button>
+				</div>
+			</FormContainer>
+		);
+	}
+
+	return (
+		<FormContainer>
+			<Title>Create Limit Order</Title>
+
+			<form onSubmit={handleSubmit}>
+				<FormGroup>
+					<Label htmlFor="makerAsset">You pay (Token)</Label>
+					<Select
+						id="makerAsset"
+						value={makerAsset}
+						onChange={(e) => setMakerAsset(e.target.value)}
+						required
+					>
+						<option value="">Select token</option>
+						{availableTokens.map((token) => (
+							<option key={token.address} value={token.address}>
+								{token.symbol}
+							</option>
+						))}
+					</Select>
+				</FormGroup>
+
+				<FormGroup>
+					<Label htmlFor="makingAmount">Amount</Label>
+					<Input
+						id="makingAmount"
+						type="number"
+						step="any"
+						min="0"
+						placeholder="0.0"
+						value={makingAmount}
+						onChange={(e) => setMakingAmount(e.target.value)}
+						required
+					/>
+				</FormGroup>
+
+				<FormGroup>
+					<Label htmlFor="takerAsset">You receive (Token)</Label>
+					<Select
+						id="takerAsset"
+						value={takerAsset}
+						onChange={(e) => setTakerAsset(e.target.value)}
+						required
+					>
+						<option value="">Select token</option>
+						{availableTokens.map((token) => (
+							<option key={token.address} value={token.address}>
+								{token.symbol}
+							</option>
+						))}
+					</Select>
+				</FormGroup>
+
+				<FormGroup>
+					<Label htmlFor="takingAmount">Amount</Label>
+					<Input
+						id="takingAmount"
+						type="number"
+						step="any"
+						min="0"
+						placeholder="0.0"
+						value={takingAmount}
+						onChange={(e) => setTakingAmount(e.target.value)}
+						required
+					/>
+				</FormGroup>
+
+				<FormGroup>
+					<Label htmlFor="expiry">Expires in</Label>
+					<Select
+						id="expiry"
+						value={expiry}
+						onChange={(e) => setExpiry(Number(e.target.value))}
+					>
+						{EXPIRY_OPTIONS.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+					</Select>
+				</FormGroup>
+
+				<Button
+					type="button"
+					onClick={handlePreview}
+					disabled={!isValid}
+					style={{ marginTop: "16px" }}
+				>
+					Preview Order
+				</Button>
+			</form>
+		</FormContainer>
+	);
 };
 
 export default LimitOrderForm;

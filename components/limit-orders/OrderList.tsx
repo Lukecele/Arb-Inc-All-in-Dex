@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import styled from 'styled-components';
-import { theme } from '../../app/styles/theme';
+import type React from "react";
+import styled from "styled-components";
+import { theme } from "../../app/styles/theme";
 
 const Container = styled.div`
   background: ${theme.colors.background.tertiary};
@@ -81,30 +81,30 @@ const StatusBadge = styled.span<{ status: string }>`
   text-transform: uppercase;
   
   ${({ status }) => {
-    switch (status) {
-      case 'active':
-        return `
+		switch (status) {
+			case "active":
+				return `
           background: rgba(32, 184, 205, 0.15);
           color: #20B8CD;
         `;
-      case 'filled':
-        return `
+			case "filled":
+				return `
           background: rgba(59, 130, 246, 0.15);
           color: #3B82F6;
         `;
-      case 'cancelled':
-      case 'expired':
-        return `
+			case "cancelled":
+			case "expired":
+				return `
           background: rgba(239, 68, 68, 0.15);
           color: #EF4444;
         `;
-      default:
-        return `
+			default:
+				return `
           background: ${theme.colors.background.tertiary};
           color: ${theme.colors.text.secondary};
         `;
-    }
-  }}
+		}
+	}}
 `;
 
 const Actions = styled.div`
@@ -112,19 +112,19 @@ const Actions = styled.div`
   gap: 8px;
 `;
 
-const ActionButton = styled.button<{ $variant?: 'primary' }>`
+const ActionButton = styled.button<{ $variant?: "primary" }>`
   padding: 6px 12px;
-  background: ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.background.secondary};
-  border: 1px solid ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.border.DEFAULT};
+  background: ${({ $variant }) => ($variant === "primary" ? "#20B8CD" : theme.colors.background.secondary)};
+  border: 1px solid ${({ $variant }) => ($variant === "primary" ? "#20B8CD" : theme.colors.border.DEFAULT)};
   border-radius: ${theme.borderRadius.sm};
-  color: ${({ $variant }) => $variant === 'primary' ? 'white' : theme.colors.text.secondary};
+  color: ${({ $variant }) => ($variant === "primary" ? "white" : theme.colors.text.secondary)};
   font-size: ${theme.typography.sizes.xs};
   cursor: pointer;
   transition: all ${theme.transitions.fast};
   
   &:hover {
     opacity: 0.8;
-    border-color: ${({ $variant }) => $variant === 'primary' ? '#20B8CD' : theme.colors.border.hover};
+    border-color: ${({ $variant }) => ($variant === "primary" ? "#20B8CD" : theme.colors.border.hover)};
   }
   
   &:disabled {
@@ -163,123 +163,131 @@ const EmptyState = styled.div`
 `;
 
 interface Order {
-  id: string;
-  makerAsset: string;
-  takerAsset: string;
-  makingAmount: string;
-  takingAmount: string;
-  status: 'active' | 'filled' | 'cancelled' | 'expired';
-  createdAt: number;
-  expiredAt: number;
-  maker: string;
+	id: string;
+	makerAsset: string;
+	takerAsset: string;
+	makingAmount: string;
+	takingAmount: string;
+	status: "active" | "filled" | "cancelled" | "expired";
+	createdAt: number;
+	expiredAt: number;
+	maker: string;
 }
 
 interface OrderListProps {
-  orders: Order[];
-  onRefresh: () => void;
-  onCancel?: (orderId: string) => void;
-  onFill?: (orderId: string) => void;
-  isLoading?: boolean;
+	orders: Order[];
+	onRefresh: () => void;
+	onCancel?: (orderId: string) => void;
+	onFill?: (orderId: string) => void;
+	isLoading?: boolean;
 }
 
 const getTokenSymbol = (address: string): string => {
-  const tokenMap: Record<string, string> = {
-    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 'BNB',
-    '0x55d398326f99059fF775485246999027B3197955': 'USDT',
-    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': 'BUSD',
-    '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': 'USDC',
-    '0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c': 'ARB',
-  };
-  return tokenMap[address] || address.slice(0, 6) + '...';
+	const tokenMap: Record<string, string> = {
+		"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c": "BNB",
+		"0x55d398326f99059fF775485246999027B3197955": "USDT",
+		"0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56": "BUSD",
+		"0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d": "USDC",
+		"0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c": "ARB",
+	};
+	return tokenMap[address] || address.slice(0, 6) + "...";
 };
 
 export const OrderList: React.FC<OrderListProps> = ({
-  orders,
-  onRefresh,
-  onCancel,
-  onFill,
-  isLoading = false,
+	orders,
+	onRefresh,
+	onCancel,
+	onFill,
+	isLoading = false,
 }) => {
-  const calculateRate = (makingAmount: string, takingAmount: string) => {
-    const making = parseFloat(makingAmount);
-    const taking = parseFloat(takingAmount);
-    if (making === 0) return '0';
-    return (taking / making).toFixed(6);
-  };
+	const calculateRate = (makingAmount: string, takingAmount: string) => {
+		const making = parseFloat(makingAmount);
+		const taking = parseFloat(takingAmount);
+		if (making === 0) return "0";
+		return (taking / making).toFixed(6);
+	};
 
-  if (orders.length === 0) {
-    return (
-      <Container>
-        <TableHeader>
-          <span>Pair</span>
-          <span>Rate</span>
-          <span>Amount</span>
-          <span>Status</span>
-          <span></span>
-        </TableHeader>
-        <EmptyState>
-          No orders found
-        </EmptyState>
-        <RefreshButton onClick={onRefresh} disabled={isLoading}>
-          {isLoading ? 'Refreshing...' : 'Refresh'}
-        </RefreshButton>
-      </Container>
-    );
-  }
+	if (orders.length === 0) {
+		return (
+			<Container>
+				<TableHeader>
+					<span>Pair</span>
+					<span>Rate</span>
+					<span>Amount</span>
+					<span>Status</span>
+					<span></span>
+				</TableHeader>
+				<EmptyState>No orders found</EmptyState>
+				<RefreshButton onClick={onRefresh} disabled={isLoading}>
+					{isLoading ? "Refreshing..." : "Refresh"}
+				</RefreshButton>
+			</Container>
+		);
+	}
 
-  return (
-    <Container>
-      <TableHeader>
-        <span>Pair</span>
-        <span>Rate</span>
-        <span>Amount</span>
-        <span>Status</span>
-        <span></span>
-      </TableHeader>
-      
-      {orders.map((order) => (
-        <OrderRow key={order.id}>
-          <TokenInfo>
-            <TokenSymbol>
-              {getTokenSymbol(order.makerAsset)} → {getTokenSymbol(order.takerAsset)}
-            </TokenSymbol>
-            <TokenAmount>
-              {parseFloat(order.makingAmount).toFixed(4)} {getTokenSymbol(order.makerAsset)}
-            </TokenAmount>
-          </TokenInfo>
-          
-          <Rate>
-            {calculateRate(order.makingAmount, order.takingAmount)} {getTokenSymbol(order.takerAsset)}/{getTokenSymbol(order.makerAsset)}
-          </Rate>
-          
-          <TokenAmount>
-            {parseFloat(order.takingAmount).toFixed(4)} {getTokenSymbol(order.takerAsset)}
-          </TokenAmount>
-          
-          <StatusBadge status={order.status}>
-            {order.status}
-          </StatusBadge>
-          
-          <Actions>
-            {order.status === 'active' && onCancel && (
-              <ActionButton onClick={() => onCancel(order.id)} disabled={isLoading}>
-                Cancel
-              </ActionButton>
-            )}
-            {order.status === 'active' && onFill && (
-              <ActionButton $variant="primary" onClick={() => onFill(order.id)} disabled={isLoading}>
-                Fill
-              </ActionButton>
-            )}
-          </Actions>
-        </OrderRow>
-      ))}
-      
-      <RefreshButton onClick={onRefresh} disabled={isLoading}>
-        {isLoading ? 'Refreshing...' : 'Refresh'}
-      </RefreshButton>
-    </Container>
-  );
+	return (
+		<Container>
+			<TableHeader>
+				<span>Pair</span>
+				<span>Rate</span>
+				<span>Amount</span>
+				<span>Status</span>
+				<span></span>
+			</TableHeader>
+
+			{orders.map((order) => (
+				<OrderRow key={order.id}>
+					<TokenInfo>
+						<TokenSymbol>
+							{getTokenSymbol(order.makerAsset)} →{" "}
+							{getTokenSymbol(order.takerAsset)}
+						</TokenSymbol>
+						<TokenAmount>
+							{parseFloat(order.makingAmount).toFixed(4)}{" "}
+							{getTokenSymbol(order.makerAsset)}
+						</TokenAmount>
+					</TokenInfo>
+
+					<Rate>
+						{calculateRate(order.makingAmount, order.takingAmount)}{" "}
+						{getTokenSymbol(order.takerAsset)}/
+						{getTokenSymbol(order.makerAsset)}
+					</Rate>
+
+					<TokenAmount>
+						{parseFloat(order.takingAmount).toFixed(4)}{" "}
+						{getTokenSymbol(order.takerAsset)}
+					</TokenAmount>
+
+					<StatusBadge status={order.status}>{order.status}</StatusBadge>
+
+					<Actions>
+						{order.status === "active" && onCancel && (
+							<ActionButton
+								onClick={() => onCancel(order.id)}
+								disabled={isLoading}
+							>
+								Cancel
+							</ActionButton>
+						)}
+						{order.status === "active" && onFill && (
+							<ActionButton
+								$variant="primary"
+								onClick={() => onFill(order.id)}
+								disabled={isLoading}
+							>
+								Fill
+							</ActionButton>
+						)}
+					</Actions>
+				</OrderRow>
+			))}
+
+			<RefreshButton onClick={onRefresh} disabled={isLoading}>
+				{isLoading ? "Refreshing..." : "Refresh"}
+			</RefreshButton>
+		</Container>
+	);
 };
 
 export default OrderList;

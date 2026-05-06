@@ -1,23 +1,26 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 // Prefetch links on hover for faster navigation
 export function usePrefetch() {
-  const router = useRouter()
+	const router = useRouter();
 
-  const prefetchPage = useCallback((href: string) => {
-    router.prefetch(href)
-  }, [router])
+	const prefetchPage = useCallback(
+		(href: string) => {
+			router.prefetch(href);
+		},
+		[router],
+	);
 
-  return { prefetchPage }
+	return { prefetchPage };
 }
 
 // Common pages to prefetch on layout load
 export const commonPagesToPrefetch = [
-  '/zap',
-  '/bridge',
-  '/limit-orders',
-  '/about',
-]
+	"/zap",
+	"/bridge",
+	"/limit-orders",
+	"/about",
+];

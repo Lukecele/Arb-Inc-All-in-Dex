@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FaCopy, FaUsers, FaCheck } from 'react-icons/fa';
-import theme from '../app/styles/theme';
+import React, { useState } from "react";
+import { FaCheck, FaCopy, FaUsers } from "react-icons/fa";
+import styled from "styled-components";
+import theme from "../app/styles/theme";
 
 const Card = styled.div`
   background: ${theme.colors.glass.light};
@@ -97,43 +97,52 @@ const CopyButton = styled.button`
 `;
 
 interface ReferralCardProps {
-  wallet: string;
-  count: number;
-  earnings: number;
+	wallet: string;
+	count: number;
+	earnings: number;
 }
 
-export default function ReferralCard({ wallet, count, earnings }: ReferralCardProps) {
-  const [copied, setCopied] = useState(false);
-  const refLink = `https://arbitrage-inc.exchange/rewards?ref=${wallet}`;
+export default function ReferralCard({
+	wallet,
+	count,
+	earnings,
+}: ReferralCardProps) {
+	const [copied, setCopied] = useState(false);
+	const refLink = `https://arbitrage-inc.exchange/rewards?ref=${wallet}`;
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(refLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+	const copyToClipboard = () => {
+		navigator.clipboard.writeText(refLink);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	};
 
-  return (
-    <Card>
-      <Title><FaUsers /> Referral Program</Title>
-      
-      <StatGrid>
-        <StatBox>
-          <StatValue>{count}</StatValue>
-          <StatLabel>Amici Invitati</StatLabel>
-        </StatBox>
-        <StatBox>
-          <StatValue>{earnings.toFixed(2)}</StatValue>
-          <StatLabel>Punti Bonus</StatLabel>
-        </StatBox>
-      </StatGrid>
+	return (
+		<Card>
+			<Title>
+				<FaUsers /> Referral Program
+			</Title>
 
-      <LinkLabel>Condividi il tuo link per guadagnare il 10% dei punti accumulati dai tuoi amici:</LinkLabel>
-      <LinkContainer>
-        <RefLink>{refLink}</RefLink>
-        <CopyButton onClick={copyToClipboard}>
-          {copied ? <FaCheck /> : <FaCopy />} {copied ? 'Copiato!' : 'Copia'}
-        </CopyButton>
-      </LinkContainer>
-    </Card>
-  );
+			<StatGrid>
+				<StatBox>
+					<StatValue>{count}</StatValue>
+					<StatLabel>Amici Invitati</StatLabel>
+				</StatBox>
+				<StatBox>
+					<StatValue>{earnings.toFixed(2)}</StatValue>
+					<StatLabel>Punti Bonus</StatLabel>
+				</StatBox>
+			</StatGrid>
+
+			<LinkLabel>
+				Condividi il tuo link per guadagnare il 10% dei punti accumulati dai
+				tuoi amici:
+			</LinkLabel>
+			<LinkContainer>
+				<RefLink>{refLink}</RefLink>
+				<CopyButton onClick={copyToClipboard}>
+					{copied ? <FaCheck /> : <FaCopy />} {copied ? "Copiato!" : "Copia"}
+				</CopyButton>
+			</LinkContainer>
+		</Card>
+	);
 }

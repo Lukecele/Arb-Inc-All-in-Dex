@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import styled from 'styled-components'
-import theme from '../styles/theme'
-import type { PoolInfo } from '../pools'
+import styled from "styled-components";
+import type { PoolInfo } from "../pools";
+import theme from "../styles/theme";
 
 const Overlay = styled.div`
   position: absolute;
@@ -12,7 +12,7 @@ const Overlay = styled.div`
   width: calc(100% - 40px);
   max-width: 500px;
   z-index: 10;
-`
+`;
 
 const DemoCard = styled.div`
   background: ${theme.colors.glass.medium};
@@ -20,7 +20,7 @@ const DemoCard = styled.div`
   border: 1px solid ${theme.colors.border.DEFAULT};
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing[4]};
-`
+`;
 
 const DemoTitle = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const DemoTitle = styled.div`
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.semibold};
   font-size: ${theme.typography.sizes.sm};
-`
+`;
 
 const DemoDot = styled.span`
   width: 8px;
@@ -43,7 +43,7 @@ const DemoDot = styled.span`
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
   }
-`
+`;
 
 const DemoStats = styled.div`
   display: grid;
@@ -53,54 +53,54 @@ const DemoStats = styled.div`
     grid-template-columns: repeat(3, 1fr);
     gap: ${theme.spacing[2]};
   }
-`
+`;
 
 const DemoStat = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
-`
+`;
 
 const DemoLabel = styled.span`
   font-size: ${theme.typography.sizes.xs};
   color: ${theme.colors.text.secondary};
-`
+`;
 
 const DemoValue = styled.span`
   font-size: ${theme.typography.sizes.sm};
   color: ${theme.colors.text.primary};
   font-weight: ${theme.typography.weights.medium};
-`
+`;
 
 interface DemoModeOverlayProps {
-  pool: PoolInfo
+	pool: PoolInfo;
 }
 
 export default function DemoModeOverlay({ pool }: DemoModeOverlayProps) {
-  return (
-    <Overlay>
-      <DemoCard>
-        <DemoTitle>
-          <DemoDot />
-          Demo Mode — Connect wallet to interact
-        </DemoTitle>
-        <DemoStats>
-          <DemoStat>
-            <DemoLabel>TVL</DemoLabel>
-            <DemoValue>${pool.liquidityUSD.toLocaleString()}</DemoValue>
-          </DemoStat>
-          <DemoStat>
-            <DemoLabel>APR</DemoLabel>
-            <DemoValue style={{ color: theme.colors.status.success }}>
-              {pool.apr || 'N/A'}
-            </DemoValue>
-          </DemoStat>
-          <DemoStat>
-            <DemoLabel>DEX</DemoLabel>
-            <DemoValue>{pool.dex}</DemoValue>
-          </DemoStat>
-        </DemoStats>
-      </DemoCard>
-    </Overlay>
-  )
+	return (
+		<Overlay>
+			<DemoCard>
+				<DemoTitle>
+					<DemoDot />
+					Demo Mode — Connect wallet to interact
+				</DemoTitle>
+				<DemoStats>
+					<DemoStat>
+						<DemoLabel>TVL</DemoLabel>
+						<DemoValue>${pool.liquidityUSD.toLocaleString()}</DemoValue>
+					</DemoStat>
+					<DemoStat>
+						<DemoLabel>APR</DemoLabel>
+						<DemoValue style={{ color: theme.colors.status.success }}>
+							{pool.apr || "N/A"}
+						</DemoValue>
+					</DemoStat>
+					<DemoStat>
+						<DemoLabel>DEX</DemoLabel>
+						<DemoValue>{pool.dex}</DemoValue>
+					</DemoStat>
+				</DemoStats>
+			</DemoCard>
+		</Overlay>
+	);
 }

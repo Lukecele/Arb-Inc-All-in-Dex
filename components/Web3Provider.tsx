@@ -1,34 +1,35 @@
-'use client'
+"use client";
 
-import { init } from '@web3-onboard/react'
-import injectedModule from '@web3-onboard/injected-wallets'
-import walletConnectModule from '@web3-onboard/walletconnect'
+import injectedModule from "@web3-onboard/injected-wallets";
+import { init } from "@web3-onboard/react";
+import walletConnectModule from "@web3-onboard/walletconnect";
 
-const injected = injectedModule()
+const injected = injectedModule();
 const walletConnect = walletConnectModule({
-  projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'b03ed6d8451c1e05022897815db0ad0b',
-  requiredChains: [56],
-  optionalChains: [1, 137, 42161, 8453, 10],
-  dappUrl: process.env.NEXT_PUBLIC_DAPP_URL || 'https://arbitrage-inc.exchange'
-})
+	projectId:
+		process.env.NEXT_PUBLIC_WC_PROJECT_ID || "b03ed6d8451c1e05022897815db0ad0b",
+	requiredChains: [56],
+	optionalChains: [1, 137, 42161, 8453, 10],
+	dappUrl: process.env.NEXT_PUBLIC_DAPP_URL || "https://arbitrage-inc.exchange",
+});
 
 init({
-  wallets: [injected, walletConnect],
-  chains: [
-    {
-      id: '0x38',
-      token: 'BNB',
-      label: 'BNB Smart Chain',
-      rpcUrl: 'https://bsc.publicnode.com',
-    },
-  ],
-  appMetadata: {
-    name: 'Arbitrage Inception',
-    icon: 'https://arbitrage-inc.exchange/logo.jpg',
-    description: 'DEX Aggregator on BNB Chain',
-  }
-})
+	wallets: [injected, walletConnect],
+	chains: [
+		{
+			id: "0x38",
+			token: "BNB",
+			label: "BNB Smart Chain",
+			rpcUrl: "https://bsc.publicnode.com",
+		},
+	],
+	appMetadata: {
+		name: "Arbitrage Inception",
+		icon: "https://arbitrage-inc.exchange/logo.jpg",
+		description: "DEX Aggregator on BNB Chain",
+	},
+});
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+	return <>{children}</>;
 }

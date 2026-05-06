@@ -1,5 +1,5 @@
-'use client';
-import styled from 'styled-components';
+"use client";
+import styled from "styled-components";
 
 const StyledLayout = styled.div`
   padding-left: 300px;
@@ -11,6 +11,10 @@ const StyledLayout = styled.div`
   }
 `;
 
-export default function LayoutClient({ children }: { children: React.ReactNode }) {
-  return <StyledLayout>{children}</StyledLayout>;
+export default function LayoutClient({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return <StyledLayout>{children}</StyledLayout>;
 }

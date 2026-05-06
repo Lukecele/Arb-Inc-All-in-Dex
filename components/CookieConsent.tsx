@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 
 const Banner = styled.div<{ $visible: boolean }>`
   position: fixed;
@@ -14,7 +14,7 @@ const Banner = styled.div<{ $visible: boolean }>`
   border-top: 1px solid rgba(124, 58, 237, 0.3);
   padding: 20px;
   z-index: 99999;
-  transform: translateY(${props => props.$visible ? '0' : '100%'});
+  transform: translateY(${(props) => (props.$visible ? "0" : "100%")});
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
 `;
@@ -65,7 +65,9 @@ const Button = styled.button<{ $primary?: boolean }>`
   cursor: pointer;
   transition: all 0.2s ease;
   
-  ${props => props.$primary ? `
+  ${(props) =>
+		props.$primary
+			? `
     background: linear-gradient(135deg, #8B5CF6, #7C3AED);
     border: none;
     color: #fff;
@@ -74,7 +76,8 @@ const Button = styled.button<{ $primary?: boolean }>`
       transform: translateY(-2px);
       box-shadow: 0 4px 16px rgba(124, 58, 246, 0.4);
     }
-  ` : `
+  `
+			: `
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #9ca3af;
@@ -86,47 +89,50 @@ const Button = styled.button<{ $primary?: boolean }>`
   `}
 `;
 
-const COOKIE_CONSENT_KEY = 'cookie_consent_accepted';
+const COOKIE_CONSENT_KEY = "cookie_consent_accepted";
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+	const [visible, setVisible] = useState(false);
+	const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
-    if (!consent) {
-      // Delay showing banner slightly for better UX
-      const timer = setTimeout(() => setVisible(true), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+	useEffect(() => {
+		setMounted(true);
+		const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+		if (!consent) {
+			// Delay showing banner slightly for better UX
+			const timer = setTimeout(() => setVisible(true), 1000);
+			return () => clearTimeout(timer);
+		}
+	}, []);
 
-  const acceptAll = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, 'all');
-    setVisible(false);
-  };
+	const acceptAll = () => {
+		localStorage.setItem(COOKIE_CONSENT_KEY, "all");
+		setVisible(false);
+	};
 
-  const acceptEssential = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, 'essential');
-    setVisible(false);
-  };
+	const acceptEssential = () => {
+		localStorage.setItem(COOKIE_CONSENT_KEY, "essential");
+		setVisible(false);
+	};
 
-  // Don't render anything on server or if already accepted
-  if (!mounted) return null;
+	// Don't render anything on server or if already accepted
+	if (!mounted) return null;
 
-  return (
-    <Banner $visible={visible} role="dialog" aria-label="Cookie consent">
-      <Content>
-        <Text>
-          This site uses essential cookies for functionality and optional analytics cookies. Please choose your preference. You can change your choice at any time.{' '}
-          <a href="/cookie-policy">Learn more</a>
-        </Text>
-        <Buttons>
-          <Button onClick={acceptEssential}>Essential Only</Button>
-          <Button $primary onClick={acceptAll}>Accept All</Button>
-        </Buttons>
-      </Content>
-    </Banner>
-  );
+	return (
+		<Banner $visible={visible} role="dialog" aria-label="Cookie consent">
+			<Content>
+				<Text>
+					This site uses essential cookies for functionality and optional
+					analytics cookies. Please choose your preference. You can change your
+					choice at any time. <a href="/cookie-policy">Learn more</a>
+				</Text>
+				<Buttons>
+					<Button onClick={acceptEssential}>Essential Only</Button>
+					<Button $primary onClick={acceptAll}>
+						Accept All
+					</Button>
+				</Buttons>
+			</Content>
+		</Banner>
+	);
 }

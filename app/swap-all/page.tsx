@@ -1,14 +1,22 @@
-'use client'
+"use client";
 
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
-const ClientSwapAllPage = dynamic(() => import('./ClientWrapper'), { ssr: false })
+const ClientSwapAllPage = dynamic(() => import("./ClientWrapper"), {
+	ssr: false,
+});
 
 export default function SwapAllPage() {
-  return (
-    <Suspense fallback={<div style={{ color: '#fff', textAlign: 'center', padding: '100px' }}>Loading...</div>}>
-      <ClientSwapAllPage />
-    </Suspense>
-  )
+	return (
+		<Suspense
+			fallback={
+				<div style={{ color: "#fff", textAlign: "center", padding: "100px" }}>
+					Loading...
+				</div>
+			}
+		>
+			<ClientSwapAllPage />
+		</Suspense>
+	);
 }

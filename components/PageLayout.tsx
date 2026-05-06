@@ -1,5 +1,5 @@
-'use client';
-import styled from 'styled-components';
+"use client";
+import styled from "styled-components";
 
 const StyledMain = styled.main`
   padding-left: 300px; /* Spazio per la Sidebar Desktop */
@@ -12,6 +12,10 @@ const StyledMain = styled.main`
   }
 `;
 
-export default function PageLayout({ children }: { children: React.ReactNode }) {
-  return <StyledMain>{children}</StyledMain>;
+export default function PageLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return <StyledMain>{children}</StyledMain>;
 }

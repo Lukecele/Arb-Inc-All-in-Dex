@@ -1,7 +1,7 @@
-'use client';
-import React from 'react';
-import styled from 'styled-components';
-import Header from '../../components/Header';
+"use client";
+import React from "react";
+import styled from "styled-components";
+import Header from "../../components/Header";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -36,18 +36,28 @@ const WidgetWrapper = styled.div`
 `;
 
 export default function ZapClient() {
-  return (
-    <PageWrapper>
-      <Header />
-      <WidgetSection>
-        <h2 style={{color: '#fff', marginBottom: '20px', fontSize: '1.5rem'}}>Liquidity Zap</h2>
-        <WidgetWrapper>
-          {/* Inserisci qui il tuo <iframe /> o componente KyberSwap */}
-          <div   style={{height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
-             KyberSwap Zap Widget
-          </div>
-        </WidgetWrapper>
-      </WidgetSection>
-    </PageWrapper>
-  );
+	return (
+		<PageWrapper>
+			<Header />
+			<WidgetSection>
+				<h2 style={{ color: "#fff", marginBottom: "20px", fontSize: "1.5rem" }}>
+					Liquidity Zap
+				</h2>
+				<WidgetWrapper>
+					{/* Inserisci qui il tuo <iframe /> o componente KyberSwap */}
+					<div
+						style={{
+							height: "600px",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							color: "#64748b",
+						}}
+					>
+						KyberSwap Zap Widget
+					</div>
+				</WidgetWrapper>
+			</WidgetSection>
+		</PageWrapper>
+	);
 }

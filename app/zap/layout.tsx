@@ -1,5 +1,5 @@
-'use client';
-import styled from 'styled-components';
+"use client";
+import styled from "styled-components";
 
 const LayoutWrapper = styled.div`
   padding-left: 300px;
@@ -12,5 +12,5 @@ const LayoutWrapper = styled.div`
 `;
 
 export default function ZapLayout({ children }: { children: React.ReactNode }) {
-  return <LayoutWrapper>{children}</LayoutWrapper>;
+	return <LayoutWrapper>{children}</LayoutWrapper>;
 }

@@ -1,33 +1,33 @@
-import Link from 'next/link'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import styled from 'styled-components'
-import { FaHome, FaSearch } from 'react-icons/fa'
+import Link from "next/link";
+import { FaHome, FaSearch } from "react-icons/fa";
+import styled from "styled-components";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 export default function NotFound() {
-  return (
-    <Container>
-      <Header activePage="/" />
-      <Content>
-        <ErrorCode>404</ErrorCode>
-        <Title>Page Not Found</Title>
-        <Description>
-          Oops! The page you're looking for doesn't exist or has been moved.
-        </Description>
-        <LinksContainer>
-          <StyledLink href="/">
-            <FaHome size={18} />
-            Back to Home
-          </StyledLink>
-          <StyledLink href="/swap-all">
-            <FaSearch size={18} />
-            Go to Swap
-          </StyledLink>
-        </LinksContainer>
-      </Content>
-      <Footer />
-    </Container>
-  )
+	return (
+		<Container>
+			<Header activePage="/" />
+			<Content>
+				<ErrorCode>404</ErrorCode>
+				<Title>Page Not Found</Title>
+				<Description>
+					Oops! The page you're looking for doesn't exist or has been moved.
+				</Description>
+				<LinksContainer>
+					<StyledLink href="/">
+						<FaHome size={18} />
+						Back to Home
+					</StyledLink>
+					<StyledLink href="/swap-all">
+						<FaSearch size={18} />
+						Go to Swap
+					</StyledLink>
+				</LinksContainer>
+			</Content>
+			<Footer />
+		</Container>
+	);
 }
 
 const Container = styled.div`
@@ -35,7 +35,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
-`
+`;
 
 const Content = styled.main`
   flex: 1;
@@ -45,7 +45,7 @@ const Content = styled.main`
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-`
+`;
 
 const ErrorCode = styled.h1`
   font-size: 120px;
@@ -60,7 +60,7 @@ const ErrorCode = styled.h1`
   @media (max-width: 768px) {
     font-size: 80px;
   }
-`
+`;
 
 const Title = styled.h2`
   font-size: 32px;
@@ -70,21 +70,21 @@ const Title = styled.h2`
   @media (max-width: 768px) {
     font-size: 24px;
   }
-`
+`;
 
 const Description = styled.p`
   font-size: 16px;
   color: #a1a1aa;
   max-width: 400px;
   margin-bottom: 40px;
-`
+`;
 
 const LinksContainer = styled.div`
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-`
+`;
 
 const StyledLink = styled(Link)`
   display: flex;
@@ -103,4 +103,4 @@ const StyledLink = styled(Link)`
     transform: translateY(-2px);
     opacity: 0.9;
   }
-`
+`;

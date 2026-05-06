@@ -1,20 +1,29 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { DEFAULT_CONFIG, LimitOrderConfig, ApiResponse } from './types';
+import axios, {
+	type AxiosError,
+	type AxiosInstance,
+	type AxiosRequestConfig,
+	type AxiosResponse,
+} from "axios";
+import {
+	type ApiResponse,
+	DEFAULT_CONFIG,
+	type LimitOrderConfig,
+} from "./types";
 
 // ============================================
 // API Client Configuration
 // ============================================
 
 interface RetryConfig {
-  maxRetries: number;
-  baseDelay: number;
-  maxDelay: number;
+	maxRetries: number;
+	baseDelay: number;
+	maxDelay: number;
 }
 
 const DEFAULT_RETRY_CONFIG: RetryConfig = {
-  maxRetries: 3,
-  baseDelay: 1000, // 1 second
-  maxDelay: 10000, // 10 seconds
+	maxRetries: 3,
+	baseDelay: 1000, // 1 second
+	maxDelay: 10000, // 10 seconds
 };
 
 // ============================================
@@ -22,216 +31,227 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
 // ============================================
 
 export class LimitOrderApiClient {
-  private client: AxiosInstance;
-  private config: LimitOrderConfig;
-  private retryConfig: RetryConfig;
+	private client: AxiosInstance;
+	private config: LimitOrderConfig;
+	private retryConfig: RetryConfig;
 
-  constructor(config?: Partial<LimitOrderConfig>, retryConfig?: Partial<RetryConfig>) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
-    this.retryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
+	constructor(
+		config?: Partial<LimitOrderConfig>,
+		retryConfig?: Partial<RetryConfig>,
+	) {
+		this.config = { ...DEFAULT_CONFIG, ...config };
+		this.retryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
 
-    this.client = axios.create({
-      baseURL: this.config.apiDomain,
-      timeout: 30000, // 30 seconds
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    });
+		this.client = axios.create({
+			baseURL: this.config.apiDomain,
+			timeout: 30000, // 30 seconds
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+		});
 
-    // Add response interceptor for error handling
-    this.client.interceptors.response.use(
-      (response) => response,
-      (error: AxiosError) => this.handleApiError(error)
-    );
-  }
+		// Add response interceptor for error handling
+		this.client.interceptors.response.use(
+			(response) => response,
+			(error: AxiosError) => this.handleApiError(error),
+		);
+	}
 
-  // ============================================
-  // Retry Logic
-  // ============================================
+	// ============================================
+	// Retry Logic
+	// ============================================
 
-  private async retryRequest<T>(
-    requestFn: () => Promise<AxiosResponse<T>>,
-    retryCount: number = 0
-  ): Promise<AxiosResponse<T>> {
-    try {
-      return await requestFn();
-    } catch (error) {
-      // Only retry on network errors or 5xx status codes
-      const axiosError = error as AxiosError;
-      const shouldRetry =
-        retryCount < this.retryConfig.maxRetries &&
-        (!axiosError.response || axiosError.response.status >= 500);
+	private async retryRequest<T>(
+		requestFn: () => Promise<AxiosResponse<T>>,
+		retryCount: number = 0,
+	): Promise<AxiosResponse<T>> {
+		try {
+			return await requestFn();
+		} catch (error) {
+			// Only retry on network errors or 5xx status codes
+			const axiosError = error as AxiosError;
+			const shouldRetry =
+				retryCount < this.retryConfig.maxRetries &&
+				(!axiosError.response || axiosError.response.status >= 500);
 
-      if (!shouldRetry) {
-        throw error;
-      }
+			if (!shouldRetry) {
+				throw error;
+			}
 
-      // Calculate delay with exponential backoff and jitter
-      const delay = Math.min(
-        this.retryConfig.baseDelay * Math.pow(2, retryCount) + Math.random() * 1000,
-        this.retryConfig.maxDelay
-      );
+			// Calculate delay with exponential backoff and jitter
+			const delay = Math.min(
+				this.retryConfig.baseDelay * 2 ** retryCount + Math.random() * 1000,
+				this.retryConfig.maxDelay,
+			);
 
-      console.warn(`Request failed, retrying in ${delay}ms... (attempt ${retryCount + 1}/${this.retryConfig.maxRetries})`);
-      
-      await new Promise(resolve => setTimeout(resolve, delay));
-      
-      return this.retryRequest(requestFn, retryCount + 1);
-    }
-  }
+			console.warn(
+				`Request failed, retrying in ${delay}ms... (attempt ${retryCount + 1}/${this.retryConfig.maxRetries})`,
+			);
 
-  // ============================================
-  // Error Handling
-  // ============================================
+			await new Promise((resolve) => setTimeout(resolve, delay));
 
-  private handleApiError(error: AxiosError): never {
-    if (error.response) {
-      // Server responded with error status
-      const data = error.response.data as any;
-      const message = data?.message || error.message;
-      const code = data?.code || error.response.status;
-      
-      throw new Error(`API Error ${code}: ${message}`);
-    } else if (error.request) {
-      // Request was made but no response received
-      throw new Error('Network error: No response received from server');
-    } else {
-      // Something happened in setting up the request
-      throw new Error(`Request setup error: ${error.message}`);
-    }
-  }
+			return this.retryRequest(requestFn, retryCount + 1);
+		}
+	}
 
-  // ============================================
-  // Generic Request Methods
-  // ============================================
+	// ============================================
+	// Error Handling
+	// ============================================
 
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    const response = await this.retryRequest(() => 
-      this.client.get<ApiResponse<T>>(url, config)
-    );
-    return response.data;
-  }
+	private handleApiError(error: AxiosError): never {
+		if (error.response) {
+			// Server responded with error status
+			const data = error.response.data as any;
+			const message = data?.message || error.message;
+			const code = data?.code || error.response.status;
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    const response = await this.retryRequest(() => 
-      this.client.post<ApiResponse<T>>(url, data, config)
-    );
-    return response.data;
-  }
+			throw new Error(`API Error ${code}: ${message}`);
+		} else if (error.request) {
+			// Request was made but no response received
+			throw new Error("Network error: No response received from server");
+		} else {
+			// Something happened in setting up the request
+			throw new Error(`Request setup error: ${error.message}`);
+		}
+	}
 
-  // ============================================
-  // Specific API Methods
-  // ============================================
+	// ============================================
+	// Generic Request Methods
+	// ============================================
 
-  // General APIs
-  async getSupportedPairs(chainId: string) {
-    return this.get<{ pairs: Array<{ makerAsset: string; takerAsset: string }> }>(
-      `/read-partner/api/v1/orders/pairs`,
-      { params: { chainId } }
-    );
-  }
+	async get<T>(
+		url: string,
+		config?: AxiosRequestConfig,
+	): Promise<ApiResponse<T>> {
+		const response = await this.retryRequest(() =>
+			this.client.get<ApiResponse<T>>(url, config),
+		);
+		return response.data;
+	}
 
-  async getContractAddresses(chainId: string) {
-    return this.get<{ latest: string; legacy: string[] }>(
-      `/read-ks/api/v1/configs/contract-address`,
-      { params: { chainId } }
-    );
-  }
+	async post<T>(
+		url: string,
+		data?: any,
+		config?: AxiosRequestConfig,
+	): Promise<ApiResponse<T>> {
+		const response = await this.retryRequest(() =>
+			this.client.post<ApiResponse<T>>(url, data, config),
+		);
+		return response.data;
+	}
 
-  // Maker APIs
-  async getUnsignedCreateOrder(body: any) {
-    return this.post<any>(`/write/api/v1/orders/sign-message`, body);
-  }
+	// ============================================
+	// Specific API Methods
+	// ============================================
 
-  async createOrder(body: any) {
-    return this.post<{ id: string; order: any }>(`/write/api/v1/orders`, body);
-  }
+	// General APIs
+	async getSupportedPairs(chainId: string) {
+		return this.get<{
+			pairs: Array<{ makerAsset: string; takerAsset: string }>;
+		}>(`/read-partner/api/v1/orders/pairs`, { params: { chainId } });
+	}
 
-  async getMakerOrders(params: any) {
-    return this.get<{ orders: any[]; pagination: any }>(
-      `/read-ks/api/v1/orders`,
-      { params }
-    );
-  }
+	async getContractAddresses(chainId: string) {
+		return this.get<{ latest: string; legacy: string[] }>(
+			`/read-ks/api/v1/configs/contract-address`,
+			{ params: { chainId } },
+		);
+	}
 
-  async getMakerActiveAmount(params: any) {
-    return this.get<{ activeMakingAmount: string }>(
-      `/read-ks/api/v1/orders/active-making-amount`,
-      { params }
-    );
-  }
+	// Maker APIs
+	async getUnsignedCreateOrder(body: any) {
+		return this.post<any>(`/write/api/v1/orders/sign-message`, body);
+	}
 
-  async getUnsignedCancelOrder(body: any) {
-    return this.post<any>(`/write/api/v1/orders/cancel-sign`, body);
-  }
+	async createOrder(body: any) {
+		return this.post<{ id: string; order: any }>(`/write/api/v1/orders`, body);
+	}
 
-  async cancelOrder(body: any) {
-    return this.post<{ success: boolean }>(`/write/api/v1/orders/cancel`, body);
-  }
+	async getMakerOrders(params: any) {
+		return this.get<{ orders: any[]; pagination: any }>(
+			`/read-ks/api/v1/orders`,
+			{ params },
+		);
+	}
 
-  async getCancelBatchOrdersEncodedData(body: any) {
-    return this.post<{ encodedData: string }>(
-      `/read-ks/api/v1/encode/cancel-batch-orders`,
-      body
-    );
-  }
+	async getMakerActiveAmount(params: any) {
+		return this.get<{ activeMakingAmount: string }>(
+			`/read-ks/api/v1/orders/active-making-amount`,
+			{ params },
+		);
+	}
 
-  async getCancelAllOrdersEncodedData(body: any) {
-    return this.post<{ encodedData: string }>(
-      `/read-ks/api/v1/encode/cancel-all-orders`,
-      body
-    );
-  }
+	async getUnsignedCancelOrder(body: any) {
+		return this.post<any>(`/write/api/v1/orders/cancel-sign`, body);
+	}
 
-  // Taker APIs
-  async getOrders(params: any) {
-    return this.get<{ orders: any[]; pagination: any }>(
-      `/read-partner/api/v1/orders`,
-      { params }
-    );
-  }
+	async cancelOrder(body: any) {
+		return this.post<{ success: boolean }>(`/write/api/v1/orders/cancel`, body);
+	}
 
-  async getOperatorSignature(params: any) {
-    return this.get<{ operatorSignatures: any[] }>(
-      `/read-partner/api/v1/orders/operator-signature`,
-      { params }
-    );
-  }
+	async getCancelBatchOrdersEncodedData(body: any) {
+		return this.post<{ encodedData: string }>(
+			`/read-ks/api/v1/encode/cancel-batch-orders`,
+			body,
+		);
+	}
 
-  async getFillOrderEncodedData(body: any) {
-    return this.post<{ encodedData: string }>(
-      `/read-ks/api/v1/encode/fill-order-to`,
-      body
-    );
-  }
+	async getCancelAllOrdersEncodedData(body: any) {
+		return this.post<{ encodedData: string }>(
+			`/read-ks/api/v1/encode/cancel-all-orders`,
+			body,
+		);
+	}
 
-  async getFillBatchOrdersEncodedData(body: any) {
-    return this.post<{ encodedData: string }>(
-      `/read-ks/api/v1/encode/fill-batch-orders-to`,
-      body
-    );
-  }
+	// Taker APIs
+	async getOrders(params: any) {
+		return this.get<{ orders: any[]; pagination: any }>(
+			`/read-partner/api/v1/orders`,
+			{ params },
+		);
+	}
 
-  // ============================================
-  // Configuration Helpers
-  // ============================================
+	async getOperatorSignature(params: any) {
+		return this.get<{ operatorSignatures: any[] }>(
+			`/read-partner/api/v1/orders/operator-signature`,
+			{ params },
+		);
+	}
 
-  getApiDomain(): string {
-    return this.config.apiDomain;
-  }
+	async getFillOrderEncodedData(body: any) {
+		return this.post<{ encodedData: string }>(
+			`/read-ks/api/v1/encode/fill-order-to`,
+			body,
+		);
+	}
 
-  getChainId(): number {
-    return this.config.chainId;
-  }
+	async getFillBatchOrdersEncodedData(body: any) {
+		return this.post<{ encodedData: string }>(
+			`/read-ks/api/v1/encode/fill-batch-orders-to`,
+			body,
+		);
+	}
 
-  updateConfig(newConfig: Partial<LimitOrderConfig>): void {
-    this.config = { ...this.config, ...newConfig };
-    
-    if (newConfig.apiDomain) {
-      this.client.defaults.baseURL = newConfig.apiDomain;
-    }
-  }
+	// ============================================
+	// Configuration Helpers
+	// ============================================
+
+	getApiDomain(): string {
+		return this.config.apiDomain;
+	}
+
+	getChainId(): number {
+		return this.config.chainId;
+	}
+
+	updateConfig(newConfig: Partial<LimitOrderConfig>): void {
+		this.config = { ...this.config, ...newConfig };
+
+		if (newConfig.apiDomain) {
+			this.client.defaults.baseURL = newConfig.apiDomain;
+		}
+	}
 }
 
 // ============================================
@@ -239,10 +259,10 @@ export class LimitOrderApiClient {
 // ============================================
 
 export function createLimitOrderClient(
-  config?: Partial<LimitOrderConfig>,
-  retryConfig?: Partial<RetryConfig>
+	config?: Partial<LimitOrderConfig>,
+	retryConfig?: Partial<RetryConfig>,
 ): LimitOrderApiClient {
-  return new LimitOrderApiClient(config, retryConfig);
+	return new LimitOrderApiClient(config, retryConfig);
 }
 
 // ============================================
@@ -252,12 +272,12 @@ export function createLimitOrderClient(
 let defaultClientInstance: LimitOrderApiClient | null = null;
 
 export function getDefaultClient(): LimitOrderApiClient {
-  if (!defaultClientInstance) {
-    defaultClientInstance = createLimitOrderClient();
-  }
-  return defaultClientInstance;
+	if (!defaultClientInstance) {
+		defaultClientInstance = createLimitOrderClient();
+	}
+	return defaultClientInstance;
 }
 
 export function setDefaultClient(client: LimitOrderApiClient): void {
-  defaultClientInstance = client;
+	defaultClientInstance = client;
 }

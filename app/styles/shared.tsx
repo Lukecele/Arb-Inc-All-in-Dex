@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import styled from 'styled-components'
-import theme from './theme'
+import styled from "styled-components";
+import theme from "./theme";
 
 export const Card = styled.div`
   background: ${theme.colors.glass.light};
@@ -17,7 +17,7 @@ export const Card = styled.div`
     box-shadow: ${theme.shadows.glow};
     border-color: ${theme.colors.border.hover};
   }
-`
+`;
 
 export const GradientButton = styled.button`
   position: relative;
@@ -64,7 +64,7 @@ export const GradientButton = styled.button`
     cursor: not-allowed;
     transform: none;
   }
-`
+`;
 
 export const GradientButtonSecondary = styled.a`
   position: relative;
@@ -102,10 +102,10 @@ export const GradientButtonSecondary = styled.a`
       opacity: 1;
     }
   }
-`
+`;
 
 export const SectionTitle = styled.h2`
-  font-size: ${theme.typography.sizes['2xl']};
+  font-size: ${theme.typography.sizes["2xl"]};
   font-weight: ${theme.typography.weights.bold};
   text-align: center;
   margin-bottom: ${theme.spacing[8]};
@@ -113,26 +113,29 @@ export const SectionTitle = styled.h2`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-`
+`;
 
-export const Badge = styled.span<{ $status?: 'done' | 'coming' }>`
+export const Badge = styled.span<{ $status?: "done" | "coming" }>`
   display: inline-flex;
   align-items: center;
   padding: ${theme.spacing[1]} ${theme.spacing[4]};
   border-radius: ${theme.borderRadius.full};
   font-size: ${theme.typography.sizes.xs};
   font-weight: ${theme.typography.weights.semibold};
-  background: ${props => props.$status === 'done' 
-    ? 'rgba(16, 185, 129, 0.15)' 
-    : 'rgba(139, 92, 246, 0.15)'};
-  color: ${props => props.$status === 'done' 
-    ? theme.colors.status.success 
-    : theme.colors.primary.DEFAULT};
-  border: 1px solid ${props => props.$status === 'done' 
-    ? 'rgba(16, 185, 129, 0.3)' 
-    : 'rgba(139, 92, 246, 0.3)'};
+  background: ${(props) =>
+		props.$status === "done"
+			? "rgba(16, 185, 129, 0.15)"
+			: "rgba(139, 92, 246, 0.15)"};
+  color: ${(props) =>
+		props.$status === "done"
+			? theme.colors.status.success
+			: theme.colors.primary.DEFAULT};
+  border: 1px solid ${(props) =>
+		props.$status === "done"
+			? "rgba(16, 185, 129, 0.3)"
+			: "rgba(139, 92, 246, 0.3)"};
   transition: border-color ${theme.transitions.DEFAULT};
-`
+`;
 
 export const GlassContainer = styled.div`
   background: ${theme.colors.glass.medium};
@@ -146,7 +149,7 @@ export const GlassContainer = styled.div`
   &:hover {
     border-color: ${theme.colors.border.hover};
   }
-`
+`;
 
 export const StatBox = styled.div`
   display: flex;
@@ -164,36 +167,34 @@ export const StatBox = styled.div`
     border-color: ${theme.colors.border.hover};
     box-shadow: ${theme.shadows.glow};
   }
-`
+`;
 
 export const TabButton = styled.button<{ $active?: boolean }>`
   padding: ${theme.spacing[4]} ${theme.spacing[8]};
   font-size: ${theme.typography.sizes.md};
   font-weight: ${theme.typography.weights.semibold};
-  color: ${props => props.$active ? theme.colors.text.primary : theme.colors.text.secondary};
-  background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.medium};
-  border: 1px solid ${props => props.$active ? 'transparent' : theme.colors.border.DEFAULT};
+  color: ${(props) => (props.$active ? theme.colors.text.primary : theme.colors.text.secondary)};
+  background: ${(props) => (props.$active ? theme.colors.primary.gradient : theme.colors.glass.medium)};
+  border: 1px solid ${(props) => (props.$active ? "transparent" : theme.colors.border.DEFAULT)};
   border-radius: ${theme.borderRadius.md};
   cursor: pointer;
   transition: all ${theme.transitions.DEFAULT};
   
   &:hover {
-    background: ${props => props.$active ? theme.colors.primary.gradient : theme.colors.glass.heavy};
-    border-color: ${props => props.$active ? 'transparent' : theme.colors.border.hover};
+    background: ${(props) => (props.$active ? theme.colors.primary.gradient : theme.colors.glass.heavy)};
+    border-color: ${(props) => (props.$active ? "transparent" : theme.colors.border.hover)};
   }
-`
+`;
 
 export const PoolBadge = styled.span<{ $isV3?: boolean }>`
   padding: ${theme.spacing[1]} ${theme.spacing[2]};
   border-radius: ${theme.borderRadius.sm};
   font-size: ${theme.typography.sizes.xs};
   font-weight: ${theme.typography.weights.semibold};
-  background: ${props => props.$isV3 
-    ? 'rgba(236, 72, 153, 0.15)' 
-    : 'rgba(45, 212, 191, 0.15)'};
-  color: ${props => props.$isV3 ? '#EC4899' : '#2DD4BF'};
-  border: 1px solid ${props => props.$isV3 
-    ? 'rgba(236, 72, 153, 0.3)' 
-    : 'rgba(45, 212, 191, 0.3)'};
+  background: ${(props) =>
+		props.$isV3 ? "rgba(236, 72, 153, 0.15)" : "rgba(45, 212, 191, 0.15)"};
+  color: ${(props) => (props.$isV3 ? "#EC4899" : "#2DD4BF")};
+  border: 1px solid ${(props) =>
+		props.$isV3 ? "rgba(236, 72, 153, 0.3)" : "rgba(45, 212, 191, 0.3)"};
   transition: border-color ${theme.transitions.DEFAULT};
-`
+`;

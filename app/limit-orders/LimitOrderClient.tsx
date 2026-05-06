@@ -1,7 +1,7 @@
-'use client';
-import React from 'react';
-import styled from 'styled-components';
-import Header from '../../components/Header';
+"use client";
+import React from "react";
+import styled from "styled-components";
+import Header from "../../components/Header";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -27,17 +27,32 @@ const WidgetWrapper = styled.div`
 `;
 
 export default function LimitOrderClient() {
-  return (
-    <PageWrapper>
-      <Header />
-      <div   style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <WidgetWrapper>
-           {/* Inserisci qui il widget Limit Order */}
-           <div   style={{height: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
-             KyberSwap Limit Orders
-           </div>
-        </WidgetWrapper>
-      </div>
-    </PageWrapper>
-  );
+	return (
+		<PageWrapper>
+			<Header />
+			<div
+				style={{
+					flex: 1,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+				}}
+			>
+				<WidgetWrapper>
+					{/* Inserisci qui il widget Limit Order */}
+					<div
+						style={{
+							height: "650px",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							color: "#64748b",
+						}}
+					>
+						KyberSwap Limit Orders
+					</div>
+				</WidgetWrapper>
+			</div>
+		</PageWrapper>
+	);
 }

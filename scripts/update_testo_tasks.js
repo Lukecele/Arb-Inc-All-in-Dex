@@ -1,6 +1,6 @@
-const fs = require('fs');
-const file = '/home/luca/progetti/arb-inc/app/rewards/RewardsClient.tsx';
-let code = fs.readFileSync(file, 'utf8');
+const fs = require("fs");
+const file = "/home/luca/progetti/arb-inc/app/rewards/RewardsClient.tsx";
+let code = fs.readFileSync(file, "utf8");
 
 // 1. Aggiungiamo un sottotitolo esplicativo sotto "🪂 Earn Extra Points"
 const targetSubtitle = `<h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Earn Extra Points</h3>`;
@@ -14,18 +14,18 @@ const newButton = `<a href={off.link} target="_blank" rel="noopener noreferrer" 
 let modified = false;
 
 if (code.includes(targetSubtitle)) {
-    code = code.replace(targetSubtitle, newSubtitle);
-    modified = true;
+	code = code.replace(targetSubtitle, newSubtitle);
+	modified = true;
 }
 
 if (code.includes(targetButton)) {
-    code = code.replace(targetButton, newButton);
-    modified = true;
+	code = code.replace(targetButton, newButton);
+	modified = true;
 }
 
 if (modified) {
-    fs.writeFileSync(file, code);
-    console.log("✅ Frontend (Tasks Box) aggiornato con successo!");
+	fs.writeFileSync(file, code);
+	console.log("✅ Frontend (Tasks Box) aggiornato con successo!");
 } else {
-    console.log("⚠️ Testo non trovato. Forse era già stato modificato?");
+	console.log("⚠️ Testo non trovato. Forse era già stato modificato?");
 }

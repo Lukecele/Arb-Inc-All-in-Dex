@@ -1,6 +1,6 @@
-const fs = require('fs');
-const file = '/home/luca/progetti/arb-inc/app/rewards/RewardsClient.tsx';
-let code = fs.readFileSync(file, 'utf8');
+const fs = require("fs");
+const file = "/home/luca/progetti/arb-inc/app/rewards/RewardsClient.tsx";
+let code = fs.readFileSync(file, "utf8");
 
 const targetSubtitle = `<h3 style={{ color: '#f472b6', marginBottom: '15px' }}>🪂 Earn Extra Points</h3>`;
 const newSubtitle = `<h3 style={{ color: '#f472b6', marginBottom: '5px' }}>🪂 Earn Extra Points</h3>

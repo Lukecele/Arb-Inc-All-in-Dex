@@ -1,16 +1,16 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const LAYOUT_PATH = path.join(__dirname, 'app/layout.tsx');
+const LAYOUT_PATH = path.join(__dirname, "app/layout.tsx");
 
 console.log("🚀 Avvio Ottimizzazione Pro per Arb-Inc...");
 
 try {
-    let content = fs.readFileSync(LAYOUT_PATH, 'utf8');
+	let content = fs.readFileSync(LAYOUT_PATH, "utf8");
 
-    // AGGIUNTA SCHEMA FINANCIAL PRODUCT (SEO Avanzata)
-    if (!content.includes('FinancialProduct')) {
-        const financialSchema = `
+	// AGGIUNTA SCHEMA FINANCIAL PRODUCT (SEO Avanzata)
+	if (!content.includes("FinancialProduct")) {
+		const financialSchema = `
 <script
   type="application/ld+json"
   dangerouslySetInnerHTML={{
@@ -27,13 +27,12 @@ try {
     })
   }}
 />`;
-        content = content.replace('</head>', `${financialSchema}\n</head>`);
-        console.log("✅ Schema FinancialProduct aggiunto.");
-    }
+		content = content.replace("</head>", `${financialSchema}\n</head>`);
+		console.log("✅ Schema FinancialProduct aggiunto.");
+	}
 
-    fs.writeFileSync(LAYOUT_PATH, content);
-    console.log("🎉 Ottimizzazione completata con successo!");
-
+	fs.writeFileSync(LAYOUT_PATH, content);
+	console.log("🎉 Ottimizzazione completata con successo!");
 } catch (err) {
-    console.error("❌ Errore:", err.message);
+	console.error("❌ Errore:", err.message);
 }
