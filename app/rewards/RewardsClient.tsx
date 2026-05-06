@@ -225,7 +225,12 @@ export default function RewardsClient() {
                     borderLeft: isMe ? '4px solid #facc15' : 'none'
                   }}>
                     <td style={{ padding: '10px', color: i < 3 ? '#facc15' : '#fff' }}>#{i + 1}</td>
-                    <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>{u.address.slice(0,6)}...{u.address.slice(-4)}</td>
+                    <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>
+                      {u.address.slice(0,6)}...{u.address.slice(-4)}
+                      {u.address.toLowerCase().startsWith('0xaff5') && u.address.toLowerCase().endsWith('04e7') && (
+                        <span style={{ marginLeft: '6px', fontSize: '10px', background: 'rgba(168,85,247,0.15)', color: '#a855f7', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(168,85,247,0.35)' }}>Team</span>
+                      )}
+                    </td>
                     <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{Math.round(u.points).toLocaleString('en-US')}</td>
                   </tr>
                 );
