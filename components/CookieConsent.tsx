@@ -119,7 +119,7 @@ export default function CookieConsent() {
     <Banner $visible={visible} role="dialog" aria-label="Cookie consent">
       <Content>
         <Text>
-          We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.{' '}
+          This site uses essential cookies for functionality and optional analytics cookies. Please choose your preference. You can change your choice at any time.{' '}
           <a href="/cookie-policy">Learn more</a>
         </Text>
         <Buttons>

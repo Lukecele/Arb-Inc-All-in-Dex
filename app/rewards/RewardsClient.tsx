@@ -206,7 +206,6 @@ export default function RewardsClient() {
              Reset: 1st & 15th of month
           </span>
         </div>
-        <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '10px', lineHeight: '1.5' }}>⚠️ The wallet marked as <strong style={{ color: '#a855f7' }}>Team</strong> belongs to the protocol founder. It participates in the leaderboard and receives a 0.1% DEX commission. All participation is transparent and on-chain verifiable.</p>
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -229,7 +228,7 @@ export default function RewardsClient() {
                     <td style={{ padding: '10px', fontSize: '12px', fontFamily: 'monospace' }}>
                       {u.address.slice(0,6)}...{u.address.slice(-4)}
                       {u.address.toLowerCase().startsWith('0xaff5') && u.address.toLowerCase().endsWith('04e7') && (
-                        <span style={{ marginLeft: '6px', fontSize: '10px', background: 'rgba(168,85,247,0.15)', color: '#a855f7', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(168,85,247,0.35)' }}>Team</span>
+                        <span style={{ marginLeft: '6px', fontSize: '10px', background: 'rgba(168,85,247,0.15)', color: '#a855f7', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(168,85,247,0.35)' }}>Treasury</span>
                       )}
                     </td>
                     <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{Math.round(u.points).toLocaleString('en-US')}</td>

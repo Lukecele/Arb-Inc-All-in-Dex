@@ -6,7 +6,7 @@
 
 Hi KyberSwap team,
 
-I have built and deployed a frontend DEX aggregator for BNB Smart Chain at **https://arbitrage-inc.exchange** using your official SDKs.
+Arbitrage Inception is a community-built, open-source frontend DEX aggregator for BNB Smart Chain at **https://arbitrage-inc.exchange**, built using your official SDKs.
 
 ## Current Integration
 
@@ -18,7 +18,7 @@ I have built and deployed a frontend DEX aggregator for BNB Smart Chain at **htt
 | Chain | BNB Smart Chain (BSC) |
 | Fee Configuration | 0.1% (10 PCM) |
 
-## What We Built
+## What Was Built
 
 - **Custom Swap Interface**: Token swap with optimized routing through KyberSwap Aggregator
 - **Zap In/Out**: Single-click liquidity provision and withdrawal via KyberSwap ZaaS

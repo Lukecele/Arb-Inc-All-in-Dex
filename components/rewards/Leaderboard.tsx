@@ -15,7 +15,7 @@ export default function Leaderboard() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-center p-4 text-yellow-500">Caricamento classifica...</div>;
+  if (loading) return <div className="text-center p-4 text-yellow-500">Loading leaderboard...</div>;
 
   return (
     <div className="bg-gray-900 border border-yellow-500/30 rounded-xl p-6 shadow-2xl mt-10">
@@ -26,7 +26,7 @@ export default function Leaderboard() {
             <tr>
               <th className="pb-3 px-2">Rank</th>
               <th className="pb-3 px-2">Wallet</th>
-              <th className="pb-3 px-2 text-right">Punti</th>
+              <th className="pb-3 px-2 text-right">Points</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">

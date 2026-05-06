@@ -3,7 +3,7 @@
 ## Status: ✅ Ready for Submission
 
 ## File Location
-`/home/luca/Scrivania/white-page/defillama-adapters/fees/arbitrage-inc.ts`
+`./fees/arbitrage-inc.ts`
 
 ## Test Results
 ```
@@ -27,7 +27,7 @@ Daily revenue: 0.00
    - Navigate to `fees/` folder
    - Click "Add file" → "Create new file"
    - Name it: `arbitrage-inc.ts`
-   - Paste the content from `/home/luca/Scrivania/white-page/defillama-adapters/fees/arbitrage-inc.ts`
+   - Paste the content from `./fees/arbitrage-inc.ts`
 
 4. **Click "Commit changes"**
 
@@ -44,7 +44,7 @@ Daily revenue: 0.00
         DEX Aggregator / Fees
 
         ## Methodology
-        We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the developer commission for every arbitrage executed via our frontend integration.
+        We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the protocol fee for every arbitrage executed via our frontend integration.
 
         ## Chain
         BNB Smart Chain (BSC)
@@ -61,7 +61,7 @@ Daily revenue: 0.00
        DEX Aggregator / Fees
 
        ## Methodology
-       We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the developer commission for every arbitrage executed via our frontend integration.
+       We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the protocol fee for every arbitrage executed via our frontend integration.
 
        ## Chain
        BNB Smart Chain (BSC)
@@ -80,7 +80,7 @@ git clone https://github.com/YOUR_USERNAME/dimension-adapters.git
 cd dimension-adapters
 
 # Copy the adapter file
-cp /home/luca/Scrivania/white-page/defillama-adapters/fees/arbitrage-inc.ts fees/
+cp ./fees/arbitrage-inc.ts fees/
 
 # Commit and push
 git add fees/arbitrage-inc.ts
@@ -96,7 +96,7 @@ Arbitrage Inc.
 DEX Aggregator / Fees
 
 ## Methodology
-We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the developer commission for every arbitrage executed via our frontend integration.
+We track fees sent to the address 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7 which represents the protocol fee for every arbitrage executed via our frontend integration.
 
 ## Chain
 BNB Smart Chain (BSC)
@@ -139,7 +139,7 @@ const adapter: Adapter = {
   fetch,
   start: '2026-03-20',
   methodology: {
-    Fees: "We track fees sent to the fee receiver address which represents the developer commission for every arbitrage executed via our frontend integration.",
+    Fees: "We track fees sent to the fee receiver address which represents the protocol fee for every arbitrage executed via our frontend integration.",
     Revenue: "Developer fees are collected from each trade and sent to the designated fee receiver address.",
   },
 };

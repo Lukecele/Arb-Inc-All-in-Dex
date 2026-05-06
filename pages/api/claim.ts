@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 
-    console.log(`🚀 Claim per ${address}: ${pendingBalance} BNB (Punti salvaguardati!)`);
+    console.log(`🚀 Claim for ${address}: ${pendingBalance} BNB (Points preserved)`);
     
     const tx = await signer.sendTransaction({
       to: address,
@@ -46,12 +46,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     await tx.wait().then(() => {
-        console.log(`✅ Transazione confermata: ${tx.hash}`);
+        console.log(`✅ Transaction confirmed: ${tx.hash}`);
     }).catch(async (e) => {
-        console.error("❌ Errore durante l'invio!");
+        console.error("❌ Error sending transaction");
     });
 
-    // --- LA MAGIA E' QUI: Azzera SOLO il pending, NON tocca leaderboard:points ---
+    // --- Reset pending only — preserve leaderboard points ---
     await redis.set(`rewards:pending:${walletLower}`, "0");
 
     return res.status(200).json({ success: true, hash: tx.hash });
