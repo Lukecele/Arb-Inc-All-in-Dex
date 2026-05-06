@@ -214,10 +214,7 @@ export default function CookiePolicyPage() {
 							connection persistence.
 						</li>
 						<li>
-							<strong>Analytics Cookies:</strong> These cookies help us
-							understand how visitors interact with our website by collecting
-							and reporting information anonymously.
-						</li>
+							
 						<li>
 							<strong>Preference Cookies:</strong> These cookies allow the
 							website to remember choices you make (such as your preferred
@@ -242,18 +239,7 @@ export default function CookiePolicyPage() {
 					</ul>
 
 					<p>
-						<strong>3.2 Performance and Analytics Cookies</strong>
-					</p>
-					<p>
-						These cookies collect information about how you use our website,
-						like which pages you visited and which links you clicked on. This
-						information is aggregated and anonymous.
-					</p>
-					<ul>
-						<li>Page visit statistics</li>
-						<li>Error logging</li>
-						<li>Performance monitoring</li>
-					</ul>
+						</ul>
 
 					<p>
 						<strong>3.3 Functionality Cookies</strong>
@@ -278,7 +264,7 @@ export default function CookiePolicyPage() {
 					<p>Third-party services that may set cookies include:</p>
 					<ul>
 						<li>WalletConnect (for wallet connections)</li>
-						<li>Analytics providers</li>
+						
 						<li>CDN services</li>
 					</ul>
 

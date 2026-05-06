@@ -97,7 +97,7 @@ export default function PrivacyPolicyPage() {
 						communications:
 					</p>
 					<ul>
-						<li>IP address (anonymized where possible)</li>
+						<li>IP address (used only for security and abuse prevention; no analytics tracking is performed)</li>
 						<li>Browser type and version</li>
 						<li>Operating system and device type</li>
 						<li>Pages visited and time spent</li>
@@ -123,30 +123,6 @@ export default function PrivacyPolicyPage() {
 						6(1)(b) GDPR).
 					</p>
 
-					<h3>2.3 Analytics Data (Google Analytics 4)</h3>
-					<p>
-						The platform uses Google Analytics 4 with IP anonymization enabled.
-						Data collected is aggregated and does not directly identify
-						individual users.
-					</p>
-					<p>
-						<strong>Legal basis:</strong> Consent (Art. 6(1)(a) GDPR) — obtained
-						via cookie banner.
-					</p>
-					<p>
-						<strong>Extra-EU transfer:</strong> Google LLC (USA) — covered by
-						Standard Contractual Clauses (SCC) per EU Commission Decision
-						2021/914.{" "}
-						<a
-							href="https://tools.google.com/dlpage/gaoptout"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Opt-out here
-						</a>
-						.
-					</p>
-
 					<h2>3. What We Do NOT Collect</h2>
 					<p>
 						We do not store private keys, seed phrases, or wallet passwords. All
@@ -166,7 +142,7 @@ export default function PrivacyPolicyPage() {
 							necessary
 						</li>
 						<li>Public authorities upon lawful request</li>
-						<li>Google LLC (Analytics) — with SCC guarantees</li>
+						
 					</ul>
 
 					<h2>5. Your Rights (Arts. 15–22 GDPR)</h2>
