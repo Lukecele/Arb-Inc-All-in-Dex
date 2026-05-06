@@ -46,3 +46,11 @@ See: [Privacy Policy](https://arbitrage-inc.exchange/privacy-policy) |
 ## Contributing
 
 Contributions are welcome. Open an issue or pull request on GitHub.
+
+## Contract Ownership
+
+The ARB Inc token contract ownership has been renounced.
+This means no entity can mint new tokens, change tax rates, or pause transfers.
+
+**Verification:** https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract
+→ `owner()` returns `0x000000000000000000000000000000000000dEaD`
