@@ -203,7 +203,7 @@ export default function RewardsClient() {
 
 				<p style={{ color: "#94a3b8", fontSize: "14px", marginBottom: "20px" }}>
 					Get <b>10% commission</b> on all points earned by your friends.
-					Forever.
+					Subject to protocol conditions.
 				</p>
 
 				{!address ? (

@@ -127,9 +127,6 @@ export default function CookieConsent() {
 				</Text>
 				<Buttons>
 					<Button onClick={acceptEssential}>Essential Only</Button>
-					<Button $primary onClick={acceptAll}>
-						Accept All
-					</Button>
 				</Buttons>
 			</Content>
 		</Banner>
