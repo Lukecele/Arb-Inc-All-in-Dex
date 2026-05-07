@@ -273,7 +273,7 @@ export default function RewardsClient() {
 				)}
 			</div>
 
-			{/* 2. DIVIDENDS BOX */}
+			{/* 2. rewardS BOX */}
 			<div
 				style={{
 					background: "linear-gradient(135deg, #2e1065, #000)",
@@ -286,7 +286,7 @@ export default function RewardsClient() {
 				}}
 			>
 				<h2 style={{ color: "#a78bfa", margin: "0 0 15px 0" }}>
-					💎 BNB Dividends Pool
+					💎 BNB rewards Pool
 				</h2>
 				<p
 					style={{

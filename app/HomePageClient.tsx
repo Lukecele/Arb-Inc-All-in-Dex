@@ -548,6 +548,7 @@ const HomePageClient = () => {
 								style={{ fontSize: "2.5rem", fontWeight: "900", color: "#fff" }}
 							>
 								{data.globalApr} 🔥
+                <p style={{ color: "#94a3b8", fontSize: "11px", marginTop: "6px", fontStyle: "italic" }}>* Annualized estimate based on 6h distribution cycles ÷ proportional token stake. Past performance does not guarantee future results. Risk of total or partial loss.</p>
 							</div>
 						</div>
 

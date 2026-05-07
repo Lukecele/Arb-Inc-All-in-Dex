@@ -383,7 +383,7 @@ JsonRpcProvider failed to detect network and cannot start up; retry in 1s (perha
 Errore: request timeout (code=TIMEOUT, version=6.16.0)
 
 🕒 [00:45:06] Ciclo di controllo...
-📈 Dividendi rilevati: 0.000181 BNB. Distribuito: 0.000090
+📈 rewardi rilevati: 0.000181 BNB. Distribuito: 0.000090
 🏁 Fine ciclo. Punti Veri: 16213.13
 
 🕒 [00:45:19] Ciclo di controllo...
@@ -406,7 +406,7 @@ JsonRpcProvider failed to detect network and cannot start up; retry in 1s (perha
 Errore: request timeout (code=TIMEOUT, version=6.16.0)
 
 🕒 [01:00:06] Ciclo di controllo...
-📈 Dividendi rilevati: 0.000181 BNB. Distribuito: 0.000090
+📈 rewardi rilevati: 0.000181 BNB. Distribuito: 0.000090
 🏁 Fine ciclo. Punti Veri: 17276.97
 
 🕒 [01:00:19] Ciclo di controllo...
