@@ -1,99 +1,43 @@
 'use client';
 import { useState, useEffect } from 'react';
-
 export default function EEADisclaimer() {
   const [visible, setVisible] = useState(false);
-
+  const [checks, setChecks] = useState({ risk: false, jurisdiction: false, sanctions: false, terms: false });
   useEffect(() => {
-    const accepted = localStorage.getItem('eea_disclaimer_v1');
+    const accepted = localStorage.getItem('tos_selfcert_v2');
     if (!accepted) setVisible(true);
   }, []);
-
   if (!visible) return null;
-
+  const allChecked = Object.values(checks).every(Boolean);
   const accept = () => {
-    localStorage.setItem('eea_disclaimer_v1', '1');
+    if (!allChecked) return;
+    localStorage.setItem('tos_selfcert_v2', Date.now().toString());
     setVisible(false);
   };
-
+  const toggle = (key) => setChecks(prev => ({ ...prev, [key]: !prev[key] }));
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 9999,
-      background: 'rgba(0,0,0,0.85)',
-      display: 'flex', alignItems: 'flex-end',
-      justifyContent: 'center',
-      padding: '0',
-    }}>
-      <div style={{
-        background: 'linear-gradient(180deg, #0f0a1e 0%, #1a0f2e 100%)',
-        border: '1px solid rgba(168,85,247,0.4)',
-        borderRadius: '20px 20px 0 0',
-        width: '100%',
-        maxWidth: '640px',
-        maxHeight: '85vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}>
-        {/* Scrollable content area */}
-        <div style={{
-          overflowY: 'auto',
-          padding: '20px 20px 8px',
-          flex: 1,
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '28px' }}>⚠️</span>
-            <h2 style={{
-              color: '#f59e0b', margin: '6px 0 4px',
-              fontSize: 'clamp(1rem, 4vw, 1.3rem)', fontWeight: '700',
-            }}>
-              Risk &amp; Access Notice
-            </h2>
-          </div>
-
-          <p style={{ color: '#cbd5e1', fontSize: 'clamp(0.78rem, 3vw, 0.9rem)', marginBottom: '10px', lineHeight: '1.5' }}>
-            This is an <strong style={{ color: '#e2e8f0' }}>experimental, non-regulated open-source DeFi interface</strong>,
-            not authorized by any financial regulator (EU/MiCA, OAM, CONSOB, Banca d&apos;Italia).
-          </p>
-
-          <div style={{
-            background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-            borderRadius: '8px', padding: '10px 12px', marginBottom: '10px',
-          }}>
-            <p style={{ color: '#fca5a5', margin: 0, fontSize: 'clamp(0.76rem, 2.8vw, 0.85rem)', lineHeight: '1.5' }}>
-              🔴 <strong>Crypto-assets are highly volatile. You may lose all invested capital.</strong><br />
-              🔴 <strong>APR figures are not guaranteed returns.</strong>
-            </p>
-          </div>
-
-          <p style={{ color: '#94a3b8', fontSize: 'clamp(0.72rem, 2.6vw, 0.82rem)', marginBottom: '4px', lineHeight: '1.5' }}>
-            EEA residents: this service is not currently authorized under MiCA in your jurisdiction.
-            Use is at your sole risk. Read our <a href="/terms-of-service" style={{ color: '#a855f7' }}>Terms of Service</a> before proceeding.
-          </p>
-        </div>
-
-        {/* Sticky button — always visible */}
-        <div style={{
-          padding: '12px 20px 20px',
-          borderTop: '1px solid rgba(168,85,247,0.15)',
-          background: '#0f0a1e',
-        }}>
-          <button
-            onClick={accept}
-            style={{
-              width: '100%',
-              background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
-              border: 'none', color: '#fff',
-              padding: '14px',
-              borderRadius: '12px',
-              fontSize: 'clamp(0.9rem, 3.5vw, 1rem)',
-              fontWeight: '700', cursor: 'pointer',
-              letterSpacing: '0.3px',
-            }}
-          >
-            I Understand — Continue
-          </button>
-        </div>
+    <div style={{ position:'fixed',inset:0,zIndex:9999,background:'rgba(3,0,20,0.92)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px' }}>
+      <div style={{ background:'linear-gradient(135deg,#0f0a2e,#1a0a3e)',border:'1px solid rgba(168,85,247,0.4)',borderRadius:'16px',maxWidth:'560px',width:'100%',maxHeight:'90vh',overflowY:'auto',padding:'32px 28px',color:'#e2e8f0' }}>
+        <div style={{ fontSize:'28px',marginBottom:'8px',textAlign:'center' }}>⚠️</div>
+        <h2 style={{ color:'#a855f7',fontSize:'1.3rem',textAlign:'center',marginBottom:'20px' }}>Terms of Service & Risk Acknowledgment</h2>
+        <p style={{ color:'#94a3b8',fontSize:'0.9rem',marginBottom:'24px',lineHeight:'1.7' }}>
+          Before accessing this interface, confirm each item below. By proceeding, you make legally binding representations.
+        </p>
+        {[
+          { key:'risk', label:<><strong style={{color:'#f3ba2f'}}>I understand the risks.</strong> Crypto-assets are highly volatile. I may lose all capital. APR figures are historical estimates, not guaranteed returns. I am financially sophisticated enough to evaluate these risks independently.</> },
+          { key:'jurisdiction', label:<><strong style={{color:'#f3ba2f'}}>I confirm my jurisdiction.</strong> I represent that I am not a citizen or resident of any jurisdiction where access to DeFi interfaces is prohibited or requires regulatory authorization not held by this project (including MiCA-regulated jurisdictions). I am solely responsible for compliance with my local laws.</> },
+          { key:'sanctions', label:<><strong style={{color:'#f3ba2f'}}>I am not subject to sanctions.</strong> I represent that I am not subject to economic or trade sanctions by any governmental authority, and am not on any prohibited-parties list (including the OFAC SDN List).</> },
+          { key:'terms', label:<><strong style={{color:'#f3ba2f'}}>I have read the Terms of Service.</strong> I agree to the <a href="/terms-of-service" target="_blank" rel="noopener noreferrer" style={{color:'#a855f7'}}>Terms of Service</a> and <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" style={{color:'#a855f7'}}>Privacy Policy</a>, including data sharing with offer providers. This interface is MIT-licensed open-source software with no warranties.</> },
+        ].map(({ key, label }) => (
+          <label key={key} style={{ display:'flex',gap:'14px',alignItems:'flex-start',marginBottom:'18px',cursor:'pointer' }}>
+            <input type="checkbox" checked={checks[key]} onChange={() => toggle(key)} style={{ width:'18px',height:'18px',marginTop:'2px',accentColor:'#a855f7',flexShrink:0 }} />
+            <span style={{ color:'#e2e8f0',fontSize:'0.88rem',lineHeight:'1.6' }}>{label}</span>
+          </label>
+        ))}
+        <button onClick={accept} disabled={!allChecked} style={{ width:'100%',padding:'14px',borderRadius:'12px',border:'none',background:allChecked?'linear-gradient(135deg,#7c3aed,#a855f7)':'rgba(100,100,120,0.3)',color:allChecked?'#ffffff':'#666',fontSize:'1rem',fontWeight:'700',cursor:allChecked?'pointer':'not-allowed',transition:'all 0.2s' }}>
+          {allChecked ? 'I Confirm — Enter Application' : 'Please confirm all items above'}
+        </button>
+        <p style={{ textAlign:'center',color:'#475569',fontSize:'0.75rem',marginTop:'16px' }}>Stored locally in your browser only.</p>
       </div>
     </div>
   );
