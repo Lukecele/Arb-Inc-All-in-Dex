@@ -20,8 +20,8 @@ behind this project — it is autonomous open-source software.
 - **20% burn on every distribution** — tokens permanently removed from circulation
 - **50% of DEX revenue** converted to BNB and sent to distribution wallet
 - **Every 12 hours:**
-  - **40% BNB rewards** distributed to holders
-  - **20% buyback and burn** forever
+  - **100% of BNB rewards** distributed directly to token holders
+  - **Separate buyback mechanism** funded by protocol revenue
 
 ## Key Features
 
