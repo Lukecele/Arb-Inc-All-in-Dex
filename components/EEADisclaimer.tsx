@@ -68,7 +68,7 @@ export default function EEADisclaimer() {
 
           <p style={{ color: '#94a3b8', fontSize: 'clamp(0.72rem, 2.6vw, 0.82rem)', marginBottom: '4px', lineHeight: '1.5' }}>
             EEA residents: this service is not currently authorized under MiCA in your jurisdiction.
-            Use is at your sole risk. Read our <a href="/terms" style={{ color: '#a855f7' }}>Terms of Service</a> before proceeding.
+            Use is at your sole risk. Read our <a href="/terms-of-service" style={{ color: '#a855f7' }}>Terms of Service</a> before proceeding.
           </p>
         </div>
 

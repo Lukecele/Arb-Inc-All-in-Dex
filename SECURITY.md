@@ -10,7 +10,7 @@
 
 If you discover a security vulnerability, please do NOT open a public GitHub issue.
 
-Send a responsible disclosure report to: [your-contact-method]
+Send a responsible disclosure report to: security@arbitrage-inc.exchange or via Telegram https://t.me/ArbitrageInception
 
 Include:
 - Description of the vulnerability

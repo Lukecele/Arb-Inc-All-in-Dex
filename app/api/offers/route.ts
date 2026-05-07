@@ -6,15 +6,15 @@ export async function GET(request: Request) {
 
 	// 1. CATTURIAMO L'IP REALE (Da Vercel)
 	const forwardedFor = request.headers.get("x-forwarded-for");
-	const userIp = forwardedFor ? forwardedFor.split(",")[0] : "151.75.207.169"; // IP di fallback in caso di test locale
+	const userIp = forwardedFor ? forwardedFor.split(",")[0] ; // IP di fallback in caso di test locale
 
 	// 2. CATTURIAMO LO USER AGENT (Che dispositivo usa l'utente?)
 	const userAgent =
 		request.headers.get("user-agent") ||
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
 
-	const userId = "2517944";
-	const key = "26271b30ab81cc1f2aa423c79ccb3d6a";
+	const userId = process.env.CPAGRIP_USER_ID || "";
+	const key = process.env.CPAGRIP_API_KEY || "";
 
 	// 3. COSTRUIAMO L'URL COMPLETO CON TUTTE LE ARMI
 	const apiUrl = `https://www.cpagrip.com/common/offer_feed_rss.php?user_id=${userId}&key=${key}&tracking_id=${encodeURIComponent(wallet)}&ip=${userIp}&ua=${encodeURIComponent(userAgent)}`;
