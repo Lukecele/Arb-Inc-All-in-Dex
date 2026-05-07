@@ -14,6 +14,7 @@ export default function EEADisclaimer() {
     localStorage.setItem('tos_selfcert_v2', Date.now().toString());
     setVisible(false);
   };
+  // @ts-ignore
   const toggle = (key: any) => setChecks(prev => ({ ...prev, [key]: !prev[key] }));
   return (
     <div style={{ position:'fixed',inset:0,zIndex:9999,background:'rgba(3,0,20,0.92)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px' }}>
