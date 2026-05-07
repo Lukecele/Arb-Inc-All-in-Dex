@@ -14,7 +14,7 @@ export default function EEADisclaimer() {
     localStorage.setItem('tos_selfcert_v2', Date.now().toString());
     setVisible(false);
   };
-  const toggle = (key) => setChecks(prev => ({ ...prev, [key]: !prev[key] }));
+  const toggle = (key: string) => setChecks(prev => ({ ...prev, [key]: !prev[key] }));
   return (
     <div style={{ position:'fixed',inset:0,zIndex:9999,background:'rgba(3,0,20,0.92)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px' }}>
       <div style={{ background:'linear-gradient(135deg,#0f0a2e,#1a0a3e)',border:'1px solid rgba(168,85,247,0.4)',borderRadius:'16px',maxWidth:'560px',width:'100%',maxHeight:'90vh',overflowY:'auto',padding:'32px 28px',color:'#e2e8f0' }}>
