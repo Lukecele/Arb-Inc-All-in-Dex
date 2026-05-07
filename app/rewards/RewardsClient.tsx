@@ -342,8 +342,7 @@ export default function RewardsClient() {
 					<div style={{ fontSize: "38px", color: "#fff", fontWeight: "900" }}>
 						{globalApr} 🔥
           </div>
-          <p style={{ color: "#94a3b8", fontSize: "11px", marginTop: "6px", fontStyle: "italic" }}>* Annualized estimate: 12h fee cycle ÷ proportional token stake. Past performance does not guarantee future results. Risk of total or partial loss.</p>
-          <div style={{ display: "none" }}
+          <p style={{ color: "#94a3b8", fontSize: "11px", marginTop: "6px", fontStyle: "italic" }}>* Annualized estimate based on 6h distribution cycles ÷ proportional token stake. Past performance does not guarantee future results. Risk of total or partial loss.</p>
 					</div>
 				</div>
 
