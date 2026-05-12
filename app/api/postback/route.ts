@@ -1,4 +1,4 @@
-import { isAddress, getAddress } from "ethers";
+import { utils } from "ethers";
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 const redis = new Redis({
@@ -14,8 +14,8 @@ export async function GET(request: Request) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 	if (!wallet) return new Response("No Wallet", { status: 400 });
-  if (!isAddress(wallet)) return new Response("Invalid address", { status: 400 });
-  const safeWallet = getAddress(wallet).toLowerCase();
+  if (!utils.utils.isAddress(wallet)) return new Response("Invalid address", { status: 400 });
+  const safeWallet = utils.utils.getAddress(wallet).toLowerCase();
 	try {
 		const amount = 250;
 		await redis.zincrby("leaderboard:points", amount, safeWallet);

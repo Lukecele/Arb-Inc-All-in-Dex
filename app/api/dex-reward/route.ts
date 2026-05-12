@@ -1,4 +1,4 @@
-import { isAddress, getAddress } from "ethers";
+import { utils } from "ethers";
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 
@@ -24,8 +24,8 @@ export async function POST(req: Request) {
 				{ success: false, error: "No wallet" },
 				{ status: 400 },
 			);
-		if (!isAddress(userWallet)) return NextResponse.json({ success: false, error: "Invalid Ethereum address" }, { status: 400 });
-      userWallet = getAddress(userWallet).toLowerCase();
+		if (!utils.utils.isAddress(userWallet)) return NextResponse.json({ success: false, error: "Invalid Ethereum address" }, { status: 400 });
+      userWallet = utils.utils.getAddress(userWallet).toLowerCase();
       if (!txHash || typeof txHash !== "string" || txHash.length !== 66) return NextResponse.json({ success: false, error: "Valid txHash required" }, { status: 400 });
 
 		// 🚨 SISTEMA ANTI-FARMING
