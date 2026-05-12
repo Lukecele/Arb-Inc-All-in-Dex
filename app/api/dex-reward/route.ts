@@ -21,8 +21,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: "Parametri mancanti" }, { status: 400 });
         }
 
-        // Validazione integrità indirizzo
-        if (!ethers.isAddress(userWallet)) {
+        // Validazione integrità indirizzo (Sintassi v5: ethers.utils.isAddress)
+        if (!ethers.utils.isAddress(userWallet)) {
             return NextResponse.json({ success: false, error: "Wallet non valido" }, { status: 400 });
         }
         userWallet = userWallet.toLowerCase();
@@ -42,11 +42,14 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, error: "Transazione già riscattata" }, { status: 400 });
             }
 
-            // 2. Convalida Blockchain (Fix Vercel Referrer)
-            const fetchReq = new ethers.FetchRequest(RPC_URL);
-            fetchReq.setHeader("Referer", ""); // Pulisce il referrer che causa crash su Node.js/Vercel
+            // 2. Convalida Blockchain (Sintassi v5 con fix Referrer)
+            const connection = {
+                url: RPC_URL,
+                headers: { "Referer": "" } // Previene il crash su Vercel
+            };
             
-            const provider = new ethers.JsonRpcProvider(fetchReq, 56, { staticNetwork: true });
+            // StaticJsonRpcProvider è più efficiente per le chiamate singole in v5
+            const provider = new ethers.providers.StaticJsonRpcProvider(connection, 56);
             const receipt = await provider.getTransactionReceipt(txHash);
             
             if (!receipt || receipt.status !== 1) {
