@@ -110,7 +110,7 @@ async function watch() {
 					updatedPoints = currentPoints * 0.95;
 				} else if (status === "diamond" && holding > 0n) {
 					// Feature 2: Se hai > 0 token, guadagni punti proporzionali.
-					const multiplier = lowerW === CEO_WALLET ? 50 : 10;
+					const multiplier = 10;
 					const pointsGained =
 						(Number(holding / 10n ** 9n) / 1000000) * multiplier;
 					updatedPoints += pointsGained;

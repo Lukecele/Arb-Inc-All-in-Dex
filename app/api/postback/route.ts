@@ -1,3 +1,4 @@
+import { isAddress, getAddress } from "ethers";
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 const redis = new Redis({
@@ -9,14 +10,16 @@ export async function GET(request: Request) {
 	const wallet = searchParams.get("tracking_id")?.toLowerCase();
 	const secret = searchParams.get("secret");
 	const expectedSecret = process.env.CPAGRIP_POSTBACK_SECRET;
-	if (expectedSecret && secret !== expectedSecret) {
+	if (!expectedSecret || secret !== expectedSecret) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 	if (!wallet) return new Response("No Wallet", { status: 400 });
+  if (!isAddress(wallet)) return new Response("Invalid address", { status: 400 });
+  const safeWallet = getAddress(wallet).toLowerCase();
 	try {
 		const amount = 250;
-		await redis.zincrby("leaderboard:points", amount, wallet);
-		const parent = await redis.get(`ref:parent:${wallet}`);
+		await redis.zincrby("leaderboard:points", amount, safeWallet);
+		const parent = await redis.get(`ref:parent:${safeWallet}`);
 		if (parent) {
 			const bonus = amount * 0.1;
 			await redis.zincrby("leaderboard:points", bonus, parent as string);

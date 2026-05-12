@@ -23,7 +23,9 @@ export async function POST(req: Request) {
 				{ success: false, error: "No wallet" },
 				{ status: 400 },
 			);
-		userWallet = userWallet.toLowerCase();
+		if (!isAddress(userWallet)) return NextResponse.json({ success: false, error: "Invalid Ethereum address" }, { status: 400 });
+      userWallet = getAddress(userWallet).toLowerCase();
+      if (!txHash || typeof txHash !== "string" || txHash.length !== 66) return NextResponse.json({ success: false, error: "Valid txHash required" }, { status: 400 });
 
 		// 🚨 SISTEMA ANTI-FARMING
 		if (txHash) {

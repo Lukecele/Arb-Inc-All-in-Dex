@@ -8,7 +8,9 @@ const redis = new Redis({
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
-	const wallet = searchParams.get("wallet")?.toLowerCase();
+	let wallet = searchParams.get("wallet")?.toLowerCase();
+  if (!wallet || !isAddress(wallet)) return NextResponse.json({ error: "Invalid Ethereum address" }, { status: 400 });
+  wallet = getAddress(wallet).toLowerCase();
 	const ref = searchParams.get("ref")?.toLowerCase(); // L'indirizzo di chi ha invitato
 
 	if (!wallet) {
@@ -29,7 +31,7 @@ export async function GET(request: Request) {
 
 		// 2. LOGICA REFERRAL UNIVERSALE (Sia nuovi che vecchi utenti)
 		// Se c'è un referrer nell'URL e non è l'utente stesso...
-		if (ref && ref !== wallet && ref.startsWith("0x")) {
+		if (ref && ref !== wallet && isAddress(ref)) {
 			// Controlliamo se l'utente ha GIÀ un "padre" per non sovrascriverlo
 			const hasParent = await redis.get(`ref:parent:${wallet}`);
 
