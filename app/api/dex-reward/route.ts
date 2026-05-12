@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { Redis } from "@upstash/redis";
 
-// Ripristino RPC ufficiale Binance
 const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-dataseed.binance.org").replace(/\/$/, "");
 
 const redis = new Redis({
@@ -36,20 +35,24 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, error: "Transazione già riscattata" }, { status: 400 });
             }
 
-            // --- FIX RADICALE PER REFERRER ---
-            // Definiamo la connessione forzando headers che sovrascrivono il default "client"
-            const connection: ethers.utils.ConnectionInfo = {
-                url: RPC_URL,
-                headers: {
-                    "Referer": "https://arbitrage-inc.exchange",
-                    "User-Agent": "Mozilla/5.0"
-                }
-            };
-
-            const provider = new ethers.providers.StaticJsonRpcProvider(connection, 56);
-            const receipt = await provider.getTransactionReceipt(txHash);
+            // --- 🚨 ATOMIC FIX PER VERCEL 🚨 ---
+            // Invece di affidarci a ethers per la fetch, facciamo la chiamata manualmente
+            // per estrarre la ricevuta, bypassando l'header 'client'.
+            const rpcResponse = await fetch(RPC_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: "2.0",
+                    id: 1,
+                    method: "eth_getTransactionReceipt",
+                    params: [txHash]
+                })
+            });
             
-            if (!receipt || receipt.status !== 1) {
+            const rpcData = await rpcResponse.json();
+            const receipt = rpcData.result;
+
+            if (!receipt || parseInt(receipt.status, 16) !== 1) {
                 return NextResponse.json({ success: false, error: "Transazione fallita o non trovata" }, { status: 400 });
             }
 
@@ -60,7 +63,7 @@ export async function POST(req: Request) {
             await redis.set(`claim_tx:${txHash}`, "true", { ex: 2592000 });
 
         } catch (verifyError: any) {
-            console.error("RPC Verify Error:", verifyError);
+            console.error("RPC Manual Fetch Error:", verifyError);
             return NextResponse.json({ success: false, error: "Errore durante la verifica blockchain" }, { status: 503 });
         }
 
