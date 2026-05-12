@@ -1,3 +1,4 @@
+import { utils } from "ethers";
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 
@@ -9,8 +10,8 @@ const redis = new Redis({
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	let wallet = searchParams.get("wallet")?.toLowerCase();
-  if (!wallet || !isAddress(wallet)) return NextResponse.json({ error: "Invalid Ethereum address" }, { status: 400 });
-  wallet = getAddress(wallet).toLowerCase();
+  if (!wallet || !utils.isAddress(wallet)) return NextResponse.json({ error: "Invalid Ethereum address" }, { status: 400 });
+  wallet = utils.getAddress(wallet).toLowerCase();
 	const ref = searchParams.get("ref")?.toLowerCase(); // L'indirizzo di chi ha invitato
 
 	if (!wallet) {
@@ -31,7 +32,7 @@ export async function GET(request: Request) {
 
 		// 2. LOGICA REFERRAL UNIVERSALE (Sia nuovi che vecchi utenti)
 		// Se c'è un referrer nell'URL e non è l'utente stesso...
-		if (ref && ref !== wallet && isAddress(ref)) {
+		if (ref && ref !== wallet && utils.isAddress(ref)) {
 			// Controlliamo se l'utente ha GIÀ un "padre" per non sovrascriverlo
 			const hasParent = await redis.get(`ref:parent:${wallet}`);
 
