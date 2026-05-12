@@ -9,8 +9,20 @@ const redis = new Redis({
 
 export async function POST(request: Request) {
 	try {
-		const { wallet } = await request.json();
-		const walletLower = wallet.toLowerCase();
+        const body = await request.json();
+		const wallet = body?.wallet;
+
+        // 1. Controllo base che ci sia un wallet fornito
+        if (!wallet || typeof wallet !== "string") {
+            return NextResponse.json({ error: "Missing or invalid wallet parameter" }, { status: 400 });
+        }
+        
+        // 2. Formattazione Ethers.js robusta anti-injection
+        if (!(ethers as any).utils.isAddress(wallet.toLowerCase())) {
+            return NextResponse.json({ error: "Invalid Ethereum address format" }, { status: 400 });
+        }
+        const walletLower = (ethers as any).utils.getAddress(wallet).toLowerCase();
+
 		const MIN_CLAIM = 0.001;
 
 		const points = parseFloat(
@@ -20,8 +32,7 @@ export async function POST(request: Request) {
 			String((await redis.get("rewards:global_index")) || "0"),
 		);
 		const userIndexStr = await redis.get(`rewards:user_index:${walletLower}`);
-		const userIndex =
-			userIndexStr !== null ? parseFloat(String(userIndexStr)) : globalIndex;
+		const userIndex = userIndexStr !== null ? parseFloat(String(userIndexStr)) : globalIndex;
 		const pendingBnb = parseFloat(
 			String((await redis.get(`rewards:pending:${walletLower}`)) || "0"),
 		);
@@ -51,7 +62,6 @@ export async function POST(request: Request) {
 
 		await tx.wait();
 
-		// --- 🛡️ FIX: NON AZZERIAMO PIÙ I PUNTI ---
 		// Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
 		await redis.set(`rewards:pending:${walletLower}`, "0");
 		await redis.set(
@@ -62,7 +72,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({ success: true, txHash: tx.hash });
 	} catch (error: any) {
 		return NextResponse.json(
-			{ error: error.message || "Errore interno" },
+			{ error: error.message || "Errore interno al server" },
 			{ status: 500 },
 		);
 	}
