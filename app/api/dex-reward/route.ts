@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { Redis } from "@upstash/redis";
 
-// Configurazione BSC - Usiamo LlamaRPC come visto nell'ultimo log
-const RPC_URL = (process.env.BSC_RPC_URL || "https://binance.llamarpc.com").replace(/\/$/, "");
+// Ripristino RPC ufficiale Binance
+const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-dataseed.binance.org").replace(/\/$/, "");
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -36,18 +36,17 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, error: "Transazione già riscattata" }, { status: 400 });
             }
 
-            // --- FIX DEFINITIVO PER REFERRER "CLIENT" ---
-            // Inizializziamo il provider usando una stringa URL pulita. 
-            // Se l'errore persiste, usiamo un ConnectionInfo che sovrascrive esplicitamente i campi critici.
-            const provider = new ethers.providers.StaticJsonRpcProvider({
+            // --- FIX RADICALE PER REFERRER ---
+            // Definiamo la connessione forzando headers che sovrascrivono il default "client"
+            const connection: ethers.utils.ConnectionInfo = {
                 url: RPC_URL,
                 headers: {
-                    // Sovrascriviamo gli header per evitare che ethers o Vercel iniettino "client"
-                    "User-Agent": "Mozilla/5.0",
-                    "Referer": "https://arbitrage-inc.exchange" 
+                    "Referer": "https://arbitrage-inc.exchange",
+                    "User-Agent": "Mozilla/5.0"
                 }
-            }, 56);
+            };
 
+            const provider = new ethers.providers.StaticJsonRpcProvider(connection, 56);
             const receipt = await provider.getTransactionReceipt(txHash);
             
             if (!receipt || receipt.status !== 1) {
