@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { Redis } from "@upstash/redis";
 
-// Configurazione BSC
-const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-dataseed.binance.org").replace(/\/$/, "");
+// Configurazione BSC - Usiamo un provider ad alta affidabilità come default
+const RPC_URL = (process.env.BSC_RPC_URL || "https://binance.llamarpc.com").replace(/\/$/, "");
 
 // Inizializzazione Redis
 const redis = new Redis({
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: "Parametri mancanti" }, { status: 400 });
         }
 
-        // Validazione integrità indirizzo (Sintassi v5: ethers.utils.isAddress)
+        // Validazione integrità indirizzo (ethers v5)
         if (!ethers.utils.isAddress(userWallet)) {
             return NextResponse.json({ success: false, error: "Wallet non valido" }, { status: 400 });
         }
@@ -42,13 +42,17 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, error: "Transazione già riscattata" }, { status: 400 });
             }
 
-            // 2. Convalida Blockchain (Sintassi v5 con fix Referrer)
+            // 2. Convalida Blockchain (Sintassi v5 con fix Referrer URL)
+            // L'errore in image_8d0cab.png indica che "client" non è un URL valido.
+            // Usiamo l'indirizzo reale del sito per soddisfare i requisiti del fetcher.
             const connection = {
                 url: RPC_URL,
-                headers: { "Referer": "" } // Previene il crash su Vercel
+                headers: { 
+                    "Referer": "https://arbitrage-inc.exchange",
+                    "Origin": "https://arbitrage-inc.exchange"
+                }
             };
             
-            // StaticJsonRpcProvider è più efficiente per le chiamate singole in v5
             const provider = new ethers.providers.StaticJsonRpcProvider(connection, 56);
             const receipt = await provider.getTransactionReceipt(txHash);
             
