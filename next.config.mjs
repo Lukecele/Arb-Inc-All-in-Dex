@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ["ethers"],
+  experimental: { optimizePackageImports: ["ethers"] },
 	transpilePackages: ["@kyberswap/liquidity-widgets"],
 	compiler: {
 		styledComponents: true,
