@@ -9,6 +9,9 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
+// Funzione helper per mettere in pausa l'esecuzione
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
@@ -35,25 +38,37 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, error: "Transazione già riscattata" }, { status: 400 });
             }
 
-            // --- 🚨 ATOMIC FIX PER VERCEL 🚨 ---
-            // Invece di affidarci a ethers per la fetch, facciamo la chiamata manualmente
-            // per estrarre la ricevuta, bypassando l'header 'client'.
-            const rpcResponse = await fetch(RPC_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    jsonrpc: "2.0",
-                    id: 1,
-                    method: "eth_getTransactionReceipt",
-                    params: [txHash]
-                })
-            });
-            
-            const rpcData = await rpcResponse.json();
-            const receipt = rpcData.result;
+            // --- 🚨 FIX RACE CONDITION: SMART POLLING 🚨 ---
+            let receipt = null;
+            const maxRetries = 4; // Fino a 4 tentativi
+            const delayMs = 3000; // 3 secondi di pausa tra i tentativi (totale ~12 secondi)
+
+            for (let i = 0; i < maxRetries; i++) {
+                const rpcResponse = await fetch(RPC_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: "2.0",
+                        id: 1,
+                        method: "eth_getTransactionReceipt",
+                        params: [txHash]
+                    })
+                });
+                
+                const rpcData = await rpcResponse.json();
+                receipt = rpcData.result;
+
+                if (receipt) {
+                    break; // La ricevuta esiste, il blocco è stato propagato!
+                }
+                
+                // Se non esiste ancora, aspettiamo prima del prossimo ciclo
+                console.log(`[Attempt ${i + 1}] Transazione non ancora trovata sulla BSC, attendo...`);
+                await sleep(delayMs);
+            }
 
             if (!receipt || parseInt(receipt.status, 16) !== 1) {
-                return NextResponse.json({ success: false, error: "Transazione fallita o non trovata" }, { status: 400 });
+                return NextResponse.json({ success: false, error: "Transazione fallita o non confermata dal network" }, { status: 400 });
             }
 
             if (receipt.from.toLowerCase() !== userWallet) {
