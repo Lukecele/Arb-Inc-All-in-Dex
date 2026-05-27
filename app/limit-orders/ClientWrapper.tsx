@@ -20,7 +20,7 @@ interface Token {
   logoUrl?: string;
 }
 
-// Solo WBNB, nativo non supportato da KyberSwap
+// Solo WBNB (BNB nativo non supportato da KyberSwap)
 const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 
 const BSC_TOKENS: Token[] = [
@@ -65,57 +65,65 @@ const ERC20_ABI = [
   "function allowance(address owner, address spender) view returns (uint256)",
 ];
 
-// Funzioni di mappatura (mantenute per retrocompatibilità, ma ora non serve più mappare BNB nativo)
-const getTokenAddressForContract = (addr: string) => addr;
-const getApiTokenAddress = (addr: string) => addr;
-
 const DEFAULT_RPC = "https://bsc-dataseed.binance.org/";
 
-async function fetchTokenPrices(): Promise<Record<string, number>> {
+// Funzione per ottenere il prezzo di un token in USDT usando l'API KyberSwap
+async function fetchTokenPriceInUSDT(tokenAddress: string): Promise<number> {
+  try {
+    const res = await fetch(
+      `https://aggregator-api.kyberswap.com/bsc/api/v1/routes?tokenIn=${tokenAddress}&tokenOut=${USDT_ADDRESS}&amountIn=${ethers.utils.parseUnits("1", 18)}`,
+      { headers: { "x-client-id": "arb-inc" } }
+    );
+    const data = await res.json();
+    if (data.data?.routeSummary?.amountOutUsd) {
+      return parseFloat(data.data.routeSummary.amountOutUsd);
+    } else if (data.data?.routeSummary?.amountOut) {
+      return parseFloat(data.data.routeSummary.amountOut) / 1e18;
+    }
+    return 1;
+  } catch {
+    return 1;
+  }
+}
+
+// Carica prezzi per tutti i token (predefiniti + eventuali custom)
+async function fetchTokenPrices(customTokens: Token[] = []): Promise<Record<string, number>> {
+  const allTokens = [...BSC_TOKENS, ...customTokens];
   const prices: Record<string, number> = {};
-  const promises = BSC_TOKENS.map(async (token) => {
+  const promises = allTokens.map(async (token) => {
     if (token.address.toLowerCase() === USDT_ADDRESS.toLowerCase()) {
       prices[token.address] = 1;
       return;
     }
-    try {
-      const apiToken = getApiTokenAddress(token.address);
-      const res = await fetch(
-        `https://aggregator-api.kyberswap.com/bsc/api/v1/routes?tokenIn=${apiToken}&tokenOut=${USDT_ADDRESS}&amountIn=1000000000000000000`,
-        { headers: { "x-client-id": "arb-inc" } },
-      );
-      const data = await res.json();
-      if (data.data?.routeSummary?.amountOutUsd)
-        prices[token.address] = parseFloat(data.data.routeSummary.amountOutUsd);
-      else if (data.data?.routeSummary?.amountOut)
-        prices[token.address] =
-          parseFloat(data.data.routeSummary.amountOut) / 1e18;
-      else prices[token.address] = 1;
-    } catch {
-      prices[token.address] = 1;
-    }
+    const price = await fetchTokenPriceInUSDT(token.address);
+    prices[token.address] = price;
   });
   await Promise.all(promises);
-  prices[USDT_ADDRESS] = 1;
   return prices;
 }
 
+// fetchBalance ora accetta i decimali del token
 async function fetchBalance(
   tokenAddr: string,
+  decimals: number,
   wallet: string,
   provider: any,
 ): Promise<string> {
   try {
     const ethersProvider = new ethers.providers.Web3Provider(provider);
-    if (tokenAddr === "0x0000000000000000000000000000000000000000")
-      return ethers.utils.formatEther(await ethersProvider.getBalance(wallet));
+    if (tokenAddr === "0x0000000000000000000000000000000000000000") {
+      const balance = await ethersProvider.getBalance(wallet);
+      return ethers.utils.formatUnits(balance, decimals);
+    }
     const contract = new ethers.Contract(tokenAddr, ERC20_ABI, ethersProvider);
-    return ethers.utils.formatEther(await contract.balanceOf(wallet));
+    const balance = await contract.balanceOf(wallet);
+    return ethers.utils.formatUnits(balance, decimals);
   } catch {
     return "0";
   }
 }
 
+// Stili (invariati)
 const Container = styled.div`min-height: 100vh; max-width: 100vw; overflow-x: hidden; box-sizing: border-box; background: #000; padding: 12px; @media (min-width: 640px) { padding: 16px 24px; }`;
 const PageHeader = styled.div`display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;`;
 const Title = styled.h1`font-size: 20px; font-weight: 700; color: #fff;`;
@@ -137,7 +145,6 @@ const RateBox = styled.div`background: #27272a; border-radius: 12px; padding: 12
 const RateLabel = styled.div`display: flex; justify-content: space-between; font-size: 12px; color: #a1a1aa; margin-bottom: 10px;`;
 const RateInput = styled.input`width: 100%; background: #18181b; border: 1px solid #3f3f46; border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none;`;
 const MarketBtn = styled.button`padding: 10px 14px; background: #20B8CD; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-left: 8px;`;
-const RateRow = styled.div`display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: #a1a1aa;`;
 const ExpirySelect = styled.select`width: 100%; padding: 12px; background: #27272a; border: 1px solid #3f3f46; border-radius: 12px; color: #fff; font-size: 14px; cursor: pointer; margin-top: 12px;`;
 const SubmitBtn = styled.button`width: 100%; padding: 14px; background: #20B8CD; border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; &:disabled { opacity: 0.5; }`;
 const TabsRow = styled.div`display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px;`;
@@ -164,9 +171,7 @@ export default function ClientWrapper() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"open" | "my">("open");
   const [balances, setBalances] = useState<Record<string, string>>({});
-  const [showTokenModal, setShowTokenModal] = useState<"sell" | "buy" | null>(
-    null,
-  );
+  const [showTokenModal, setShowTokenModal] = useState<"sell" | "buy" | null>(null);
   const [tokenPrices, setTokenPrices] = useState<Record<string, number>>({});
 
   const walletAddress = wallet?.accounts?.[0]?.address;
@@ -189,27 +194,31 @@ export default function ClientWrapper() {
   const [importLoading, setImportLoading] = useState(false);
   const [importError, setImportError] = useState("");
 
+  // Aggiorna i prezzi ogni volta che cambiano i token custom
   useEffect(() => {
-    fetchTokenPrices()
-      .then(setTokenPrices)
-      .catch(() => {});
-  }, []);
+    const updatePrices = async () => {
+      const prices = await fetchTokenPrices(customTokens);
+      setTokenPrices(prices);
+    };
+    updatePrices();
+  }, [customTokens]);
 
   useEffect(() => {
-    if (provider && walletAddress)
-      setMaker(createLimitOrderMaker(getDefaultClient()));
+    if (provider && walletAddress) setMaker(createLimitOrderMaker(getDefaultClient()));
     else setMaker(null);
   }, [provider, walletAddress]);
 
   const loadBalances = useCallback(async () => {
     if (!walletAddress || !provider) return;
     const bals: Record<string, string> = {};
-    const prov = new ethers.providers.Web3Provider(provider);
-    bals["0x0000000000000000000000000000000000000000"] =
-      ethers.utils.formatEther(await prov.getBalance(walletAddress));
     const tokensToFetch = [...BSC_TOKENS, ...customTokens];
-    for (const t of tokensToFetch)
-      bals[t.address] = await fetchBalance(t.address, walletAddress, provider);
+    for (const t of tokensToFetch) {
+      bals[t.address] = await fetchBalance(t.address, t.decimals, walletAddress, provider);
+    }
+    // Saldo nativo BNB (non usato per ordini, solo visuale)
+    const ethersProvider = new ethers.providers.Web3Provider(provider);
+    const nativeBalance = await ethersProvider.getBalance(walletAddress);
+    bals["0x0000000000000000000000000000000000000000"] = ethers.utils.formatEther(nativeBalance);
     setBalances(bals);
   }, [walletAddress, provider, customTokens]);
 
@@ -221,10 +230,7 @@ export default function ClientWrapper() {
     if (!maker || !walletAddress) return;
     setLoading(true);
     try {
-      const res = await maker.getMakerOrders(walletAddress, {
-        page: 1,
-        size: 50,
-      });
+      const res = await maker.getMakerOrders(walletAddress, { page: 1, size: 50 });
       const fetchedOrders = (res.orders || []).map((o: any) => ({
         id: o.id,
         makerAsset: o.makerAsset,
@@ -235,7 +241,6 @@ export default function ClientWrapper() {
       }));
       setOrders(fetchedOrders);
 
-      // LAZY CLAIM CON ALERT
       const referrer = window.localStorage.getItem("arb_inc_referrer") || "";
       fetchedOrders.forEach((o: any) => {
         if (o.status.toLowerCase() === "filled") {
@@ -252,9 +257,7 @@ export default function ClientWrapper() {
               }),
             }).then(() => {
               window.localStorage.setItem(localKey, "true");
-              alert(
-                "🏆 Reward Claimed! 200 points added for your completed Limit Order!",
-              );
+              alert("🏆 Reward Claimed! 200 points added for your completed Limit Order!");
             });
           }
         }
@@ -290,21 +293,13 @@ export default function ClientWrapper() {
   const checkApproval = useCallback(async () => {
     if (!walletAddress || !provider || !maker) return;
     try {
-      const tokenAddr = getTokenAddressForContract(sellToken.address);
+      const tokenAddr = sellToken.address;
       const res = await maker.getMakerActiveAmount(walletAddress, tokenAddr);
-      const currentAmount = ethers.BigNumber.from(
-        res.activeMakingAmount || "0",
-      );
-      const newAmount = ethers.utils.parseUnits(
-        sellAmount || "0",
-        sellToken.decimals,
-      );
+      const currentAmount = ethers.BigNumber.from(res.activeMakingAmount || "0");
+      const newAmount = ethers.utils.parseUnits(sellAmount || "0", sellToken.decimals);
       const prov = new ethers.providers.Web3Provider(provider);
       const tokenContract = new ethers.Contract(tokenAddr, ERC20_ABI, prov);
-      const allowance = await tokenContract.allowance(
-        walletAddress,
-        LIMIT_ORDER_CONTRACT,
-      );
+      const allowance = await tokenContract.allowance(walletAddress, LIMIT_ORDER_CONTRACT);
       setActiveMakingAmount(res.activeMakingAmount || "0");
       setApprovalNeeded(allowance.lt(currentAmount.add(newAmount)));
     } catch (e) {
@@ -317,12 +312,8 @@ export default function ClientWrapper() {
     setApproving(true);
     try {
       const prov = new ethers.providers.Web3Provider(provider);
-      const tokenAddr = getTokenAddressForContract(sellToken.address);
-      const tokenContract = new ethers.Contract(
-        tokenAddr,
-        ERC20_ABI,
-        await prov.getSigner(),
-      );
+      const tokenAddr = sellToken.address;
+      const tokenContract = new ethers.Contract(tokenAddr, ERC20_ABI, await prov.getSigner());
       const amount = ethers.utils
         .parseUnits(sellAmount, sellToken.decimals)
         .add(ethers.utils.parseUnits(activeMakingAmount || "0", 18));
@@ -336,30 +327,54 @@ export default function ClientWrapper() {
     setApproving(false);
   };
 
-  const getMarketRate = () =>
-    (
-      (tokenPrices[sellToken.address] || 1) /
-      (tokenPrices[buyToken.address] || 1)
-    ).toFixed(6);
+  const getMarketRate = () => {
+    const sellPrice = tokenPrices[sellToken.address] || 0;
+    const buyPrice = tokenPrices[buyToken.address] || 0;
+    if (sellPrice === 0 || buyPrice === 0) return null;
+    return (sellPrice / buyPrice).toFixed(6);
+  };
+
   const handleRate = (v: string) => {
     setRate(v);
     setUseMarketRate(false);
-    if (sellAmount && v)
-      setBuyAmount((parseFloat(sellAmount) * parseFloat(v)).toFixed(6));
+    if (sellAmount && v) {
+      const buy = parseFloat(sellAmount) * parseFloat(v);
+      setBuyAmount(buy.toFixed(buyToken.decimals <= 6 ? 6 : 4));
+    }
   };
+
   const handleMarket = () => {
-    const r = getMarketRate();
-    setRate(r);
+    const marketRate = getMarketRate();
+    if (!marketRate) {
+      alert("Market rate not available for one of the selected tokens. Please enter rate manually.");
+      return;
+    }
+    setRate(marketRate);
     setUseMarketRate(true);
-    if (sellAmount)
-      setBuyAmount((parseFloat(sellAmount) * parseFloat(r)).toFixed(6));
+    if (sellAmount) {
+      const buy = parseFloat(sellAmount) * parseFloat(marketRate);
+      setBuyAmount(buy.toFixed(buyToken.decimals <= 6 ? 6 : 4));
+    }
   };
+
   const handleSell = (v: string) => {
     setSellAmount(v);
-    if (v && rate) setBuyAmount((parseFloat(v) * parseFloat(rate)).toFixed(6));
-    else if (v && useMarketRate)
-      setBuyAmount((parseFloat(v) * parseFloat(getMarketRate())).toFixed(6));
+    if (v && rate) {
+      const buy = parseFloat(v) * parseFloat(rate);
+      setBuyAmount(buy.toFixed(buyToken.decimals <= 6 ? 6 : 4));
+    } else if (v && useMarketRate) {
+      const marketRate = getMarketRate();
+      if (marketRate) {
+        const buy = parseFloat(v) * parseFloat(marketRate);
+        setBuyAmount(buy.toFixed(buyToken.decimals <= 6 ? 6 : 4));
+      } else {
+        setBuyAmount("");
+      }
+    } else {
+      setBuyAmount("");
+    }
   };
+
   const handleFlip = () => {
     const t = sellToken;
     setSellToken(buyToken);
@@ -367,6 +382,7 @@ export default function ClientWrapper() {
     setSellAmount("");
     setBuyAmount("");
     setRate("");
+    setUseMarketRate(false);
   };
 
   useEffect(() => {
@@ -385,44 +401,33 @@ export default function ClientWrapper() {
     }
     const sellFloat = parseFloat(sellAmount);
     const rateFloat = parseFloat(rate);
-    if (
-      isNaN(sellFloat) ||
-      isNaN(rateFloat) ||
-      sellFloat <= 0 ||
-      rateFloat <= 0
-    ) {
+    if (isNaN(sellFloat) || isNaN(rateFloat) || sellFloat <= 0 || rateFloat <= 0) {
       alert("Invalid amount or rate");
       return;
     }
 
-    const makingAmount = ethers.utils.parseUnits(
-      sellFloat.toString(),
-      sellToken.decimals,
-    );
-    const takingAmount = ethers.utils.parseUnits(
-      (sellFloat * rateFloat).toString(),
-      buyToken.decimals,
-    );
+    const makingAmount = ethers.utils.parseUnits(sellFloat.toString(), sellToken.decimals);
+    const takingAmount = ethers.utils.parseUnits((sellFloat * rateFloat).toString(), buyToken.decimals);
 
     try {
       const prov = new ethers.providers.Web3Provider(provider);
       const mk = createLimitOrderMaker(getDefaultClient());
-      const exp =
-        expiry > 0
-          ? Math.floor(Date.now() / 1000) + expiry
-          : Math.floor(Date.now() / 1000) + 86400 * 365;
+      const exp = expiry > 0
+        ? Math.floor(Date.now() / 1000) + expiry
+        : Math.floor(Date.now() / 1000) + 86400 * 365;
 
       await mk.createOrder(await prov.getSigner(), {
         chainId: BSC_CHAIN_ID.toString(),
-        makerAsset: getApiTokenAddress(sellToken.address),
-        takerAsset: getApiTokenAddress(buyToken.address),
+        makerAsset: sellToken.address,
+        takerAsset: buyToken.address,
         makingAmount: makingAmount.toString(),
         takingAmount: takingAmount.toString(),
         expiredAt: exp,
       });
 
       alert(
-        "Order created! Points will be awarded automatically when the order is successfully filled.",
+        "Order created! Points will be awarded automatically when the order is successfully filled.\n\n" +
+        "⚠️ Note: The order will be executed only when the market price reaches your rate AND there is sufficient liquidity in the KyberSwap pool for this pair."
       );
       loadOrders();
       setSellAmount("");
@@ -444,10 +449,8 @@ export default function ClientWrapper() {
   };
 
   const getSym = (a: string) =>
-    allTokens.find((t) => t.address.toLowerCase() === a.toLowerCase())
-      ?.symbol || a.slice(0, 6);
+    allTokens.find((t) => t.address.toLowerCase() === a.toLowerCase())?.symbol || a.slice(0, 6);
 
-  // ---------- MIGLIORATA IMPORT TOKEN CON LETTURA ON-CHAIN ----------
   const handleImportToken = async () => {
     if (!importAddress || !/^0x[0-9a-fA-F]{40}$/.test(importAddress)) {
       setImportError("Inserisci un indirizzo valido (0x...)");
@@ -471,7 +474,6 @@ export default function ClientWrapper() {
     setImportLoading(true);
     setImportError("");
 
-    // Ottieni provider (wallet o fallback RPC)
     let ethersProvider: ethers.providers.Provider;
     if (provider) {
       ethersProvider = new ethers.providers.Web3Provider(provider);
@@ -480,7 +482,6 @@ export default function ClientWrapper() {
     }
 
     try {
-      // Lettura simbolo e decimali direttamente dal contratto
       const tokenContract = new ethers.Contract(
         checksummed,
         [
@@ -490,25 +491,16 @@ export default function ClientWrapper() {
         ],
         ethersProvider
       );
-
-      const [symbol, decimals] = await Promise.all([
-        tokenContract.symbol(),
-        tokenContract.decimals(),
-      ]);
-
-      const newToken: Token = {
-        address: checksummed,
-        symbol: symbol,
-        decimals: decimals,
-        logoUrl: "",
-      };
-
+      const [symbol, decimals] = await Promise.all([tokenContract.symbol(), tokenContract.decimals()]);
+      const newToken: Token = { address: checksummed, symbol, decimals, logoUrl: "" };
       setCustomTokens((prev) => [...prev, newToken]);
       selectToken(newToken);
-      loadBalances(); // per vedere subito il saldo
+      loadBalances();
+      // Forza aggiornamento prezzi
+      const newPrice = await fetchTokenPriceInUSDT(checksummed);
+      setTokenPrices((prev) => ({ ...prev, [checksummed]: newPrice }));
     } catch (onChainError) {
       console.warn("On-chain fetch fallita, provo KyberSwap API", onChainError);
-      // Fallback API KyberSwap
       try {
         const res = await fetch(
           `https://ks-setting.kyberswap.com/api/v1/tokens?addresses=${checksummed}&chainId=56`,
@@ -526,6 +518,8 @@ export default function ClientWrapper() {
           setCustomTokens((prev) => [...prev, newToken]);
           selectToken(newToken);
           loadBalances();
+          const newPrice = await fetchTokenPriceInUSDT(checksummed);
+          setTokenPrices((prev) => ({ ...prev, [checksummed]: newPrice }));
         } else {
           setImportError("Token non trovato né on‑chain né su KyberSwap. Verifica l'indirizzo.");
         }
@@ -537,7 +531,6 @@ export default function ClientWrapper() {
       setImportLoading(false);
     }
   };
-  // ----------------------------------------------------------------
 
   return (
     <Container>
@@ -545,147 +538,69 @@ export default function ClientWrapper() {
       <PageHeader>
         <Title>Limit Order</Title>
         <HeaderRight>
-          <ChainBadge>
-            <span style={{ color: "#20B8CD" }}>●</span> BNB Chain
-          </ChainBadge>
-          <WalletBadge
-            onClick={() => !walletAddress && connect()}
-            style={{ cursor: walletAddress ? "default" : "pointer" }}
-          >
-            {walletAddress
-              ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-              : "Connect Wallet"}
+          <ChainBadge><span style={{ color: "#20B8CD" }}>●</span> BNB Chain</ChainBadge>
+          <WalletBadge onClick={() => !walletAddress && connect()} style={{ cursor: walletAddress ? "default" : "pointer" }}>
+            {walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "Connect Wallet"}
           </WalletBadge>
         </HeaderRight>
       </PageHeader>
       <DescriptionCard>
-        Place limit orders on BSC with the best rates. Powered by{" "}
-        <strong>KyberSwap</strong>.
+        Place limit orders on BSC with the best rates. Powered by <strong>KyberSwap</strong>.
       </DescriptionCard>
       <MainGrid>
         <Card>
           <CardTitle>Place Limit Order</CardTitle>
 
-          {/* BANNER 200 PUNTI */}
-          <div
-            style={{
-              background: "rgba(244,114,182,0.1)",
-              color: "#F472B6",
-              padding: "10px",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontWeight: "bold",
-              marginBottom: "10px",
-              textAlign: "center",
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-              border: "1px solid rgba(244,114,182,0.3)",
-            }}
-          >
+          <div style={{ background: "rgba(244,114,182,0.1)", color: "#F472B6", padding: "10px", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", marginBottom: "10px", textAlign: "center", border: "1px solid rgba(244,114,182,0.3)" }}>
             🏆 Earn 200 Points Upon Execution
           </div>
 
-          {/* BANNER AGGIORNATO: solo WBNB */}
-          <div
-            style={{
-              background: "rgba(245, 158, 11, 0.1)",
-              color: "#f59e0b",
-              padding: "10px",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontWeight: "500",
-              marginBottom: "15px",
-              textAlign: "center",
-              border: "1px solid rgba(245, 158, 11, 0.3)",
-              lineHeight: "1.4",
-            }}
-          >
-            ⚠️ <strong>NOTA:</strong> KyberSwap supporta solo <strong>WBNB</strong> (non BNB nativo).
-            Usa WBNB per i tuoi ordini. Puoi convertire BNB → WBNB su PancakeSwap.
+          <div style={{ background: "rgba(245, 158, 11, 0.1)", color: "#f59e0b", padding: "10px", borderRadius: "8px", fontSize: "12px", fontWeight: "500", marginBottom: "15px", textAlign: "center", border: "1px solid rgba(245, 158, 11, 0.3)", lineHeight: "1.4" }}>
+            ⚠️ <strong>NOTA:</strong> KyberSwap supporta solo <strong>WBNB</strong> (non BNB nativo).<br/>
+            Per eseguire un ordine limite, il token deve avere liquidità sufficiente sulla pool di KyberSwap.
           </div>
 
           <InputGroup>
             <InputLabel>
               <span>You Sell</span>
               <span style={{ color: "#a1a1aa", float: "right", fontSize: 12 }}>
-                {walletAddress
-                  ? balances[sellToken.address]
-                    ? parseFloat(balances[sellToken.address]).toFixed(4)
-                    : "..."
-                  : "Connect wallet"}
+                {walletAddress ? (balances[sellToken.address] ? parseFloat(balances[sellToken.address]).toFixed(4) : "...") : "Connect wallet"}
               </span>
             </InputLabel>
             <InputRow>
-              <AmountInput
-                type="number"
-                placeholder="0.0"
-                value={sellAmount}
-                onChange={(e) => handleSell(e.target.value)}
-              />
+              <AmountInput type="number" placeholder="0.0" value={sellAmount} onChange={(e) => handleSell(e.target.value)} />
               <TokenButton onClick={() => setShowTokenModal("sell")}>
-                {sellToken.logoUrl && <TokenIcon src={sellToken.logoUrl} />}{" "}
-                {sellToken.symbol} ▼
+                {sellToken.logoUrl && <TokenIcon src={sellToken.logoUrl} />} {sellToken.symbol} ▼
               </TokenButton>
             </InputRow>
           </InputGroup>
           <SwapIcon onClick={handleFlip}>⇅</SwapIcon>
           <InputGroup>
-            <InputLabel>
-              <span>You Buy</span>
-            </InputLabel>
+            <InputLabel><span>You Buy</span></InputLabel>
             <InputRow>
-              <AmountInput
-                type="text"
-                placeholder="0.0"
-                value={buyAmount}
-                readOnly
-              />
+              <AmountInput type="text" placeholder="0.0" value={buyAmount} readOnly />
               <TokenButton onClick={() => setShowTokenModal("buy")}>
-                {buyToken.logoUrl && <TokenIcon src={buyToken.logoUrl} />}{" "}
-                {buyToken.symbol} ▼
+                {buyToken.logoUrl && <TokenIcon src={buyToken.logoUrl} />} {buyToken.symbol} ▼
               </TokenButton>
             </InputRow>
           </InputGroup>
           <RateBox>
-            <RateLabel>
-              <span>Sell {sellToken.symbol} at rate</span>
-            </RateLabel>
+            <RateLabel><span>Sell {sellToken.symbol} at rate</span></RateLabel>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              <RateInput
-                type="number"
-                placeholder="0.0"
-                value={rate}
-                onChange={(e) => handleRate(e.target.value)}
-              />
+              <RateInput type="number" placeholder="0.0" value={rate} onChange={(e) => handleRate(e.target.value)} />
               <MarketBtn onClick={handleMarket}>Market</MarketBtn>
             </div>
           </RateBox>
           <div style={{ marginTop: 12 }}>
-            <span
-              style={{
-                fontSize: 13,
-                color: "#a1a1aa",
-                display: "block",
-                marginBottom: 6,
-              }}
-            >
-              Expires in
-            </span>
-            <ExpirySelect
-              value={expiry}
-              onChange={(e) => setExpiry(Number(e.target.value))}
-            >
+            <span style={{ fontSize: 13, color: "#a1a1aa", display: "block", marginBottom: 6 }}>Expires in</span>
+            <ExpirySelect value={expiry} onChange={(e) => setExpiry(Number(e.target.value))}>
               <option value={0}>Forever</option>
               <option value={3600}>1 hour</option>
               <option value={86400}>1 day</option>
             </ExpirySelect>
           </div>
           {approvalNeeded && sellAmount && (
-            <SubmitBtn
-              onClick={handleApprove}
-              disabled={approving}
-              style={{ background: "#f59e0b", marginBottom: 8 }}
-            >
+            <SubmitBtn onClick={handleApprove} disabled={approving} style={{ background: "#f59e0b", marginBottom: 8 }}>
               {approving ? "Approving..." : `Approve ${sellToken.symbol}`}
             </SubmitBtn>
           )}
@@ -695,89 +610,24 @@ export default function ClientWrapper() {
         <Card>
           <CardTitle>Open Orders</CardTitle>
           <TabsRow>
-            <Tab
-              $active={activeTab === "open"}
-              onClick={() => setActiveTab("open")}
-            >
-              Open Limit Orders
-            </Tab>
-            <Tab
-              $active={activeTab === "my"}
-              onClick={() => setActiveTab("my")}
-            >
-              My Orders
-            </Tab>
+            <Tab $active={activeTab === "open"} onClick={() => setActiveTab("open")}>Open Limit Orders</Tab>
+            <Tab $active={activeTab === "my"} onClick={() => setActiveTab("my")}>My Orders</Tab>
           </TabsRow>
-          {orders.length === 0 ? (
-            <EmptyState>No orders found</EmptyState>
-          ) : (
+          {orders.length === 0 ? <EmptyState>No orders found</EmptyState> : (
             <div>
               {orders.map((o) => (
-                <div
-                  key={o.id}
-                  style={{
-                    padding: "12px",
-                    borderBottom: "1px solid #27272a",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    gap: "8px",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ color: "#fff", fontWeight: 500 }}>
-                      {getSym(o.makerAsset)} → {getSym(o.takerAsset)}
-                    </div>
-                    <div style={{ color: "#a1a1aa", fontSize: 13 }}>
-                      {formatNumber(o.makingAmount)} {getSym(o.makerAsset)}
-                    </div>
+                <div key={o.id} style={{ padding: "12px", borderBottom: "1px solid #27272a", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                  <div>
+                    <div style={{ color: "#fff", fontWeight: 500 }}>{getSym(o.makerAsset)} → {getSym(o.takerAsset)}</div>
+                    <div style={{ color: "#a1a1aa", fontSize: 13 }}>{formatNumber(o.makingAmount)} {getSym(o.makerAsset)}</div>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      flexWrap: "wrap",
-                      flexShrink: 1,
-                    }}
-                  >
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ color: "#F472B6", fontWeight: 500 }}>
-                        {(
-                          parseFloat(o.takingAmount) /
-                          parseFloat(o.makingAmount)
-                        ).toFixed(4)}{" "}
-                        {getSym(o.takerAsset)}
-                      </div>
-                      <div
-                        style={{
-                          color:
-                            o.status.toLowerCase() === "filled"
-                              ? "#22c55e"
-                              : "#20B8CD",
-                          fontSize: 12,
-                        }}
-                      >
-                        {o.status}
-                      </div>
+                      <div style={{ color: "#F472B6", fontWeight: 500 }}>{(parseFloat(o.takingAmount) / parseFloat(o.makingAmount)).toFixed(4)} {getSym(o.takerAsset)}</div>
+                      <div style={{ color: o.status.toLowerCase() === "filled" ? "#22c55e" : "#20B8CD", fontSize: 12 }}>{o.status}</div>
                     </div>
                     {o.status.toLowerCase() !== "filled" && (
-                      <button
-                        type="button"
-                        onClick={() => handleCancel(o.id)}
-                        disabled={cancellingId === o.id}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#ef4444",
-                          border: "none",
-                          borderRadius: 6,
-                          color: "#fff",
-                          fontSize: 12,
-                          cursor: "pointer",
-                        }}
-                      >
+                      <button onClick={() => handleCancel(o.id)} disabled={cancellingId === o.id} style={{ padding: "6px 12px", background: "#ef4444", border: "none", borderRadius: 6, color: "#fff", fontSize: 12, cursor: "pointer" }}>
                         {cancellingId === o.id ? "..." : "Cancel"}
                       </button>
                     )}
@@ -793,84 +643,24 @@ export default function ClientWrapper() {
         <Modal onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }}>
           <ModalInner onClick={(e) => e.stopPropagation()}>
             <ModalTitle>
-              Select Token{" "}
-              <button
-                type="button"
-                onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }}
-                style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 20, cursor: "pointer" }}
-              >
-                ×
-              </button>
+              Select Token
+              <button onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }} style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 20, cursor: "pointer" }}>×</button>
             </ModalTitle>
-
-            {/* Importazione custom token migliorata */}
             <div style={{ padding: "12px 16px", borderBottom: "1px solid #27272a" }}>
-              <div style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 6 }}>
-                Import custom token (incolla contract address)
-              </div>
+              <div style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 6 }}>Import custom token (incolla contract address)</div>
               <div style={{ display: "flex", gap: 8 }}>
-                <input
-                  type="text"
-                  placeholder="0x..."
-                  value={importAddress}
-                  onChange={(e) => { setImportAddress(e.target.value); setImportError(""); }}
-                  style={{
-                    flex: 1,
-                    padding: "8px 10px",
-                    background: "#27272a",
-                    border: `1px solid ${importError ? "#ef4444" : "#3f3f46"}`,
-                    borderRadius: 8,
-                    color: "#fff",
-                    fontSize: 13,
-                    outline: "none",
-                    minWidth: 0,
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleImportToken}
-                  disabled={importLoading}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#20B8CD",
-                    border: "none",
-                    borderRadius: 8,
-                    color: "#fff",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                    opacity: importLoading ? 0.6 : 1,
-                  }}
-                >
-                  {importLoading ? "..." : "Import"}
-                </button>
+                <input type="text" placeholder="0x..." value={importAddress} onChange={(e) => { setImportAddress(e.target.value); setImportError(""); }} style={{ flex: 1, padding: "8px 10px", background: "#27272a", border: `1px solid ${importError ? "#ef4444" : "#3f3f46"}`, borderRadius: 8, color: "#fff", fontSize: 13, outline: "none" }} />
+                <button onClick={handleImportToken} disabled={importLoading} style={{ padding: "8px 14px", background: "#20B8CD", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap", opacity: importLoading ? 0.6 : 1 }}>{importLoading ? "..." : "Import"}</button>
               </div>
-              {importError && (
-                <div style={{ color: "#ef4444", fontSize: 12, marginTop: 6 }}>
-                  {importError}
-                </div>
-              )}
+              {importError && <div style={{ color: "#ef4444", fontSize: 12, marginTop: 6 }}>{importError}</div>}
             </div>
-
             {allTokens.map((t) => (
               <TokenItem key={t.address} onClick={() => selectToken(t)}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  {t.logoUrl && (
-                    <img src={t.logoUrl} alt={t.symbol} style={{ width: 24, height: 24, borderRadius: "50%" }} />
-                  )}
-                  <div>
-                    <TokenName>{t.symbol}</TokenName>
-                    {customTokens.includes(t) && (
-                      <div style={{ fontSize: 11, color: "#20B8CD" }}>Custom</div>
-                    )}
-                  </div>
+                  {t.logoUrl && <img src={t.logoUrl} alt={t.symbol} style={{ width: 24, height: 24, borderRadius: "50%" }} />}
+                  <div><TokenName>{t.symbol}</TokenName>{customTokens.includes(t) && <div style={{ fontSize: 11, color: "#20B8CD" }}>Custom</div>}</div>
                 </div>
-                <TokenBal>
-                  {balances[t.address]
-                    ? parseFloat(balances[t.address]).toFixed(4)
-                    : ""}
-                </TokenBal>
+                <TokenBal>{balances[t.address] ? parseFloat(balances[t.address]).toFixed(4) : ""}</TokenBal>
               </TokenItem>
             ))}
           </ModalInner>
