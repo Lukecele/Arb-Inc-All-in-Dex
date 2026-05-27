@@ -299,10 +299,10 @@ function fromBaseUnits(raw: string, decimals: number): string {
   if (!raw || raw === "0") return "0";
   try {
     const bn = BigInt(raw);
-    const divisor = BigInt(10 ** decimals);
+    const divisor = BigInt(Math.pow(10, decimals).toFixed(0));
     const intPart = bn / divisor;
     const fracPart = bn % divisor;
-    if (fracPart === 0n) return intPart.toString();
+    if (fracPart === BigInt(0)) return intPart.toString();
     const fracStr = fracPart.toString().padStart(decimals, "0").replace(/0+$/, "");
     const short = fracStr.slice(0, 6); // max 6 decimal places for display
     return `${intPart}.${short}`;
@@ -437,7 +437,7 @@ export const OrderList: React.FC<OrderListProps> = ({
             ? Math.min(
                 100,
                 Math.round(
-                  (Number(BigInt(order.filledMakingAmount) * 100n) /
+                  (Number(BigInt(order.filledMakingAmount) * BigInt(100)) /
                     Number(BigInt(order.makingAmount)))
                 )
               )

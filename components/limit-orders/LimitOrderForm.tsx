@@ -338,7 +338,10 @@ function toBaseUnits(value: string, decimals: number): string {
   if (!value || isNaN(Number(value))) return "0";
   const [int, frac = ""] = value.split(".");
   const fracPadded = (frac + "0".repeat(decimals)).slice(0, decimals);
-  const raw = BigInt(int) * BigInt(10 ** decimals) + BigInt(fracPadded || "0");
+  const intBig = BigInt(int || "0");
+  const fracBig = BigInt(fracPadded || "0");
+  const multiplier = BigInt(Math.pow(10, decimals).toFixed(0));
+  const raw = intBig * multiplier + fracBig;
   return raw.toString();
 }
 
@@ -346,10 +349,10 @@ function toBaseUnits(value: string, decimals: number): string {
 function fromBaseUnits(value: string, decimals: number): string {
   if (!value || value === "0") return "0";
   const bn = BigInt(value);
-  const divisor = BigInt(10 ** decimals);
+  const divisor = BigInt(Math.pow(10, decimals).toFixed(0));
   const intPart = bn / divisor;
   const fracPart = bn % divisor;
-  if (fracPart === 0n) return intPart.toString();
+  if (fracPart === BigInt(0)) return intPart.toString();
   const fracStr = fracPart.toString().padStart(decimals, "0").replace(/0+$/, "");
   return `${intPart}.${fracStr}`;
 }
