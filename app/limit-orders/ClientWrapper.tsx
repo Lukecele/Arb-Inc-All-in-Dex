@@ -192,6 +192,10 @@ export default function ClientWrapper() {
 	const [approving, setApproving] = useState(false);
 	const [activeMakingAmount, setActiveMakingAmount] = useState<string>("0");
 	const [cancellingId, setCancellingId] = useState<string | null>(null);
+	const [customTokens, setCustomTokens] = useState<Token[]>([]);
+	const [importAddress, setImportAddress] = useState("");
+	const [importLoading, setImportLoading] = useState(false);
+	const [importError, setImportError] = useState("");
 
 	useEffect(() => {
 		fetchTokenPrices()
@@ -210,10 +214,11 @@ export default function ClientWrapper() {
 		const prov = new ethers.providers.Web3Provider(provider);
 		bals["0x0000000000000000000000000000000000000000"] =
 			ethers.utils.formatEther(await prov.getBalance(walletAddress));
-		for (const t of BSC_TOKENS)
+		const tokensToFetch = [...BSC_TOKENS, ...customTokens];
+		for (const t of tokensToFetch)
 			bals[t.address] = await fetchBalance(t.address, walletAddress, provider);
 		setBalances(bals);
-	}, [walletAddress, provider]);
+	}, [walletAddress, provider, customTokens]);
 
 	useEffect(() => {
 		if (walletAddress && provider) loadBalances();
@@ -434,14 +439,59 @@ export default function ClientWrapper() {
 		}
 	};
 
+	const allTokens = [...BSC_TOKENS, ...customTokens];
+
 	const selectToken = (t: Token) => {
 		if (showTokenModal === "sell") setSellToken(t);
 		else setBuyToken(t);
 		setShowTokenModal(null);
+		setImportAddress("");
+		setImportError("");
 	};
+
 	const getSym = (a: string) =>
-		BSC_TOKENS.find((t) => t.address.toLowerCase() === a.toLowerCase())
+		allTokens.find((t) => t.address.toLowerCase() === a.toLowerCase())
 			?.symbol || a.slice(0, 6);
+
+	const handleImportToken = async () => {
+		if (!importAddress || !/^0x[0-9a-fA-F]{40}$/.test(importAddress)) {
+			setImportError("Inserisci un indirizzo valido (0x...)");
+			return;
+		}
+		// Check if already in list
+		if (allTokens.find((t) => t.address.toLowerCase() === importAddress.toLowerCase())) {
+			const found = allTokens.find((t) => t.address.toLowerCase() === importAddress.toLowerCase())!;
+			selectToken(found);
+			return;
+		}
+		setImportLoading(true);
+		setImportError("");
+		try {
+			// Try KyberSwap token API first
+			const res = await fetch(
+				`https://ks-setting.kyberswap.com/api/v1/tokens?addresses=${importAddress}&chainId=56`,
+				{ headers: { "x-client-id": "arb-inc" } }
+			);
+			const data = await res.json();
+			const t = data?.data?.tokens?.[0];
+			if (t) {
+				const newToken: Token = {
+					address: t.address,
+					symbol: t.symbol,
+					decimals: t.decimals,
+					logoUrl: t.logoURI || t.logoUrl || "",
+				};
+				setCustomTokens((prev) => [...prev, newToken]);
+				selectToken(newToken);
+			} else {
+				setImportError("Token non trovato su BSC. Controlla l'indirizzo.");
+			}
+		} catch {
+			setImportError("Errore nel caricamento del token.");
+		} finally {
+			setImportLoading(false);
+		}
+	};
 
 	return (
 		<Container>
@@ -694,27 +744,88 @@ export default function ClientWrapper() {
 			</MainGrid>
 
 			{showTokenModal && (
-				<Modal onClick={() => setShowTokenModal(null)}>
+				<Modal onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }}>
 					<ModalInner onClick={(e) => e.stopPropagation()}>
 						<ModalTitle>
 							Select Token{" "}
 							<button
 								type="button"
-								onClick={() => setShowTokenModal(null)}
-								style={{
-									background: "none",
-									border: "none",
-									color: "#a1a1aa",
-									fontSize: 20,
-									cursor: "pointer",
-								}}
+								onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }}
+								style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 20, cursor: "pointer" }}
 							>
 								×
 							</button>
 						</ModalTitle>
-						{BSC_TOKENS.map((t) => (
+
+						{/* Custom token import */}
+						<div style={{ padding: "12px 16px", borderBottom: "1px solid #27272a" }}>
+							<div style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 6 }}>
+								Import custom token (incolla contract address)
+							</div>
+							<div style={{ display: "flex", gap: 8 }}>
+								<input
+									type="text"
+									placeholder="0x..."
+									value={importAddress}
+									onChange={(e) => { setImportAddress(e.target.value); setImportError(""); }}
+									style={{
+										flex: 1,
+										padding: "8px 10px",
+										background: "#27272a",
+										border: `1px solid ${importError ? "#ef4444" : "#3f3f46"}`,
+										borderRadius: 8,
+										color: "#fff",
+										fontSize: 13,
+										outline: "none",
+										minWidth: 0,
+									}}
+								/>
+								<button
+									type="button"
+									onClick={handleImportToken}
+									disabled={importLoading}
+									style={{
+										padding: "8px 14px",
+										background: "#20B8CD",
+										border: "none",
+										borderRadius: 8,
+										color: "#fff",
+										fontSize: 13,
+										fontWeight: 600,
+										cursor: "pointer",
+										whiteSpace: "nowrap",
+										opacity: importLoading ? 0.6 : 1,
+									}}
+								>
+									{importLoading ? "..." : "Import"}
+								</button>
+							</div>
+							{importError && (
+								<div style={{ color: "#ef4444", fontSize: 12, marginTop: 6 }}>
+									{importError}
+								</div>
+							)}
+						</div>
+
+						{/* Default + custom token list */}
+						{allTokens.map((t) => (
 							<TokenItem key={t.address} onClick={() => selectToken(t)}>
-								<TokenName>{t.symbol}</TokenName>
+								<div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+									{t.logoUrl && (
+										<img src={t.logoUrl} alt={t.symbol} style={{ width: 24, height: 24, borderRadius: "50%" }} />
+									)}
+									<div>
+										<TokenName>{t.symbol}</TokenName>
+										{customTokens.includes(t) && (
+											<div style={{ fontSize: 11, color: "#20B8CD" }}>Custom</div>
+										)}
+									</div>
+								</div>
+								<TokenBal>
+									{balances[t.address]
+										? parseFloat(balances[t.address]).toFixed(4)
+										: ""}
+								</TokenBal>
 							</TokenItem>
 						))}
 					</ModalInner>
