@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
 
 const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
-const BSC_CHAIN_ID = 56;
 
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
@@ -17,6 +16,7 @@ export default function VaultsClient() {
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rawJson, setRawJson] = useState<string>('');
 
   useEffect(() => {
     setAddress(wallet?.accounts[0]?.address);
@@ -35,13 +35,17 @@ export default function VaultsClient() {
         return res.json();
       })
       .then(data => {
-        console.log('Vaults API response:', data);
-        const list = data?.vaults || data || [];
+        const jsonStr = JSON.stringify(data, null, 2);
+        console.log('Risposta grezza vaults:', jsonStr);
+        setRawJson(jsonStr);
+        // Tenta diversi percorsi
+        const list = data?.vaults || data?.data?.vaults || data?.data || data || [];
+        console.log('Array estratto:', list);
         if (Array.isArray(list)) {
           setVaults(list);
           setError(null);
         } else {
-          setError('Formato dati non valido');
+          setError('Formato dati non valido. Guarda il JSON qui sotto.');
         }
       })
       .catch(err => {
@@ -162,7 +166,12 @@ export default function VaultsClient() {
       {error && !loading && (
         <div className="bg-red-900/30 border border-red-700 rounded p-4 text-center">
           <p className="text-red-400">Errore: {error}</p>
-          <p className="text-sm text-gray-400 mt-2">Verifica che la variabile PORTALS_API_KEY sia impostata su Vercel.</p>
+          {rawJson && (
+            <details className="mt-2 text-left">
+              <summary className="cursor-pointer text-gray-400 text-sm">Mostra JSON ricevuto</summary>
+              <pre className="text-xs text-gray-300 mt-2 overflow-auto max-h-40 bg-black p-2 rounded">{rawJson}</pre>
+            </details>
+          )}
         </div>
       )}
 
