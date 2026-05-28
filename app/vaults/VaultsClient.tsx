@@ -12,24 +12,34 @@ interface Vault {
   token: string;
 }
 
-export default function VaultsClient({ initialVaults }: { initialVaults: Vault[] }) {
+export default function VaultsClient() {
   const { address, isConnected } = useAccount();
   const { sendTransaction } = useSendTransaction();
 
-  // IL TUO WALLET FISSO - NESSUNO PUÒ CAMBIARLO
   const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
-  const [vaults] = useState<Vault[]>(initialVaults);
+  const [vaults, setVaults] = useState<Vault[]>([]);
   const [feePercentage, setFeePercentage] = useState<number>(100);
   const [showFeeSettings, setShowFeeSettings] = useState(false);
   const [selectedVault, setSelectedVault] = useState<Vault | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Carica solo la percentuale salvata (se presente)
+  // Carica percentuale salvata
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
     if (savedPercentage) setFeePercentage(Number(savedPercentage));
+  }, []);
+
+  // Carica i vault dall'API
+  useEffect(() => {
+    fetch('/api/portals/vaults')
+      .then(res => res.json())
+      .then(data => {
+        const list = data?.vaults || data || [];
+        setVaults(list);
+      })
+      .catch(err => console.error('Failed to fetch vaults', err));
   }, []);
 
   const handleDeposit = async () => {
