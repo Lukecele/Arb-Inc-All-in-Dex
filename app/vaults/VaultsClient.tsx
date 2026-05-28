@@ -1,18 +1,5 @@
 'use client';
 
-// ============================================================
-//  app/vaults/VaultsClient.tsx
-//
-//  FIX rispetto alla versione precedente:
-//  1. FEE_RECIPIENT ora è un address valido a 42 caratteri
-//  2. `sender` passato alla POST /api/portals/deposit
-//  3. `amount` convertito in wei con parseUnits prima di inviare
-//  4. Flusso approvazione ERC-20: se l'API restituisce approveTx,
-//     viene firmata e attesa PRIMA della transazione di deposit
-//  5. `gasLimit` propagato se fornito dall'API
-//  6. `tokenSymbol` mostrato in UI per chiarezza
-// ============================================================
-
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
@@ -21,13 +8,22 @@ import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-// ⚠️  Sostituire con il proprio address a 42 caratteri (0x + 40 hex)
 const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
-//                                                              ^^^^ fix: 2 caratteri mancavano
-const FEE_BPS = 100; // 100 basis points = 1%
+
+// Fee dinamica basata sull'APY del vault (mai 0)
+const getFeeBps = (apy: number): number => {
+  if (apy < 1) return 25;        // 0.25%
+  if (apy < 5) return 50;        // 0.50%
+  if (apy < 20) return 100;      // 1.00%
+  if (apy < 50) return 150;      // 1.50%
+  return 200;                     // 2.00%
+};
+
+const getFeePercent = (apy: number): string => {
+  return (getFeeBps(apy) / 100).toFixed(2);
+};
 
 // ─── Styled Components ───────────────────────────────────────
-
 const PageWrapper = styled.div`
   min-height: 100vh;
   padding-left: 260px;
@@ -128,7 +124,6 @@ const DepositBtn = styled.button`
 type DepositStep = 'idle' | 'approving' | 'depositing' | 'done' | 'error';
 
 // ─── Componente principale ────────────────────────────────────
-
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress] = useState<string | undefined>();
@@ -200,22 +195,23 @@ export default function VaultsClient() {
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const signer = provider.getSigner();
 
-      // FIX #3: converti in wei PRIMA di mandare all'API
       const amountWei = ethers.utils
         .parseUnits(depositAmount, selectedVault.tokenDecimals)
         .toString();
 
-      // ── Chiamata API backend ─────────────────────────────
+      // Fee calcolata dinamicamente in base all'APY
+      const feeBps = getFeeBps(selectedVault.apy);
+
       const res = await fetch('/api/portals/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vaultId: selectedVault.id,
-          amount: amountWei,               // FIX #3: wei, non stringa raw
+          amount: amountWei,
           tokenIn: selectedVault.token,
-          sender: address,                 // FIX #4: sender obbligatorio
+          sender: address,
           feeRecipient: FEE_RECIPIENT,
-          feePercentage: FEE_BPS,
+          feePercentage: feeBps,
         }),
       });
 
@@ -225,7 +221,7 @@ export default function VaultsClient() {
         throw new Error(data.error ?? 'Errore nella costruzione della transazione');
       }
 
-      // FIX #5: flusso approvazione ERC-20 PRIMA del deposit
+      // Flusso approvazione
       if (data.approveTx) {
         setDepositStep('approving');
 
@@ -238,10 +234,9 @@ export default function VaultsClient() {
         });
 
         await approveTxResponse.wait();
-        // Approvazione confermata, si procede col deposit
       }
 
-      // ── Transazione di deposit ────────────────────────────
+      // Transazione di deposit
       setDepositStep('depositing');
 
       const depositTx = await signer.sendTransaction({
@@ -250,7 +245,6 @@ export default function VaultsClient() {
         value: data.tx.value
           ? ethers.BigNumber.from(data.tx.value)
           : undefined,
-        // FIX #7: gasLimit dall'API se disponibile
         gasLimit: data.tx.gasLimit
           ? ethers.BigNumber.from(data.tx.gasLimit)
           : undefined,
@@ -353,7 +347,6 @@ export default function VaultsClient() {
       <Header activePage="/vaults" walletSection={walletSection} />
       <PageWrapper>
         <Container>
-          {/* Titolo */}
           <div style={{ marginBottom: '32px' }}>
             <h1
               style={{
@@ -368,8 +361,7 @@ export default function VaultsClient() {
               Vaults (Portals.fi)
             </h1>
             <p style={{ color: '#94a3b8', marginTop: '8px' }}>
-              I migliori vault su BNB Chain con APY e TVL reali. Collega il wallet per
-              depositare.
+              I migliori vault su BNB Chain. Commissione dinamica in base all'APY.
             </p>
           </div>
 
@@ -398,8 +390,10 @@ export default function VaultsClient() {
                     </Value>
                   </Stat>
                   <Stat>
-                    <Label>Token</Label>
-                    <Value style={{ fontSize: '13px' }}>{vault.tokenSymbol}</Value>
+                    <Label>Fee</Label>
+                    <Value style={{ fontSize: '13px', color: '#a78bfa' }}>
+                      {getFeePercent(vault.apy)}%
+                    </Value>
                   </Stat>
                 </StatsRow>
 
@@ -517,9 +511,16 @@ export default function VaultsClient() {
                   </button>
                 </div>
 
-                {/* Info fee */}
+                {/* Info fee dinamica */}
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
-                  <div>Commissione: {(FEE_BPS / 100).toFixed(2)}% (una tantum)</div>
+                  <div>
+                    Commissione di deposito:{' '}
+                    <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong>{' '}
+                    (una tantum)
+                  </div>
+                  <div>
+                    APY del vault: {selectedVault.apy.toFixed(2)}% — la fee è calcolata in modo proporzionale.
+                  </div>
                   <div>
                     Destinatario: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}
                   </div>
