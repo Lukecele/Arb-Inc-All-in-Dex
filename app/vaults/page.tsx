@@ -1,5 +1,5 @@
-import VaultsWrapper from './VaultsWrapper';
+import VaultsClient from './VaultsClient';
 
 export default function VaultsPage() {
-  return <VaultsWrapper />;
+  return <VaultsClient />;
 }

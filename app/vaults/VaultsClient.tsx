@@ -1,38 +1,40 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useSendTransaction } from 'wagmi';
-
-interface Vault {
-  id: string;
-  name: string;
-  protocol: string;
-  apy: number;
-  tvl: number;
-  token: string;
-}
 
 export default function VaultsClient() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) {
+    return (
+      <div className="container mx-auto p-4 text-center py-12 text-gray-400">
+        Caricamento...
+      </div>
+    );
+  }
+  return <VaultsContent />;
+}
+
+function VaultsContent() {
+  const { useAccount, useSendTransaction } = require('wagmi');
   const { address, isConnected } = useAccount();
   const { sendTransaction } = useSendTransaction();
 
   const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
-  const [vaults, setVaults] = useState<Vault[]>([]);
+  const [vaults, setVaults] = useState<any[]>([]);
   const [feePercentage, setFeePercentage] = useState<number>(100);
   const [showFeeSettings, setShowFeeSettings] = useState(false);
-  const [selectedVault, setSelectedVault] = useState<Vault | null>(null);
+  const [selectedVault, setSelectedVault] = useState<any | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Carica percentuale salvata
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
     if (savedPercentage) setFeePercentage(Number(savedPercentage));
   }, []);
 
-  // Carica i vault
   useEffect(() => {
     setLoading(true);
     fetch('/api/portals/vaults')
@@ -155,13 +157,13 @@ export default function VaultsClient() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {vaults.map((vault) => (
+        {vaults.map((vault: any) => (
           <div key={vault.id} className="bg-gray-900 p-4 rounded-xl border border-gray-700">
             <h2 className="text-xl font-semibold">{vault.name}</h2>
             <p className="text-sm text-gray-400">{vault.protocol}</p>
             <div className="flex justify-between mt-3">
-              <span>APY: {vault.apy.toFixed(2)}%</span>
-              <span>TVL: ${vault.tvl.toLocaleString()}</span>
+              <span>APY: {vault.apy?.toFixed(2) ?? 'N/A'}%</span>
+              <span>TVL: ${vault.tvl?.toLocaleString() ?? 'N/A'}</span>
             </div>
             <button
               onClick={() => setSelectedVault(vault)}
