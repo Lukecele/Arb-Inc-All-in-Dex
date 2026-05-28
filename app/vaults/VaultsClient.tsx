@@ -12,11 +12,12 @@ const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
 // Fee dinamica basata sull'APY del vault (mai 0)
 const getFeeBps = (apy: number): number => {
-  if (apy < 1) return 25;        // 0.25%
-  if (apy < 5) return 50;        // 0.50%
-  if (apy < 20) return 100;      // 1.00%
-  if (apy < 50) return 150;      // 1.50%
-  return 200;                     // 2.00%
+  if (apy < 0.5) return 5;         // 0.05%
+  if (apy < 2) return 10;          // 0.10%
+  if (apy < 5) return 25;          // 0.25%
+  if (apy < 20) return 50;         // 0.50%
+  if (apy < 50) return 100;        // 1.00%
+  return 150;                       // 1.50%
 };
 
 const getFeePercent = (apy: number): string => {

@@ -66,8 +66,8 @@ export const vaultsList: VaultConfig[] = [
     protocol: 'Lista',
     apy: 4.55,
     tvl: 584_250_000,
-    token: BNB_NATIVE,
-    tokenSymbol: 'BNB',
+    token: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    tokenSymbol: 'WBNB',
     tokenDecimals: 18,
   },
 
@@ -242,8 +242,8 @@ export const vaultsList: VaultConfig[] = [
     protocol: 'EtherFi',
     apy: 5.34,
     tvl: 63_240,
-    token: BNB_NATIVE, // deposito via BNB → weETH tramite Portals
-    tokenSymbol: 'BNB',
+    token: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', // deposito via BNB → weETH tramite Portals
+    tokenSymbol: 'WBNB',
     tokenDecimals: 18,
   },
 
@@ -411,8 +411,8 @@ export const vaultsList: VaultConfig[] = [
     protocol: 'Beefy',
     apy: 277.63,
     tvl: 25_770,
-    token: BNB_NATIVE,
-    tokenSymbol: 'BNB',
+    token: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    tokenSymbol: 'WBNB',
     tokenDecimals: 18,
   },
 ];
