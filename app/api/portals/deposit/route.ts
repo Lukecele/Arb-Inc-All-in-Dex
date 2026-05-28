@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
     portalUrl.searchParams.set('inputAmount', amount);
     portalUrl.searchParams.set('outputToken', vaultId);
     portalUrl.searchParams.set('slippageTolerancePercentage', '1');
+    portalUrl.searchParams.set("validate", "false");
     if (feeRecipient && feePercentage) {
       portalUrl.searchParams.set('feeRecipient', feeRecipient);
       portalUrl.searchParams.set('feeBps', String(feePercentage));
