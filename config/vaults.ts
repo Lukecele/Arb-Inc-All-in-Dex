@@ -10,21 +10,13 @@ export interface VaultConfig {
 
 export const vaultsList: VaultConfig[] = [
   {
-    id: "binance-bnb-bsc",
-    name: "BNB Staking",
+    id: "bsc:0xb0b84d294e0c75a6abe60171b70edeb2efd14a1b",
+    name: "Ankr BNB Liquid Staking",
     protocol: "Portals",
-    apy: 12.5,
+    apy: 4.5,
     tvl: 45000000,
     token: "0x0000000000000000000000000000000000000000",
     tokenDecimals: 18
-  },
-  {
-    id: "binance-busd-bsc",
-    name: "BUSD Savings",
-    protocol: "Portals",
-    apy: 8.2,
-    tvl: 12000000,
-    token: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    tokenDecimals: 18
   }
+  // Aggiungi qui solo vault che hai VERIFICATO personalmente sull'Explorer
 ];
