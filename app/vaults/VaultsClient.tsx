@@ -137,15 +137,6 @@ export default function VaultsClient() {
   // Token selezionato nel modal — default BNB
   const [selectedToken, setSelectedToken]   = useState<TokenInfo>(COMMON_TOKENS[0]);
 
-  // ── Carica vault da Portals ──────────────────────────────────────────────
-  useEffect(() => {
-    setLoadingVaults(true);
-    fetch('/api/portals/vaults')
-      .then(r => r.json())
-      .then(d => setVaults(Array.isArray(d) ? d : []))
-      .catch(() => setVaults([]))
-      .finally(() => setLoadingVaults(false));
-  }, []);
 
   // ── Sync address ────────────────────────────────────────────────────────
   useEffect(() => { setAddress(wallet?.accounts[0]?.address); }, [wallet]);
