@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     // ----------------------------------------------------------
     const portalUrl = new URL(`${PORTALS_API_BASE}/portal`);
     portalUrl.searchParams.set('sender', sender);
-    portalUrl.searchParams.set('inputToken', isBNBNative ? 'bsc:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : `bsc:${tokenIn}`);
+    portalUrl.searchParams.set('inputToken', isBNBNative ? 'bsc:0x0000000000000000000000000000000000000000' : `bsc:${tokenIn}`);
     portalUrl.searchParams.set('inputAmount', amount); // in wei
     portalUrl.searchParams.set('outputToken', vaultId); // es. "bsc:0x882C..."
     portalUrl.searchParams.set('slippageTolerancePercentage', '1');
