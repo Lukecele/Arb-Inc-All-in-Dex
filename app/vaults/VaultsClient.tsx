@@ -1,28 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
+import { useState, useEffect, useCallback } from 'react';
+
+const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
+const BSC_CHAIN_ID = 56;
 
 export default function VaultsClient() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  if (!mounted) {
-    return (
-      <div className="container mx-auto p-4 text-center py-12 text-gray-400">
-        Caricamento...
-      </div>
-    );
-  }
-  return <VaultsContent />;
-}
-
-function VaultsContent() {
-  const { useAccount, useSigner } = require('wagmi');
-  const { address, isConnected } = useAccount();
-  const { data: signer } = useSigner();
-
-  const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
-
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [address, setAddress] = useState<string | undefined>();
   const [vaults, setVaults] = useState<any[]>([]);
   const [feePercentage, setFeePercentage] = useState<number>(100);
   const [showFeeSettings, setShowFeeSettings] = useState(false);
@@ -30,6 +17,10 @@ function VaultsContent() {
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAddress(wallet?.accounts[0]?.address);
+  }, [wallet]);
 
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
@@ -60,8 +51,8 @@ function VaultsContent() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDeposit = async () => {
-    if (!selectedVault || !depositAmount || !address || !signer) return;
+  const handleDeposit = useCallback(async () => {
+    if (!selectedVault || !depositAmount || !address || !wallet) return;
     setLoading(true);
     try {
       const res = await fetch('/api/portals/deposit', {
@@ -77,14 +68,14 @@ function VaultsContent() {
       });
       const data = await res.json();
       if (data.tx) {
-        const tx = data.tx;
-        // ethers v5: value come BigNumber
-        const txResponse = await signer.sendTransaction({
-          to: tx.to,
-          data: tx.data,
-          value: tx.value ? ethers.BigNumber.from(tx.value) : undefined,
+        const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+        const signer = provider.getSigner();
+        const tx = await signer.sendTransaction({
+          to: data.tx.to,
+          data: data.tx.data,
+          value: data.tx.value ? ethers.BigNumber.from(data.tx.value) : undefined,
         });
-        await txResponse.wait();
+        await tx.wait();
         alert('Deposito inviato!');
         setSelectedVault(null);
         setDepositAmount('');
@@ -97,18 +88,40 @@ function VaultsContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedVault, depositAmount, address, wallet, feePercentage]);
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Vaults (Portals.fi)</h1>
-        <button
-          onClick={() => setShowFeeSettings(!showFeeSettings)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          ⚙️ Dev Fee
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            onClick={() => setShowFeeSettings(!showFeeSettings)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            ⚙️ Dev Fee
+          </button>
+          {!address ? (
+            <button
+              onClick={() => connect()}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
+            >
+              {connecting ? 'Connecting...' : 'Connect Wallet'}
+            </button>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#94a3b8' }}>
+                {address.slice(0, 6)}...{address.slice(-4)}
+              </span>
+              <button
+                onClick={() => wallet && disconnect(wallet)}
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
+              >
+                Disconnect
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {showFeeSettings && (
@@ -170,10 +183,10 @@ function VaultsContent() {
             </div>
             <button
               onClick={() => setSelectedVault(vault)}
-              disabled={!isConnected}
+              disabled={!address}
               className="mt-4 w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white py-2 rounded"
             >
-              {isConnected ? 'Deposita' : 'Connetti il wallet'}
+              {address ? 'Deposita' : 'Connetti il wallet'}
             </button>
           </div>
         ))}
@@ -196,7 +209,7 @@ function VaultsContent() {
             <div className="flex gap-3">
               <button
                 onClick={handleDeposit}
-                disabled={loading || !depositAmount || !signer}
+                disabled={loading || !depositAmount}
                 className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-2 rounded"
               >
                 {loading ? 'Invio...' : 'Conferma'}
