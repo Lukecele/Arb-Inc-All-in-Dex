@@ -7,14 +7,14 @@ export async function GET() {
     return NextResponse.json({ error: 'API key missing' }, { status: 500 });
   }
   try {
-    const res = await fetch('https://api.portals.fi/v2/tokens?networks=bsc&sortBy=liquidity&sortDirection=desc&limit=100', {
+    const res = await fetch('https://api.portals.fi/v2/tokens?networks=bsc&platforms=venus,beefy,lista,euler,ethena,astherus,re-protocol,mellow&sortBy=apy&sortDirection=desc&limit=100', {
       headers: { Authorization: `Bearer ${PORTALS_API_KEY}` },
     });
     const data = await res.json();
     const tokens = data?.tokens || [];
     // Filtra token con APY o liquidità significativa
     const vaults = tokens
-      .filter((t: any) => (t.metrics?.apy > 0 || t.liquidity > 1000000) && t.symbol)
+      .filter((t: any) => t.platform !== 'basic' && (t.metrics?.apy > 0 || t.liquidity > 100000) && t.symbol)
       .map((t: any) => ({
         id: t.key,
         name: t.name,
