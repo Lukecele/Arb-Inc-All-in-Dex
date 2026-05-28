@@ -47,11 +47,12 @@ const StatsRow = styled.div` display: flex; justify-content: space-between; font
 const Stat = styled.div` display: flex; flex-direction: column; `;
 const Label = styled.span` font-size: 11px; color: #64748b; text-transform: uppercase; `;
 const Value = styled.span` font-weight: 600; `;
-const DepositBtn = styled.button`
+const ActionBtn = styled.button`
   background: #a855f7; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
   cursor: pointer; width: 100%; transition: opacity 0.15s;
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
+const RedeemBtn = styled(ActionBtn)` background: #ef4444; `;
 
 type DepositStep = 'idle' | 'approving' | 'depositing' | 'done' | 'error';
 
@@ -66,9 +67,38 @@ export default function VaultsClient() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [balance, setBalance] = useState<string>('0');
   const [loadingBalance, setLoadingBalance] = useState(false);
+  const [vaultBalances, setVaultBalances] = useState<Record<string, string>>({});
+  const [loadingVaultBalances, setLoadingVaultBalances] = useState(false);
+  const [redeemMode, setRedeemMode] = useState(false);
+  const [redeemAmount, setRedeemAmount] = useState('');
 
   useEffect(() => { setAddress(wallet?.accounts[0]?.address); }, [wallet]);
 
+  // Carica i saldi dei token di vault (quelli che hai ricevuto depositando)
+  useEffect(() => {
+    if (!address || !wallet) return;
+    const fetchVaultBalances = async () => {
+      setLoadingVaultBalances(true);
+      const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      const newBalances: Record<string, string> = {};
+      for (const v of vaultsList) {
+        try {
+          const vaultTokenAddr = v.id.split(':')[1]; // estrae 0x... dal formato bsc:0x...
+          if (vaultTokenAddr === '0x0000000000000000000000000000000000000000') continue;
+          const erc20 = new ethers.Contract(vaultTokenAddr, ['function balanceOf(address) view returns (uint256)'], provider);
+          const bal = await erc20.balanceOf(address);
+          if (!bal.isZero()) {
+            newBalances[v.id] = ethers.utils.formatUnits(bal, 18); // assumiamo 18 decimali per i token di vault
+          }
+        } catch { /* ignoriamo */ }
+      }
+      setVaultBalances(newBalances);
+      setLoadingVaultBalances(false);
+    };
+    fetchVaultBalances();
+  }, [address, wallet]);
+
+  // Carica saldo del token selezionato (per deposito)
   useEffect(() => {
     if (!address || !wallet) return;
     const fetchBalance = async () => {
@@ -91,18 +121,25 @@ export default function VaultsClient() {
     fetchBalance();
   }, [address, wallet, selectedToken]);
 
-  // Quando si seleziona un vault, prova a pre-selezionare il token suggerito
   const openModal = (vault: any) => {
     setSelectedVault(vault);
     setDepositAmount('');
     setDepositStep('idle');
+    setRedeemMode(false);
     const suggested = vault.suggestedToken;
     const found = COMMON_TOKENS.find(t => t.symbol === suggested);
     if (found) {
       setSelectedToken(found);
     } else {
-      setSelectedToken(COMMON_TOKENS[0]); // fallback BNB
+      setSelectedToken(COMMON_TOKENS[0]);
     }
+  };
+
+  const openRedeem = (vault: any) => {
+    setSelectedVault(vault);
+    setRedeemAmount('');
+    setDepositStep('idle');
+    setRedeemMode(true);
   };
 
   const handleDeposit = useCallback(async () => {
@@ -161,6 +198,66 @@ export default function VaultsClient() {
     }
   }, [selectedVault, depositAmount, selectedToken, address, wallet]);
 
+  const handleRedeem = useCallback(async () => {
+    if (!selectedVault || !redeemAmount || !address || !wallet) return;
+    const amountFloat = parseFloat(redeemAmount);
+    if (isNaN(amountFloat) || amountFloat <= 0) return;
+
+    setDepositStep('idle');
+    setTxHash(null);
+    setErrorMsg(null);
+
+    try {
+      const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      const signer = provider.getSigner();
+      // Per il redeem, inputToken = token del vault, outputToken = token desiderato (quello suggerito)
+      const vaultToken = selectedVault.id.split(':')[1]; // es. 0xfD5840Cd...
+      const outputToken = selectedVault.suggestedToken;
+      const outTokenObj = COMMON_TOKENS.find(t => t.symbol === outputToken) || COMMON_TOKENS[0];
+      const amountWei = ethers.utils.parseUnits(redeemAmount, 18).toString(); // assumo 18 decimali per il vault token
+
+      const res = await fetch('/api/portals/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vaultId: `bsc:${outTokenObj.address}`, // outputToken = USDT, BNB, ecc.
+          amount: amountWei,
+          tokenIn: vaultToken,
+          sender: address,
+          feeRecipient: FEE_RECIPIENT,
+          feePercentage: getFeeBps(selectedVault.apy),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.tx) throw new Error(data.error || 'Errore');
+
+      if (data.approveTx) {
+        setDepositStep('approving');
+        const approveTxResponse = await signer.sendTransaction({
+          to: data.approveTx.to,
+          data: data.approveTx.data,
+          gasLimit: data.approveTx.gasLimit ? ethers.BigNumber.from(data.approveTx.gasLimit) : undefined,
+        });
+        await approveTxResponse.wait();
+      }
+
+      setDepositStep('depositing');
+      const redeemTx = await signer.sendTransaction({
+        to: data.tx.to,
+        data: data.tx.data,
+        value: data.tx.value ? ethers.BigNumber.from(data.tx.value) : undefined,
+        gasLimit: data.tx.gasLimit ? ethers.BigNumber.from(data.tx.gasLimit) : undefined,
+      });
+      const receipt = await redeemTx.wait();
+      setTxHash(receipt.transactionHash);
+      setDepositStep('done');
+    } catch (err: any) {
+      setErrorMsg(err?.reason || err?.data?.message || err?.message || 'Errore sconosciuto');
+      setDepositStep('error');
+    }
+  }, [selectedVault, redeemAmount, address, wallet]);
+
   const walletSection = (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
       {!address ? (
@@ -182,7 +279,29 @@ export default function VaultsClient() {
       <PageWrapper>
         <Container>
           <h1 style={{ fontSize: '32px', fontWeight: 800, margin: 0, background: 'linear-gradient(to bottom, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vaults (Portals.fi)</h1>
-          <p style={{ color: '#94a3b8', marginTop: '8px' }}>Scegli un vault e deposita il token suggerito per la migliore riuscita. La fee è automatica.</p>
+          <p style={{ color: '#94a3b8', marginTop: '8px' }}>Deposita e preleva dai migliori vault su BNB Chain.</p>
+
+          {/* Sezione I miei depositi */}
+          {address && Object.keys(vaultBalances).length > 0 && (
+            <div style={{ marginTop: 32, marginBottom: 32 }}>
+              <h2 style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>I miei depositi</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {Object.entries(vaultBalances).map(([vaultId, bal]) => {
+                  const vault = vaultsList.find(v => v.id === vaultId);
+                  if (!vault || parseFloat(bal) <= 0) return null;
+                  return (
+                    <div key={vaultId} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ fontWeight: 600 }}>{vault.name}</div>
+                        <div style={{ fontSize: 13, color: '#94a3b8' }}>{parseFloat(bal).toFixed(6)} tokens</div>
+                      </div>
+                      <RedeemBtn onClick={() => openRedeem(vault)}>Preleva</RedeemBtn>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <CardGrid>
             {vaultsList.map((vault: any) => (
@@ -199,14 +318,15 @@ export default function VaultsClient() {
                 <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
                   Token suggerito: <strong style={{ color: '#a855f7' }}>{vault.suggestedToken}</strong>
                 </div>
-                <DepositBtn onClick={() => openModal(vault)} disabled={!address}>
+                <ActionBtn onClick={() => openModal(vault)} disabled={!address}>
                   {address ? 'Deposita' : 'Connetti il wallet'}
-                </DepositBtn>
+                </ActionBtn>
               </Card>
             ))}
           </CardGrid>
 
-          {selectedVault && (
+          {/* Modale deposito / prelievo */}
+          {(selectedVault && !redeemMode) && (
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setSelectedVault(null)}>
               <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 440, width: '100%' }} onClick={e => e.stopPropagation()}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Deposita in {selectedVault.name}</h2>
@@ -237,23 +357,8 @@ export default function VaultsClient() {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>
-                  <input
-                    type="number"
-                    placeholder="0.0"
-                    value={depositAmount}
-                    onChange={e => setDepositAmount(e.target.value)}
-                    step="any"
-                    min="0"
-                    disabled={depositStep === 'approving' || depositStep === 'depositing'}
-                    style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }}
-                  />
-                  <button
-                    onClick={() => setDepositAmount(balance)}
-                    disabled={depositStep === 'approving' || depositStep === 'depositing'}
-                    style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    MAX
-                  </button>
+                  <input type="number" placeholder="0.0" value={depositAmount} onChange={e => setDepositAmount(e.target.value)} step="any" min="0" disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }} />
+                  <button onClick={() => setDepositAmount(balance)} disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
                 </div>
 
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
@@ -270,12 +375,44 @@ export default function VaultsClient() {
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button onClick={() => { setSelectedVault(null); setDepositStep('idle'); }} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: '#334155', color: 'white' }}>{depositStep === 'done' ? 'Chiudi' : 'Annulla'}</button>
                   {depositStep !== 'done' && (
-                    <button
-                      onClick={handleDeposit}
-                      disabled={depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0}
-                      style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: depositStep === 'error' ? '#f59e0b' : '#22c55e', color: 'white', opacity: (depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0) ? 0.5 : 1, transition: 'opacity 0.15s' }}
-                    >
+                    <button onClick={handleDeposit} disabled={depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: depositStep === 'error' ? '#f59e0b' : '#22c55e', color: 'white', opacity: (depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0) ? 0.5 : 1, transition: 'opacity 0.15s' }}>
                       {depositStep === 'error' ? 'Riprova' : depositStep === 'approving' ? 'Approvazione in corso...' : depositStep === 'depositing' ? 'Deposit in corso...' : 'Conferma Deposito'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modale redeem */}
+          {(selectedVault && redeemMode) && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => { setSelectedVault(null); setRedeemMode(false); }}>
+              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 440, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Preleva da {selectedVault.name}</h2>
+                <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20 }}>
+                  Token di vault: {selectedVault.id.split(':')[1]?.slice(0, 10)}...
+                </p>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 13, marginBottom: 10 }}>
+                  <span>Saldo disponibile</span>
+                  <span style={{ color: 'white', fontWeight: 600 }}>{parseFloat(vaultBalances[selectedVault.id] || '0').toFixed(6)} tokens</span>
+                </div>
+
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>
+                  <input type="number" placeholder="0.0" value={redeemAmount} onChange={e => setRedeemAmount(e.target.value)} step="any" min="0" disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }} />
+                  <button onClick={() => setRedeemAmount(vaultBalances[selectedVault.id] || '0')} disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
+                </div>
+
+                {depositStep === 'approving' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Approvazione in corso...</div>}
+                {depositStep === 'depositing' && <div style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#c084fc', marginBottom: 16 }}>⏳ Prelievo in corso...</div>}
+                {depositStep === 'done' && txHash && <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#4ade80', marginBottom: 16 }}>✅ Prelievo completato! <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noopener noreferrer" style={{ color: '#4ade80', textDecoration: 'underline' }}>Vedi su BscScan</a></div>}
+                {depositStep === 'error' && errorMsg && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#f87171', marginBottom: 16, wordBreak: 'break-word' }}>❌ {errorMsg}</div>}
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button onClick={() => { setSelectedVault(null); setRedeemMode(false); }} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: '#334155', color: 'white' }}>Annulla</button>
+                  {depositStep !== 'done' && (
+                    <button onClick={handleRedeem} disabled={depositStep === 'approving' || depositStep === 'depositing' || !redeemAmount || parseFloat(redeemAmount) <= 0} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: '#ef4444', color: 'white', opacity: (depositStep === 'approving' || depositStep === 'depositing' || !redeemAmount || parseFloat(redeemAmount) <= 0) ? 0.5 : 1, transition: 'opacity 0.15s' }}>
+                      {depositStep === 'error' ? 'Riprova' : depositStep === 'approving' ? 'Approvazione in corso...' : depositStep === 'depositing' ? 'Prelievo in corso...' : 'Conferma Prelievo'}
                     </button>
                   )}
                 </div>
