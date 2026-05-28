@@ -25,13 +25,11 @@ export default function VaultsClient() {
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Carica percentuale salvata
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
     if (savedPercentage) setFeePercentage(Number(savedPercentage));
   }, []);
 
-  // Carica i vault dall'API
   useEffect(() => {
     fetch('/api/portals/vaults')
       .then(res => res.json())

@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic';
-
-const VaultsClient = dynamic(() => import('./VaultsClient'), { ssr: false });
+import VaultsWrapper from './VaultsWrapper';
 
 export default function VaultsPage() {
-  return <VaultsClient />;
+  return <VaultsWrapper />;
 }
