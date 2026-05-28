@@ -4,6 +4,7 @@ import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
+import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -123,8 +124,8 @@ interface TokenInfo {
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress]               = useState<string | undefined>();
-  const [vaults, setVaults]                 = useState<any[]>([]);
-  const [loadingVaults, setLoadingVaults]   = useState(true);
+  const [vaults] = useState<any[]>(vaultsList.map(v => ({ ...v, symbol: v.protocol })));
+  const loadingVaults = false;
   const [selectedVault, setSelectedVault]   = useState<any | null>(null);
   const [depositAmount, setDepositAmount]   = useState('');
   const [depositStep, setDepositStep]       = useState<DepositStep>('idle');
