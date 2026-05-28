@@ -23,21 +23,38 @@ export default function VaultsClient() {
   const [showFeeSettings, setShowFeeSettings] = useState(false);
   const [selectedVault, setSelectedVault] = useState<Vault | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Carica percentuale salvata
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
     if (savedPercentage) setFeePercentage(Number(savedPercentage));
   }, []);
 
+  // Carica i vault
   useEffect(() => {
+    setLoading(true);
     fetch('/api/portals/vaults')
-      .then(res => res.json())
-      .then(data => {
-        const list = data?.vaults || data || [];
-        setVaults(list);
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
       })
-      .catch(err => console.error('Failed to fetch vaults', err));
+      .then(data => {
+        console.log('Vaults API response:', data);
+        const list = data?.vaults || data || [];
+        if (Array.isArray(list)) {
+          setVaults(list);
+          setError(null);
+        } else {
+          setError('Formato dati non valido');
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch vaults', err);
+        setError(err.message || 'Errore nel caricamento');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleDeposit = async () => {
@@ -114,6 +131,26 @@ export default function VaultsClient() {
           >
             Chiudi
           </button>
+        </div>
+      )}
+
+      {loading && (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-gray-400">Caricamento vaults...</p>
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="bg-red-900/30 border border-red-700 rounded p-4 text-center">
+          <p className="text-red-400">Errore: {error}</p>
+          <p className="text-sm text-gray-400 mt-2">Verifica che la variabile PORTALS_API_KEY sia impostata su Vercel.</p>
+        </div>
+      )}
+
+      {!loading && !error && vaults.length === 0 && (
+        <div className="text-center py-12 text-gray-500">
+          Nessun vault disponibile.
         </div>
       )}
 
