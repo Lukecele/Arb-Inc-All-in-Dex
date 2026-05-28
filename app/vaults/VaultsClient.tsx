@@ -3,20 +3,19 @@
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
+import { vaultsList } from '@/config/vaults';
 
 const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress] = useState<string | undefined>();
-  const [vaults, setVaults] = useState<any[]>([]);
+  const [vaults] = useState(vaultsList);
   const [feePercentage, setFeePercentage] = useState<number>(100);
   const [showFeeSettings, setShowFeeSettings] = useState(false);
   const [selectedVault, setSelectedVault] = useState<any | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [rawJson, setRawJson] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setAddress(wallet?.accounts[0]?.address);
@@ -25,34 +24,6 @@ export default function VaultsClient() {
   useEffect(() => {
     const savedPercentage = localStorage.getItem('devFeePercentage');
     if (savedPercentage) setFeePercentage(Number(savedPercentage));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch('/api/portals/vaults')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        const jsonStr = JSON.stringify(data, null, 2);
-        console.log('Risposta grezza vaults:', jsonStr);
-        setRawJson(jsonStr);
-        // Tenta diversi percorsi
-        const list = data?.vaults || data?.data?.vaults || data?.data || data || [];
-        console.log('Array estratto:', list);
-        if (Array.isArray(list)) {
-          setVaults(list);
-          setError(null);
-        } else {
-          setError('Formato dati non valido. Guarda il JSON qui sotto.');
-        }
-      })
-      .catch(err => {
-        console.error('Failed to fetch vaults', err);
-        setError(err.message || 'Errore nel caricamento');
-      })
-      .finally(() => setLoading(false));
   }, []);
 
   const handleDeposit = useCallback(async () => {
@@ -153,31 +124,6 @@ export default function VaultsClient() {
           >
             Chiudi
           </button>
-        </div>
-      )}
-
-      {loading && (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-          <p className="mt-4 text-gray-400">Caricamento vaults...</p>
-        </div>
-      )}
-
-      {error && !loading && (
-        <div className="bg-red-900/30 border border-red-700 rounded p-4 text-center">
-          <p className="text-red-400">Errore: {error}</p>
-          {rawJson && (
-            <details className="mt-2 text-left">
-              <summary className="cursor-pointer text-gray-400 text-sm">Mostra JSON ricevuto</summary>
-              <pre className="text-xs text-gray-300 mt-2 overflow-auto max-h-40 bg-black p-2 rounded">{rawJson}</pre>
-            </details>
-          )}
-        </div>
-      )}
-
-      {!loading && !error && vaults.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
-          Nessun vault disponibile.
         </div>
       )}
 
