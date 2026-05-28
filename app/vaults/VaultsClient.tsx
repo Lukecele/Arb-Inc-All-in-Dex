@@ -4,189 +4,100 @@ import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
-// Fee dinamica basata sull'APY del vault (mai 0)
 const getFeeBps = (apy: number): number => {
-  if (apy < 0.5) return 5;         // 0.05%
-  if (apy < 2) return 10;          // 0.10%
-  if (apy < 5) return 25;          // 0.25%
-  if (apy < 20) return 50;         // 0.50%
-  if (apy < 50) return 100;        // 1.00%
-  return 150;                       // 1.50%
+  if (apy < 0.5) return 5;
+  if (apy < 2) return 10;
+  if (apy < 5) return 25;
+  if (apy < 20) return 50;
+  if (apy < 50) return 100;
+  return 150;
 };
 
-const getFeePercent = (apy: number): string => {
-  return (getFeeBps(apy) / 100).toFixed(2);
-};
+const getFeePercent = (apy: number): string => (getFeeBps(apy) / 100).toFixed(2);
 
-// ─── Styled Components ───────────────────────────────────────
 const PageWrapper = styled.div`
-  min-height: 100vh;
-  padding-left: 260px;
-  background: #030014;
-  color: white;
-  @media (max-width: 1024px) {
-    padding-left: 0;
-    padding-top: 60px;
-  }
+  min-height: 100vh; padding-left: 260px; background: #030014; color: white;
+  @media (max-width: 1024px) { padding-left: 0; padding-top: 60px; }
 `;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-`;
-
-const CardGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 32px;
-`;
-
+const Container = styled.div` max-width: 1200px; margin: 0 auto; padding: 40px 20px; `;
+const CardGrid = styled.div` display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 32px; `;
 const Card = styled.div`
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(168, 85, 247, 0.15);
-  border-radius: 20px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: border-color 0.2s;
-  &:hover {
-    border-color: rgba(168, 85, 247, 0.4);
-  }
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(168,85,247,0.15); border-radius: 20px; padding: 24px;
+  display: flex; flex-direction: column; gap: 16px; transition: border-color 0.2s;
+  &:hover { border-color: rgba(168,85,247,0.4); }
 `;
-
-const VaultName = styled.h3`
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0;
-`;
-
-const Protocol = styled.p`
-  font-size: 12px;
-  color: #94a3b8;
-  margin: 0;
-`;
-
-const StatsRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-`;
-
-const Stat = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.span`
-  font-size: 11px;
-  color: #64748b;
-  text-transform: uppercase;
-`;
-
-const Value = styled.span`
-  font-weight: 600;
-`;
-
-const BalanceRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 10px 14px;
-`;
-
+const VaultName = styled.h3` font-size: 18px; font-weight: 700; margin: 0; `;
+const Protocol = styled.p` font-size: 12px; color: #94a3b8; margin: 0; `;
+const StatsRow = styled.div` display: flex; justify-content: space-between; font-size: 14px; `;
+const Stat = styled.div` display: flex; flex-direction: column; `;
+const Label = styled.span` font-size: 11px; color: #64748b; text-transform: uppercase; `;
+const Value = styled.span` font-weight: 600; `;
+const BalanceRow = styled.div` display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px 14px; `;
 const DepositBtn = styled.button`
-  background: #a855f7;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  transition: opacity 0.15s;
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  background: #a855f7; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
+  cursor: pointer; width: 100%; transition: opacity 0.15s;
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 
-// ─── Step di stato per il flusso deposit ─────────────────────
 type DepositStep = 'idle' | 'approving' | 'depositing' | 'done' | 'error';
 
-// ─── Componente principale ────────────────────────────────────
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress] = useState<string | undefined>();
-
-  const [selectedVault, setSelectedVault] = useState<(typeof vaultsList)[0] | null>(null);
+  const [vaults, setVaults] = useState<any[]>([]);
+  const [loadingVaults, setLoadingVaults] = useState(true);
+  const [selectedVault, setSelectedVault] = useState<any | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
   const [depositStep, setDepositStep] = useState<DepositStep>('idle');
   const [txHash, setTxHash] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
   const [balances, setBalances] = useState<Record<string, string>>({});
   const [loadingBalances, setLoadingBalances] = useState(false);
 
-  // Sync address da wallet
   useEffect(() => {
-    setAddress(wallet?.accounts[0]?.address);
-  }, [wallet]);
+    setLoadingVaults(true);
+    fetch('/api/portals/vaults')
+      .then(res => res.json())
+      .then(data => setVaults(Array.isArray(data) ? data : []))
+      .catch(() => setVaults([]))
+      .finally(() => setLoadingVaults(false));
+  }, []);
 
-  // Fetch saldi token per ogni vault
+  useEffect(() => { setAddress(wallet?.accounts[0]?.address); }, [wallet]);
+
   useEffect(() => {
-    if (!address || !wallet) return;
-
+    if (!address || !wallet || vaults.length === 0) return;
     const fetchBalances = async () => {
       setLoadingBalances(true);
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const newBalances: Record<string, string> = {};
-
-      for (const v of vaultsList) {
+      for (const v of vaults) {
         try {
-          if (v.token === '0x0000000000000000000000000000000000000000') {
-            // BNB nativo
+          const tokenAddr = v.token;
+          if (tokenAddr === '0x0000000000000000000000000000000000000000') {
             const bal = await provider.getBalance(address);
             newBalances[v.id] = ethers.utils.formatEther(bal);
           } else {
-            // ERC-20
-            const erc20 = new ethers.Contract(
-              v.token,
-              ['function balanceOf(address) view returns (uint256)'],
-              provider
-            );
-            const bal: ethers.BigNumber = await erc20.balanceOf(address);
-            newBalances[v.id] = ethers.utils.formatUnits(bal, v.tokenDecimals);
+            const erc20 = new ethers.Contract(tokenAddr, ['function balanceOf(address) view returns (uint256)'], provider);
+            const bal = await erc20.balanceOf(address);
+            newBalances[v.id] = ethers.utils.formatUnits(bal, v.decimals || 18);
           }
-        } catch (err) {
-          console.error(`Errore saldo per ${v.name}:`, err);
-          newBalances[v.id] = '0';
-        }
+        } catch { newBalances[v.id] = '0'; }
       }
-
       setBalances(newBalances);
       setLoadingBalances(false);
     };
-
     fetchBalances();
-  }, [address, wallet]);
+  }, [address, wallet, vaults]);
 
-  // ─── Handler deposit ───────────────────────────────────────
   const handleDeposit = useCallback(async () => {
     if (!selectedVault || !depositAmount || !address || !wallet) return;
-
-    const amountFloat = parseFloat(depositAmount);
-    if (isNaN(amountFloat) || amountFloat <= 0) return;
+    if (isNaN(parseFloat(depositAmount)) || parseFloat(depositAmount) <= 0) return;
 
     setDepositStep('idle');
     setTxHash(null);
@@ -195,12 +106,8 @@ export default function VaultsClient() {
     try {
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const signer = provider.getSigner();
-
-      const amountWei = ethers.utils
-        .parseUnits(depositAmount, selectedVault.tokenDecimals)
-        .toString();
-
-      // Fee calcolata dinamicamente in base all'APY
+      const decimals = selectedVault.decimals || 18;
+      const amountWei = ethers.utils.parseUnits(depositAmount, decimals).toString();
       const feeBps = getFeeBps(selectedVault.apy);
 
       const res = await fetch('/api/portals/deposit', {
@@ -217,430 +124,112 @@ export default function VaultsClient() {
       });
 
       const data = await res.json();
+      if (!res.ok || !data.tx) throw new Error(data.error || 'Errore');
 
-      if (!res.ok || !data.tx) {
-        throw new Error(data.error ?? 'Errore nella costruzione della transazione');
-      }
-
-      // Flusso approvazione
       if (data.approveTx) {
         setDepositStep('approving');
-
         const approveTxResponse = await signer.sendTransaction({
           to: data.approveTx.to,
           data: data.approveTx.data,
-          gasLimit: data.approveTx.gasLimit
-            ? ethers.BigNumber.from(data.approveTx.gasLimit)
-            : undefined,
+          gasLimit: data.approveTx.gasLimit ? ethers.BigNumber.from(data.approveTx.gasLimit) : undefined,
         });
-
         await approveTxResponse.wait();
       }
 
-      // Transazione di deposit
       setDepositStep('depositing');
-
       const depositTx = await signer.sendTransaction({
         to: data.tx.to,
         data: data.tx.data,
-        value: data.tx.value
-          ? ethers.BigNumber.from(data.tx.value)
-          : undefined,
-        gasLimit: data.tx.gasLimit
-          ? ethers.BigNumber.from(data.tx.gasLimit)
-          : undefined,
+        value: data.tx.value ? ethers.BigNumber.from(data.tx.value) : undefined,
+        gasLimit: data.tx.gasLimit ? ethers.BigNumber.from(data.tx.gasLimit) : undefined,
       });
 
       const receipt = await depositTx.wait();
       setTxHash(receipt.transactionHash);
       setDepositStep('done');
-
-      // Aggiorna saldo dopo il deposit
-      if (selectedVault.token === '0x0000000000000000000000000000000000000000') {
-        const bal = await provider.getBalance(address);
-        setBalances((prev) => ({
-          ...prev,
-          [selectedVault.id]: ethers.utils.formatEther(bal),
-        }));
-      } else {
-        const erc20 = new ethers.Contract(
-          selectedVault.token,
-          ['function balanceOf(address) view returns (uint256)'],
-          provider
-        );
-        const bal: ethers.BigNumber = await erc20.balanceOf(address);
-        setBalances((prev) => ({
-          ...prev,
-          [selectedVault.id]: ethers.utils.formatUnits(bal, selectedVault.tokenDecimals),
-        }));
-      }
     } catch (err: any) {
-      console.error('[handleDeposit]', err);
-      const msg: string =
-        err?.reason ?? err?.data?.message ?? err?.message ?? 'Errore sconosciuto';
-      setErrorMsg(msg);
+      setErrorMsg(err?.reason || err?.data?.message || err?.message || 'Errore sconosciuto');
       setDepositStep('error');
     }
   }, [selectedVault, depositAmount, address, wallet]);
 
-  // ─── Reset modal ──────────────────────────────────────────
-  const closeModal = () => {
-    setSelectedVault(null);
-    setDepositAmount('');
-    setDepositStep('idle');
-    setTxHash(null);
-    setErrorMsg(null);
-  };
-
-  // ─── Sezione wallet nell'header ───────────────────────────
   const walletSection = (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
       {!address ? (
-        <button
-          onClick={() => connect()}
-          style={{
-            background: '#a855f7',
-            color: 'white',
-            border: 'none',
-            borderRadius: '12px',
-            padding: '10px 20px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={() => connect()} style={{ background: '#a855f7', color: 'white', border: 'none', borderRadius: '12px', padding: '10px 20px', fontWeight: 600, cursor: 'pointer' }}>
           {connecting ? 'Connecting...' : 'Connect Wallet'}
         </button>
       ) : (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#94a3b8' }}>
-            {address.slice(0, 6)}...{address.slice(-4)}
-          </span>
-          <button
-            onClick={() => wallet && disconnect(wallet)}
-            style={{
-              background: '#ef4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '6px 12px',
-              fontSize: '12px',
-              cursor: 'pointer',
-            }}
-          >
-            Disconnect
-          </button>
+          <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#94a3b8' }}>{address.slice(0, 6)}...{address.slice(-4)}</span>
+          <button onClick={() => wallet && disconnect(wallet)} style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>Disconnect</button>
         </div>
       )}
     </div>
   );
 
-  // ─── Testo step deposito ──────────────────────────────────
-  const depositBtnLabel = () => {
-    if (depositStep === 'approving') return 'Approvazione in corso...';
-    if (depositStep === 'depositing') return 'Deposit in corso...';
-    return 'Conferma Deposito';
-  };
-  const isDepositBusy = depositStep === 'approving' || depositStep === 'depositing';
-
-  // ─── Render ───────────────────────────────────────────────
   return (
     <>
       <Header activePage="/vaults" walletSection={walletSection} />
       <PageWrapper>
         <Container>
-          <div style={{ marginBottom: '32px' }}>
-            <h1
-              style={{
-                fontSize: '32px',
-                fontWeight: 800,
-                margin: 0,
-                background: 'linear-gradient(to bottom, #fff, #94a3b8)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Vaults (Portals.fi)
-            </h1>
-            <p style={{ color: '#94a3b8', marginTop: '8px' }}>
-              I migliori vault su BNB Chain. Commissione dinamica in base all'APY.
-            </p>
-          </div>
+          <h1 style={{ fontSize: '32px', fontWeight: 800, margin: 0, background: 'linear-gradient(to bottom, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vaults (Portals.fi)</h1>
+          <p style={{ color: '#94a3b8', marginTop: '8px' }}>Deposita qualsiasi token supportato su BNB Chain con fee dinamica.</p>
 
-          {/* Griglia vault */}
+          {loadingVaults && <p style={{ color: '#94a3b8', marginTop: 32 }}>Caricamento vaults...</p>}
+
           <CardGrid>
-            {vaultsList.map((vault) => (
+            {vaults.map((vault: any) => (
               <Card key={vault.id}>
                 <div>
                   <VaultName>{vault.name}</VaultName>
-                  <Protocol>{vault.protocol}</Protocol>
+                  <Protocol>{vault.platform}</Protocol>
                 </div>
-
                 <StatsRow>
-                  <Stat>
-                    <Label>APY</Label>
-                    <Value style={{ color: vault.apy > 1 ? '#22c55e' : 'white' }}>
-                      {vault.apy.toFixed(2)}%
-                    </Value>
-                  </Stat>
-                  <Stat>
-                    <Label>TVL</Label>
-                    <Value>
-                      {vault.tvl >= 1_000_000
-                        ? `$${(vault.tvl / 1_000_000).toFixed(2)}M`
-                        : `$${(vault.tvl / 1_000).toFixed(1)}k`}
-                    </Value>
-                  </Stat>
-                  <Stat>
-                    <Label>Fee</Label>
-                    <Value style={{ fontSize: '13px', color: '#a78bfa' }}>
-                      {getFeePercent(vault.apy)}%
-                    </Value>
-                  </Stat>
+                  <Stat><Label>APY</Label><Value style={{ color: vault.apy > 1 ? '#22c55e' : 'white' }}>{vault.apy.toFixed(2)}%</Value></Stat>
+                  <Stat><Label>TVL</Label><Value>${(vault.tvl / 1e6).toFixed(2)}M</Value></Stat>
+                  <Stat><Label>Fee</Label><Value style={{ fontSize: '13px', color: '#a78bfa' }}>{getFeePercent(vault.apy)}%</Value></Stat>
                 </StatsRow>
-
                 {address && (
                   <BalanceRow>
-                    <span style={{ fontSize: 13, color: '#94a3b8' }}>
-                      Saldo {vault.tokenSymbol}
-                    </span>
-                    <span style={{ fontWeight: 600 }}>
-                      {loadingBalances
-                        ? '...'
-                        : parseFloat(balances[vault.id] || '0').toFixed(6)}
-                    </span>
+                    <span style={{ fontSize: 13, color: '#94a3b8' }}>Saldo {vault.symbol}</span>
+                    <span style={{ fontWeight: 600 }}>{loadingBalances ? '...' : parseFloat(balances[vault.id] || '0').toFixed(6)}</span>
                   </BalanceRow>
                 )}
-
-                <DepositBtn
-                  onClick={() => {
-                    setDepositAmount('');
-                    setDepositStep('idle');
-                    setSelectedVault(vault);
-                  }}
-                  disabled={!address}
-                >
+                <DepositBtn onClick={() => { setDepositAmount(''); setDepositStep('idle'); setSelectedVault(vault); }} disabled={!address}>
                   {address ? 'Deposita' : 'Connetti il wallet'}
                 </DepositBtn>
               </Card>
             ))}
           </CardGrid>
 
-          {/* ── Modal deposit ── */}
           {selectedVault && (
-            <div
-              style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.75)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 1000,
-              }}
-              onClick={closeModal}
-            >
-              <div
-                style={{
-                  background: '#0f0f1a',
-                  border: '1px solid rgba(168, 85, 247, 0.25)',
-                  borderRadius: 20,
-                  padding: 32,
-                  maxWidth: 440,
-                  width: '100%',
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>
-                  Deposita in {selectedVault.name}
-                </h2>
-                <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20 }}>
-                  Token di input:{' '}
-                  <strong style={{ color: 'white' }}>{selectedVault.tokenSymbol}</strong>
-                </p>
-
-                {/* Saldo disponibile */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    color: '#94a3b8',
-                    fontSize: 13,
-                    marginBottom: 10,
-                  }}
-                >
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setSelectedVault(null)}>
+              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 440, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Deposita in {selectedVault.name}</h2>
+                <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20 }}>Token: <strong style={{ color: 'white' }}>{selectedVault.symbol}</strong></p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 13, marginBottom: 10 }}>
                   <span>Saldo disponibile</span>
-                  <span style={{ color: 'white', fontWeight: 600 }}>
-                    {parseFloat(balances[selectedVault.id] || '0').toFixed(6)}{' '}
-                    {selectedVault.tokenSymbol}
-                  </span>
+                  <span style={{ color: 'white', fontWeight: 600 }}>{parseFloat(balances[selectedVault.id] || '0').toFixed(6)} {selectedVault.symbol}</span>
                 </div>
-
-                {/* Input importo */}
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>
-                  <input
-                    type="number"
-                    placeholder="0.0"
-                    value={depositAmount}
-                    onChange={(e) => setDepositAmount(e.target.value)}
-                    step="any"
-                    min="0"
-                    disabled={isDepositBusy}
-                    style={{
-                      flex: 1,
-                      padding: 12,
-                      borderRadius: 12,
-                      border: '1px solid rgba(168, 85, 247, 0.3)',
-                      background: 'rgba(0,0,0,0.3)',
-                      color: 'white',
-                      fontSize: 16,
-                    }}
-                  />
-                  <button
-                    onClick={() => setDepositAmount(balances[selectedVault.id] || '0')}
-                    disabled={isDepositBusy}
-                    style={{
-                      background: 'rgba(168, 85, 247, 0.2)',
-                      color: '#a855f7',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: '8px 12px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    MAX
-                  </button>
+                  <input type="number" placeholder="0.0" value={depositAmount} onChange={e => setDepositAmount(e.target.value)} step="any" min="0" disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }} />
+                  <button onClick={() => setDepositAmount(balances[selectedVault.id] || '0')} disabled={depositStep === 'approving' || depositStep === 'depositing'} style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
                 </div>
-
-                {/* Info fee dinamica */}
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
-                  <div>
-                    Commissione di deposito:{' '}
-                    <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong>{' '}
-                    (una tantum)
-                  </div>
-                  <div>
-                    APY del vault: {selectedVault.apy.toFixed(2)}% — la fee è calcolata in modo proporzionale.
-                  </div>
-                  <div>
-                    Destinatario: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}
-                  </div>
+                  <div>Commissione di deposito: <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong> (una tantum)</div>
+                  <div>APY del vault: {selectedVault.apy.toFixed(2)}%</div>
+                  <div>Destinatario: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}</div>
                 </div>
-
-                {/* Step progress */}
-                {depositStep === 'approving' && (
-                  <div
-                    style={{
-                      background: 'rgba(234,179,8,0.1)',
-                      border: '1px solid rgba(234,179,8,0.3)',
-                      borderRadius: 10,
-                      padding: '10px 14px',
-                      fontSize: 13,
-                      color: '#fbbf24',
-                      marginBottom: 16,
-                    }}
-                  >
-                    ⏳ Passo 1/2 — Approvazione ERC-20 in corso, attendi conferma...
-                  </div>
-                )}
-                {depositStep === 'depositing' && (
-                  <div
-                    style={{
-                      background: 'rgba(168,85,247,0.1)',
-                      border: '1px solid rgba(168,85,247,0.3)',
-                      borderRadius: 10,
-                      padding: '10px 14px',
-                      fontSize: 13,
-                      color: '#c084fc',
-                      marginBottom: 16,
-                    }}
-                  >
-                    ⏳ Passo 2/2 — Deposit in corso, attendi conferma...
-                  </div>
-                )}
-                {depositStep === 'done' && txHash && (
-                  <div
-                    style={{
-                      background: 'rgba(34,197,94,0.1)',
-                      border: '1px solid rgba(34,197,94,0.3)',
-                      borderRadius: 10,
-                      padding: '10px 14px',
-                      fontSize: 13,
-                      color: '#4ade80',
-                      marginBottom: 16,
-                    }}
-                  >
-                    ✅ Deposit completato!{' '}
-                    <a
-                      href={`https://bscscan.com/tx/${txHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#4ade80', textDecoration: 'underline' }}
-                    >
-                      Vedi su BscScan
-                    </a>
-                  </div>
-                )}
-                {depositStep === 'error' && errorMsg && (
-                  <div
-                    style={{
-                      background: 'rgba(239,68,68,0.1)',
-                      border: '1px solid rgba(239,68,68,0.3)',
-                      borderRadius: 10,
-                      padding: '10px 14px',
-                      fontSize: 12,
-                      color: '#f87171',
-                      marginBottom: 16,
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    ❌ {errorMsg}
-                  </div>
-                )}
-
-                {/* Pulsanti */}
+                {depositStep === 'approving' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Passo 1/2 — Approvazione in corso...</div>}
+                {depositStep === 'depositing' && <div style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#c084fc', marginBottom: 16 }}>⏳ Passo 2/2 — Deposit in corso...</div>}
+                {depositStep === 'done' && txHash && <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#4ade80', marginBottom: 16 }}>✅ Deposit completato! <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noopener noreferrer" style={{ color: '#4ade80', textDecoration: 'underline' }}>Vedi su BscScan</a></div>}
+                {depositStep === 'error' && errorMsg && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#f87171', marginBottom: 16, wordBreak: 'break-word' }}>❌ {errorMsg}</div>}
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button
-                    onClick={closeModal}
-                    style={{
-                      flex: 1,
-                      padding: 12,
-                      borderRadius: 12,
-                      border: 'none',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      background: '#334155',
-                      color: 'white',
-                    }}
-                  >
-                    {depositStep === 'done' ? 'Chiudi' : 'Annulla'}
-                  </button>
-
+                  <button onClick={() => { setSelectedVault(null); setDepositStep('idle'); }} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: '#334155', color: 'white' }}>{depositStep === 'done' ? 'Chiudi' : 'Annulla'}</button>
                   {depositStep !== 'done' && (
-                    <button
-                      onClick={handleDeposit}
-                      disabled={
-                        isDepositBusy ||
-                        !depositAmount ||
-                        parseFloat(depositAmount) <= 0
-                      }
-                      style={{
-                        flex: 1,
-                        padding: 12,
-                        borderRadius: 12,
-                        border: 'none',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        background: depositStep === 'error' ? '#f59e0b' : '#22c55e',
-                        color: 'white',
-                        opacity:
-                          isDepositBusy || !depositAmount || parseFloat(depositAmount) <= 0
-                            ? 0.5
-                            : 1,
-                        transition: 'opacity 0.15s',
-                      }}
-                    >
-                      {depositStep === 'error' ? 'Riprova' : depositBtnLabel()}
+                    <button onClick={handleDeposit} disabled={depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0} style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', fontWeight: 600, cursor: 'pointer', background: depositStep === 'error' ? '#f59e0b' : '#22c55e', color: 'white', opacity: (depositStep === 'approving' || depositStep === 'depositing' || !depositAmount || parseFloat(depositAmount) <= 0) ? 0.5 : 1, transition: 'opacity 0.15s' }}>
+                      {depositStep === 'error' ? 'Riprova' : depositStep === 'approving' ? 'Approvazione in corso...' : depositStep === 'depositing' ? 'Deposit in corso...' : 'Conferma Deposito'}
                     </button>
                   )}
                 </div>
