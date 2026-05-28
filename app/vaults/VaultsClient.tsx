@@ -3,28 +3,246 @@
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components';
 import { vaultsList } from '@/config/vaults';
 
 const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
+const BSC_CHAIN_ID = 56;
 
+/* ---------- styled-components (palette del progetto) ---------- */
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  padding-left: 260px;
+  background: #030014;
+  color: white;
+  @media (max-width: 1024px) {
+    padding-left: 0;
+    padding-top: 60px;
+  }
+`;
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+`;
+const HeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+`;
+const Title = styled.h1`
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(to bottom, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+const RightSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+const PillButton = styled.button<{ $primary?: boolean }>`
+  background: ${(p) => (p.$primary ? '#a855f7' : 'rgba(255,255,255,0.05)')};
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+  &:hover { opacity: 0.85; }
+`;
+const AddressBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #94a3b8;
+`;
+const DisconnectBtn = styled.button`
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+`;
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+`;
+const Card = styled.div`
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: 0.2s;
+  &:hover { border-color: rgba(168, 85, 247, 0.4); }
+`;
+const VaultName = styled.h3`
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+`;
+const Protocol = styled.p`
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+`;
+const StatsRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+`;
+const Stat = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const Label = styled.span`
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+`;
+const Value = styled.span`
+  font-weight: 600;
+`;
+const BalanceRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+`;
+const DepositBtn = styled.button`
+  background: #a855f7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+`;
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+const Modal = styled.div`
+  background: #121212;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+`;
+const ModalTitle = styled.h2`
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+`;
+const Input = styled.input`
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: rgba(0,0,0,0.3);
+  color: white;
+  margin-bottom: 16px;
+  font-size: 16px;
+  &:focus { outline: none; border-color: #a855f7; }
+`;
+const FeeInfo = styled.div`
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+`;
+const ModalActions = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+const ModalButton = styled.button<{ $confirm?: boolean }>`
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: ${(p) => (p.$confirm ? '#22c55e' : '#334155')};
+  color: white;
+  &:disabled { opacity: 0.5; }
+`;
+
+/* ---------- Componente ---------- */
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress] = useState<string | undefined>();
-  const [vaults] = useState(vaultsList);
   const [feePercentage, setFeePercentage] = useState<number>(100);
   const [showFeeSettings, setShowFeeSettings] = useState(false);
   const [selectedVault, setSelectedVault] = useState<any | null>(null);
   const [depositAmount, setDepositAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Saldi per ogni vault (indice per id)
+  const [balances, setBalances] = useState<Record<string, string>>({});
+  const [loadingBalances, setLoadingBalances] = useState(false);
+
   useEffect(() => {
     setAddress(wallet?.accounts[0]?.address);
   }, [wallet]);
 
   useEffect(() => {
-    const savedPercentage = localStorage.getItem('devFeePercentage');
-    if (savedPercentage) setFeePercentage(Number(savedPercentage));
+    const saved = localStorage.getItem('devFeePercentage');
+    if (saved) setFeePercentage(Number(saved));
   }, []);
+
+  // Carica i saldi quando cambia l'address o la lista dei vault
+  useEffect(() => {
+    if (!address || !wallet) return;
+    const fetchBalances = async () => {
+      setLoadingBalances(true);
+      const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      const newBalances: Record<string, string> = {};
+      for (const v of vaultsList) {
+        try {
+          if (v.token === '0x0000000000000000000000000000000000000000') {
+            // BNB nativo
+            const bal = await provider.getBalance(address);
+            newBalances[v.id] = ethers.utils.formatEther(bal);
+          } else {
+            // Token ERC-20
+            const erc20 = new ethers.Contract(v.token, ['function balanceOf(address) view returns (uint256)'], provider);
+            const bal = await erc20.balanceOf(address);
+            newBalances[v.id] = ethers.utils.formatUnits(bal, v.tokenDecimals);
+          }
+        } catch (err) {
+          console.error(`Errore saldo per ${v.name}`, err);
+          newBalances[v.id] = '0';
+        }
+      }
+      setBalances(newBalances);
+      setLoadingBalances(false);
+    };
+    fetchBalances();
+  }, [address, wallet]);
 
   const handleDeposit = useCallback(async () => {
     if (!selectedVault || !depositAmount || !address || !wallet) return;
@@ -66,119 +284,108 @@ export default function VaultsClient() {
   }, [selectedVault, depositAmount, address, wallet, feePercentage]);
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Vaults (Portals.fi)</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button
-            onClick={() => setShowFeeSettings(!showFeeSettings)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-          >
-            ⚙️ Dev Fee
-          </button>
-          {!address ? (
-            <button
-              onClick={() => connect()}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
-            >
-              {connecting ? 'Connecting...' : 'Connect Wallet'}
-            </button>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: '12px', color: '#94a3b8' }}>
+    <PageWrapper>
+      <Container>
+        <HeaderRow>
+          <Title>Vaults (Portals.fi)</Title>
+          <RightSide>
+            <PillButton onClick={() => setShowFeeSettings(!showFeeSettings)}>
+              ⚙️ Dev Fee
+            </PillButton>
+            {!address ? (
+              <PillButton $primary onClick={() => connect()}>
+                {connecting ? 'Connecting...' : 'Connect Wallet'}
+              </PillButton>
+            ) : (
+              <AddressBadge>
                 {address.slice(0, 6)}...{address.slice(-4)}
+                <DisconnectBtn onClick={() => wallet && disconnect(wallet)}>
+                  Disconnect
+                </DisconnectBtn>
+              </AddressBadge>
+            )}
+          </RightSide>
+        </HeaderRow>
+
+        {showFeeSettings && (
+          <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid #a855f7', borderRadius: 16, padding: 20, marginBottom: 32 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, fontSize: 16 }}>Dev Fee</h3>
+              <span style={{ fontFamily: 'monospace', fontSize: 13, color: '#94a3b8' }}>
+                {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}
               </span>
-              <button
-                onClick={() => wallet && disconnect(wallet)}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
-              >
-                Disconnect
-              </button>
             </div>
-          )}
-        </div>
-      </div>
-
-      {showFeeSettings && (
-        <div className="bg-gray-800 p-4 rounded mb-6">
-          <h2 className="text-xl mb-2">Dev Fee</h2>
-          <p className="text-sm text-gray-400 mb-3">
-            Indirizzo: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}
-          </p>
-          <div>
-            <label className="block text-sm mb-1">Percentuale (in basis points, 100 = 1%)</label>
-            <input
-              type="number"
-              value={feePercentage}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setFeePercentage(val);
-                localStorage.setItem('devFeePercentage', val.toString());
-              }}
-              className="p-2 bg-gray-700 rounded text-white w-full"
-            />
-          </div>
-          <button
-            onClick={() => setShowFeeSettings(false)}
-            className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-          >
-            Chiudi
-          </button>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {vaults.map((vault: any) => (
-          <div key={vault.id} className="bg-gray-900 p-4 rounded-xl border border-gray-700">
-            <h2 className="text-xl font-semibold">{vault.name}</h2>
-            <p className="text-sm text-gray-400">{vault.protocol}</p>
-            <div className="flex justify-between mt-3">
-              <span>APY: {vault.apy?.toFixed(2) ?? 'N/A'}%</span>
-              <span>TVL: ${vault.tvl?.toLocaleString() ?? 'N/A'}</span>
-            </div>
-            <button
-              onClick={() => setSelectedVault(vault)}
-              disabled={!address}
-              className="mt-4 w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white py-2 rounded"
-            >
-              {address ? 'Deposita' : 'Connetti il wallet'}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {selectedVault && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-xl max-w-md w-full">
-            <h2 className="text-2xl mb-4">Deposita in {selectedVault.name}</h2>
-            <input
-              type="text"
-              placeholder="Importo"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-              className="w-full p-2 bg-gray-700 rounded mb-4 text-white"
-            />
-            <div className="text-sm text-gray-400 mb-4">
-              Dev fee: {feePercentage / 100}% a {FEE_RECIPIENT.slice(0, 6)}...
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={handleDeposit}
-                disabled={loading || !depositAmount}
-                className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-2 rounded"
-              >
-                {loading ? 'Invio...' : 'Conferma'}
-              </button>
-              <button
-                onClick={() => setSelectedVault(null)}
-                className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
-              >
-                Annulla
-              </button>
+            <div style={{ marginTop: 16 }}>
+              <label style={{ fontSize: 13, color: '#94a3b8' }}>Percentuale (bps)</label>
+              <Input
+                type="number"
+                value={feePercentage}
+                onChange={(e) => {
+                  setFeePercentage(Number(e.target.value));
+                  localStorage.setItem('devFeePercentage', e.target.value);
+                }}
+                style={{ marginTop: 8 }}
+              />
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        <CardGrid>
+          {vaultsList.map((vault) => (
+            <Card key={vault.id}>
+              <div>
+                <VaultName>{vault.name}</VaultName>
+                <Protocol>{vault.protocol}</Protocol>
+              </div>
+              <StatsRow>
+                <Stat>
+                  <Label>APY</Label>
+                  <Value>{vault.apy.toFixed(2)}%</Value>
+                </Stat>
+                <Stat>
+                  <Label>TVL</Label>
+                  <Value>${vault.tvl.toLocaleString()}</Value>
+                </Stat>
+              </StatsRow>
+              {address && (
+                <BalanceRow>
+                  <span style={{ fontSize: 13, color: '#94a3b8' }}>Saldo</span>
+                  <span style={{ fontWeight: 600 }}>
+                    {loadingBalances ? '...' : `${parseFloat(balances[vault.id] || '0').toFixed(4)}`}
+                  </span>
+                </BalanceRow>
+              )}
+              <DepositBtn
+                onClick={() => setSelectedVault(vault)}
+                disabled={!address}
+              >
+                {address ? 'Deposita' : 'Connetti il wallet'}
+              </DepositBtn>
+            </Card>
+          ))}
+        </CardGrid>
+
+        {selectedVault && (
+          <ModalOverlay onClick={() => setSelectedVault(null)}>
+            <Modal onClick={(e) => e.stopPropagation()}>
+              <ModalTitle>Deposita in {selectedVault.name}</ModalTitle>
+              <Input
+                type="text"
+                placeholder="Importo"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+              />
+              <FeeInfo>Dev fee: {feePercentage / 100}% a {FEE_RECIPIENT.slice(0, 6)}...</FeeInfo>
+              <ModalActions>
+                <ModalButton onClick={() => setSelectedVault(null)}>Annulla</ModalButton>
+                <ModalButton $confirm onClick={handleDeposit} disabled={loading || !depositAmount}>
+                  {loading ? 'Invio...' : 'Conferma'}
+                </ModalButton>
+              </ModalActions>
+            </Modal>
+          </ModalOverlay>
+        )}
+      </Container>
+    </PageWrapper>
   );
 }
