@@ -10,7 +10,7 @@ export interface VaultConfig {
 export const vaultsList: VaultConfig[] = [
   { id: 'bsc:0x211Cc4DD073734dA055fbF44a2b4667d5E5fE5d2', name: 'Ethena Staked USDe', protocol: 'Ethena', apy: 3.75, tvl: 1_790_000_000, suggestedToken: 'USDe' },
   { id: 'bsc:0x882C173bC7Ff3b7786CA16dfeD3DFFfb9Ee7847B', name: 'Venus BTC', protocol: 'Venus', apy: 0.18, tvl: 388_250_000, suggestedToken: 'BTCB' },
-  { id: 'bsc:0xB0b84D294e0C75A6abe60171b70edEb2EFd14A1B', name: 'Staked Lista BNB', protocol: 'Lista', apy: 4.55, tvl: 584_250_000, suggestedToken: 'BNB' },
+  { id: 'bsc:0xB0b84D294e0C75A6abe60171b70edEb2EFd14A1B', name: 'Staked Lista BNB', protocol: 'Lista', apy: 4.55, tvl: 584_250_000, suggestedToken: 'WBNB' },
   { id: 'bsc:0xf508fCD89b8bd15579dc79A6827cB4686A3592c8', name: 'Venus ETH', protocol: 'Venus', apy: 0.38, tvl: 39_800_000, suggestedToken: 'ETH' },
   { id: 'bsc:0x86aC3974e2BD0d60825230fa6F355fF11409df5c', name: 'Venus CAKE', protocol: 'Venus', apy: 0.01, tvl: 18_000_000, suggestedToken: 'CAKE' },
   { id: 'bsc:0xB248a295732e0225acd3337607cc01068e3b9c10', name: 'Venus XRP', protocol: 'Venus', apy: 0.37, tvl: 7_250_000, suggestedToken: 'XRP' },
@@ -22,7 +22,7 @@ export const vaultsList: VaultConfig[] = [
   { id: 'bsc:0x08CEB3F4a7ed3500cA0982bcd0FC7816688084c3', name: 'Venus TUSD', protocol: 'Venus', apy: 35.11, tvl: 13_800, suggestedToken: 'TUSD' },
   { id: 'bsc:0x86B31895B51D839Ce645a3F95E5AC4e5b2A36BE7', name: 'Venus THE', protocol: 'Venus', apy: 4.92, tvl: 92_980, suggestedToken: 'THE' },
   { id: 'bsc:0x77734e70b6e88b4d82fe632a168edf6e700912b6', name: 'Astherus BNB', protocol: 'Astherus', apy: 4.55, tvl: 155_600_000, suggestedToken: 'slisBNB' },
-  { id: 'bsc:0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A', name: 'Wrapped eETH', protocol: 'EtherFi', apy: 5.34, tvl: 63_240, suggestedToken: 'BNB' },
+  { id: 'bsc:0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A', name: 'Wrapped eETH', protocol: 'EtherFi', apy: 5.34, tvl: 63_240, suggestedToken: 'WBNB' },
   { id: 'bsc:0xba9425ec55ee0e72216d18e0ad8bbba2553bfb60', name: 'Re Protocol reUSD', protocol: 'Re Protocol', apy: 6.97, tvl: 31_970, suggestedToken: 'USDT' },
   { id: 'bsc:0x3ac88afbc38bb41443457eeb027b60e85b815538', name: 'Euler Re7 Labs WBNB', protocol: 'Euler', apy: 240.00, tvl: 22_560, suggestedToken: 'WBNB' },
   { id: 'bsc:0x7a455f66fd2d2d5c69ae403a971ed513c852f9d7', name: 'Euler Re7 Labs BTCB', protocol: 'Euler', apy: 240.00, tvl: 9_940, suggestedToken: 'BTCB' },
