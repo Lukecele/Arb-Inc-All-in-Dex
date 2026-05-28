@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 
 export default function VaultsClient() {
   const [mounted, setMounted] = useState(false);
@@ -16,9 +17,9 @@ export default function VaultsClient() {
 }
 
 function VaultsContent() {
-  const { useAccount, useSendTransaction } = require('wagmi');
+  const { useAccount, useSigner } = require('wagmi');
   const { address, isConnected } = useAccount();
-  const { sendTransaction } = useSendTransaction();
+  const { data: signer } = useSigner();
 
   const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
 
@@ -60,7 +61,7 @@ function VaultsContent() {
   }, []);
 
   const handleDeposit = async () => {
-    if (!selectedVault || !depositAmount || !address) return;
+    if (!selectedVault || !depositAmount || !address || !signer) return;
     setLoading(true);
     try {
       const res = await fetch('/api/portals/deposit', {
@@ -77,11 +78,13 @@ function VaultsContent() {
       const data = await res.json();
       if (data.tx) {
         const tx = data.tx;
-        await sendTransaction({
-          to: tx.to as `0x${string}`,
-          data: tx.data as `0x${string}`,
-          value: tx.value ? BigInt(tx.value) : undefined,
+        // ethers v5: value come BigNumber
+        const txResponse = await signer.sendTransaction({
+          to: tx.to,
+          data: tx.data,
+          value: tx.value ? ethers.BigNumber.from(tx.value) : undefined,
         });
+        await txResponse.wait();
         alert('Deposito inviato!');
         setSelectedVault(null);
         setDepositAmount('');
@@ -193,7 +196,7 @@ function VaultsContent() {
             <div className="flex gap-3">
               <button
                 onClick={handleDeposit}
-                disabled={loading || !depositAmount}
+                disabled={loading || !depositAmount || !signer}
                 className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-2 rounded"
               >
                 {loading ? 'Invio...' : 'Conferma'}
