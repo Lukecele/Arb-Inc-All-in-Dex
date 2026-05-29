@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import type { PoolInfo } from "../pools";
+import { PoolInfo } from "../../types";
 import theme from "../styles/theme";
 
 const Overlay = styled.div`
