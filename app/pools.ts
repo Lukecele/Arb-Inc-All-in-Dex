@@ -1,94 +1,375 @@
-// app/pools.ts
-
-// FIX: Esportazione della costante richiesta da ZapOutClient.tsx
-export const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-
 export interface PoolConfig {
   id: string;
   name: string;
   address: string;
   poolType: string;
-  token0: {
-    address: string;
-    symbol: string;
-    decimals: number;
-  };
-  token1: {
-    address: string;
-    symbol: string;
-    decimals: number;
-  };
-  fee?: number; 
-  fallbackApr: number; 
+  dex: "pancakeswapv2" | "pancakeswapv3" | "uniswapv3";
+  chain: string;
+  fee?: number; // Specifico per logica di fee tier V3 (es. 2500 = 0.25%)
+  fallbackApr: number; // Usato come paracadute se l'API live fallisce
+  zapSupported: boolean;
+  isMainstream: boolean;
+  category: "mainstream" | "pancake" | "uniswap";
+  token0: { address: string; symbol: string; decimals: number };
+  token1: { address: string; symbol: string; decimals: number };
 }
 
-// Alias per retrocompatibilità con PoolSelector.tsx
-export type PoolInfo = PoolConfig;
+export const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+export const BUSD_ADDRESS = "0xe9e7cea3dedca5984780bafc599bd69add087d56";
+export const CAKE_ADDRESS = "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82";
+export const ADA_ADDRESS = "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47";
+export const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
 
-// Pool PancakeSwap V3
-export const pcsV3Pools: PoolConfig[] = [
+// --- POOL PANCAKESWAP V2 (Mainstream) ---
+export const pools: PoolConfig[] = [
   {
-    id: "pcs-v3-usdt-wbnb",
-    name: "USDT-WBNB (PancakeSwap V3 0.25%)",
-    address: "0x36696169C63e42cd08ce11f5deeBbCeBae652050",
-    poolType: "DEX_PANCAKESWAPV3",
-    fee: 2500, 
-    token0: {
-      address: "0x55d398326f99059fF775485246999027B3197955", 
-      symbol: "USDT",
-      decimals: 18,
-    },
-    token1: {
-      address: WBNB_ADDRESS, 
-      symbol: "WBNB",
-      decimals: 18,
-    },
-    fallbackApr: 28.2,
-  }
-];
-
-// Pool Concentrated Liquidity / KyberSwap Elastic
-export const clmPools: PoolConfig[] = [
+    id: "bnb-usdt",
+    name: "BNB / USDT",
+    address: "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+    poolType: "DEX_PANCAKESWAPV2",
+    dex: "pancakeswapv2",
+    chain: "bsc",
+    fallbackApr: 25.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "mainstream",
+    token0: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
   {
-    id: "kyberswap-v3-usdt-wbnb",
-    name: "USDT-WBNB (KyberSwap Elastic)",
-    address: "0x4AA05AcCE320bE0fD98356E81A204C63AdE8E067",
-    poolType: "DEX_KYBERSWAPV3",
-    fee: 1000, 
-    token0: {
-      address: "0x55d398326f99059fF775485246999027B3197955",
-      symbol: "USDT",
-      decimals: 18,
-    },
-    token1: {
-      address: WBNB_ADDRESS,
-      symbol: "WBNB",
-      decimals: 18,
-    },
-    fallbackApr: 32.1,
-  }
-];
-
-// Pool Standard / V2 (Incluso il fix su CAKE-WBNB)
-export const v2Pools: PoolConfig[] = [
+    id: "bnb-btc",
+    name: "BNB / BTCB",
+    address: "0x61EB785d58D2dAd0DB4bF4f71546C56d2dFcE7d6",
+    poolType: "DEX_PANCAKESWAPV2",
+    dex: "pancakeswapv2",
+    chain: "bsc",
+    fallbackApr: 22.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "mainstream",
+    token0: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+    token1: { symbol: "BTCB", address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c", decimals: 18 },
+  },
+  {
+    id: "bnb-eth",
+    name: "BNB / ETH",
+    address: "0x74E4716E4B519cB5e270542D7B5391c5c69Aa162",
+    poolType: "DEX_PANCAKESWAPV2",
+    dex: "pancakeswapv2",
+    chain: "bsc",
+    fallbackApr: 28.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "mainstream",
+    token0: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+    token1: { symbol: "ETH", address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", decimals: 18 },
+  },
+  {
+    id: "wbnb-busd",
+    name: "WBNB / BUSD",
+    address: "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
+    poolType: "DEX_PANCAKESWAPV2",
+    dex: "pancakeswapv2",
+    chain: "bsc",
+    fallbackApr: 18.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "mainstream",
+    token0: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+    token1: { symbol: "BUSD", address: BUSD_ADDRESS, decimals: 18 },
+  },
   {
     id: "pcs-v2-cake-wbnb",
-    name: "CAKE-WBNB (PancakeSwap V2)",
-    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", 
+    name: "CAKE / WBNB",
+    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", // FIX: LP Contract reale
     poolType: "DEX_PANCAKESWAPV2",
-    token0: {
-      address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", 
-      symbol: "CAKE",
-      decimals: 18,
-    },
-    token1: {
-      address: WBNB_ADDRESS, 
-      symbol: "WBNB",
-      decimals: 18,
-    },
+    dex: "pancakeswapv2",
+    chain: "bsc",
     fallbackApr: 14.5,
-  }
+    zapSupported: true,
+    isMainstream: true,
+    category: "pancake",
+    token0: { symbol: "CAKE", address: CAKE_ADDRESS, decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "bnb-ada",
+    name: "BNB / ADA",
+    address: "0xf8a32a2ca32d4b9af77a9fb41de01d39f3c86317",
+    poolType: "DEX_PANCAKESWAPV2",
+    dex: "pancakeswapv2",
+    chain: "bsc",
+    fallbackApr: 40.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "pancake",
+    token0: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+    token1: { symbol: "ADA", address: ADA_ADDRESS, decimals: 18 },
+  },
 ];
 
-// Esportazione globale dell'array unito
-export const pools: PoolConfig[] = [...v2Pools, ...pcsV3Pools, ...clmPools];
+// --- POOL PANCAKESWAP V3 (Mainstream / Native) ---
+export const pcsV3Pools: PoolConfig[] = [
+  {
+    id: "pcs-v3-esports-wbnb",
+    name: "ESPORTS / WBNB",
+    address: "0x5bb59bb9371cbec158ed602d5f3cf1ad1c9b4462",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 55.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "pancake",
+    token0: { symbol: "ESPORTS", address: "0xf39e4b21c84e737df08e2c3b32541d856f508e48", decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "pcs-v3-mgo-wbnb",
+    name: "MGO / WBNB",
+    address: "0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 42.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "pancake",
+    token0: { symbol: "MGO", address: "0x5e0d6791edbeeba6a14d1d38e2b8233257118eb1", decimals: 9 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "pcs-v3-usdt-wbnb",
+    name: "USDT / WBNB",
+    address: "0x36696169C63e42cd08ce11f5deeBbCeBae652050", // FIX: LP Contract reale V3
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 35.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "pancake",
+    token0: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+];
+
+// --- POOL EXOTIC / CLM (Uniswap V3 & Pancake V3 High-Yield) ---
+export const clmPools: PoolConfig[] = [
+  {
+    id: "gen-usdt-uni",
+    name: "GENIUS / USDT (Uni V3)",
+    address: "0xD77865e605049Bb362E9a6C5a1df7b033C376811",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 85.0, // Scalato a un fallback umano (gestito poi via API live)
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "GENIUS", address: "0x1F12B85aAC097E43Aa1555b2881E98a51090e9A6", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "gen-usdt-pcs",
+    name: "GENIUS / USDT (PCS V3)",
+    address: "0x9DfF5b244427bD42C650de57766b3a85761DE780",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 79.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "GENIUS", address: "0x1F12B85aAC097E43Aa1555b2881E98a51090e9A6", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "zest-usdt-uni",
+    name: "ZEST / USDT",
+    address: "0x6d299F4bAD5392af1e55e3E86A0339399543032b",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 45.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "ZEST", address: "0x5506599c722389A60580B5213ea1Da60D64754a1", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "zec-usdt-uni",
+    name: "ZEC / USDT (Uni V3)",
+    address: "0x4d1b90273d5B0Ea98101154D73A6C7D7A19884DB",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 35.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "ZEC", address: "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "zec-wbnb-uni",
+    name: "ZEC / WBNB",
+    address: "0x64b0B57840A3a2Bde9a05b69d726239194dc49e1",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 24.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "ZEC", address: "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb", decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "xpl-usdt-uni",
+    name: "XPL / USDT (Uni V3)",
+    address: "0x7deef378B6BefA291E2e255294E532b2C1bCa419",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 40.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "XPL", address: "0x405FBc9004D857903bFD6b3357792D71a50726b0", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "xpl-usdt-pcs",
+    name: "XPL / USDT (PCS V3)",
+    address: "0x50203DF8eFcddBa9755C886F086b9B2D537a15F9",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 48.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "XPL", address: "0x405FBc9004D857903bFD6b3357792D71a50726b0", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "usdt-opg-uni",
+    name: "USDT / OPG",
+    address: "0x0a4b571C4932d84dE11A6BCA96bb9BA5bF27Ff1C",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 30.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "OPG", address: "0x5feCcD17C393CaF1001D18164236A37E731FCb9d", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "zec-btcb-uni",
+    name: "ZEC / BTCB",
+    address: "0xbF3693031c272be6d539d79a9715561229a8fBa9",
+    poolType: "DEX_UNISWAPV3",
+    dex: "uniswapv3",
+    chain: "bsc",
+    fee: 3000,
+    fallbackApr: 19.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "ZEC", address: "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb", decimals: 18 },
+    token1: { symbol: "BTCB", address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c", decimals: 18 },
+  },
+  {
+    id: "zec-usdt-pcs",
+    name: "ZEC / USDT (PCS V3)",
+    address: "0x6fAE7301f1B7c0ab83d69A855447491F2B585876",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 32.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "ZEC", address: "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "pup-wbnb-pcs",
+    name: "PUP / WBNB",
+    address: "0x8e86a6C334aB270084bF8273D5293488f2578207",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 15.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "PUP", address: "0x73b84F7E3901F39FC29F3704a03126D317Ab4444", decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "broc-wbnb-pcs",
+    name: "BROCCOLI / WBNB",
+    address: "0xdB25C09d96C165B62F6e6F9d9b17174738d897BA",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 5.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "Broccoli", address: "0x12B4356C65340Fb02cdff01293F95FEBb1512F3b", decimals: 18 },
+    token1: { symbol: "WBNB", address: WBNB_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "form-usdt-pcs",
+    name: "FORM / USDT",
+    address: "0x7Cb113B487e025b3a69537fcA579559433240cb5",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 8.0,
+    zapSupported: true,
+    isMainstream: false,
+    category: "uniswap",
+    token0: { symbol: "FORM", address: "0x5b73A93b4E5e4f1FD27D8b3F8C97D69908b5E284", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+  {
+    id: "eth-usdt-pcs",
+    name: "ETH / USDT (PCS V3)",
+    address: "0x9F599F3D64a9D99eA21e68127Bb6CE99f893DA61",
+    poolType: "DEX_PANCAKESWAPV3",
+    dex: "pancakeswapv3",
+    chain: "bsc",
+    fee: 2500,
+    fallbackApr: 29.0,
+    zapSupported: true,
+    isMainstream: true,
+    category: "uniswap",
+    token0: { symbol: "ETH", address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", decimals: 18 },
+    token1: { symbol: "USDT", address: USDT_ADDRESS, decimals: 18 },
+  },
+];
+
+// Retrocompatibilità per il frontend
+export type PoolInfo = PoolConfig;
