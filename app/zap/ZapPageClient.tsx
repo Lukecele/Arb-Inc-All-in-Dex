@@ -38,9 +38,14 @@ const BSC_CHAIN_ID = 56;
 const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
 const FEE_PCM = 10;
 
-const mapStringToPoolType = (poolTypeString: string): PoolType => {
-	if (poolTypeString === "DEX_CLM") return PoolType.DEX_PANCAKESWAPV3;
-	return (PoolType[poolTypeString as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
+const mapPoolToWidgetPoolType = (pool: PoolInfo): PoolType => {
+	if (pool.poolType === "DEX_CLM") {
+		const dexLower = pool.dex.toLowerCase();
+		if (dexLower.includes("uniswap")) return PoolType.DEX_UNISWAPV3;
+		if (dexLower.includes("pancake")) return PoolType.DEX_PANCAKESWAPV3;
+		return PoolType.DEX_PANCAKESWAPV3;
+	}
+	return (PoolType[pool.poolType as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -216,7 +221,7 @@ export default function ZapPageClient() {
 								<SafeWidgetWrapper>
 								<LiquidityWidget
 									chainId={chainId as ChainId.Bsc}
-									poolType={mapStringToPoolType(selectedPool.poolType)}
+									poolType={mapPoolToWidgetPoolType(selectedPool)}
 									poolAddress={selectedPool.address}
 									connectedAccount={{
 										address: address || undefined,
@@ -237,6 +242,7 @@ export default function ZapPageClient() {
 							<ZapOutClient
 								poolAddress={selectedPool.address}
 								poolType={selectedPool.poolType}
+								poolDex={selectedPool.dex}
 								token0Address={selectedPool.token0.address}
 								token0Symbol={selectedPool.token0.symbol}
 								token1Address={selectedPool.token1.address}
