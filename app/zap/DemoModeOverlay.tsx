@@ -18,7 +18,7 @@ const Overlay = styled.div`
 `;
 
 const DemoCard = styled.div`
-  background: ${(theme.colors.background as any).DEFAULT || theme.colors.background};
+  background: ${(theme.colors as any).background?.DEFAULT || "#1a1a1a"};
   padding: 24px;
   border-radius: 12px;
   max-width: 400px;
@@ -32,11 +32,11 @@ const DemoStat = styled.div`
 `;
 
 const DemoLabel = styled.span`
-  color: ${theme.colors.textSecondary};
+  color: ${(theme.colors as any).textSecondary || "#aaaaaa"};
 `;
 
 const DemoValue = styled.span`
-  color: ${theme.colors.textPrimary};
+  color: ${(theme.colors as any).textPrimary || "#ffffff"};
   font-weight: bold;
 `;
 
