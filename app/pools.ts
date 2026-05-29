@@ -1,3 +1,8 @@
+// app/pools.ts
+
+// FIX: Esportazione della costante richiesta da ZapOutClient.tsx
+export const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+
 export interface PoolConfig {
   id: string;
   name: string;
@@ -17,7 +22,7 @@ export interface PoolConfig {
   fallbackApr: number; 
 }
 
-// FIX: Esportiamo l'alias PoolInfo per non far sballare PoolSelector.tsx
+// Alias per retrocompatibilità con PoolSelector.tsx
 export type PoolInfo = PoolConfig;
 
 // Pool PancakeSwap V3
@@ -34,7 +39,7 @@ export const pcsV3Pools: PoolConfig[] = [
       decimals: 18,
     },
     token1: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", 
+      address: WBNB_ADDRESS, 
       symbol: "WBNB",
       decimals: 18,
     },
@@ -56,7 +61,7 @@ export const clmPools: PoolConfig[] = [
       decimals: 18,
     },
     token1: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      address: WBNB_ADDRESS,
       symbol: "WBNB",
       decimals: 18,
     },
@@ -69,7 +74,7 @@ export const v2Pools: PoolConfig[] = [
   {
     id: "pcs-v2-cake-wbnb",
     name: "CAKE-WBNB (PancakeSwap V2)",
-    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", // LP Address Corretto
+    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", 
     poolType: "DEX_PANCAKESWAPV2",
     token0: {
       address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", 
@@ -77,7 +82,7 @@ export const v2Pools: PoolConfig[] = [
       decimals: 18,
     },
     token1: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", 
+      address: WBNB_ADDRESS, 
       symbol: "WBNB",
       decimals: 18,
     },
@@ -85,5 +90,5 @@ export const v2Pools: PoolConfig[] = [
   }
 ];
 
-// FIX: Esportiamo l'array globale 'pools' unendo tutte le liste, richiesto sia da ZapPageClient che da PoolSelector
+// Esportazione globale dell'array unito
 export const pools: PoolConfig[] = [...v2Pools, ...pcsV3Pools, ...clmPools];
