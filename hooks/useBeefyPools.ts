@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { PoolInfo } from '../app/zap/pools';
+import type { PoolInfo } from '@/app/zap/pools';
 
 export function useBeefyPools() {
     const [beefyPools, setBeefyPools] = useState<PoolInfo[]>([]);
