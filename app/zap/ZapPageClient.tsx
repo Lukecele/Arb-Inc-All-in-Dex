@@ -179,7 +179,6 @@ export default function ZapPageClient() {
 											address: address || "",
 											chainId: chainId,
 										}}
-										provider={wallet?.provider}
 										source="arbitrage-inception"
 										feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
 										onConnectWallet={() => connect()}
