@@ -81,38 +81,30 @@ export default function ZapPageClient() {
 
 	useEffect(() => {
 		async function fetchBeefyVaults() {
-				try {
-					const res = await fetch("https://api.beefy.finance/vaults");
-					const data = await res.json();
-					console.log("DEBUG: Totale Vaults ricevuti:", data.length);
-					const bscVaults = data
-						.filter((v: any) => {
-							const isBsc = v.chain === "bsc";
-							const isActive = v.status === "active";
-							const hasZap = v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress;
-							return isBsc && isActive && hasZap;
-						})
-						.map((v: any) => {
-							console.log("DEBUG: Vault BSC valido:", v.id, v.zaps[0].poolAddress);
-							return {
-								id: v.id,
-								name: v.name + " (" + v.platformId.toUpperCase() + " Vault)",
-								address: v.zaps[0].poolAddress,
-								poolType: v.platformId === "pancakeswap" ? "DEX_PANCAKESWAPV2" : "DEX_PANCAKESWAPV3",
-								token0: { address: v.assets?.[0] || "", symbol: v.assets?.[0] || "", decimals: 18 },
-								token1: { address: v.assets?.[1] || "", symbol: v.assets?.[1] || "", decimals: 18 },
-								liquidityUSD: 0,
-								apr: "Beefy Auto-Compounding"
-							};
-						});
-					setAllPools(bscVaults);
-					if (bscVaults.length > 0) setSelectedPool(bscVaults[0]);
-				} catch (err) {
-					console.error("Errore fetch Beefy:", err);
-				} finally {
-					setLoadingBeefy(false);
-				}
-			}\n\t\t\tfetchBeefyVaults();
+    try {
+        const res = await fetch('https://api.beefy.finance/vaults');
+        const data = await res.json();
+        const bscVaults = data
+            .filter((v) => v.chain === 'bsc' && v.status === 'active' && v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress)
+            .map((v) => ({
+                id: v.id,
+                name: v.name + ' (' + v.platformId.toUpperCase() + ' Vault)',
+                address: v.zaps[0].poolAddress,
+                poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
+                token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '', decimals: 18 },
+                token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '', decimals: 18 },
+                liquidityUSD: 0,
+                apr: 'Beefy Auto-Compounding'
+            }));
+        setAllPools(bscVaults);
+        if (bscVaults.length > 0) setSelectedPool(bscVaults[0]);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        setLoadingBeefy(false);
+    }
+}
+fetchBeefyVaults();
 	}, []);
 
 	useEffect(() => {
