@@ -13,47 +13,37 @@ export interface PoolConfig {
     symbol: string;
     decimals: number;
   };
-  fee?: number; // Opzionale, specifico per le V3
-  fallbackApr: number; // Usato come fallback se l'API fallisce
+  fee?: number; 
+  fallbackApr: number; 
 }
 
-export const pools: PoolConfig[] = [
-  {
-    id: "pcs-v2-cake-wbnb",
-    name: "CAKE-WBNB (PancakeSwap V2)",
-    // FIX: Cambiato l'indirizzo del token CAKE con l'indirizzo reale del pool LP di PancakeSwap V2
-    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", 
-    poolType: "DEX_PANCAKESWAPV2",
-    token0: {
-      address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", // CAKE
-      symbol: "CAKE",
-      decimals: 18,
-    },
-    token1: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // WBNB
-      symbol: "WBNB",
-      decimals: 18,
-    },
-    fallbackApr: 14.5,
-  },
+// FIX: Esportiamo l'alias PoolInfo per non far sballare PoolSelector.tsx
+export type PoolInfo = PoolConfig;
+
+// Pool PancakeSwap V3
+export const pcsV3Pools: PoolConfig[] = [
   {
     id: "pcs-v3-usdt-wbnb",
     name: "USDT-WBNB (PancakeSwap V3 0.25%)",
     address: "0x36696169C63e42cd08ce11f5deeBbCeBae652050",
     poolType: "DEX_PANCAKESWAPV3",
-    fee: 2500, // 0.25%
+    fee: 2500, 
     token0: {
-      address: "0x55d398326f99059fF775485246999027B3197955", // USDT
+      address: "0x55d398326f99059fF775485246999027B3197955", 
       symbol: "USDT",
       decimals: 18,
     },
     token1: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // WBNB
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", 
       symbol: "WBNB",
       decimals: 18,
     },
     fallbackApr: 28.2,
-  },
+  }
+];
+
+// Pool Concentrated Liquidity / KyberSwap Elastic
+export const clmPools: PoolConfig[] = [
   {
     id: "kyberswap-v3-usdt-wbnb",
     name: "USDT-WBNB (KyberSwap Elastic)",
@@ -73,3 +63,27 @@ export const pools: PoolConfig[] = [
     fallbackApr: 32.1,
   }
 ];
+
+// Pool Standard / V2 (Incluso il fix su CAKE-WBNB)
+export const v2Pools: PoolConfig[] = [
+  {
+    id: "pcs-v2-cake-wbnb",
+    name: "CAKE-WBNB (PancakeSwap V2)",
+    address: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6", // LP Address Corretto
+    poolType: "DEX_PANCAKESWAPV2",
+    token0: {
+      address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", 
+      symbol: "CAKE",
+      decimals: 18,
+    },
+    token1: {
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", 
+      symbol: "WBNB",
+      decimals: 18,
+    },
+    fallbackApr: 14.5,
+  }
+];
+
+// FIX: Esportiamo l'array globale 'pools' unendo tutte le liste, richiesto sia da ZapPageClient che da PoolSelector
+export const pools: PoolConfig[] = [...v2Pools, ...pcsV3Pools, ...clmPools];
