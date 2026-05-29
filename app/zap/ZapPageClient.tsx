@@ -170,7 +170,7 @@ export default function ZapPageClient() {
 							</WarningBadge>
 
 							<WidgetScroller $scale={0.9}>
-								{address && selectedPool && selectedPool.address ? (
+								{selectedPool && selectedPool.address ? (
 									<LiquidityWidget
 										chainId={BSC_CHAIN_ID as ChainId.Bsc}
 										poolType={mapStringToPoolType(selectedPool?.poolType || "")}
