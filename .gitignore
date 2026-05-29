@@ -17,3 +17,4 @@ data/
 scripts/.env
 .env.local
 .env*.local
+tsconfig.tsbuildinfo
