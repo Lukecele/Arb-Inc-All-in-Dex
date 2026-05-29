@@ -2,7 +2,7 @@
 
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
@@ -52,17 +52,17 @@ const Card = styled.div`
   &:hover { border-color: rgba(168,85,247,0.4); }
 `;
 const VaultName = styled.h3` font-size: 18px; font-weight: 700; margin: 0; `;
-const Protocol = styled.p` font-size: 12px; color: #94a3b8; margin: 0; `;
+const Protocol = styled.p` font-size: 12px; color: '#94a3b8'; margin: 0; `;
 const StatsRow = styled.div` display: flex; justify-content: space-between; font-size: 14px; `;
 const Stat = styled.div` display: flex; flex-direction: column; `;
-const Label = styled.span` font-size: 11px; color: #64748b; text-transform: uppercase; `;
+const Label = styled.span` font-size: 11px; color: '#64748b'; text-transform: uppercase; `;
 const Value = styled.span` font-weight: 600; `;
 const ActionBtn = styled.button`
-  background: #a855f7; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
+  background: '#a855f7'; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
   cursor: pointer; width: 100%; transition: opacity 0.15s;
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
-const RedeemBtn = styled(ActionBtn)` background: #ef4444; `;
+const RedeemBtn = styled(ActionBtn)` background: '#ef4444'; `;
 const TokenGrid = styled.div`
   display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
   max-height: 90px; overflow-y: auto;
