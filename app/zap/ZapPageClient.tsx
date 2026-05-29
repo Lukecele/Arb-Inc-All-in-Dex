@@ -43,6 +43,9 @@ const PointsBadge = styled.div` background: rgba(168, 85, 247, 0.1); color: #a85
 const WarningBadge = styled.div` background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; `;
 
 export default function ZapPageClient() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
   const [{ wallet }, connect, disconnect] = useConnectWallet();
   const [, setChain] = useSetChain();
   const [address, setAddress] = useState<string | undefined>();
