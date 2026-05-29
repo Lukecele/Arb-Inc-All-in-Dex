@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import styled from "styled-components";
-import type { PoolInfo } from "../pools";
+import { PoolInfo } from "../../types";
 import { ethers } from "ethers";
 
 const Wrapper = styled.div`

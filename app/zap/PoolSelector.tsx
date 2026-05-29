@@ -1,6 +1,6 @@
 "use client";
 import styled from "styled-components";
-import type { PoolInfo } from "../pools";
+import { PoolInfo } from "../../types";
 import { pcsV3Pools, pools } from "../pools";
 import { useBeefyPools } from "../../hooks/useBeefyPools";
 import { useEffect, useState } from "react";

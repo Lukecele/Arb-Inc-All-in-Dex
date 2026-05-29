@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 import { FaExclamationTriangle } from "react-icons/fa";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import type { PoolInfo } from "../pools";
+import { PoolInfo } from "../../types";
 import { pcsV3Pools, pools } from "../pools";
 import DemoModeOverlay from "./DemoModeOverlay";
 import PoolSelector from "./PoolSelector";
