@@ -21,7 +21,7 @@ import React from "react";
 class SafeWidgetWrapper extends React.Component {
 	state = { hasError: false };
 	static getDerivedStateFromError() { return { hasError: true }; }
-	componentDidCatch(error) { console.error("KyberWidget Error:", error); }
+	componentDidCatch(error: any) { console.error("KyberWidget Error:", error); }
 	render() {
 		if (this.state.hasError) {
 			return (
