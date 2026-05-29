@@ -1,12 +1,4 @@
-export interface PoolInfo {
-	id: string;
-	name: string;
-	address: string;
-	token0: {
-		symbol: string;
-		address: string;
-		decimals: number;
-	};
+import { PoolInfo } from "../types";
 	token1: {
 		symbol: string;
 		address: string;
