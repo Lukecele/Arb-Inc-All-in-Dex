@@ -2,7 +2,7 @@
 
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
@@ -28,16 +28,20 @@ const TOKEN_ADDRESSES: Record<string, { address: string; decimals: number }> = {
   CYC:  { address: '0x5845684b49aef79a5c0f887f50401c247dca7ac6', decimals: 18 },
 };
 
+// Token di fallback se la lista generata è vuota
+const FALLBACK_TOKEN = { symbol: 'BNB', address: '0x0000000000000000000000000000000000000000', decimals: 18 };
+
 /* ---------- Tokens selezionabili (generati dai vault presenti) ---------- */
-const COMMON_TOKENS = Array.from(
-  new Set(vaultsList.map(v => v.suggestedToken))
-)
-  .filter(sym => TOKEN_ADDRESSES[sym])
-  .map(sym => ({
-    symbol: sym,
-    address: TOKEN_ADDRESSES[sym].address,
-    decimals: TOKEN_ADDRESSES[sym].decimals,
-  }));
+const COMMON_TOKENS = useMemo(() => {
+  const symbols = Array.from(new Set(vaultsList.map(v => v.suggestedToken)))
+    .filter(sym => TOKEN_ADDRESSES[sym])
+    .map(sym => ({
+      symbol: sym,
+      address: TOKEN_ADDRESSES[sym].address,
+      decimals: TOKEN_ADDRESSES[sym].decimals,
+    }));
+  return symbols.length > 0 ? symbols : [FALLBACK_TOKEN];
+}, [vaultsList]);
 
 /* ---------- Styled Components ---------- */
 const PageWrapper = styled.div`
@@ -52,17 +56,17 @@ const Card = styled.div`
   &:hover { border-color: rgba(168,85,247,0.4); }
 `;
 const VaultName = styled.h3` font-size: 18px; font-weight: 700; margin: 0; `;
-const Protocol = styled.p` font-size: 12px; color: '#94a3b8'; margin: 0; `;
+const Protocol = styled.p` font-size: 12px; color: #94a3b8; margin: 0; `;
 const StatsRow = styled.div` display: flex; justify-content: space-between; font-size: 14px; `;
 const Stat = styled.div` display: flex; flex-direction: column; `;
-const Label = styled.span` font-size: 11px; color: '#64748b'; text-transform: uppercase; `;
+const Label = styled.span` font-size: 11px; color: #64748b; text-transform: uppercase; `;
 const Value = styled.span` font-weight: 600; `;
 const ActionBtn = styled.button`
-  background: '#a855f7'; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
+  background: #a855f7; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600;
   cursor: pointer; width: 100%; transition: opacity 0.15s;
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
-const RedeemBtn = styled(ActionBtn)` background: '#ef4444'; `;
+const RedeemBtn = styled(ActionBtn)` background: #ef4444; `;
 const TokenGrid = styled.div`
   display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
   max-height: 90px; overflow-y: auto;
@@ -80,7 +84,8 @@ export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [address, setAddress] = useState<string | undefined>();
   const [selectedVault, setSelectedVault] = useState<any | null>(null);
-  const [selectedToken, setSelectedToken] = useState(COMMON_TOKENS[0]);
+  // Inizializza con il primo token disponibile, o il fallback se la lista è vuota
+  const [selectedToken, setSelectedToken] = useState(COMMON_TOKENS[0] || FALLBACK_TOKEN);
   const [depositAmount, setDepositAmount] = useState('');
   const [depositStep, setDepositStep] = useState<DepositStep>('idle');
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -118,7 +123,7 @@ export default function VaultsClient() {
 
   // Saldo del token selezionato
   useEffect(() => {
-    if (!address || !wallet) return;
+    if (!address || !wallet || !selectedToken) return;
     const fetchBalance = async () => {
       setLoadingBalance(true);
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
@@ -143,7 +148,7 @@ export default function VaultsClient() {
     setDepositStep('idle');
     setRedeemMode(false);
     const found = COMMON_TOKENS.find(t => t.symbol === vault.suggestedToken);
-    setSelectedToken(found || COMMON_TOKENS[0]);
+    setSelectedToken(found || COMMON_TOKENS[0] || FALLBACK_TOKEN);
   };
 
   const openRedeem = (vault: any) => {
@@ -154,7 +159,7 @@ export default function VaultsClient() {
   };
 
   const handleDeposit = useCallback(async () => {
-    if (!selectedVault || !depositAmount || !address || !wallet) return;
+    if (!selectedVault || !depositAmount || !address || !wallet || !selectedToken) return;
     if (isNaN(parseFloat(depositAmount)) || parseFloat(depositAmount) <= 0) return;
 
     setDepositStep('idle'); setTxHash(null); setErrorMsg(null);
@@ -209,7 +214,7 @@ export default function VaultsClient() {
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const signer = provider.getSigner();
       const vaultToken = selectedVault.id.split(':')[1];
-      const outToken = COMMON_TOKENS.find(t => t.symbol === selectedVault.suggestedToken) || COMMON_TOKENS[0];
+      const outToken = COMMON_TOKENS.find(t => t.symbol === selectedVault.suggestedToken) || COMMON_TOKENS[0] || FALLBACK_TOKEN;
       const amountWei = ethers.utils.parseUnits(redeemAmount, 18).toString();
 
       const res = await fetch('/api/portals/deposit', {
@@ -331,14 +336,14 @@ export default function VaultsClient() {
                 </p>
                 <TokenGrid>
                   {COMMON_TOKENS.map(t => (
-                    <TokenBadge key={t.address} $active={selectedToken.address === t.address} onClick={() => setSelectedToken(t)}>
+                    <TokenBadge key={t.address} $active={selectedToken?.address === t.address} onClick={() => setSelectedToken(t)}>
                       {t.symbol}
                     </TokenBadge>
                   ))}
                 </TokenGrid>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 13, marginBottom: 10 }}>
                   <span>Saldo disponibile</span>
-                  <span style={{ color: 'white', fontWeight: 600 }}>{loadingBalance ? '...' : parseFloat(balance).toFixed(6)} {selectedToken.symbol}</span>
+                  <span style={{ color: 'white', fontWeight: 600 }}>{loadingBalance ? '...' : parseFloat(balance).toFixed(6)} {selectedToken?.symbol}</span>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>
                   <input type="number" placeholder="0.0" value={depositAmount} onChange={e => setDepositAmount(e.target.value)} step="any" min="0" disabled={isBusy}
