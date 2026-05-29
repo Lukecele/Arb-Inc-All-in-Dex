@@ -1,164 +1,319 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { pools, PoolConfig } from "../pools";
+import { type ChainId, PoolType } from "@kyberswap/liquidity-widgets";
+import { useCallback, useEffect, useState } from "react";
+import styled, { createGlobalStyle } from "styled-components";
+import "@kyberswap/liquidity-widgets/dist/style.css";
+import { LiquidityWidget } from "@kyberswap/liquidity-widgets";
+import { useConnectWallet, useSetChain } from "@web3-onboard/react";
+import { ethers } from "ethers";
+import { FaExclamationTriangle, FaRegChartBar } from "react-icons/fa";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import type { PoolInfo } from "../pools";
+import { clmPools, pcsV3Pools, pools } from "../pools";
+import DemoModeOverlay from "./DemoModeOverlay";
+import PoolSelector from "./PoolSelector";
+import ZapOutClient from "./ZapOutClient";
 
-// Struttura dati estesa per includere metriche real-time
-interface EnhancedPool extends PoolConfig {
-  liveApr: number;
-  liveApy?: number;
+import React from "react";
+
+class SafeWidgetWrapper extends React.Component<{ children: any }> {
+	state = { hasError: false };
+	static getDerivedStateFromError() { return { hasError: true }; }
+	componentDidCatch(error: any) { console.error("KyberWidget Error:", error); }
+	render() {
+		if (this.state.hasError) {
+			return (
+				<div style={{ padding: "30px", textAlign: "center", color: "#64748b", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px dashed rgba(168,85,247,0.2)" }}>
+					⚠️ Questo pool non è al momento supportato dal widget KyberSwap Zap. Prova a selezionare un altro pool.
+				</div>
+			);
+		}
+		return this.props.children;
+	}
 }
 
+const BSC_CHAIN_ID = 56;
+const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
+const FEE_PCM = 10;
+
+// poolType in pools.ts now uses KyberSwap's official DEX IDs directly,
+// so we just map them straight to the PoolType enum.
+const mapPoolToWidgetPoolType = (pool: PoolInfo): PoolType => {
+	return (PoolType[pool.poolType as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
+};
+
+const GlobalStyle = createGlobalStyle`
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #030014; color: #FFFFFF; }
+`;
+const Container = styled.div`
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; background: #030014;
+  @media (max-width: 1024px) { padding: 80px 15px 20px; }
+`;
+const ConnectButton = styled.button`
+  padding: 10px 20px; font-size: 14px; cursor: pointer; background: #a855f7; color: #fff; border: none; border-radius: 12px; font-weight: 600; transition: all 0.2s;
+  &:hover { transform: translateY(-2px); }
+`;
+const DisconnectButton = styled.button`
+  padding: 6px 12px; font-size: 12px; cursor: pointer; background: #ef4444; color: white; border: none; border-radius: 8px;
+`;
+const MainContent = styled.main`
+  flex: 1; width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 20px;
+`;
+const WidgetWrapper = styled.div`
+  width: 100%; background: rgba(255, 255, 255, 0.02); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; overflow: hidden;
+`;
+const WidgetScroller = styled.div<{ $scale?: number }>`
+  transform: scale(${(props) => props.$scale || 1}); transform-origin: top center; width: 100%;
+`;
+const SectionTitle = styled.h2`
+  font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+`;
+const TabButton = styled.button<{ $active?: boolean }>`
+  padding: 12px 32px; font-size: 16px; font-weight: 600; color: #fff; background: ${(props) => (props.$active ? "#a855f7" : "rgba(255,255,255,0.05)")}; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s;
+`;
+const PointsBadge = styled.div`
+  background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; border-radius: 12px; font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 15px;
+`;
+const WarningBadge = styled.div`
+  background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;
+`;
+
+// Nuovo badge per mostrare i dati analitici live integrandosi nel tema grafico scuro
+const LiveMetricsBadge = styled.div`
+  background: rgba(16, 185, 129, 0.06); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+`;
+
 export default function ZapPageClient() {
-  const [extendedPools, setExtendedPools] = useState<EnhancedPool[]>(
-    pools.map((p) => ({ ...p, liveApr: p.fallbackApr }))
-  );
-  const [selectedPool, setSelectedPool] = useState<EnhancedPool>(extendedPools[0]);
-  const [loadingApr, setLoadingApr] = useState<boolean>(true);
+	const [{ wallet }, connect, disconnect] = useConnectWallet();
+	const [, setChain] = useSetChain();
 
-  // 1. Fetching degli APR/APY Real-time dall'API KyberSwap Earn
-  useEffect(() => {
-    async function fetchLiveAprs() {
-      try {
-        setLoadingApr(true);
-        const res = await fetch("https://pool-farm.kyberswap.com/bsc/api/v1/pools");
-        if (!res.ok) throw new Error("Network response was not ok");
-        
-        const json = await res.json();
-        
-        // L'API di KyberSwap restituisce tipicamente { code: 0, data: { pools: [...] } } o un array diretto
-        const kyberPools = json?.data?.pools || json?.pools || [];
+	const [address, setAddress] = useState<string | undefined>();
+	const [chainId, setChainId] = useState<number>(BSC_CHAIN_ID);
+	const [activeTab, setActiveTab] = useState<"zap-in" | "zap-out">("zap-in");
+	
+	// Evitiamo la duplicazione degli elementi causata dal merge strutturale dentro pools.ts
+	const allPools = Array.from(new Map([...pools, ...pcsV3Pools, ...clmPools].map(p => [p.id, p])).values());
+	const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
 
-        if (kyberPools.length > 0) {
-          const updated = pools.map((p) => {
-            // Confronto case-insensitive degli indirizzi delle pool
-            const matchedLivePool = kyberPools.find(
-              (kp: any) => kp.address?.toLowerCase() === p.address.toLowerCase()
-            );
+	// Stato dedicato all'aggiornamento real-time dei rendimenti
+	const [liveData, setLiveData] = useState<Record<string, { apr: number; apy?: number }>>({});
+	const [loadingLive, setLoadingLive] = useState<boolean>(true);
 
-            return {
-              ...p,
-              liveApr: matchedLivePool?.apr || matchedLivePool?.totalApr || p.fallbackApr,
-              liveApy: matchedLivePool?.apy || undefined,
-            };
-          });
+	useEffect(() => {
+		if (wallet?.accounts?.[0]?.address) {
+			setAddress(wallet.accounts[0].address);
+			setChainId(parseInt(wallet?.chains?.[0]?.id || "0x38", 16));
+		} else {
+			setAddress(undefined);
+		}
+	}, [wallet]);
 
-          setExtendedPools(updated);
-          
-          // Mantiene sincronizzata la pool selezionata al volo
-          const currentSelected = updated.find((up) => up.id === selectedPool.id);
-          if (currentSelected) setSelectedPool(currentSelected);
-        }
-      } catch (error) {
-        console.error("Errore nel recupero degli APR Live da KyberSwap:", error);
-      } finally {
-        setLoadingApr(false);
-      }
-    }
+	// Fetch asincrono lato client delle metriche di KyberSwap Earn
+	useEffect(() => {
+		async function fetchLiveMetrics() {
+			try {
+				setLoadingLive(true);
+				const res = await fetch("https://pool-farm.kyberswap.com/bsc/api/v1/pools");
+				if (!res.ok) throw new Error("Errore chiamata API");
+				const json = await res.json();
+				const kyberPools = json?.data?.pools || json?.pools || [];
+				
+				const dataMap: Record<string, { apr: number; apy?: number }> = {};
+				kyberPools.forEach((kp: any) => {
+					if (kp.address) {
+						dataMap[kp.address.toLowerCase()] = {
+							apr: kp.apr || kp.totalApr || 0,
+							apy: kp.apy || undefined
+						};
+					}
+				});
+				setLiveData(dataMap);
+			} catch (error) {
+				console.error("Errore nel recupero degli APR Live:", error);
+			} finally {
+				setLoadingLive(false);
+			}
+		}
+		fetchLiveMetrics();
+	}, []);
 
-    fetchLiveAprs();
-  }, []);
+	const handleSubmitTx = useCallback(
+		async (txData: any) => {
+			if (!wallet) throw new Error("No wallet connected");
+			const provider = new ethers.providers.Web3Provider(
+				wallet.provider,
+				"any",
+			);
+			const signer = provider.getSigner();
 
-  // 2. Handler per la generazione dei parametri del Widget ZaaS di KyberSwap
-  const getWidgetConfig = (pool: EnhancedPool) => {
-    const baseConfig = {
-      targetChainId: 56, // BNB Chain
-      poolAddress: pool.address,
-      poolType: pool.poolType,
-      theme: "dark",
-    };
+			const tx = await signer.sendTransaction({
+				from: txData.from,
+				to: txData.to,
+				value: txData.value,
+				data: txData.data,
+				gasLimit: txData.gasLimit,
+			});
 
-    // Controllo critico: Se la pool è V2 (classico AMM), non inserire parametri legati ai range di prezzo o fee V3
-    if (pool.poolType.endsWith("V2")) {
-      return {
-        ...baseConfig,
-        // Parametri specifici o limitazioni per V2 richiesti dal widget
-        degenMode: false, 
-      };
-    }
+			if (address) {
+				const referrer =
+					typeof window !== "undefined"
+						? window.localStorage.getItem("arb_inc_referrer") || ""
+						: "";
+				fetch("/api/dex-reward", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						userWallet: address,
+						type: "zap",
+						txHash: tx.hash,
+						referrerWallet: referrer,
+					}),
+				}).then(() => {
+					alert("🎉 Liquidity Zap Successful! +150 Points added!");
+				});
+			}
+			return tx.hash;
+		},
+		[wallet, address],
+	);
 
-    // Configurazione specifica per pool a liquidità concentrata (V3-style)
-    return {
-      ...baseConfig,
-      feeTier: pool.fee || 3000,
-    };
-  };
+	// Estrapoliamo i dati live o usiamo il fallback statico se non ancora caricati
+	const currentAddressKey = selectedPool?.address?.toLowerCase();
+	const activeApr = liveData[currentAddressKey]?.apr ?? selectedPool?.fallbackApr ?? 0;
+	const activeApy = liveData[currentAddressKey]?.apy;
 
-  const widgetConfig = getWidgetConfig(selectedPool);
+	return (
+		<>
+			<GlobalStyle />
+			<Header
+				activePage="/zap"
+				walletSection={
+					address ? (
+						<div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+							<span style={{ fontFamily: "monospace", fontSize: "12px" }}>
+								{address.slice(0, 6)}...{address.slice(-4)}
+							</span>
+							<DisconnectButton onClick={() => wallet && disconnect(wallet)}>
+								Disconnect
+							</DisconnectButton>
+						</div>
+					) : (
+						<ConnectButton onClick={() => connect()}>
+							Connect Wallet
+						</ConnectButton>
+					)
+				}
+			/>
+			<Container>
+				<MainContent>
+					<SectionTitle>Liquidity Zap</SectionTitle>
 
-  return (
-    <div className="p-6 bg-gray-900 text-white min-h-screen">
-      <div className="max-w-4xl mx-auto space-y-6">
-        
-        {/* Dashboard Header & Pool Selector */}
-        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-          <h2 className="text-xl font-bold mb-4 text-emerald-400">Arb Inception - Zap Dynamic Dashboard</h2>
-          
-          <label className="block text-sm font-medium text-gray-400 mb-2">
-            Seleziona la Pool di Destinazione:
-          </label>
-          
-          <select
-            className="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            value={selectedPool.id}
-            onChange={(e) => {
-              const found = extendedPools.find((p) => p.id === e.target.value);
-              if (found) setSelectedPool(found);
-            }}
-          >
-            {extendedPools.map((pool) => (
-              <option key={pool.id} value={pool.id}>
-                {pool.name} | APR: {pool.liveApr.toFixed(2)}% {pool.liveApy ? `(APY: ${pool.liveApy.toFixed(2)}%)` : ""}
-              </option>
-            ))}
-          </select>
+					<PoolSelector
+						selectedPoolId={selectedPool.id}
+						onPoolChange={(poolIdOrPool: any) => {
+							// Mantiene la compatibilità con qualunque tipo di ritorno emesso dal PoolSelector
+							const targetId = poolIdOrPool?.id || poolIdOrPool;
+							const found = allPools.find(p => p.id === targetId);
+							if (found) setSelectedPool(found);
+						}}
+					/>
 
-          {/* Dettagli della Pool Selezionata */}
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm bg-gray-750 p-4 rounded-lg">
-            <div>
-              <span className="text-gray-400 block">Tipo Pool:</span>
-              <span className="font-mono text-amber-400 text-xs">{selectedPool.poolType}</span>
-            </div>
-            <div>
-              <span className="text-gray-400 block">Status APR:</span>
-              <span>
-                {loadingApr ? (
-                  <span className="text-yellow-400 animate-pulse">Caricamento...</span>
-                ) : (
-                  <span className="text-emerald-400 font-bold">Live 🟢</span>
-                )}
-              </span>
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <span className="text-gray-400 block">Pool Contract Address:</span>
-              <span className="font-mono text-xs break-all text-gray-300">{selectedPool.address}</span>
-            </div>
-          </div>
-        </div>
+					{/* Componente Live Dashboard: mostra le metriche aggiornate ad ogni cambio pool */}
+					<LiveMetricsBadge>
+						<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+							<FaRegChartBar />
+							<span>Live Pool Analytics:</span>
+						</div>
+						<div style={{ display: "flex", gap: "20px" }}>
+							<span>APR: <strong style={{ color: "#fff" }}>{activeApr.toFixed(2)}%</strong></span>
+							{activeApy !== undefined && (
+								<span>APY: <strong style={{ color: "#fff" }}>{activeApy.toFixed(2)}%</strong></span>
+							)}
+							<span style={{ fontSize: "11px", color: loadingLive ? "#fbbf24" : "#34d399" }}>
+								{loadingLive ? "● Syncing..." : "● Live"}
+							</span>
+						</div>
+					</LiveMetricsBadge>
 
-        {/* Simulazione e placeholder del Widget ZaaS di KyberSwap */}
-        <div className="bg-gray-850 p-6 rounded-xl border border-gray-700 flex flex-col items-center justify-center min-h-[400px]">
-          <h3 className="text-md font-semibold text-gray-300 mb-4">KyberSwap ZaaS Widget Core</h3>
-          
-          {/* Qui viene istanziato l'Iframe o l'SDK di KyberSwap usando il widgetConfig dinamico */}
-          <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg text-center border border-dashed border-gray-600">
-            <p className="text-sm text-gray-400 mb-2">Iniezione parametri ZaaS riuscita per:</p>
-            <p className="font-bold text-white mb-4">{selectedPool.name}</p>
-            
-            <div className="text-left text-xs font-mono bg-black/40 p-3 rounded text-emerald-300 space-y-1">
-              <div>poolAddress: "{widgetConfig.poolAddress}"</div>
-              <div>poolType: "{widgetConfig.poolType}"</div>
-              <div>targetChainId: {widgetConfig.targetChainId}</div>
-              {"feeTier" in widgetConfig && <div>feeTier: {widgetConfig.feeTier}</div>}
-            </div>
-            
-            <div className="mt-6 text-xs text-gray-500">
-              Il widget adatterà i flussi d'interfaccia in base al protocollo nativo rilevato.
-            </div>
-          </div>
-        </div>
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							gap: "15px",
+							marginBottom: "25px",
+						}}
+					>
+						<TabButton
+							$active={activeTab === "zap-in"}
+							onClick={() => setActiveTab("zap-in")}
+						>
+							Zap In
+						</TabButton>
+						<TabButton
+							$active={activeTab === "zap-out"}
+							onClick={() => setActiveTab("zap-out")}
+						>
+							Zap Out
+						</TabButton>
+					</div>
 
-      </div>
-    </div>
-  );
+					{activeTab === "zap-in" ? (
+						<WidgetWrapper>
+							<PointsBadge>
+								🏆 Earn 150 Points & 10% Referral Bonus per Zap!
+							</PointsBadge>
+
+							<WarningBadge>
+								<FaExclamationTriangle
+									style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
+								/>
+								<div>
+									<strong>Tax Token Notice:</strong> When zapping Arbitrage
+									Inception (ARB INC), please set your slippage to{" "}
+									<strong>8%</strong> to ensure the transaction processes
+									successfully due to tokenomics.
+								</div>
+							</WarningBadge>
+
+							<WidgetScroller $scale={0.9}>
+								<SafeWidgetWrapper>
+									<LiquidityWidget
+										chainId={chainId as ChainId.Bsc}
+										poolType={mapPoolToWidgetPoolType(selectedPool)}
+										poolAddress={selectedPool.address}
+										connectedAccount={{
+											address: address || undefined,
+											chainId: chainId,
+										}}
+										source="arbitrage-inception"
+										feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
+										onConnectWallet={() => connect()}
+										onSwitchChain={() => setChain({ chainId: "0x38" })}
+										onSubmitTx={handleSubmitTx}
+									/>
+								</SafeWidgetWrapper>
+								{!address && <DemoModeOverlay pool={selectedPool} />}
+							</WidgetScroller>
+						</WidgetWrapper>
+					) : (
+						<WidgetWrapper>
+							<ZapOutClient
+								poolAddress={selectedPool.address}
+								poolType={selectedPool.poolType}
+								poolDex={selectedPool.dex}
+								token0Address={selectedPool.token0.address}
+								token0Symbol={selectedPool.token0.symbol}
+								token1Address={selectedPool.token1.address}
+								token1Symbol={selectedPool.token1.symbol}
+							/>
+						</WidgetWrapper>
+					)}
+				</MainContent>
+				<Footer />
+			</Container>
+		</>
+	);
 }
