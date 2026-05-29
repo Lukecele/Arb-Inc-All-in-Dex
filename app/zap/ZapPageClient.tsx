@@ -170,11 +170,11 @@ export default function ZapPageClient() {
 							</WarningBadge>
 
 							<WidgetScroller $scale={0.9}>
-								{address && selectedPool ? (
+								{address && selectedPool && selectedPool.address ? (
 									<LiquidityWidget
-										chainId={chainId as ChainId.Bsc}
+										chainId={BSC_CHAIN_ID as ChainId.Bsc}
 										poolType={mapStringToPoolType(selectedPool?.poolType || "")}
-										poolAddress={selectedPool?.address || ""}
+										poolAddress={selectedPool.address.toLowerCase()}
 										connectedAccount={{
 											address: address || "",
 											chainId: chainId,
