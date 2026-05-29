@@ -17,15 +17,7 @@ const COMMON_TOKENS = [
   { symbol: 'WBNB', address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', decimals: 18 },
   { symbol: 'BTCB', address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', decimals: 18 },
   { symbol: 'ETH', address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', decimals: 18 },
-  { symbol: 'CAKE', address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', decimals: 18 },
-  { symbol: 'XRP', address: '0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE', decimals: 18 },
-  { symbol: 'AAVE', address: '0xfb6115445Bff7b52FeB98650C87f44907E58f802', decimals: 18 },
-  { symbol: 'DAI', address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', decimals: 18 },
-  { symbol: 'UNI', address: '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1', decimals: 18 },
-  { symbol: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD', decimals: 18 },
-  { symbol: 'TUSD', address: '0x14016E85a25aeb13065688cAFB43044C2ef86784', decimals: 18 },
-  { symbol: 'HAY', address: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5', decimals: 18 },
-  { symbol: 'CYC', address: '0x5845684b49aef79a5c0f887f50401c247dca7ac6', decimals: 18 },
+  { symbol: 'BUSD', address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', decimals: 18 },
 ];
 
 const getFeeBps = (apy: number): number => {
@@ -62,8 +54,18 @@ const ActionBtn = styled.button`
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 const RedeemBtn = styled(ActionBtn)` background: #ef4444; `;
+const TokenGrid = styled.div`
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+  max-height: 90px; overflow-y: auto;
+`;
+const TokenBadge = styled.button<{ $active: boolean }>`
+  padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 11px;
+  background: ${p => p.$active ? '#a855f7' : 'rgba(168,85,247,0.15)'}; color: white;
+  white-space: nowrap;
+  &:hover { opacity: 0.85; }
+`;
 
-type DepositStep = 'idle' | 'approving' | 'depositing' | 'done' | 'error';
+type DepositStep = 'idle' | 'fee' | 'approving' | 'depositing' | 'done' | 'error';
 
 export default function VaultsClient() {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
@@ -83,7 +85,6 @@ export default function VaultsClient() {
 
   useEffect(() => { setAddress(wallet?.accounts[0]?.address); }, [wallet]);
 
-  // Carica i saldi dei token di vault (quelli che hai ricevuto depositando)
   useEffect(() => {
     if (!address || !wallet) return;
     const fetchVaultBalances = async () => {
@@ -92,14 +93,12 @@ export default function VaultsClient() {
       const newBalances: Record<string, string> = {};
       for (const v of vaultsList) {
         try {
-          const vaultTokenAddr = v.id.split(':')[1]; // estrae 0x... dal formato bsc:0x...
+          const vaultTokenAddr = v.id.split(':')[1];
           if (!ethers.utils.isAddress(vaultTokenAddr)) continue;
           const erc20 = new ethers.Contract(vaultTokenAddr, ['function balanceOf(address) view returns (uint256)'], provider);
           const bal = await erc20.balanceOf(address);
-          if (!bal.isZero()) {
-            newBalances[v.id] = ethers.utils.formatUnits(bal, 18); // assumiamo 18 decimali per i token di vault
-          }
-        } catch { /* ignoriamo */ }
+          if (!bal.isZero()) newBalances[v.id] = ethers.utils.formatUnits(bal, 18);
+        } catch {}
       }
       setVaultBalances(newBalances);
       setLoadingVaultBalances(false);
@@ -107,7 +106,6 @@ export default function VaultsClient() {
     fetchVaultBalances();
   }, [address, wallet]);
 
-  // Carica saldo del token selezionato (per deposito)
   useEffect(() => {
     if (!address || !wallet) return;
     const fetchBalance = async () => {
@@ -146,25 +144,48 @@ export default function VaultsClient() {
 
   const handleDeposit = useCallback(async () => {
     if (!selectedVault || !depositAmount || !address || !wallet) return;
-    if (isNaN(parseFloat(depositAmount)) || parseFloat(depositAmount) <= 0) return;
+    const amountFloat = parseFloat(depositAmount);
+    if (isNaN(amountFloat) || amountFloat <= 0) return;
 
     setDepositStep('idle'); setTxHash(null); setErrorMsg(null);
     try {
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const signer = provider.getSigner();
-      const amountWei = ethers.utils.parseUnits(depositAmount, selectedToken.decimals).toString();
+      const decimals = selectedToken.decimals;
       const feeBps = getFeeBps(selectedVault.apy);
+      const feePercent = feeBps / 10000;
+      const feeAmount = amountFloat * feePercent;
+      const netAmount = amountFloat - feeAmount;
+      if (netAmount <= 0) throw new Error('Importo insufficiente dopo la fee');
 
+      // 1. Invia la fee al wallet dev
+      setDepositStep('fee');
+      const feeWei = ethers.utils.parseUnits(feeAmount.toFixed(decimals), decimals);
+      if (feeWei.gt(0)) {
+        const isNative = selectedToken.address === '0x0000000000000000000000000000000000000000';
+        if (isNative) {
+          const tx = await signer.sendTransaction({ to: FEE_RECIPIENT, value: feeWei });
+          await tx.wait();
+        } else {
+          const iface = new ethers.utils.Interface(['function transfer(address to, uint256 amount) returns (bool)']);
+          const data = iface.encodeFunctionData('transfer', [FEE_RECIPIENT, feeWei]);
+          const tx = await signer.sendTransaction({ to: selectedToken.address, data });
+          await tx.wait();
+        }
+      }
+
+      // 2. Chiama l'API Portals con l'importo netto
+      const netWei = ethers.utils.parseUnits(netAmount.toFixed(decimals), decimals).toString();
       const res = await fetch('/api/portals/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vaultId: selectedVault.id,
-          amount: amountWei,
+          amount: netWei,
           tokenIn: selectedToken.address,
           sender: address,
           feeRecipient: FEE_RECIPIENT,
-          feePercentage: feeBps,
+          feePercentage: 0,
         }),
       });
       const data = await res.json();
@@ -178,6 +199,7 @@ export default function VaultsClient() {
         });
         await approveTxResponse.wait();
       }
+
       setDepositStep('depositing');
       const depositTx = await signer.sendTransaction({
         to: data.tx.to, data: data.tx.data,
@@ -195,8 +217,7 @@ export default function VaultsClient() {
 
   const handleRedeem = useCallback(async () => {
     if (!selectedVault || !redeemAmount || !address || !wallet) return;
-    const amountFloat = parseFloat(redeemAmount);
-    if (isNaN(amountFloat) || amountFloat <= 0) return;
+    if (isNaN(parseFloat(redeemAmount)) || parseFloat(redeemAmount) <= 0) return;
 
     setDepositStep('idle'); setTxHash(null); setErrorMsg(null);
     try {
@@ -260,11 +281,12 @@ export default function VaultsClient() {
   );
 
   const depositBtnLabel = () => {
+    if (depositStep === 'fee') return 'Invio fee...';
     if (depositStep === 'approving') return 'Approvazione in corso...';
     if (depositStep === 'depositing') return 'Deposit in corso...';
     return 'Conferma Deposito';
   };
-  const isBusy = depositStep === 'approving' || depositStep === 'depositing';
+  const isBusy = depositStep === 'fee' || depositStep === 'approving' || depositStep === 'depositing';
 
   return (
     <>
@@ -272,7 +294,7 @@ export default function VaultsClient() {
       <PageWrapper>
         <Container>
           <h1 style={{ fontSize: '32px', fontWeight: 800, margin: 0, background: 'linear-gradient(to bottom, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vaults (Portals.fi)</h1>
-          <p style={{ color: '#94a3b8', marginTop: '8px' }}>Deposita e preleva dai migliori vault su BNB Chain.</p>
+          <p style={{ color: '#94a3b8', marginTop: '8px' }}>Deposita e preleva dai migliori vault su BNB Chain. Fee dinamica in base all'APY, inviata direttamente al wallet dev.</p>
 
           {/* I miei depositi */}
           {address && Object.keys(vaultBalances).length > 0 && (
@@ -321,21 +343,18 @@ export default function VaultsClient() {
           {/* Modale deposito */}
           {(selectedVault && !redeemMode) && (
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setSelectedVault(null)}>
-              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 440, width: '100%' }} onClick={e => e.stopPropagation()}>
+              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 480, width: '100%' }} onClick={e => e.stopPropagation()}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Deposita in {selectedVault.name}</h2>
                 <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20 }}>
                   Token consigliato: <strong style={{ color: '#a855f7' }}>{selectedVault.suggestedToken}</strong>
                 </p>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                <TokenGrid>
                   {COMMON_TOKENS.map(t => (
-                    <button key={t.address} onClick={() => setSelectedToken(t)}
-                      style={{
-                        padding: '6px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600,
-                        background: selectedToken.address === t.address ? '#a855f7' : 'rgba(168,85,247,0.15)',
-                        color: 'white'
-                      }}>{t.symbol}</button>
+                    <TokenBadge key={t.address} $active={selectedToken.address === t.address} onClick={() => setSelectedToken(t)}>
+                      {t.symbol}
+                    </TokenBadge>
                   ))}
-                </div>
+                </TokenGrid>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 13, marginBottom: 10 }}>
                   <span>Saldo disponibile</span>
                   <span style={{ color: 'white', fontWeight: 600 }}>{loadingBalance ? '...' : parseFloat(balance).toFixed(6)} {selectedToken.symbol}</span>
@@ -346,11 +365,21 @@ export default function VaultsClient() {
                   <button onClick={() => setDepositAmount(balance)} disabled={isBusy}
                     style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
                 </div>
+                {depositAmount && !isNaN(parseFloat(depositAmount)) && (
+                  <div style={{ fontSize: 12, color: '#64748b', marginBottom: 16, lineHeight: 1.6, background: 'rgba(0,0,0,0.2)', padding: 8, borderRadius: 8 }}>
+                    <div>Importo lordo: {parseFloat(depositAmount).toFixed(6)} {selectedToken.symbol}</div>
+                    <div style={{ color: '#a78bfa' }}>
+                      Fee ({getFeePercent(selectedVault.apy)}%): { (parseFloat(depositAmount) * getFeeBps(selectedVault.apy) / 10000).toFixed(6) } {selectedToken.symbol}
+                    </div>
+                    <div style={{ color: '#4ade80' }}>
+                      Importo netto depositato: { (parseFloat(depositAmount) * (1 - getFeeBps(selectedVault.apy) / 10000)).toFixed(6) } {selectedToken.symbol}
+                    </div>
+                  </div>
+                )}
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
-                  <div>Commissione: <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong> (una tantum)</div>
-                  <div>APY: {selectedVault.apy.toFixed(2)}%</div>
                   <div>Destinatario fee: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}</div>
                 </div>
+                {depositStep === 'fee' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Invio fee al wallet dev...</div>}
                 {depositStep === 'approving' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Approvazione in corso...</div>}
                 {depositStep === 'depositing' && <div style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#c084fc', marginBottom: 16 }}>⏳ Deposit in corso...</div>}
                 {depositStep === 'done' && txHash && <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#4ade80', marginBottom: 16 }}>✅ Completato! <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noopener noreferrer" style={{ color: '#4ade80', textDecoration: 'underline' }}>Vedi su BscScan</a></div>}
