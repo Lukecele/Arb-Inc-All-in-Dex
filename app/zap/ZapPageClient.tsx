@@ -81,12 +81,20 @@ export default function ZapPageClient() {
 
 	useEffect(() => {
 		async function fetchBeefyVaults() {
+    setLoadingBeefy(true);
     try {
         const res = await fetch('https://api.beefy.finance/vaults');
         const data = await res.json();
-        const bscVaults = data
-            .filter((v: any) => v.chain === 'bsc' && v.status === 'active' && v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress)
-            .map((v: any) => ({
+        console.log('DEBUG_BEEFY: Totale vault ricevuti:', data.length);
+        
+        const bscVaults = data.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
+        console.log('DEBUG_BEEFY: Vault su BSC trovati:', bscVaults.length);
+        
+        const validVaults = bscVaults.filter((v: any) => v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress);
+        console.log('DEBUG_BEEFY: Vault con ZAP validi:', validVaults.length);
+
+        if (validVaults.length > 0) {
+            const formatted = validVaults.map((v: any) => ({
                 id: v.id,
                 name: v.name + ' (' + v.platformId.toUpperCase() + ' Vault)',
                 address: v.zaps[0].poolAddress,
@@ -96,10 +104,14 @@ export default function ZapPageClient() {
                 liquidityUSD: 0,
                 apr: 'Beefy Auto-Compounding'
             }));
-        setAllPools(bscVaults);
-        if (bscVaults.length > 0) setSelectedPool(bscVaults[0]);
+            setAllPools(formatted);
+            setSelectedPool(formatted[0]);
+            console.log('DEBUG_BEEFY: Impostato pool:', formatted[0].name);
+        } else {
+            console.error('DEBUG_BEEFY: Nessun vault valido trovato!');
+        }
     } catch (err) {
-        console.error(err);
+        console.error('DEBUG_BEEFY: Errore fetch:', err);
     } finally {
         setLoadingBeefy(false);
     }
