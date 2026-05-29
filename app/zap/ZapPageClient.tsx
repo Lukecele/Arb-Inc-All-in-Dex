@@ -36,16 +36,13 @@ const ConnectButton = styled.button` padding: 10px 20px; font-size: 14px; cursor
 const DisconnectButton = styled.button` padding: 6px 12px; font-size: 12px; cursor: pointer; background: #ef4444; color: white; border: none; border-radius: 8px; `;
 const MainContent = styled.main` flex: 1; width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 20px; `;
 const WidgetWrapper = styled.div` width: 100%; background: rgba(255, 255, 255, 0.02); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; overflow: hidden; `;
-const WidgetScroller = styled.div<{ $scale?: number }>` transform: scale(${(props) => props.$scale || 1}); transform-origin: top center; width: 100%; `;
+const WidgetScroller = styled.div<{ $scale?: number }>` transform: scale(${(props) => props.$scale || 1}); transform-origin: top center; width: 100%; position: relative; min-height: 400px; `;
 const SectionTitle = styled.h2` font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; `;
 const TabButton = styled.button<{ $active?: boolean }>` padding: 12px 32px; font-size: 16px; font-weight: 600; color: #fff; background: ${(props) => (props.$active ? "#a855f7" : "rgba(255,255,255,0.05)")}; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s; `;
 const PointsBadge = styled.div` background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; border-radius: 12px; font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 15px; `;
 const WarningBadge = styled.div` background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; `;
 
 export default function ZapPageClient() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
   const [{ wallet }, connect, disconnect] = useConnectWallet();
   const [, setChain] = useSetChain();
   const [address, setAddress] = useState<string | undefined>();
@@ -53,6 +50,11 @@ export default function ZapPageClient() {
   const [activeTab, setActiveTab] = useState<"zap-in" | "zap-out">("zap-in");
   const allPools = [...pools, ...pcsV3Pools];
   const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (wallet?.accounts?.[0]?.address) {
@@ -75,6 +77,8 @@ export default function ZapPageClient() {
     return tx.hash;
   }, [wallet, address]);
 
+  if (!mounted) return null;
+
   return (
     <>
       <GlobalStyle />
@@ -92,9 +96,7 @@ export default function ZapPageClient() {
               <PointsBadge>🏆 Earn 150 Points & 10% Referral Bonus per Zap!</PointsBadge>
               <WarningBadge><FaExclamationTriangle style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }} /><div><strong>Tax Token Notice:</strong> When zapping Arbitrage Inception (ARB INC), please set your slippage to <strong>8%</strong>.</div></WarningBadge>
               <WidgetScroller $scale={0.9}>
-                {!address ? (
-                  <DemoModeOverlay pool={selectedPool} />
-                ) : (
+                {address ? (
                   <LiquidityWidget
                     chainId={chainId as ChainId.Bsc}
                     poolType={mapStringToPoolType(selectedPool.poolType)}
@@ -106,6 +108,8 @@ export default function ZapPageClient() {
                     onSwitchChain={() => setChain({ chainId: "0x38" })}
                     onSubmitTx={handleSubmitTx}
                   />
+                ) : (
+                  <DemoModeOverlay pool={selectedPool} />
                 )}
               </WidgetScroller>
             </WidgetWrapper>
