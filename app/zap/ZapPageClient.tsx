@@ -81,56 +81,39 @@ export default function ZapPageClient() {
 
 	useEffect(() => {
 		async function fetchBeefyVaults() {
-    setLoadingBeefy(true);
-    try {
-        const res = await fetch('https://api.beefy.finance/vaults');
-        const allVaults = await res.json();
-        
-        // Filtriamo i vault BSC attivi
-        const bscVaults = allVaults.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
-        
-        console.log('DEBUG: Inizio validazione pool...');
-        let foundPool = null;
-
-        // Proviamo a trovare una pool che KyberSwap accetta (non restituisce 404)
-        for (const v of bscVaults) {
-            const poolUrl = `https://earn-service.kyberswap.com/api/v1/pools?chainId=56&address=${v.tokenAddress}`;
+            setLoadingBeefy(true);
             try {
-                const check = await fetch(poolUrl);
-                if (check.ok) {
-                    foundPool = {
-                        id: v.id,
-                        name: v.name,
-                        address: v.tokenAddress,
-                        poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
-                        token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '' },
-                        token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '' },
-                        liquidityUSD: 0,
-                        apr: 'Beefy Auto-Compounding',
-                        dex: v.platformId || 'pancakeswap'
-                    };
-                    console.log('DEBUG: Trovata pool valida:', v.name);
-                    break; 
+                const res = await fetch('https://api.beefy.finance/vaults');
+                const allVaults = await res.json();
+                
+                // Filtriamo i vault BSC attivi
+                const bscVaults = allVaults.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
+                
+                // Mappiamo direttamente i vault senza chiamare l'API deprecata
+                const mappedPools = bscVaults.map((v: any) => ({
+                    id: v.id,
+                    name: v.name,
+                    address: v.tokenAddress,
+                    poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
+                    token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '' },
+                    token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '' },
+                    liquidityUSD: 0,
+                    apr: 'Beefy Auto-Compounding',
+                    dex: v.platformId || 'pancakeswap'
+                }));
+
+                if (mappedPools.length > 0) {
+                    setAllPools(mappedPools);
+                    setSelectedPool(mappedPools[0]);
                 }
+                
             } catch (err) {
-                continue; 
+                console.error('DEBUG: Errore caricamento Beefy:', err);
+            } finally {
+                setLoadingBeefy(false);
             }
         }
-
-        if (foundPool) {
-            setAllPools([foundPool]);
-            setSelectedPool(foundPool);
-        } else {
-            console.error('DEBUG: Nessuna pool valida trovata su KyberSwap!');
-        }
-        
-    } catch (err) {
-        console.error('DEBUG: Errore:', err);
-    } finally {
-        setLoadingBeefy(false);
-    }
-}
-fetchBeefyVaults();
+        fetchBeefyVaults();
 	}, []);
 
 	useEffect(() => {
