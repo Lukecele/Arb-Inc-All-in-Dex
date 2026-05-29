@@ -216,7 +216,7 @@ export default function ZapPageClient() {
 										onSubmitTx={handleSubmitTx}
 									/>
 								) : (
-									<DemoModeOverlay pool={selectedPool} />
+									<DemoModeOverlay pool={selectedPool || ({} as any)} />
 								)}
 							</WidgetScroller>
 						</WidgetWrapper>
