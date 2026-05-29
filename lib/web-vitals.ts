@@ -13,14 +13,7 @@ interface WebVitalsMetrics {
 // Function to send metrics to analytics
 function sendToAnalytics({ name, delta, id, rating }: Metric) {
 	// Send to Google Analytics 4
-	if (typeof window !== "undefined" && (window as any).gtag) {
-		(window as any).gtag("event", name, {
-			event_category: "Web Vitals",
-			event_label: id,
-			value: Math.round(name === "CLS" ? delta * 1000 : delta),
-			non_interaction: true,
-		});
-	}
+	
 
 	// Log to console in development
 	if (process.env.NODE_ENV === "development") {

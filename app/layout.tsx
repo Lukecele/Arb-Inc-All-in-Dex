@@ -45,15 +45,8 @@ export default function RootLayout({
 			<head>
 				<link rel="preconnect" href="https://rsms.me" />
 				<link rel="preconnect" href="https://www.googletagmanager.com" />
-				<Script
-					id="gtm-script"
-					strategy="lazyOnload"
-					src="https://www.googletagmanager.com/gtag/js?id=G-H6XYJKW0CX"
-				/>
-				<Script
-					id="gtm-config"
-					strategy="lazyOnload"
-				>{`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "G-H6XYJKW0CX");`}</Script>
+				
+				
 			</head>
 			<body
 				className={inter.className}
