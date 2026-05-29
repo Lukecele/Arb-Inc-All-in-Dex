@@ -8,7 +8,7 @@ export function useZapPools() {
   useEffect(() => {
     fetchLivePoolMetrics().then((data) => {
       // Ordina per APR massimo per spingere in alto i rendimenti migliori dello Zap
-      const sorted = data.sort((a, b) => b.apr - a.apr);
+      const sorted = data.sort((a, b) => parseFloat(b.apr) - parseFloat(a.apr));
       setLivePools(sorted);
       setLoading(false);
     });

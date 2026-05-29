@@ -99,7 +99,7 @@ export default function ZapPageClient() {
 	const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
 
 	// Stato dedicato all'aggiornamento real-time dei rendimenti
-	const [liveData, setLiveData] = useState<Record<string, { apr: number; apy?: number }>>({});
+	const [liveData, setLiveData] = useState<Record<string, { apr: string; apy?: number }>>({});
 	const [loadingLive, setLoadingLive] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -121,7 +121,7 @@ export default function ZapPageClient() {
 				const json = await res.json();
 				const kyberPools = json?.data?.pools || json?.pools || [];
 				
-				const dataMap: Record<string, { apr: number; apy?: number }> = {};
+				const dataMap: Record<string, { apr: string; apy?: number }> = {};
 				kyberPools.forEach((kp: any) => {
 					if (kp.address) {
 						dataMap[kp.address.toLowerCase()] = {
@@ -228,7 +228,7 @@ export default function ZapPageClient() {
 							<span>Live Pool Analytics:</span>
 						</div>
 						<div style={{ display: "flex", gap: "20px" }}>
-							<span>APR: <strong style={{ color: "#fff" }}>{activeApr.toFixed(2)}%</strong></span>
+							<span>APR: <strong style={{ color: "#fff" }}>{parseFloat(String(activeApr)).toFixed(2)}%</strong></span>
 							{activeApy !== undefined && (
 								<span>APY: <strong style={{ color: "#fff" }}>{activeApy.toFixed(2)}%</strong></span>
 							)}

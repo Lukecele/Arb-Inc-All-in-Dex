@@ -8,7 +8,7 @@ export function useZapPools() {
   useEffect(() => {
     fetchLivePoolMetrics().then((data) => {
       // Ordina per APR decrescente
-      const sorted = [...data].sort((a, b) => b.apr - a.apr);
+      const sorted = [...data].sort((a, b) => parseFloat(b.apr) - parseFloat(a.apr));
       setLivePools(sorted);
       setLoading(false);
     });
