@@ -18,7 +18,7 @@ const Overlay = styled.div`
 `;
 
 const DemoCard = styled.div`
-  background: ${theme.colors.background};
+  background: ${(theme.colors.background as any).DEFAULT || theme.colors.background};
   padding: 24px;
   border-radius: 12px;
   max-width: 400px;
