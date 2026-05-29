@@ -86,7 +86,7 @@ export default function ZapPageClient() {
 				const data = await res.json();
 				// Filtra solo i vault attivi su BSC che hanno una struttura valida per lo zap
 				const bscVaults = data
-					.filter((v: any) => v.chain === "bsc" && v.status === "active" && v.tokenAddress)
+					.filter((v: any) => v.chain === "bsc" && v.status === "active" && v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress)
 					.map((v: any) => ({
 						id: v.id,
 						name: v.name + " (" + v.platformId.toUpperCase() + " Vault)",
