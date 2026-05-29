@@ -21,6 +21,7 @@ const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
 const FEE_PCM = 10;
 
 const mapStringToPoolType = (poolTypeString: string): PoolType => {
+	if (poolTypeString === "DEX_CLM") return PoolType.DEX_PANCAKESWAPV3;
 	return (PoolType[poolTypeString as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
 };
 

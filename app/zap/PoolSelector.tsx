@@ -17,7 +17,7 @@ export default function PoolSelector({ selectedPoolId, onPoolChange }: any) {
     useEffect(() => { if (!loadingBeefy) setAllPools([...beefyPools, ...pools, ...pcsV3Pools, ...clmPools]); }, [beefyPools]);
     return (
         <PoolsGrid>
-            {allPools.slice(0, 6).map((p) => (
+            {allPools.map((p) => (
                 <PoolCard key={p.id} $isActive={selectedPoolId === p.id} onClick={() => onPoolChange(p)}>
                     <h4>{p.name}</h4><p>{p?.apr || 'N/A'}</p>
                 </PoolCard>
