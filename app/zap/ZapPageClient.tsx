@@ -18,7 +18,7 @@ import ZapOutClient from "./ZapOutClient";
 
 import React from "react";
 
-class SafeWidgetWrapper extends React.Component {
+class SafeWidgetWrapper extends React.Component<{ children: any }> {
 	state = { hasError: false };
 	static getDerivedStateFromError() { return { hasError: true }; }
 	componentDidCatch(error: any) { console.error("KyberWidget Error:", error); }
