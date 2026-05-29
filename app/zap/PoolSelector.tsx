@@ -1,7 +1,7 @@
 "use client";
 import styled from "styled-components";
 import { PoolInfo } from "../../types";
-import { pcsV3Pools, pools } from "../pools";
+import { clmPools, pcsV3Pools, pools } from "../pools";
 import { useBeefyPools } from "../../hooks/useBeefyPools";
 import { useEffect, useState } from "react";
 
@@ -13,8 +13,8 @@ const PoolCard = styled.div<{ $isActive: boolean }>`
 
 export default function PoolSelector({ selectedPoolId, onPoolChange }: any) {
     const { beefyPools, loadingBeefy } = useBeefyPools();
-    const [allPools, setAllPools] = useState<PoolInfo[]>([...pools, ...pcsV3Pools]);
-    useEffect(() => { if (!loadingBeefy) setAllPools([...beefyPools, ...pools, ...pcsV3Pools]); }, [beefyPools]);
+    const [allPools, setAllPools] = useState<PoolInfo[]>([...pools, ...pcsV3Pools, ...clmPools]);
+    useEffect(() => { if (!loadingBeefy) setAllPools([...beefyPools, ...pools, ...pcsV3Pools, ...clmPools]); }, [beefyPools]);
     return (
         <PoolsGrid>
             {allPools.slice(0, 6).map((p) => (

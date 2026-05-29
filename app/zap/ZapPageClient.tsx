@@ -11,7 +11,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import type { PoolInfo } from "../pools";
-import { pcsV3Pools, pools } from "../pools";
+import { clmPools, pcsV3Pools, pools } from "../pools";
 import DemoModeOverlay from "./DemoModeOverlay";
 import PoolSelector from "./PoolSelector";
 import ZapOutClient from "./ZapOutClient";
@@ -21,18 +21,7 @@ const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
 const FEE_PCM = 10;
 
 const mapStringToPoolType = (poolTypeString: string): PoolType => {
-	switch (poolTypeString) {
-		case "DEX_PANCAKESWAPV2":
-			return PoolType.DEX_PANCAKESWAPV2;
-		case "DEX_PANCAKESWAPV3":
-			return PoolType.DEX_PANCAKESWAPV3;
-		case "DEX_SUSHISWAPV2":
-			return PoolType.DEX_SUSHISWAPV2;
-		case "DEX_SUSHISWAPV3":
-			return PoolType.DEX_SUSHISWAPV3;
-		default:
-			return PoolType.DEX_PANCAKESWAPV2;
-	}
+	return (PoolType[poolTypeString as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -80,7 +69,7 @@ export default function ZapPageClient() {
 	const [address, setAddress] = useState<string | undefined>();
 	const [chainId, setChainId] = useState<number>(BSC_CHAIN_ID);
 	const [activeTab, setActiveTab] = useState<"zap-in" | "zap-out">("zap-in");
-	const allPools = [...pools, ...pcsV3Pools];
+	const allPools = [...pools, ...pcsV3Pools, ...clmPools];
 	const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
 
 	useEffect(() => {
