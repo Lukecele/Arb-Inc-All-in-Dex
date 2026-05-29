@@ -25,7 +25,7 @@ class SafeWidgetWrapper extends React.Component {
 	render() {
 		if (this.state.hasError) {
 			return (
-				<div style={{ padding: "30px", textAlignment: "center", color: "#64748b", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px dashed rgba(168,85,247,0.2)" }}>
+				<div style={{ padding: "30px", textAlign: "center", color: "#64748b", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px dashed rgba(168,85,247,0.2)" }}>
 					⚠️ Questo tipo di pool (V3/CLM) richiede l indicizzazione diretta sull aggregator di KyberSwap o parametri di tick estesi non disponibili in modalità Zap standard.
 				</div>
 			);
