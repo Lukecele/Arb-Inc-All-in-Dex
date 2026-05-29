@@ -104,7 +104,7 @@ export default function ZapPageClient() {
                         address: v.tokenAddress,
                         poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
                         token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '' },
-                        token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '', decimals: 18 },
+                        token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '' },
                         liquidityUSD: 0,
                         apr: 'Beefy Auto-Compounding'
                     };
