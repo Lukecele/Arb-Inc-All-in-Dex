@@ -55,7 +55,7 @@ export default function DemoModeOverlay({ pool }: Props) {
         </DemoStat>
         <DemoStat>
           <DemoLabel>APR</DemoLabel>
-          <DemoValue>{pool.apr || "0%"}</DemoValue>
+          <DemoValue>{pool?.apr || "0%"}</DemoValue>
         </DemoStat>
       </DemoCard>
     </Overlay>

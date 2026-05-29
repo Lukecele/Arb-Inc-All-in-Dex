@@ -19,7 +19,7 @@ export default function PoolSelector({ selectedPoolId, onPoolChange }: any) {
         <PoolsGrid>
             {allPools.slice(0, 6).map((p) => (
                 <PoolCard key={p.id} $isActive={selectedPoolId === p.id} onClick={() => onPoolChange(p)}>
-                    <h4>{p.name}</h4><p>{p.apr || 'N/A'}</p>
+                    <h4>{p.name}</h4><p>{p?.apr || 'N/A'}</p>
                 </PoolCard>
             ))}
         </PoolsGrid>

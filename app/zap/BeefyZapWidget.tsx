@@ -119,7 +119,7 @@ export default function BeefyZapWidget({ pool, userAddress, feeReceiver = "0xafF
         <Wrapper>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
                 <h3 style={{ fontSize: "18px" }}>Zap In (Beefy Vault)</h3>
-                <span style={{ color: "#28E0B9", fontWeight: "bold" }}>{pool.apr}</span>
+                <span style={{ color: "#28E0B9", fontWeight: "bold" }}>{pool?.apr}</span>
             </div>
             
             <InputWrapper>
