@@ -205,23 +205,26 @@ export default function ZapPageClient() {
 								</div>
 							</WarningBadge>
 
-							<WidgetScroller $scale={0.9}>
-								<LiquidityWidget
-									chainId={chainId as ChainId.Bsc}
-									poolType={mapStringToPoolType(selectedPool.poolType)}
-									poolAddress={selectedPool.address}
-									connectedAccount={{
-										address: address || undefined,
-										chainId: chainId,
-									}}
-									source="arbitrage-inception"
-									feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
-									onConnectWallet={() => connect()}
-									onSwitchChain={() => setChain({ chainId: "0x38" })}
-									onSubmitTx={handleSubmitTx}
-								/>
-								{!address && <DemoModeOverlay pool={selectedPool} />}
-							</WidgetScroller>
+<WidgetScroller $scale={0.9}>
+  {!address ? (
+    <DemoModeOverlay pool={selectedPool} />
+  ) : (
+    <LiquidityWidget
+      chainId={chainId as ChainId.Bsc}
+      poolType={mapStringToPoolType(selectedPool.poolType)}
+      poolAddress={selectedPool.address}
+      connectedAccount={{
+        address: address,
+        chainId: chainId,
+      }}
+      source="arbitrage-inception"
+      feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
+      onConnectWallet={() => connect()}
+      onSwitchChain={() => setChain({ chainId: "0x38" })}
+      onSubmitTx={handleSubmitTx}
+    />
+  )}
+</WidgetScroller>
 						</WidgetWrapper>
 					) : (
 						<WidgetWrapper>
