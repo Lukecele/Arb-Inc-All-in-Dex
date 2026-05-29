@@ -178,7 +178,6 @@ export default function ZapPageClient() {
 										connectedAccount={{
 											address: address || "",
 											chainId: chainId,
-											provider: wallet?.provider
 										}}
 										provider={wallet?.provider}
 										source="arbitrage-inception"
