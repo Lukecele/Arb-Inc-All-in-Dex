@@ -85,33 +85,30 @@ export default function ZapPageClient() {
     try {
         const res = await fetch('https://api.beefy.finance/vaults');
         const data = await res.json();
-        console.log('DEBUG_BEEFY: Totale vault ricevuti:', data.length);
         
         const bscVaults = data.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
-        console.log('DEBUG_BEEFY: Vault su BSC trovati:', bscVaults.length);
         
-        const validVaults = bscVaults.filter((v: any) => v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress);
-        console.log('DEBUG_BEEFY: Vault con ZAP validi:', validVaults.length);
-
-        if (validVaults.length > 0) {
-            const formatted = validVaults.map((v: any) => ({
-                id: v.id,
-                name: v.name + ' (' + v.platformId.toUpperCase() + ' Vault)',
-                address: v.zaps[0].poolAddress,
-                poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
-                token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '', decimals: 18 },
-                token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '', decimals: 18 },
-                liquidityUSD: 0,
-                apr: 'Beefy Auto-Compounding'
-            }));
-            setAllPools(formatted);
-            setSelectedPool(formatted[0]);
-            console.log('DEBUG_BEEFY: Impostato pool:', formatted[0].name);
-        } else {
-            console.error('DEBUG_BEEFY: Nessun vault valido trovato!');
+        // LOG DI DIAGNOSTICA: Stampiamo il primo vault BSC per vedere com è fatto
+        if (bscVaults.length > 0) {
+            console.log('DEBUG_BEEFY_STRUCTURE: Primo vault BSC:', bscVaults[0].id);
+            console.log('DEBUG_BEEFY_STRUCTURE: Contenuto zaps:', JSON.stringify(bscVaults[0].zaps, null, 2));
         }
+
+        // Manteniamo il filtro lasco per ora per vedere cosa c è
+        const formatted = bscVaults
+            .filter((v: any) => v.zaps && v.zaps.length > 0)
+            .map((v: any) => ({
+                id: v.id,
+                name: v.name,
+                address: v.zaps[0].poolAddress || v.zaps[0].address || 'MISSING',
+                poolType: 'DEX_PANCAKESWAPV2'
+            }));
+            
+        setAllPools(formatted);
+        if (formatted.length > 0) setSelectedPool(formatted[0]);
+        
     } catch (err) {
-        console.error('DEBUG_BEEFY: Errore fetch:', err);
+        console.error('DEBUG_BEEFY: Errore:', err);
     } finally {
         setLoadingBeefy(false);
     }
