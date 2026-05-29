@@ -85,8 +85,8 @@ export default function ZapPageClient() {
         const res = await fetch('https://api.beefy.finance/vaults');
         const data = await res.json();
         const bscVaults = data
-            .filter((v) => v.chain === 'bsc' && v.status === 'active' && v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress)
-            .map((v) => ({
+            .filter((v: any) => v.chain === 'bsc' && v.status === 'active' && v.zaps && v.zaps.length > 0 && v.zaps[0].poolAddress)
+            .map((v: any) => ({
                 id: v.id,
                 name: v.name + ' (' + v.platformId.toUpperCase() + ' Vault)',
                 address: v.zaps[0].poolAddress,
