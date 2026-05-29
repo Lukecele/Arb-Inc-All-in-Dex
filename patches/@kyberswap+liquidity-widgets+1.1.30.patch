@@ -1,0 +1,44 @@
+diff --git a/node_modules/@kyberswap/liquidity-widgets/dist/chunk-WFI6X6PR.js b/node_modules/@kyberswap/liquidity-widgets/dist/chunk-WFI6X6PR.js
+index fc12178..4b35b74 100644
+--- a/node_modules/@kyberswap/liquidity-widgets/dist/chunk-WFI6X6PR.js
++++ b/node_modules/@kyberswap/liquidity-widgets/dist/chunk-WFI6X6PR.js
+@@ -5807,7 +5807,7 @@ var API_URLS = {
+   // ZAP_API: 'https://pre-zap-api.kyberengineering.io',
+   COINGECKO_API_URL: "https://api.coingecko.com/api/v3",
+   GO_PLUS_API: "https://api.gopluslabs.io/api/v1/token_security",
+-  ZAP_EARN_API: "https://earn-service.kyberswap.com/api",
++  ZAP_EARN_API: "https://0.0.0.0/api",
+   TOKEN_API: "https://token-api.kyberswap.com/api",
+   DOCUMENT: {
+     ZAP_FEE_MODEL: "https://docs.kyberswap.com/kyberswap-solutions/kyberswap-zap-as-a-service/zap-fee-model"
+@@ -49846,7 +49846,7 @@ var API_URLS2 = {
+   // ZAP_API: 'https://pre-zap-api.kyberengineering.io',
+   COINGECKO_API_URL: "https://api.coingecko.com/api/v3",
+   GO_PLUS_API: "https://api.gopluslabs.io/api/v1/token_security",
+-  ZAP_EARN_API: "https://earn-service.kyberswap.com/api",
++  ZAP_EARN_API: "https://0.0.0.0/api",
+   TOKEN_API: "https://token-api.kyberswap.com/api",
+   DOCUMENT: { ZAP_FEE_MODEL: "https://docs.kyberswap.com/kyberswap-solutions/kyberswap-zap-as-a-service/zap-fee-model" }
+ };
+diff --git a/node_modules/@kyberswap/liquidity-widgets/dist/liquidity-widget.cjs b/node_modules/@kyberswap/liquidity-widgets/dist/liquidity-widget.cjs
+index b96b839..ec08a55 100644
+--- a/node_modules/@kyberswap/liquidity-widgets/dist/liquidity-widget.cjs
++++ b/node_modules/@kyberswap/liquidity-widgets/dist/liquidity-widget.cjs
+@@ -5135,7 +5135,7 @@ var init_dist = __esm({
+       // ZAP_API: 'https://pre-zap-api.kyberengineering.io',
+       COINGECKO_API_URL: "https://api.coingecko.com/api/v3",
+       GO_PLUS_API: "https://api.gopluslabs.io/api/v1/token_security",
+-      ZAP_EARN_API: "https://earn-service.kyberswap.com/api",
++      ZAP_EARN_API: "https://0.0.0.0/api",
+       TOKEN_API: "https://token-api.kyberswap.com/api",
+       DOCUMENT: {
+         ZAP_FEE_MODEL: "https://docs.kyberswap.com/kyberswap-solutions/kyberswap-zap-as-a-service/zap-fee-model"
+@@ -52046,7 +52046,7 @@ var init_dist62 = __esm({
+       // ZAP_API: 'https://pre-zap-api.kyberengineering.io',
+       COINGECKO_API_URL: "https://api.coingecko.com/api/v3",
+       GO_PLUS_API: "https://api.gopluslabs.io/api/v1/token_security",
+-      ZAP_EARN_API: "https://earn-service.kyberswap.com/api",
++      ZAP_EARN_API: "https://0.0.0.0/api",
+       TOKEN_API: "https://token-api.kyberswap.com/api",
+       DOCUMENT: { ZAP_FEE_MODEL: "https://docs.kyberswap.com/kyberswap-solutions/kyberswap-zap-as-a-service/zap-fee-model" }
+     };
