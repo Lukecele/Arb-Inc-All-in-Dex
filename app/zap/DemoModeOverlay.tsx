@@ -51,7 +51,7 @@ export default function DemoModeOverlay({ pool }: Props) {
         <h3>Demo Mode</h3>
         <DemoStat>
           <DemoLabel>TVL</DemoLabel>
-          <DemoValue>${(pool.liquidityUSD || 0).toLocaleString()}</DemoValue>
+          <DemoValue>${(pool?.liquidityUSD || 0).toLocaleString()}</DemoValue>
         </DemoStat>
         <DemoStat>
           <DemoLabel>APR</DemoLabel>

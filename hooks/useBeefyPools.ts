@@ -29,7 +29,7 @@ export function useBeefyPools() {
                             liquidityUSD: vaultTvl, rawApy: vaultApy.totalApy || 0, isArbitrageInception: false
                         };
                     })
-                    .filter((p: any) => p.liquidityUSD > 50000)
+                    .filter((p: any) => p?.liquidityUSD > 50000)
                     .sort((a: any, b: any) => b.rawApy - a.rawApy)
                     .slice(0, 12);
                 setBeefyPools(bscPools);
