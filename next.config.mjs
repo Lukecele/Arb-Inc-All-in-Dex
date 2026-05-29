@@ -2,7 +2,7 @@
 const nextConfig = {
 	serverExternalPackages: [],
 	experimental: { optimizePackageImports: [] },
-	transpilePackages: ["@kyberswap/liquidity-widgets"],
+	transpilePackages: [],
 	compiler: {
 		styledComponents: true,
 	},
