@@ -16,6 +16,24 @@ import DemoModeOverlay from "./DemoModeOverlay";
 import PoolSelector from "./PoolSelector";
 import ZapOutClient from "./ZapOutClient";
 
+import React from "react";
+
+class SafeWidgetWrapper extends React.Component {
+	state = { hasError: false };
+	static getDerivedStateFromError() { return { hasError: true }; }
+	componentDidCatch(error) { console.error("KyberWidget Error:", error); }
+	render() {
+		if (this.state.hasError) {
+			return (
+				<div style={{ padding: "30px", textAlignment: "center", color: "#64748b", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px dashed rgba(168,85,247,0.2)" }}>
+					⚠️ Questo tipo di pool (V3/CLM) richiede l indicizzazione diretta sull aggregator di KyberSwap o parametri di tick estesi non disponibili in modalità Zap standard.
+				</div>
+			);
+		}
+		return this.props.children;
+	}
+}
+
 const BSC_CHAIN_ID = 56;
 const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
 const FEE_PCM = 10;
@@ -195,6 +213,7 @@ export default function ZapPageClient() {
 							</WarningBadge>
 
 							<WidgetScroller $scale={0.9}>
+								<SafeWidgetWrapper>
 								<LiquidityWidget
 									chainId={chainId as ChainId.Bsc}
 									poolType={mapStringToPoolType(selectedPool.poolType)}
@@ -209,6 +228,7 @@ export default function ZapPageClient() {
 									onSwitchChain={() => setChain({ chainId: "0x38" })}
 									onSubmitTx={handleSubmitTx}
 								/>
+								</SafeWidgetWrapper>
 								{!address && <DemoModeOverlay pool={selectedPool} />}
 							</WidgetScroller>
 						</WidgetWrapper>
