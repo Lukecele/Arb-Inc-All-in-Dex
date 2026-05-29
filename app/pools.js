@@ -1,4 +1,3 @@
-// 1. Array completo di tutte le pool
 export const STATIC_POOLS = [
   { id: "0x1F12B85aAC097E43Aa1555b2881E98a51090e9A6", dex: "DEX_PANCAKESWAPV3", symbol: "GENIUS/USDT", fee: 2500 },
   { id: "0x5506599c722389A60580B5213ea1Da60D64754a1", dex: "DEX_PANCAKESWAPV3", symbol: "ZEST/USDT", fee: 2500 },
@@ -30,16 +29,14 @@ export const pcsV3Pools = STATIC_POOLS.filter(p => p.dex === 'DEX_PANCAKESWAPV3'
 export const clmPools = STATIC_POOLS.filter(p => p.dex === 'DEX_KYBERSWAPELASTIC');
 export const WBNB_ADDRESS = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 
-// 2. Fetching ottimizzato con feeTier dinamico
 const PANCAKE_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange-v3-bsc";
 const KYBER_ELASTIC_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-bsc";
 
 export async function fetchLivePoolMetrics() {
   try {
     const poolIds = STATIC_POOLS.map(p => `"${p.id.toLowerCase()}"`).join(",");
-    // Query aggiornata per includere feeTier
     const graphqlQuery = { 
-      query: \`{ 
+      query: `{ 
         pools(where: { id_in: [${poolIds}] }) { 
           id 
           totalValueLockedUSD 
@@ -49,7 +46,7 @@ export async function fetchLivePoolMetrics() {
             feesUSD 
           } 
         } 
-      }\` 
+      }` 
     };
 
     const [pancakeRes, kyberRes] = await Promise.all([
@@ -63,12 +60,10 @@ export async function fetchLivePoolMetrics() {
     allPools.forEach(p => {
       const tvl = parseFloat(p.totalValueLockedUSD) || 0;
       const dayData = p.poolDayData?.[0];
-      const feeTier = parseInt(p.feeTier) || 2500; // Default 0.25% (2500 basis points)
+      const feeTier = parseInt(p.feeTier) || 2500;
       
       let apr = 0;
       if (tvl > 1000 && dayData) {
-        // Se feesUSD non è presente, calcola usando il feeTier reale
-        // feeTier è in basis points (es. 2500 = 0.25%).
         const dailyFees = parseFloat(dayData.feesUSD) || (parseFloat(dayData.volumeUSD) * (feeTier / 1000000));
         apr = (dailyFees * 365 * 100) / tvl;
       }
