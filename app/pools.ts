@@ -17,6 +17,8 @@ export interface PoolInfo {
 	apr?: string;
 	dex: string;
 	isArbitrageInception: boolean;
+  isBeefy?: boolean;
+  rawApy?: number;
 }
 
 export const ARB_INC_ADDRESS = "0x630b9c39d46314a3268d75bb25fd79df4581d1af";
