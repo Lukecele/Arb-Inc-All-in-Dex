@@ -86,17 +86,27 @@ export default function ZapPageClient() {
         const res = await fetch('https://api.beefy.finance/vaults');
         const data = await res.json();
         
-        // Prendiamo il primo vault BSC per analizzarlo
-        const firstVault = data.find((v: any) => v.chain === 'bsc' && v.status === 'active');
+        // Filtriamo solo i vault BSC attivi
+        const bscVaults = data.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
         
-        if (firstVault) {
-            console.log('--- OGGETTO VAULT COMPLETO ---');
-            console.log(JSON.stringify(firstVault, null, 2));
-            console.log('------------------------------');
-        }
+        const formatted = bscVaults.map((v: any) => ({
+            id: v.id,
+            name: v.name,
+            // CORREZIONE: usiamo tokenAddress (LP) invece di earnedTokenAddress (Moo Receipt)
+            address: v.tokenAddress, 
+            poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
+            token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '', decimals: 18 },
+            token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '', decimals: 18 },
+            liquidityUSD: 0,
+            apr: 'Beefy Auto-Compounding'
+        }));
+            
+        setAllPools(formatted);
+        if (formatted.length > 0) setSelectedPool(formatted[0]);
+        console.log('DEBUG_FINAL: Vault caricati con indirizzo LP:', formatted.length);
         
     } catch (err) {
-        console.error('Errore:', err);
+        console.error('DEBUG_FINAL: Errore:', err);
     } finally {
         setLoadingBeefy(false);
     }
