@@ -75,8 +75,38 @@ export default function ZapPageClient() {
 	const [address, setAddress] = useState<string | undefined>();
 	const [chainId, setChainId] = useState<number>(BSC_CHAIN_ID);
 	const [activeTab, setActiveTab] = useState<"zap-in" | "zap-out">("zap-in");
-	const allPools = [...pools, ...pcsV3Pools];
-	const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
+	const [allPools, setAllPools] = useState<PoolInfo[]>([]);
+	const [selectedPool, setSelectedPool] = useState<PoolInfo | null>(null);
+	const [loadingBeefy, setLoadingBeefy] = useState(true);
+
+	useEffect(() => {
+		async function fetchBeefyVaults() {
+			try {
+				const res = await fetch("https://api.beefy.finance/vaults");
+				const data = await res.json();
+				// Filtra solo i vault attivi su BSC che hanno una struttura valida per lo zap
+				const bscVaults = data
+					.filter(v => v.chain === "bsc" && v.status === "active" && v.tokenAddress)
+					.map(v => ({
+						id: v.id,
+						name: v.name + " (" + v.platformId.toUpperCase() + " Vault)",
+						address: v.tokenAddress,
+						poolType: v.platformId === "pancakeswap" ? "DEX_PANCAKESWAPV2" : "DEX_PANCAKESWAPV3",
+						token0: { address: v.assets?.[0] || "", symbol: v.assets?.[0] || "", decimals: 18 },
+						token1: { address: v.assets?.[1] || "", symbol: v.assets?.[1] || "", decimals: 18 },
+						liquidityUSD: 0,
+						apr: "Beefy Auto-Compounding"
+					}));
+				setAllPools(bscVaults);
+				if (bscVaults.length > 0) setSelectedPool(bscVaults[0]);
+			} catch (err) {
+				console.error("Errore fetch Beefy:", err);
+			} finally {
+				setLoadingBeefy(false);
+			}
+		}
+		fetchBeefyVaults();
+	}, []);
 
 	useEffect(() => {
 		if (wallet?.accounts?.[0]?.address) {
