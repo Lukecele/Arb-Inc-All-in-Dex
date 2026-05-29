@@ -26,7 +26,7 @@ class SafeWidgetWrapper extends React.Component<{ children: any }> {
 		if (this.state.hasError) {
 			return (
 				<div style={{ padding: "30px", textAlign: "center", color: "#64748b", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px dashed rgba(168,85,247,0.2)" }}>
-					⚠️ Questo tipo di pool (V3/CLM) richiede l indicizzazione diretta sull aggregator di KyberSwap o parametri di tick estesi non disponibili in modalità Zap standard.
+					⚠️ Questo pool non è al momento supportato dal widget KyberSwap Zap. Prova a selezionare un altro pool.
 				</div>
 			);
 		}
@@ -38,13 +38,9 @@ const BSC_CHAIN_ID = 56;
 const FEE_RECEIVER = "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7";
 const FEE_PCM = 10;
 
+// poolType in pools.ts now uses KyberSwap's official DEX IDs directly,
+// so we just map them straight to the PoolType enum.
 const mapPoolToWidgetPoolType = (pool: PoolInfo): PoolType => {
-	if (pool.poolType === "DEX_CLM") {
-		const dexLower = pool.dex.toLowerCase();
-		if (dexLower.includes("uniswap")) return PoolType.DEX_UNISWAPV3;
-		if (dexLower.includes("pancake")) return PoolType.DEX_PANCAKESWAPV3;
-		return PoolType.DEX_PANCAKESWAPV3;
-	}
 	return (PoolType[pool.poolType as keyof typeof PoolType] || PoolType.DEX_PANCAKESWAPV2) as PoolType;
 };
 
@@ -81,7 +77,6 @@ const TabButton = styled.button<{ $active?: boolean }>`
 const PointsBadge = styled.div`
   background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; border-radius: 12px; font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 15px;
 `;
-// IDENTICO A QUELLO DELLA PAGINA SWAP
 const WarningBadge = styled.div`
   background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;
 `;
@@ -204,7 +199,6 @@ export default function ZapPageClient() {
 								🏆 Earn 150 Points & 10% Referral Bonus per Zap!
 							</PointsBadge>
 
-							{/* BANNER UNIFICATO IDENTICO ALLO SWAP */}
 							<WarningBadge>
 								<FaExclamationTriangle
 									style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
@@ -219,20 +213,20 @@ export default function ZapPageClient() {
 
 							<WidgetScroller $scale={0.9}>
 								<SafeWidgetWrapper>
-								<LiquidityWidget
-									chainId={chainId as ChainId.Bsc}
-									poolType={mapPoolToWidgetPoolType(selectedPool)}
-									poolAddress={selectedPool.address}
-									connectedAccount={{
-										address: address || undefined,
-										chainId: chainId,
-									}}
-									source="arbitrage-inception"
-									feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
-									onConnectWallet={() => connect()}
-									onSwitchChain={() => setChain({ chainId: "0x38" })}
-									onSubmitTx={handleSubmitTx}
-								/>
+									<LiquidityWidget
+										chainId={chainId as ChainId.Bsc}
+										poolType={mapPoolToWidgetPoolType(selectedPool)}
+										poolAddress={selectedPool.address}
+										connectedAccount={{
+											address: address || undefined,
+											chainId: chainId,
+										}}
+										source="arbitrage-inception"
+										feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
+										onConnectWallet={() => connect()}
+										onSwitchChain={() => setChain({ chainId: "0x38" })}
+										onSubmitTx={handleSubmitTx}
+									/>
 								</SafeWidgetWrapper>
 								{!address && <DemoModeOverlay pool={selectedPool} />}
 							</WidgetScroller>
