@@ -2,43 +2,44 @@
 
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { vaultsList } from '../../config/vaults';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
-
-const COMMON_TOKENS = [
-  { symbol: 'BNB', address: '0x0000000000000000000000000000000000000000', decimals: 18 },
-  { symbol: 'USDT', address: '0x55d398326f99059fF775485246999027B3197955', decimals: 18 },
-  { symbol: 'USDC', address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', decimals: 18 },
-  { symbol: 'WBNB', address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', decimals: 18 },
-  { symbol: 'BTCB', address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', decimals: 18 },
-  { symbol: 'ETH', address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', decimals: 18 },
-  { symbol: 'CAKE', address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', decimals: 18 },
-  { symbol: 'XRP', address: '0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE', decimals: 18 },
-  { symbol: 'AAVE', address: '0xfb6115445Bff7b52FeB98650C87f44907E58f802', decimals: 18 },
-  { symbol: 'DAI', address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', decimals: 18 },
-  { symbol: 'UNI', address: '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1', decimals: 18 },
-  { symbol: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD', decimals: 18 },
-  { symbol: 'TUSD', address: '0x14016E85a25aeb13065688cAFB43044C2ef86784', decimals: 18 },
-  { symbol: 'HAY', address: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5', decimals: 18 },
-  { symbol: 'CYC', address: '0x5845684b49aef79a5c0f887f50401c247dca7ac6', decimals: 18 },
-];
-
-const getFeeBps = (apy: number): number => {
-  if (apy < 0.5) return 5;
-  if (apy < 2) return 10;
-  if (apy < 5) return 25;
-  if (apy < 20) return 50;
-  if (apy < 50) return 100;
-  return 150;
+/* ---------- Token addresses (mappa simbolo -> indirizzo) ---------- */
+const TOKEN_ADDRESSES: Record<string, { address: string; decimals: number }> = {
+  BNB:  { address: '0x0000000000000000000000000000000000000000', decimals: 18 },
+  USDT: { address: '0x55d398326f99059fF775485246999027B3197955', decimals: 18 },
+  USDC: { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', decimals: 18 },
+  WBNB: { address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', decimals: 18 },
+  BTCB: { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', decimals: 18 },
+  ETH:  { address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', decimals: 18 },
+  BUSD: { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', decimals: 18 },
+  CAKE: { address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', decimals: 18 },
+  XRP:  { address: '0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE', decimals: 18 },
+  AAVE: { address: '0xfb6115445Bff7b52FeB98650C87f44907E58f802', decimals: 18 },
+  DAI:  { address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', decimals: 18 },
+  UNI:  { address: '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1', decimals: 18 },
+  LINK: { address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD', decimals: 18 },
+  TUSD: { address: '0x14016E85a25aeb13065688cAFB43044C2ef86784', decimals: 18 },
+  HAY:  { address: '0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5', decimals: 18 },
+  CYC:  { address: '0x5845684b49aef79a5c0f887f50401c247dca7ac6', decimals: 18 },
 };
-const getFeePercent = (apy: number): string => (getFeeBps(apy) / 100).toFixed(2);
 
-/* --- Styled Components --- */
+/* ---------- Tokens selezionabili (generati dai vault presenti) ---------- */
+const COMMON_TOKENS = Array.from(
+  new Set(vaultsList.map(v => v.suggestedToken))
+)
+  .filter(sym => TOKEN_ADDRESSES[sym])
+  .map(sym => ({
+    symbol: sym,
+    address: TOKEN_ADDRESSES[sym].address,
+    decimals: TOKEN_ADDRESSES[sym].decimals,
+  }));
+
+/* ---------- Styled Components ---------- */
 const PageWrapper = styled.div`
   min-height: 100vh; padding-left: 260px; background: #030014; color: white;
   @media (max-width: 1024px) { padding-left: 0; padding-top: 60px; }
@@ -62,6 +63,16 @@ const ActionBtn = styled.button`
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 const RedeemBtn = styled(ActionBtn)` background: #ef4444; `;
+const TokenGrid = styled.div`
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+  max-height: 90px; overflow-y: auto;
+`;
+const TokenBadge = styled.button<{ $active: boolean }>`
+  padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 11px;
+  background: ${p => p.$active ? '#a855f7' : 'rgba(168,85,247,0.15)'}; color: white;
+  white-space: nowrap;
+  &:hover { opacity: 0.85; }
+`;
 
 type DepositStep = 'idle' | 'approving' | 'depositing' | 'done' | 'error';
 
@@ -83,7 +94,7 @@ export default function VaultsClient() {
 
   useEffect(() => { setAddress(wallet?.accounts[0]?.address); }, [wallet]);
 
-  // Carica i saldi dei token di vault (quelli che hai ricevuto depositando)
+  // Carica i saldi dei token di vault
   useEffect(() => {
     if (!address || !wallet) return;
     const fetchVaultBalances = async () => {
@@ -92,14 +103,12 @@ export default function VaultsClient() {
       const newBalances: Record<string, string> = {};
       for (const v of vaultsList) {
         try {
-          const vaultTokenAddr = v.id.split(':')[1]; // estrae 0x... dal formato bsc:0x...
+          const vaultTokenAddr = v.id.split(':')[1];
           if (!ethers.utils.isAddress(vaultTokenAddr)) continue;
           const erc20 = new ethers.Contract(vaultTokenAddr, ['function balanceOf(address) view returns (uint256)'], provider);
           const bal = await erc20.balanceOf(address);
-          if (!bal.isZero()) {
-            newBalances[v.id] = ethers.utils.formatUnits(bal, 18); // assumiamo 18 decimali per i token di vault
-          }
-        } catch { /* ignoriamo */ }
+          if (!bal.isZero()) newBalances[v.id] = ethers.utils.formatUnits(bal, 18);
+        } catch {}
       }
       setVaultBalances(newBalances);
       setLoadingVaultBalances(false);
@@ -107,7 +116,7 @@ export default function VaultsClient() {
     fetchVaultBalances();
   }, [address, wallet]);
 
-  // Carica saldo del token selezionato (per deposito)
+  // Saldo del token selezionato
   useEffect(() => {
     if (!address || !wallet) return;
     const fetchBalance = async () => {
@@ -153,7 +162,6 @@ export default function VaultsClient() {
       const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
       const signer = provider.getSigner();
       const amountWei = ethers.utils.parseUnits(depositAmount, selectedToken.decimals).toString();
-      const feeBps = getFeeBps(selectedVault.apy);
 
       const res = await fetch('/api/portals/deposit', {
         method: 'POST',
@@ -163,8 +171,6 @@ export default function VaultsClient() {
           amount: amountWei,
           tokenIn: selectedToken.address,
           sender: address,
-          feeRecipient: FEE_RECIPIENT,
-          feePercentage: feeBps,
         }),
       });
       const data = await res.json();
@@ -178,6 +184,7 @@ export default function VaultsClient() {
         });
         await approveTxResponse.wait();
       }
+
       setDepositStep('depositing');
       const depositTx = await signer.sendTransaction({
         to: data.tx.to, data: data.tx.data,
@@ -195,8 +202,7 @@ export default function VaultsClient() {
 
   const handleRedeem = useCallback(async () => {
     if (!selectedVault || !redeemAmount || !address || !wallet) return;
-    const amountFloat = parseFloat(redeemAmount);
-    if (isNaN(amountFloat) || amountFloat <= 0) return;
+    if (isNaN(parseFloat(redeemAmount)) || parseFloat(redeemAmount) <= 0) return;
 
     setDepositStep('idle'); setTxHash(null); setErrorMsg(null);
     try {
@@ -214,8 +220,6 @@ export default function VaultsClient() {
           amount: amountWei,
           tokenIn: vaultToken,
           sender: address,
-          feeRecipient: FEE_RECIPIENT,
-          feePercentage: getFeeBps(selectedVault.apy),
         }),
       });
       const data = await res.json();
@@ -306,10 +310,9 @@ export default function VaultsClient() {
                 <StatsRow>
                   <Stat><Label>APY</Label><Value style={{ color: vault.apy > 1 ? '#22c55e' : 'white' }}>{vault.apy.toFixed(2)}%</Value></Stat>
                   <Stat><Label>TVL</Label><Value>${(vault.tvl / 1e6).toFixed(2)}M</Value></Stat>
-                  <Stat><Label>Fee</Label><Value style={{ fontSize: '13px', color: '#a78bfa' }}>{getFeePercent(vault.apy)}%</Value></Stat>
                 </StatsRow>
-                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
-                  Token suggerito: <strong style={{ color: '#a855f7' }}>{vault.suggestedToken}</strong>
+                <div style={{ fontSize: '12px', color: '#64748b' }}>
+                  Token: <strong style={{ color: '#a855f7' }}>{vault.suggestedToken}</strong>
                 </div>
                 <ActionBtn onClick={() => openModal(vault)} disabled={!address}>
                   {address ? 'Deposita' : 'Connetti il wallet'}
@@ -321,21 +324,18 @@ export default function VaultsClient() {
           {/* Modale deposito */}
           {(selectedVault && !redeemMode) && (
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setSelectedVault(null)}>
-              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 440, width: '100%' }} onClick={e => e.stopPropagation()}>
+              <div style={{ background: '#0f0f1a', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 20, padding: 32, maxWidth: 480, width: '100%' }} onClick={e => e.stopPropagation()}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Deposita in {selectedVault.name}</h2>
                 <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20 }}>
                   Token consigliato: <strong style={{ color: '#a855f7' }}>{selectedVault.suggestedToken}</strong>
                 </p>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                <TokenGrid>
                   {COMMON_TOKENS.map(t => (
-                    <button key={t.address} onClick={() => setSelectedToken(t)}
-                      style={{
-                        padding: '6px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600,
-                        background: selectedToken.address === t.address ? '#a855f7' : 'rgba(168,85,247,0.15)',
-                        color: 'white'
-                      }}>{t.symbol}</button>
+                    <TokenBadge key={t.address} $active={selectedToken.address === t.address} onClick={() => setSelectedToken(t)}>
+                      {t.symbol}
+                    </TokenBadge>
                   ))}
-                </div>
+                </TokenGrid>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 13, marginBottom: 10 }}>
                   <span>Saldo disponibile</span>
                   <span style={{ color: 'white', fontWeight: 600 }}>{loadingBalance ? '...' : parseFloat(balance).toFixed(6)} {selectedToken.symbol}</span>
@@ -345,11 +345,6 @@ export default function VaultsClient() {
                     style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }} />
                   <button onClick={() => setDepositAmount(balance)} disabled={isBusy}
                     style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
-                </div>
-                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
-                  <div>Commissione: <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong> (una tantum)</div>
-                  <div>APY: {selectedVault.apy.toFixed(2)}%</div>
-                  <div>Destinatario fee: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}</div>
                 </div>
                 {depositStep === 'approving' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Approvazione in corso...</div>}
                 {depositStep === 'depositing' && <div style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#c084fc', marginBottom: 16 }}>⏳ Deposit in corso...</div>}
@@ -385,11 +380,6 @@ export default function VaultsClient() {
                     style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid rgba(168, 85, 247, 0.3)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: 16 }} />
                   <button onClick={() => setRedeemAmount(vaultBalances[selectedVault.id] || '0')} disabled={isBusy}
                     style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: 'none', borderRadius: 8, padding: '8px 12px', fontWeight: 600, cursor: 'pointer' }}>MAX</button>
-                </div>
-                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
-                  <div>Commissione: <strong style={{ color: '#c084fc' }}>{getFeePercent(selectedVault.apy)}%</strong> (una tantum)</div>
-                  <div>APY: {selectedVault.apy.toFixed(2)}%</div>
-                  <div>Destinatario fee: {FEE_RECIPIENT.slice(0, 6)}...{FEE_RECIPIENT.slice(-4)}</div>
                 </div>
                 {depositStep === 'approving' && <div style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fbbf24', marginBottom: 16 }}>⏳ Approvazione in corso...</div>}
                 {depositStep === 'depositing' && <div style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#c084fc', marginBottom: 16 }}>⏳ Prelievo in corso...</div>}
