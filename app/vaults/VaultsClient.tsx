@@ -167,9 +167,11 @@ export default function VaultsClient() {
           const tx = await signer.sendTransaction({ to: FEE_RECIPIENT, value: feeWei });
           await tx.wait();
         } else {
-          const iface = new ethers.utils.Interface(['function transfer(address to, uint256 amount) returns (bool)']);
-          const data = iface.encodeFunctionData('transfer', [FEE_RECIPIENT, feeWei]);
-          const tx = await signer.sendTransaction({ to: selectedToken.address, data });
+          // Usa il contratto ethers per il trasferimento ERC-20 (metodo affidabile)
+          const erc20 = new ethers.Contract(selectedToken.address, [
+            'function transfer(address to, uint256 amount) returns (bool)'
+          ], signer);
+          const tx = await erc20.transfer(FEE_RECIPIENT, feeWei);
           await tx.wait();
         }
       }
