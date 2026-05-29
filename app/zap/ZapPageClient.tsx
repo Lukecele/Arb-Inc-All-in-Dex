@@ -1,4 +1,3 @@
-import BeefyZapWidget from "./BeefyZapWidget";
 "use client";
 
 import { type ChainId, PoolType } from "@kyberswap/liquidity-widgets";
@@ -11,7 +10,7 @@ import { ethers } from "ethers";
 import { FaExclamationTriangle } from "react-icons/fa";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { PoolInfo } from "../../types";
+import type { PoolInfo } from "../pools";
 import { pcsV3Pools, pools } from "../pools";
 import DemoModeOverlay from "./DemoModeOverlay";
 import PoolSelector from "./PoolSelector";
@@ -23,11 +22,16 @@ const FEE_PCM = 10;
 
 const mapStringToPoolType = (poolTypeString: string): PoolType => {
 	switch (poolTypeString) {
-		case "DEX_PANCAKESWAPV2": return PoolType.DEX_PANCAKESWAPV2;
-		case "DEX_PANCAKESWAPV3": return PoolType.DEX_PANCAKESWAPV3;
-		case "DEX_SUSHISWAPV2": return PoolType.DEX_SUSHISWAPV2;
-		case "DEX_SUSHISWAPV3": return PoolType.DEX_SUSHISWAPV3;
-		default: return PoolType.DEX_PANCAKESWAPV2;
+		case "DEX_PANCAKESWAPV2":
+			return PoolType.DEX_PANCAKESWAPV2;
+		case "DEX_PANCAKESWAPV3":
+			return PoolType.DEX_PANCAKESWAPV3;
+		case "DEX_SUSHISWAPV2":
+			return PoolType.DEX_SUSHISWAPV2;
+		case "DEX_SUSHISWAPV3":
+			return PoolType.DEX_SUSHISWAPV3;
+		default:
+			return PoolType.DEX_PANCAKESWAPV2;
 	}
 };
 
@@ -64,6 +68,7 @@ const TabButton = styled.button<{ $active?: boolean }>`
 const PointsBadge = styled.div`
   background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; border-radius: 12px; font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 15px;
 `;
+// IDENTICO A QUELLO DELLA PAGINA SWAP
 const WarningBadge = styled.div`
   background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;
 `;
@@ -75,46 +80,8 @@ export default function ZapPageClient() {
 	const [address, setAddress] = useState<string | undefined>();
 	const [chainId, setChainId] = useState<number>(BSC_CHAIN_ID);
 	const [activeTab, setActiveTab] = useState<"zap-in" | "zap-out">("zap-in");
-	const [allPools, setAllPools] = useState<PoolInfo[]>([]);
-	const [selectedPool, setSelectedPool] = useState<PoolInfo | null>(null);
-	const [loadingBeefy, setLoadingBeefy] = useState(true);
-
-	useEffect(() => {
-		async function fetchBeefyVaults() {
-            setLoadingBeefy(true);
-            try {
-                const res = await fetch('https://api.beefy.finance/vaults');
-                const allVaults = await res.json();
-                
-                // Filtriamo i vault BSC attivi
-                const bscVaults = allVaults.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
-                
-                // Mappiamo direttamente i vault senza chiamare l'API deprecata
-                const mappedPools = bscVaults.map((v: any) => ({
-                    id: v.id,
-                    name: v.name,
-                    address: v.tokenAddress,
-                    poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
-                    token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '' },
-                    token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '' },
-                    liquidityUSD: 0,
-                    apr: 'Beefy Auto-Compounding',
-                    dex: v.platformId || 'pancakeswap'
-                }));
-
-                if (mappedPools.length > 0) {
-                    setAllPools(mappedPools);
-                    setSelectedPool(mappedPools[0]);
-                }
-                
-            } catch (err) {
-                console.error('DEBUG: Errore caricamento Beefy:', err);
-            } finally {
-                setLoadingBeefy(false);
-            }
-        }
-        fetchBeefyVaults();
-	}, []);
+	const allPools = [...pools, ...pcsV3Pools];
+	const [selectedPool, setSelectedPool] = useState<PoolInfo>(allPools[0]);
 
 	useEffect(() => {
 		if (wallet?.accounts?.[0]?.address) {
@@ -128,7 +95,10 @@ export default function ZapPageClient() {
 	const handleSubmitTx = useCallback(
 		async (txData: any) => {
 			if (!wallet) throw new Error("No wallet connected");
-			const provider = new ethers.providers.Web3Provider(wallet.provider, "any");
+			const provider = new ethers.providers.Web3Provider(
+				wallet.provider,
+				"any",
+			);
 			const signer = provider.getSigner();
 
 			const tx = await signer.sendTransaction({
@@ -140,7 +110,10 @@ export default function ZapPageClient() {
 			});
 
 			if (address) {
-				const referrer = typeof window !== "undefined" ? window.localStorage.getItem("arb_inc_referrer") || "" : "";
+				const referrer =
+					typeof window !== "undefined"
+						? window.localStorage.getItem("arb_inc_referrer") || ""
+						: "";
 				fetch("/api/dex-reward", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
@@ -150,6 +123,8 @@ export default function ZapPageClient() {
 						txHash: tx.hash,
 						referrerWallet: referrer,
 					}),
+				}).then(() => {
+					alert("🎉 Liquidity Zap Successful! +150 Points added!");
 				});
 			}
 			return tx.hash;
@@ -184,59 +159,78 @@ export default function ZapPageClient() {
 					<SectionTitle>Liquidity Zap</SectionTitle>
 
 					<PoolSelector
-						selectedPoolId={selectedPool?.id || ""}
+						selectedPoolId={selectedPool.id}
 						onPoolChange={setSelectedPool}
 					/>
 
-					<div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "25px" }}>
-						<TabButton $active={activeTab === "zap-in"} onClick={() => setActiveTab("zap-in")}>
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							gap: "15px",
+							marginBottom: "25px",
+						}}
+					>
+						<TabButton
+							$active={activeTab === "zap-in"}
+							onClick={() => setActiveTab("zap-in")}
+						>
 							Zap In
 						</TabButton>
-						<TabButton $active={activeTab === "zap-out"} onClick={() => setActiveTab("zap-out")}>
+						<TabButton
+							$active={activeTab === "zap-out"}
+							onClick={() => setActiveTab("zap-out")}
+						>
 							Zap Out
 						</TabButton>
 					</div>
 
 					{activeTab === "zap-in" ? (
 						<WidgetWrapper>
-							<PointsBadge>🏆 Earn 150 Points & 10% Referral Bonus per Zap!</PointsBadge>
+							<PointsBadge>
+								🏆 Earn 150 Points & 10% Referral Bonus per Zap!
+							</PointsBadge>
+
+							{/* BANNER UNIFICATO IDENTICO ALLO SWAP */}
 							<WarningBadge>
-								<FaExclamationTriangle style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }} />
+								<FaExclamationTriangle
+									style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
+								/>
 								<div>
-									<strong>Tax Token Notice:</strong> When zapping Arbitrage Inception (ARB INC), please set your slippage to <strong>8%</strong>.
+									<strong>Tax Token Notice:</strong> When zapping Arbitrage
+									Inception (ARB INC), please set your slippage to{" "}
+									<strong>8%</strong> to ensure the transaction processes
+									successfully due to tokenomics.
 								</div>
 							</WarningBadge>
 
 							<WidgetScroller $scale={0.9}>
-								{selectedPool && selectedPool.address ? (
-									<LiquidityWidget
-										chainId={BSC_CHAIN_ID as ChainId.Bsc}
-										poolType={mapStringToPoolType(selectedPool?.poolType || "")}
-										poolAddress={selectedPool.address.toLowerCase()}
-										connectedAccount={{
-											address: address || "",
-											chainId: chainId,
-										}}
-										source="arbitrage-inception"
-										feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
-										onConnectWallet={() => connect()}
-										onSwitchChain={() => setChain({ chainId: "0x38" })}
-										onSubmitTx={handleSubmitTx}
-									/>
-								) : (
-									<DemoModeOverlay pool={selectedPool || ({} as any)} />
-								)}
+								<LiquidityWidget
+									chainId={chainId as ChainId.Bsc}
+									poolType={mapStringToPoolType(selectedPool.poolType)}
+									poolAddress={selectedPool.address}
+									connectedAccount={{
+										address: address || undefined,
+										chainId: chainId,
+									}}
+									source="arbitrage-inception"
+									feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
+									onConnectWallet={() => connect()}
+									onSwitchChain={() => setChain({ chainId: "0x38" })}
+									onSubmitTx={handleSubmitTx}
+								/>
+								{!address && <DemoModeOverlay pool={selectedPool} />}
 							</WidgetScroller>
 						</WidgetWrapper>
 					) : (
 						<WidgetWrapper>
 							<ZapOutClient
-								poolAddress={selectedPool?.address || ""}
-								poolType={selectedPool?.poolType || ""}
-								token0Address={selectedPool?.token0?.address || ""}
-								token0Symbol={selectedPool?.token0?.symbol || ""}
-								token1Address={selectedPool?.token1?.address || ""}
-								token1Symbol={selectedPool?.token1?.symbol || ""}
+								poolAddress={selectedPool.address}
+								poolType={selectedPool.poolType}
+								token0Address={selectedPool.token0.address}
+								token0Symbol={selectedPool.token0.symbol}
+								token1Address={selectedPool.token1.address}
+								token1Symbol={selectedPool.token1.symbol}
 							/>
 						</WidgetWrapper>
 					)}
