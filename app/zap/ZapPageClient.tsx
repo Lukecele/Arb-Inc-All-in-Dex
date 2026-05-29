@@ -87,7 +87,7 @@ export default function ZapPageClient() {
         const allVaults = await res.json();
         
         // Filtriamo i vault BSC attivi
-        const bscVaults = allVaults.filter((v) => v.chain === 'bsc' && v.status === 'active');
+        const bscVaults = allVaults.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
         
         console.log('DEBUG: Inizio validazione pool...');
         let foundPool = null;
