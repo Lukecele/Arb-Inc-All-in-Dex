@@ -23,16 +23,11 @@ const FEE_PCM = 10;
 
 const mapStringToPoolType = (poolTypeString: string): PoolType => {
 	switch (poolTypeString) {
-		case "DEX_PANCAKESWAPV2":
-			return PoolType.DEX_PANCAKESWAPV2;
-		case "DEX_PANCAKESWAPV3":
-			return PoolType.DEX_PANCAKESWAPV3;
-		case "DEX_SUSHISWAPV2":
-			return PoolType.DEX_SUSHISWAPV2;
-		case "DEX_SUSHISWAPV3":
-			return PoolType.DEX_SUSHISWAPV3;
-		default:
-			return PoolType.DEX_PANCAKESWAPV2;
+		case "DEX_PANCAKESWAPV2": return PoolType.DEX_PANCAKESWAPV2;
+		case "DEX_PANCAKESWAPV3": return PoolType.DEX_PANCAKESWAPV3;
+		case "DEX_SUSHISWAPV2": return PoolType.DEX_SUSHISWAPV2;
+		case "DEX_SUSHISWAPV3": return PoolType.DEX_SUSHISWAPV3;
+		default: return PoolType.DEX_PANCAKESWAPV2;
 	}
 };
 
@@ -62,7 +57,6 @@ const WidgetScroller = styled.div<{ $scale?: number }>`
 `;
 const SectionTitle = styled.h2`
   font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
- animate;
 `;
 const TabButton = styled.button<{ $active?: boolean }>`
   padding: 12px 32px; font-size: 16px; font-weight: 600; color: #fff; background: ${(props) => (props.$active ? "#a855f7" : "rgba(255,255,255,0.05)")}; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s;
@@ -96,10 +90,7 @@ export default function ZapPageClient() {
 	const handleSubmitTx = useCallback(
 		async (txData: any) => {
 			if (!wallet) throw new Error("No wallet connected");
-			const provider = new ethers.providers.Web3Provider(
-				wallet.provider,
-				"any",
-			);
+			const provider = new ethers.providers.Web3Provider(wallet.provider, "any");
 			const signer = provider.getSigner();
 
 			const tx = await signer.sendTransaction({
@@ -111,10 +102,7 @@ export default function ZapPageClient() {
 			});
 
 			if (address) {
-				const referrer =
-					typeof window !== "undefined"
-						? window.localStorage.getItem("arb_inc_referrer") || ""
-						: "";
+				const referrer = typeof window !== "undefined" ? window.localStorage.getItem("arb_inc_referrer") || "" : "";
 				fetch("/api/dex-reward", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
@@ -124,8 +112,6 @@ export default function ZapPageClient() {
 						txHash: tx.hash,
 						referrerWallet: referrer,
 					}),
-				}).then(() => {
-					alert("🎉 Liquidity Zap Successful! +150 Points added!");
 				});
 			}
 			return tx.hash;
@@ -160,60 +146,41 @@ export default function ZapPageClient() {
 					<SectionTitle>Liquidity Zap</SectionTitle>
 
 					<PoolSelector
-						selectedPoolId={selectedPool.id}
+						selectedPoolId={selectedPool?.id || ""}
 						onPoolChange={setSelectedPool}
 					/>
 
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							gap: "15px",
-							marginBottom: "25px",
-						}}
-					>
-						<TabButton
-							$active={activeTab === "zap-in"}
-							onClick={() => setActiveTab("zap-in")}
-						>
+					<div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "25px" }}>
+						<TabButton $active={activeTab === "zap-in"} onClick={() => setActiveTab("zap-in")}>
 							Zap In
 						</TabButton>
-						<TabButton
-							$active={activeTab === "zap-out"}
-							onClick={() => setActiveTab("zap-out")}
-						>
+						<TabButton $active={activeTab === "zap-out"} onClick={() => setActiveTab("zap-out")}>
 							Zap Out
 						</TabButton>
 					</div>
 
 					{activeTab === "zap-in" ? (
 						<WidgetWrapper>
-							<PointsBadge>
-								🏆 Earn 150 Points & 10% Referral Bonus per Zap!
-							</PointsBadge>
-
+							<PointsBadge>🏆 Earn 150 Points & 10% Referral Bonus per Zap!</PointsBadge>
 							<WarningBadge>
-								<FaExclamationTriangle
-									style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
-								/>
+								<FaExclamationTriangle style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }} />
 								<div>
-									<strong>Tax Token Notice:</strong> When zapping Arbitrage
-									Inception (ARB INC), please set your slippage to{" "}
-									<strong>8%</strong> to ensure the transaction processes
-									successfully due to tokenomics.
+									<strong>Tax Token Notice:</strong> When zapping Arbitrage Inception (ARB INC), please set your slippage to <strong>8%</strong>.
 								</div>
 							</WarningBadge>
 
 							<WidgetScroller $scale={0.9}>
-								{address ? (
+								{address && selectedPool ? (
 									<LiquidityWidget
 										chainId={chainId as ChainId.Bsc}
-										poolType={mapStringToPoolType(selectedPool.poolType)}
-										poolAddress={selectedPool.address}
+										poolType={mapStringToPoolType(selectedPool?.poolType || "")}
+										poolAddress={selectedPool?.address || ""}
 										connectedAccount={{
-											address: address,
+											address: address || "",
 											chainId: chainId,
+											provider: wallet?.provider
 										}}
+										provider={wallet?.provider}
 										source="arbitrage-inception"
 										feeConfig={{ feePcm: FEE_PCM, feeAddress: FEE_RECEIVER }}
 										onConnectWallet={() => connect()}
@@ -228,12 +195,12 @@ export default function ZapPageClient() {
 					) : (
 						<WidgetWrapper>
 							<ZapOutClient
-								poolAddress={selectedPool.address}
-								poolType={selectedPool.poolType}
-								token0Address={selectedPool.token0.address}
-								token0Symbol={selectedPool.token0.symbol}
-								token1Address={selectedPool.token1.address}
-								token1Symbol={selectedPool.token1.symbol}
+								poolAddress={selectedPool?.address || ""}
+								poolType={selectedPool?.poolType || ""}
+								token0Address={selectedPool?.token0?.address || ""}
+								token0Symbol={selectedPool?.token0?.symbol || ""}
+								token1Address={selectedPool?.token1?.address || ""}
+								token1Symbol={selectedPool?.token1?.symbol || ""}
 							/>
 						</WidgetWrapper>
 					)}
