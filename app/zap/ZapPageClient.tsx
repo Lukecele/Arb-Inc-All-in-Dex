@@ -1,4 +1,4 @@
-import BeefyZapWidget from "../../BeefyZapWidget";
+import BeefyZapWidget from "./BeefyZapWidget";
 "use client";
 
 import { type ChainId, PoolType } from "@kyberswap/liquidity-widgets";
