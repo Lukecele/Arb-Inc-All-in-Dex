@@ -86,29 +86,27 @@ export default function ZapPageClient() {
         const res = await fetch('https://api.beefy.finance/vaults');
         const data = await res.json();
         
+        // Filtro rilassato: prendiamo solo i vault BSC attivi
         const bscVaults = data.filter((v: any) => v.chain === 'bsc' && v.status === 'active');
         
-        // LOG DI DIAGNOSTICA: Stampiamo il primo vault BSC per vedere com è fatto
-        if (bscVaults.length > 0) {
-            console.log('DEBUG_BEEFY_STRUCTURE: Primo vault BSC:', bscVaults[0].id);
-            console.log('DEBUG_BEEFY_STRUCTURE: Contenuto zaps:', JSON.stringify(bscVaults[0].zaps, null, 2));
-        }
-
-        // Manteniamo il filtro lasco per ora per vedere cosa c è
-        const formatted = bscVaults
-            .filter((v: any) => v.zaps && v.zaps.length > 0)
-            .map((v: any) => ({
-                id: v.id,
-                name: v.name,
-                address: v.zaps[0].poolAddress || v.zaps[0].address || 'MISSING',
-                poolType: 'DEX_PANCAKESWAPV2'
-            }));
+        const formatted = bscVaults.map((v: any) => ({
+            id: v.id,
+            name: v.name,
+            // Usiamo earnedTokenAddress che è l indirizzo del token LP/Pool
+            address: v.earnedTokenAddress, 
+            poolType: v.platformId === 'pancakeswap' ? 'DEX_PANCAKESWAPV2' : 'DEX_PANCAKESWAPV3',
+            token0: { address: v.assets?.[0] || '', symbol: v.assets?.[0] || '', decimals: 18 },
+            token1: { address: v.assets?.[1] || '', symbol: v.assets?.[1] || '', decimals: 18 },
+            liquidityUSD: 0,
+            apr: 'Beefy Auto-Compounding'
+        }));
             
         setAllPools(formatted);
         if (formatted.length > 0) setSelectedPool(formatted[0]);
+        console.log('DEBUG_FINAL: Vault caricati:', formatted.length);
         
     } catch (err) {
-        console.error('DEBUG_BEEFY: Errore:', err);
+        console.error('DEBUG_FINAL: Errore:', err);
     } finally {
         setLoadingBeefy(false);
     }
