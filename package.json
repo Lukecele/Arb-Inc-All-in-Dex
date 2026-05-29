@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+    "postinstall": "sed -i 's|https://earn-service.kyberswap.com/api|https://0.0.0.0/api|g' node_modules/@kyberswap/liquidity-widgets/dist/*.cjs node_modules/@kyberswap/liquidity-widgets/dist/*.js",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
