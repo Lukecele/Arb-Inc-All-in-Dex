@@ -50,7 +50,7 @@ const AprText = styled.span` color: #10b981; font-weight: 700; font-size: 0.9rem
 
 export default function PoolSelector({ selectedPoolId, onPoolChange }: any) {
 	const { beefyPools, loadingBeefy } = useBeefyPools();
-	const [allPools, setAllPools] = useState<PoolInfo[]>([...pools, ...pcsV3Pools, ...clmPools]);
+	const [allPools, setAllPools] = useState<any[]>([...pools, ...pcsV3Pools, ...clmPools]);
 
 	useEffect(() => {
 		if (!loadingBeefy) setAllPools([...beefyPools, ...pools, ...pcsV3Pools, ...clmPools]);
