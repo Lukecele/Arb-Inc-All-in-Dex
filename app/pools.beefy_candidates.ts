@@ -23,7 +23,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -96,7 +95,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -169,7 +167,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -242,7 +239,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -315,7 +311,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -388,7 +383,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -461,7 +455,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -534,7 +527,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -607,7 +599,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -680,7 +671,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -753,7 +743,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {
@@ -826,7 +815,6 @@ export const beefyCandidates: any = [
     isMainstream: false,
     dexId: "PANCAKE_SWAP_V3",
     chain: "bsc",
-    zapSupported: true,
     category: "pancake",
     source: "beefy",
     raw: {

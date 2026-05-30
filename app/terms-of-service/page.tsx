@@ -41,7 +41,7 @@ export default function TermsOfServicePage() {
 					<Nav>
 						<NavLink href="/">Home</NavLink>
 						<NavLink href="/swap-all">Swap</NavLink>
-						<NavLink href="/zap">Zap</NavLink>
+
 						<NavLink href="/bridge">Bridge</NavLink>
 						<NavLink href="/limit-orders">Limit Orders</NavLink>
 						<NavLink href="/rewards">Rewards</NavLink>

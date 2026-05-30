@@ -70,13 +70,11 @@ async function main() {
       isMainstream: false,
       dexId,
       chain: 'bsc',
-      zapSupported: mapped !== null,
       category: mapped ? (mapped.dexId.includes('PANCAKE') ? 'pancake' : 'uniswap') : 'unknown',
       source: 'beefy',
       raw: v,
     };
   })
-  .filter(p => p.zapSupported)
   .sort((a,b) => (b.aprValue||0) - (a.aprValue||0))
   .slice(0, 12);
 
@@ -97,7 +95,6 @@ async function main() {
     .replace(/"isMainstream":/g,'isMainstream:')
     .replace(/"dexId":/g,'dexId:')
     .replace(/"chain":/g,'chain:')
-    .replace(/"zapSupported":/g,'zapSupported:')
     .replace(/"category":/g,'category:')
     .replace(/"source":/g,'source:')
     .replace(/"raw":/g,'raw:')
@@ -105,7 +102,7 @@ async function main() {
 
   const fileContent = header + body + ' as PoolInfo[];\n';
   fs.writeFileSync(outPath, fileContent, 'utf8');
-  console.log(`Wrote ${outPath} with ${candidates.length} candidates (zapSupported only).`);
+  console.log(`Wrote ${outPath} with ${candidates.length} candidates.`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

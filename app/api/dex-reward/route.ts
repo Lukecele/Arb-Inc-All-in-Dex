@@ -28,7 +28,6 @@ export async function POST(req: Request) {
 
         let points = 0;
         if (type === "swap") points = 100;
-        else if (type === "zap") points = 150;
         else if (type === "limit") points = 200;
         else return NextResponse.json({ success: false, error: "Invalid type" }, { status: 400 });
 

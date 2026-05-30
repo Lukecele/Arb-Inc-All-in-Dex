@@ -3,11 +3,10 @@ import type { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
 	const baseUrl = "https://arbitrage-inc.exchange";
 
-	// Elenco completo delle 7 pagine
+	// Elenco completo delle 6 pagine
 	const routes = [
 		"", // Home
 		"/swap-all",
-		"/zap",
 		"/bridge",
 		"/limit-orders", // Aggiunto Limit Orders
 		"/rewards",

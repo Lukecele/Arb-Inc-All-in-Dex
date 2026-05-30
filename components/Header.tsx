@@ -54,11 +54,7 @@ const Icons = {
 			<path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
 		</svg>
 	),
-	Zap: () => (
-		<svg viewBox="0 0 24 24">
-			<path d="M13 10V3L4 14h7v7l9-11h-7z" />
-		</svg>
-	),
+
 	Limit: () => (
 		<svg viewBox="0 0 24 24">
 			<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -94,7 +90,6 @@ export default function Header({ activePage, walletSection }: any) {
 		{ name: "Swap", href: "/swap-all", Icon: Icons.Swap },
         { name: "Vaults", href: "/vaults", Icon: Icons.Vaults },
 		{ name: "Bridge", href: "/bridge", Icon: Icons.Bridge },
-		{ name: "Zap", href: "/zap", Icon: Icons.Zap },
 		{ name: "Limit Orders", href: "/limit-orders", Icon: Icons.Limit },
 		{ name: "Rewards", href: "/rewards", Icon: Icons.Rewards },
 		{ name: "Contact", href: "/contact", Icon: Icons.Contact },

@@ -1,6 +1,6 @@
 export async function triggerDexReward(
 	userWallet: string | undefined,
-	actionType: "swap" | "zap" | "bridge" | "limit-order",
+	actionType: "swap" | "bridge" | "limit-order",
 	txHash: string,
 ) {
 	if (!userWallet) return;

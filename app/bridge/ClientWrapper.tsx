@@ -34,7 +34,6 @@ declare global {
 const navLinks = [
 	{ href: "/", label: "Home" },
 	{ href: "/swap-all", label: "Swap All" },
-	{ href: "/zap", label: "Zap" },
 	{ href: "/bridge", label: "Bridge", active: true },
 	{ href: "/limit-orders", label: "Limit Orders" },
 	{ href: "/contact", label: "Contact" },
