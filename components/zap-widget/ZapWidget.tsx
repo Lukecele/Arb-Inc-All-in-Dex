@@ -1,0 +1,890 @@
+import React, { useState } from 'react';
+import { Settings, ArrowDown, Info, AlertTriangle, ExternalLink, ArrowUp, Wallet } from 'lucide-react';
+import { useConnectWallet } from '@web3-onboard/react';
+import { SUPPORTED_TOKENS } from '../../lib/zap/constants';
+import { useZapInRoute, useZapOutRoute } from '../../hooks/zap/useZapRoute';
+import { getDefaultZapClient } from '../../lib/zap/zap-api-client';
+import { useTokenBalance } from '../../hooks/useTokenBalance';
+import { ethers } from 'ethers';
+
+export default function ZapWidget({ 
+  initialPool, 
+  onClose,
+  onSuccess
+}: { 
+  initialPool?: any, // Accept BeefyVault or MOCK_POOL
+  onClose?: () => void,
+  onSuccess?: (amountUSD: number, nftId?: string) => void
+}) {
+  const [{ wallet }] = useConnectWallet();
+  const [tab, setTab] = useState<'IN'|'OUT'>('IN');
+  
+  // Selection States
+  const [tokenIn, setTokenIn] = useState(SUPPORTED_TOKENS[0]); // BNB Default
+  const [tokenOut, setTokenOut] = useState(SUPPORTED_TOKENS[2]); // USDC Default
+  const [amount, setAmount] = useState('');
+  const [nftPositionId, setNftPositionId] = useState('');
+  const [manualNftId, setManualNftId] = useState('');
+  const [showManualInput, setShowManualInput] = useState(false);
+  const isSandbox = false;
+  const setIsSandbox = (val: boolean) => {};
+  const [txHash, setTxHash] = useState('');
+  const [mintedNftId, setMintedNftId] = useState('');
+  
+  // Create a minimal pool object from initialPool
+  const [targetPool, setTargetPool] = useState(initialPool || { name: 'Select Pool', id: '', dex: '', platform: '', fee: '0%' });
+  const [slippage, setSlippage] = useState(50); // 0.5% (50 bps)
+  const [showSettings, setShowSettings] = useState(false);
+  
+  const [tickLower, setTickLower] = useState(-886800);
+  const [tickUpper, setTickUpper] = useState(886800);
+
+  const [detectedPositions, setDetectedPositions] = useState<any[]>([]);
+  const [detectingPositions, setDetectingPositions] = useState(false);
+  const [scannedCount, setScannedCount] = useState(0);
+  const [scanRefresh, setScanRefresh] = useState(0);
+
+  const [showAllNfts, setShowAllNfts] = useState(false);
+
+  React.useEffect(() => {
+    const loadRealPositions = async () => {
+      setDetectingPositions(true);
+      
+      if (!wallet) {
+        setDetectedPositions([]);
+        setDetectingPositions(false);
+        return;
+      }
+
+      const userAddress = wallet?.accounts[0].address;
+      setScannedCount(0);
+
+      try {
+        const provider = new ethers.providers.Web3Provider(wallet.provider);
+        
+        const findAddr = (sym: string) => SUPPORTED_TOKENS.find(t => t.symbol.toUpperCase() === sym?.toUpperCase())?.address?.toLowerCase();
+
+        const targetT0 = targetPool.token0Address?.toLowerCase() || findAddr(targetPool.token0);
+        const targetT1 = targetPool.token1Address?.toLowerCase() || findAddr(targetPool.token1);
+        
+        const dexConfigs = [
+          {
+            name: 'PancakeSwap V3',
+            manager: "0x46a15b0b27311cedf172ab29e4f4766fbe7f4364",
+            factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
+          },
+          {
+            name: 'Uniswap V3',
+            manager: "0x7b8A01B39D58278b5DE7e48c8449c9f4F5170613",
+            factory: "0xdB1d10011AD0F69208368f7d06e153118BA8b793"
+          }
+        ];
+
+        let allFound: any[] = [];
+        
+        console.log(`Targeting tokens: ${targetPool.token0} (${targetT0}) and ${targetPool.token1} (${targetT1})`);
+
+        for (const config of dexConfigs) {
+          try {
+            const positionContract = new ethers.Contract(config.manager, [
+              "function balanceOf(address owner) view returns (uint256)",
+              "function tokenOfOwnerByIndex(address owner, uint256 index) view returns (uint256)",
+              "function positions(uint256 tokenId) view returns (uint96 nonce, address operator, address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, uint128 tokensOwed0, uint128 tokensOwed1)"
+            ], provider);
+
+            const bal = await positionContract.balanceOf(userAddress);
+            const count = bal.toNumber();
+            setScannedCount(prev => prev + count);
+
+            if (count > 0) {
+              const maxFetch = Math.min(count, 150);
+              // Fetch indices in parallel
+              const indices = Array.from({ length: maxFetch }, (_, i) => i);
+              const tokenIds = await Promise.all(
+                indices.map(idx => positionContract.tokenOfOwnerByIndex(userAddress, idx).catch(() => null))
+              );
+
+              // Filter out nulls and fetch positions in parallel
+              const validIds = tokenIds.filter(id => id !== null);
+              const positions = await Promise.all(
+                validIds.map(id => positionContract.positions(id).then((res: any) => ({ id, res })).catch(() => null))
+              );
+
+              for (const item of positions) {
+                if (!item) continue;
+                const { id, res: pos } = item;
+                
+                const t0 = pos.token0.toLowerCase();
+                const t1 = pos.token1.toLowerCase();
+                
+                const isTokenMatch = (
+                  (targetT0 && targetT1 && ((t0 === targetT0 && t1 === targetT1) || (t1 === targetT0 && t0 === targetT1)))
+                );
+
+                if (pos.liquidity.gt(0)) {
+                  const feePercent = (pos.fee / 10000).toFixed(2);
+                  allFound.push({
+                    id: id.toString(),
+                    name: `NFT #${id}`,
+                    range: `Tick Range: [${pos.tickLower}, ${pos.tickUpper}]`,
+                    valueUSD: 0, 
+                    asset0: `Token0: ${t0.substring(0, 6)}`,
+                    asset1: `Token1: ${t1.substring(0, 6)}`,
+                    isReal: true,
+                    poolId: "", // Will fetch if matched
+                    dex: config.name,
+                    manager: config.manager,
+                    fee: `${feePercent}%`,
+                    isMatch: isTokenMatch,
+                    rawT0: t0,
+                    rawT1: t1
+                  });
+                }
+              }
+            }
+          } catch (e) {
+            console.error(`Error scanning ${config.name}:`, e);
+          }
+        }
+        
+        // Final enrichment for matched ones
+        const factoryContractPancake = new ethers.Contract("0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865", ["function getPool(address,address,uint24) view returns (address)"], provider);
+        const factoryContractUni = new ethers.Contract("0xdB1d10011AD0F69208368f7d06e153118BA8b793", ["function getPool(address,address,uint24) view returns (address)"], provider);
+
+        allFound = await Promise.all(allFound.map(async (pos) => {
+          if (pos.isMatch) {
+             try {
+                const factory = pos.dex === 'Uniswap V3' ? factoryContractUni : factoryContractPancake;
+                const feeRaw = Math.round(parseFloat(pos.fee) * 10000);
+                const poolId = await factory.getPool(pos.rawT0, pos.rawT1, feeRaw);
+                return { 
+                  ...pos, 
+                  poolId: poolId.toLowerCase(),
+                  asset0: targetPool.token0,
+                  asset1: targetPool.token1
+                };
+             } catch (e) {
+                return pos;
+             }
+          }
+          return pos;
+        }));
+
+        setDetectedPositions(allFound);
+      } catch (err) {
+        console.error("Failed loading real positions:", err);
+        setDetectedPositions([]);
+      } finally {
+        setDetectingPositions(false);
+      }
+    };
+
+    loadRealPositions();
+  }, [wallet, targetPool.id, scanRefresh]);
+
+  React.useEffect(() => {
+    if (tab === 'OUT') {
+      const match = detectedPositions.find(p => p.isMatch);
+      if (match && !nftPositionId) {
+        setNftPositionId(match.id);
+      }
+    }
+  }, [detectedPositions, tab, nftPositionId]);
+
+  const selectedPos = detectedPositions.find(p => p.id === nftPositionId);
+  const matchingPositions = detectedPositions.filter(p => p.isMatch);
+  const displayPositions = showAllNfts ? detectedPositions : matchingPositions;
+
+  const { balance: balanceIn, loading: loadingBalIn } = useTokenBalance(tokenIn.address);
+  const { balance: balanceOut, loading: loadingBalOut } = useTokenBalance(tokenOut.address);
+
+  const { route: routeIn, loading: loadingIn, error: errorIn } = useZapInRoute(
+    tokenIn.address,
+    tokenIn.decimals,
+    (tab === 'IN') ? amount : '',
+    targetPool.dex,
+    targetPool.id,
+    slippage,
+    targetPool.platform?.includes('V3') ? tickLower : undefined,
+    targetPool.platform?.includes('V3') ? tickUpper : undefined
+  );
+
+  const { route: routeOut, loading: loadingOut, error: errorOut } = useZapOutRoute(
+    tokenOut.address,
+    targetPool.dex,
+    (selectedPos?.poolId && tab === 'OUT') ? selectedPos.poolId : targetPool.id,
+    nftPositionId,
+    slippage
+  );
+
+  const loading = tab === 'IN' ? loadingIn : loadingOut;
+  const error = tab === 'IN' ? errorIn : errorOut;
+  const route = tab === 'IN' ? routeIn : routeOut;
+
+  const [txModalParams, setTxModalParams] = useState<{isOpen: boolean, step: number, message: string}>({ isOpen: false, step: 0, message: '' });
+
+  const getExpectedInOutputText = () => {
+    if (!route) return "~ LP";
+    
+    if (route.positionDetails?.addedLiquidity) {
+      try {
+        const formatted = ethers.utils.formatUnits(route.positionDetails.addedLiquidity, 18);
+        const parsed = parseFloat(formatted);
+        if (!isNaN(parsed)) {
+          return `${parsed.toLocaleString(undefined, { maximumFractionDigits: 6 })} LP`;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+    
+    if (route.positionDetails?.addedAmountUsd) {
+      const parsed = parseFloat(route.positionDetails.addedAmountUsd);
+      if (!isNaN(parsed)) {
+         return `~ $${parsed.toFixed(2)}`;
+      }
+    }
+    
+    if (route.zapDetails?.finalAmountUsd) {
+      const parsed = parseFloat(route.zapDetails.finalAmountUsd);
+      if (!isNaN(parsed)) {
+         return `~ $${parsed.toFixed(2)}`;
+      }
+    }
+    
+    return "~ LP";
+  };
+
+  const getExpectedOutOutputText = () => {
+    if (!route) return "0.0";
+    
+    if (route.amountOut) {
+      try {
+        const formatted = ethers.utils.formatUnits(route.amountOut, tokenOut.decimals);
+        return parseFloat(formatted).toLocaleString(undefined, { maximumFractionDigits: 6 });
+      } catch (e) {
+        return route.amountOut;
+      }
+    }
+    
+    if (route.zapDetails?.finalAmountUsd) {
+       const usd = parseFloat(route.zapDetails.finalAmountUsd);
+       let tokenPrice = 1.0;
+       if (tokenOut.symbol.includes('BNB') || tokenOut.symbol === 'WBNB') tokenPrice = 600;
+       else if (tokenOut.symbol === 'ETH') tokenPrice = 3500;
+       else if (tokenOut.symbol === 'CAKE') tokenPrice = 2.5;
+       
+       const estAmt = usd / tokenPrice;
+       return estAmt.toLocaleString(undefined, { maximumFractionDigits: 6 });
+    }
+    
+    return "~";
+  };
+
+  const getGasEstimateText = () => {
+    if (!route) return "$0.000";
+    const rawGas = route.gasUsd || route.route?.gasUsd;
+    if (rawGas) {
+      const parsed = parseFloat(rawGas);
+      if (!isNaN(parsed)) {
+        return `$${parsed.toFixed(3)}`;
+      }
+    }
+    const gasUnits = route.gas || route.route?.gas;
+    if (gasUnits) {
+       const parsedUnits = parseInt(gasUnits);
+       if (!isNaN(parsedUnits)) {
+          const estUsd = (parsedUnits * 3 * 1e-9) * 600;
+          return `$${estUsd.toFixed(3)}`;
+       }
+    }
+    return "$0.250";
+  };
+
+  const handleAction = async () => {
+    if (!wallet) {
+      alert("Please connect wallet top right.");
+      return;
+    }
+    
+    setTxHash('');
+    setTxModalParams({ isOpen: true, step: 0, message: isSandbox ? 'Simulating Confirmation...' : 'Confirming in Wallet...' });
+    
+    try {
+        const provider = new ethers.providers.Web3Provider(wallet.provider);
+        const signer = provider.getSigner();
+
+        // Simulate approval
+        if (tab === 'IN' && tokenIn.symbol !== 'BNB') {
+           setTxModalParams({ isOpen: true, step: 1, message: `Approving ${tokenIn.symbol}...` });
+           const tokenContract = new ethers.Contract(tokenIn.address, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
+           try {
+              const KYBER_ROUTER = route?.routerAddress || "0x6131B5fae19EA4f9D964eAc0408E4408b66337b5";
+              const tx = await tokenContract.approve(KYBER_ROUTER, ethers.constants.MaxUint256);
+              await tx.wait();
+           } catch(e) {
+              throw new Error("Approval rejected");
+           }
+        }
+        
+        // Ensure route is ready
+        if (!route?.route) {
+          throw new Error("Route not found. Please wait.");
+        }
+
+        setTxModalParams({ isOpen: true, step: 2, message: `Building ZaaS Call...` });
+        const zapClient = getDefaultZapClient();
+        
+        const txData = tab === 'IN' 
+            ? await zapClient.buildZapInTx({
+                sender: wallet.accounts[0].address,
+                recipient: wallet.accounts[0].address,
+                route: route.route
+              }).catch(e => { throw e; })
+            : await zapClient.buildZapOutTx({
+                sender: wallet.accounts[0].address,
+                recipient: wallet.accounts[0].address,
+                route: route.route
+              }).catch(e => { throw e; });
+              
+        setTxModalParams({ isOpen: true, step: 2, message: `Confirm Zap ${tab} in Wallet...` });
+        try {
+            const tx = await signer.sendTransaction({
+              to: txData.data.routerAddress,
+              data: txData.data.callData,
+              value: tab === 'IN' && tokenIn.symbol === 'BNB' ? ethers.utils.parseUnits(amount, 18) : "0"
+            });
+            setTxHash(tx.hash);
+            setTxModalParams({ isOpen: true, step: 2, message: `Executing Zap ${tab} (Waiting for BSC confirmation)...` });
+            const receipt = await tx.wait();
+            
+            const dexManager = (tab === 'OUT' && selectedPos?.manager) 
+              ? selectedPos.manager 
+              : (targetPool.platform === 'Uniswap V3' 
+                  ? "0x7b8A01B39D58278b5DE7e48c8449c9f4F5170613" 
+                  : "0x46a15b0b27311cedf172ab29e4f4766fbe7f4364");
+
+            // Parse out minted NFT position if present in logs
+            for (const log of (receipt.logs || [])) {
+              if (log.address.toLowerCase() === dexManager.toLowerCase()) {
+                if (log.topics && log.topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
+                  if (log.topics[3]) {
+                    try {
+                      const parsedId = ethers.BigNumber.from(log.topics[3]).toString();
+                      setMintedNftId(parsedId);
+                      console.log("Successfully detected minted NFT ID from receipt:", parsedId);
+                    } catch (err) {
+                      console.error("Failed to parse NFT ID from topic:", err);
+                    }
+                  }
+                }
+              }
+            }
+        } catch(e: any) {
+            console.error("Zap tx error:", e);
+            throw new Error(e.reason || e.message || "Transaction rejected");
+        }
+        
+        setTxModalParams({ isOpen: true, step: 3, message: 'Transaction Successful!' });
+
+        let amountUSD = 0;
+        if (route.positionDetails?.addedAmountUsd) amountUSD = parseFloat(route.positionDetails.addedAmountUsd);
+        else if (route.zapDetails?.finalAmountUsd) amountUSD = parseFloat(route.zapDetails.finalAmountUsd);
+        
+        if (isNaN(amountUSD) || amountUSD <= 0) {
+           amountUSD = tab === 'IN' ? Number(amount) : (selectedPos ? selectedPos.valueUSD : 0);
+           if (tab === 'IN') {
+             if (tokenIn.symbol.includes('BNB')) amountUSD *= 600;
+             else if (tokenIn.symbol === 'CAKE') amountUSD *= 2.5;
+           }
+        }
+        
+        if (isNaN(amountUSD) || amountUSD < 0) amountUSD = 0;
+
+        setTimeout(() => {
+           setTxModalParams({ isOpen: false, step: 0, message: '' });
+           setAmount('');
+           setNftPositionId('');
+           if (onSuccess) onSuccess(tab === 'IN' ? amountUSD : -amountUSD, mintedNftId);
+           if (onClose) onClose();
+        }, 3000);
+    } catch (e: any) {
+        console.error("Zap flow error:", e);
+        setTxModalParams({ isOpen: true, step: 4, message: e.message || 'Transaction Failed' });
+    }
+  };
+
+  const forceCompleteTransaction = () => {
+    // Escape-hatch in case public RPC node gets stuck pending
+    setTxModalParams({ isOpen: true, step: 3, message: 'Transaction Tracked!' });
+    let amountUSD = 0;
+    
+    if (tab === 'IN') {
+      amountUSD = Number(amount);
+      if (isNaN(amountUSD) || amountUSD <= 0) amountUSD = 10;
+      
+      if (tokenIn.symbol.includes('BNB') || tokenIn.symbol === 'WBNB') amountUSD *= 600;
+      else if (tokenIn.symbol === 'ETH') amountUSD *= 3500;
+      else if (tokenIn.symbol === 'CAKE') amountUSD *= 2.5;
+      else if (['USDT', 'USDC', 'BUSD', 'DAI'].includes(tokenIn.symbol)) amountUSD *= 1;
+      if (amountUSD > 10000000) amountUSD = 10000000;
+    } else {
+      amountUSD = selectedPos?.valueUSD || 50;
+    }
+    
+    setTimeout(() => {
+       setTxModalParams({ isOpen: false, step: 0, message: '' });
+       setAmount('');
+       setNftPositionId('');
+       if (onSuccess) onSuccess(tab === 'IN' ? amountUSD : -amountUSD, "");
+       if (onClose) onClose();
+    }, 2000);
+  };
+
+  return (
+    <div className="bg-[#131A2A] border border-[#1E293B] rounded-[24px] shadow-2xl relative overflow-hidden">
+      {txModalParams.isOpen && (
+         <div className="absolute inset-0 bg-[#0A0D14]/95 backdrop-blur-sm z-50 flex items-center justify-center flex-col p-6 rounded-[24px]">
+            {txModalParams.step < 3 && <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />}
+            {txModalParams.step === 3 && <div className="w-12 h-12 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-4"><span className="text-2xl">✓</span></div>}
+            {txModalParams.step === 4 && <div className="w-12 h-12 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center mb-4"><AlertTriangle/></div>}
+            
+            <h3 className="text-white font-bold text-base text-center mb-3 max-h-[120px] overflow-y-auto px-4">{txModalParams.message}</h3>
+            
+            {txHash && (
+               <div className="mb-4 text-center bg-[#0D111C]/60 p-3 rounded-lg border border-[#1E293B] max-w-[280px]">
+                 <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Transaction Status Link</span>
+                 <a 
+                   href={`https://bscscan.com/tx/${txHash}`} 
+                   target="_blank" 
+                   rel="noreferrer"
+                   className="text-xs text-blue-400 hover:text-blue-300 font-mono flex items-center justify-center gap-1 mt-1 break-all"
+                 >
+                   {txHash.substring(0, 16)}...{txHash.substring(txHash.length - 12)}
+                   <ExternalLink size={12} className="shrink-0" />
+                 </a>
+               </div>
+            )}
+
+            {txModalParams.step === 2 && txHash && (
+               <button 
+                 onClick={forceCompleteTransaction}
+                 className="mb-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-blue-500/15 flex items-center gap-1.5"
+               >
+                 Confirm in Portfolio & Run (Skip RPC Wait)
+               </button>
+            )}
+
+            {(txModalParams.step === 3 || txModalParams.step === 4) ? (
+              <button 
+                onClick={() => setTxModalParams({ isOpen: false, step: 0, message: '' })}
+                className="px-5 py-2 bg-slate-850 hover:bg-slate-750 text-white border border-[#1E293B] rounded-lg text-sm font-semibold transition-colors"
+              >
+                Close
+              </button>
+            ) : (
+              <button 
+                onClick={() => setTxModalParams({ isOpen: false, step: 0, message: '' })}
+                className="text-slate-500 hover:text-slate-300 text-xs underline mt-2 transition-colors"
+               >
+                Dismiss Modal (Unlock Screen)
+              </button>
+            )}
+         </div>
+      )}
+      {/* Header Tabs */}
+      <div className="flex border-b border-[#1E293B] relative">
+        {onClose && (
+           <button onClick={onClose} className="absolute left-2 top-4 text-slate-400 hover:text-white p-1 z-10 transition-colors">
+             <ArrowUp size={16} className="-rotate-90"/>
+           </button>
+        )}
+        <button 
+          onClick={() => { setTab('IN'); setAmount(''); }}
+          className={`flex-1 py-4 text-sm font-semibold transition-colors ${tab === 'IN' ? 'text-white border-b-2 border-blue-500 bg-blue-500/5' : 'text-slate-400 hover:text-white'} `}
+        >
+          Zap In
+        </button>
+        <button 
+          onClick={() => { setTab('OUT'); setAmount(''); }}
+          className={`flex-1 py-4 text-sm font-semibold transition-colors ${tab === 'OUT' ? 'text-white border-b-2 border-blue-500 bg-blue-500/5' : 'text-slate-400 hover:text-white'} `}
+        >
+          Zap Out
+        </button>
+      </div>
+
+      <div className="p-4 space-y-2">
+        {/* Source Section (Token or LP Position) */}
+        <div className="bg-[#0D111C] p-4 rounded-xl border border-[#1E293B]/50 hover:border-[#1E293B] transition-colors relative">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-medium text-slate-400">
+               {tab === 'IN' ? 'You pay (Token)' : 'You withdraw (from Pool)'}
+            </span>
+            {tab === 'IN' && wallet && (
+               <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <Wallet size={12} />
+                  <span>{loadingBalIn ? '...' : balanceIn}</span>
+                  <button onClick={() => setAmount(balanceIn)} className="text-blue-400 hover:text-blue-300 ml-1 font-medium bg-blue-500/10 px-1.5 py-0.5 rounded">MAX</button>
+               </div>
+            )}
+          </div>
+
+          {tab === 'IN' ? (
+             <div className="flex justify-between items-center gap-3">
+               <input 
+                 type="number"
+                 placeholder="0.0"
+                 value={amount}
+                 onChange={e => setAmount(e.target.value)}
+                 className="bg-transparent text-[32px] font-medium text-white w-full outline-none placeholder:text-slate-600 font-mono"
+               />
+               <button 
+                 onClick={() => {
+                    const currentIndex = SUPPORTED_TOKENS.findIndex(t => t.symbol === tokenIn.symbol);
+                    setTokenIn(SUPPORTED_TOKENS[(currentIndex + 1) % SUPPORTED_TOKENS.length]);
+                 }}
+                 className="flex items-center gap-2 bg-[#1E293B] hover:bg-[#273549] text-white px-3 py-1.5 rounded-full font-medium text-sm transition-colors shrink-0"
+               >
+                 <img src={tokenIn.logoUrl} className="w-5 h-5 rounded-full" alt="" />
+                 {tokenIn.symbol}
+               </button>
+             </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+                <button 
+                  onClick={() => { if (!initialPool) alert("Please close and select a vault from the Vaults list") }}
+                  className={`w-full flex items-center justify-between bg-[#1E293B]/50 p-3 rounded-lg border border-transparent ${!initialPool ? 'hover:bg-[#1E293B] hover:border-slate-600 cursor-pointer' : 'cursor-default'} transition-colors`}
+                >
+                  <div className="flex items-center gap-3">
+                     <div className="flex -space-x-2">
+                       <div className="w-7 h-7 rounded-full bg-slate-800 border-2 border-[#1E293B] z-10 flex items-center justify-center text-[9px] font-bold">1</div>
+                       <div className="w-7 h-7 rounded-full bg-slate-700 border-2 border-[#1E293B] z-0 flex items-center justify-center text-[9px] font-bold">2</div>
+                     </div>
+                     <div className="text-left">
+                        <p className="text-white font-medium">{targetPool.name}</p>
+                        <p className="text-xs text-slate-400">{targetPool.dex || targetPool.platform} • Fee {targetPool.fee}</p>
+                     </div>
+                  </div>
+                  {!initialPool && <span className="text-slate-500 text-sm">Change</span>}
+                </button>
+                {/* V3 Positions Selector List */}
+                <div className="mt-2.5 bg-[#0A0D14] p-3 rounded-lg border border-[#1E293B]/60">
+                  <div className="flex justify-between items-center mb-2.5 border-b border-[#1E293B]/40 pb-2">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                       Active Positions in {targetPool.name}
+                    </span>
+                    {detectingPositions ? (
+                      <span className="text-[10px] text-blue-400 animate-pulse font-mono">Scanning {scannedCount > 0 ? `${scannedCount} NFTs...` : 'Wallet...'}</span>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                         <span className="text-[10px] text-slate-500 font-mono">{displayPositions.length} Found</span>
+                         <button 
+                           onClick={() => setShowAllNfts(!showAllNfts)}
+                           className={`text-[10px] font-bold uppercase transition-colors px-1.5 py-0.5 rounded ${showAllNfts ? 'bg-blue-500 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                           title="Show all V3 NFT positions found in wallet regardless of matching"
+                         >
+                           All
+                         </button>
+                         <button 
+                           onClick={() => setScanRefresh(prev => prev + 1)}
+                           className="text-[10px] text-blue-400 hover:text-blue-300 font-bold uppercase"
+                         >
+                           Refresh
+                         </button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                    {displayPositions.length === 0 ? (
+                      <div className="py-6 flex flex-col items-center justify-center text-center px-4">
+                        <div className="w-10 h-10 rounded-full bg-slate-800/30 flex items-center justify-center mb-2 border border-slate-700/20 text-slate-600">
+                          <Wallet size={16} />
+                        </div>
+                        <p className="text-[11px] text-slate-500 font-medium">
+                          {showAllNfts ? 'No V3 positions found in wallet.' : 'No active LP positions detected for this pair.'}
+                        </p>
+                        <p className="text-[9px] text-slate-600 mt-1 leading-relaxed">
+                          {showAllNfts 
+                            ? 'Ensure you are on BSC Mainnet and have active V3 positions in PancakeSwap or Uniswap.' 
+                            : 'Click "ALL" to see if we found other positions that don\'t match this specific pool.'}
+                        </p>
+                        <button 
+                          onClick={() => setShowManualInput(!showManualInput)}
+                          className="mt-3 text-[10px] text-blue-400 font-bold uppercase tracking-wider hover:underline"
+                        >
+                          {showManualInput ? 'Cancel Manual ID' : 'Enter NFT ID Manually'}
+                        </button>
+                      </div>
+                    ) : (
+                      displayPositions.map((pos) => {
+                        const isSelected = nftPositionId === pos.id;
+                        return (
+                          <div 
+                            key={pos.id}
+                            onClick={() => {
+                              setNftPositionId(pos.id);
+                              setShowManualInput(false);
+                            }}
+                            className={`p-3 rounded-xl border transition-all cursor-pointer flex justify-between items-center group relative overflow-hidden ${
+                              isSelected 
+                                ? 'bg-blue-600/10 border-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.15)]' 
+                                : 'bg-[#131A2A]/40 border-[#1E293B]/60 hover:border-slate-500 hover:bg-[#131A2A]/60'
+                            }`}
+                          >
+                            {isSelected && <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />}
+                            <div className="text-left">
+                              <p className="text-xs font-bold text-white flex items-center gap-2">
+                                <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]' : (pos.isMatch ? 'bg-green-500/40' : 'bg-red-500/40')}`}></span>
+                                NFT ID: #{pos.id}
+                                {isSelected && <span className="text-[9px] bg-blue-500 text-white px-1.5 py-0.5 rounded-md uppercase tracking-tighter">Selected</span>}
+                                {!pos.isMatch && <span className="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded-md uppercase tracking-tighter">Mismatch</span>}
+                              </p>
+                              <div className="flex flex-col gap-1 mt-1.5">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="flex -space-x-1.5">
+                                    <div className="w-3.5 h-3.5 rounded-full bg-slate-800 border border-[#131A2A] text-[6px] flex items-center justify-center font-bold font-mono">
+                                      {pos.dex === 'Uniswap V3' ? 'U' : 'P'}
+                                    </div>
+                                    <div className="w-3.5 h-3.5 rounded-full bg-slate-700 border border-[#131A2A] text-[6px] flex items-center justify-center font-bold">2</div>
+                                  </div>
+                                  <span className="text-[10px] text-slate-400 font-medium">{pos.dex} • {pos.fee} • {pos.range.replace('Tick Range: ', '').replace('[', '').replace(']', '')}</span>
+                                </div>
+                                <p className="text-[9px] text-blue-300/80 font-mono">
+                                   Contains: {pos.asset0} + {pos.asset1}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right flex flex-col items-end">
+                               <div className="text-blue-400 text-xs font-bold font-mono group-hover:scale-110 transition-transform">
+                                 {pos.valueUSD > 0 ? `$${pos.valueUSD.toFixed(2)}` : 'Active'}
+                               </div>
+                               <div className="flex items-center gap-1 text-[8px] text-slate-500 mt-1 uppercase font-bold tracking-widest">
+                                  Select <ArrowUp size={8} className="rotate-90"/>
+                               </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                    
+                    {(showManualInput || (displayPositions.length > 0)) && (
+                      <div className="mt-4 pt-4 border-t border-[#1E293B]/40">
+                         <button 
+                            onClick={() => setShowManualInput(!showManualInput)}
+                            className="text-[10px] text-slate-500 font-bold uppercase tracking-wider hover:text-slate-300 transition-colors mb-2 block"
+                         >
+                            {showManualInput ? 'Close Manual Entry' : 'Manual NFT ID Entry'}
+                         </button>
+                         {showManualInput && (
+                            <div className="flex flex-col gap-2 bg-[#0A0D14] p-3 rounded-lg border border-[#1E293B]/60">
+                               <input 
+                                 type="text"
+                                 placeholder="Enter Position NFT ID"
+                                 value={manualNftId}
+                                 onChange={e => {
+                                   setManualNftId(e.target.value);
+                                   setNftPositionId(e.target.value);
+                                 }}
+                                 className="bg-transparent text-sm text-white w-full outline-none font-mono"
+                               />
+                               <p className="text-[9px] text-slate-500">Only use if auto-detection fails. NFT must be owned by your wallet.</p>
+                            </div>
+                         )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+             </div>
+          )}
+        </div>
+
+        {/* Separator / Direction */}
+        <div className="flex justify-center -my-3 relative z-10 pointer-events-none">
+          <div className="bg-[#131A2A] p-1.5 rounded-xl border border-[#1E293B]">
+            {tab === 'IN' ? <ArrowDown size={16} className="text-slate-400" /> : <ArrowUp size={16} className="text-slate-400" />}
+          </div>
+        </div>
+
+        {/* Target Section (Pool or Token) */}
+        <div className="bg-[#0D111C] p-4 rounded-xl border border-[#1E293B]/50 hover:border-[#1E293B] transition-colors relative">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-medium text-slate-400">
+               {tab === 'IN' ? 'Target Pool (Receive LP)' : 'Receive Token'}
+            </span>
+            <div className="flex items-center gap-3">
+               {tab === 'OUT' && wallet && (
+                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                    <Wallet size={12} />
+                    <span>{loadingBalOut ? '...' : balanceOut}</span>
+                 </div>
+               )}
+               <button onClick={() => setShowSettings(!showSettings)} className={`text-slate-500 hover:text-slate-300 transition-colors ${showSettings ? 'text-white' : ''}`}>
+                 <Settings size={16} />
+               </button>
+            </div>
+          </div>
+          
+          {showSettings && (
+             <div className="mb-4 space-y-2">
+               <div className="bg-[#0A0D14] p-3 rounded-lg border border-[#1E293B] flex items-center justify-between">
+                  <span className="text-xs text-slate-400">Slippage Tolerance</span>
+                  <div className="flex gap-2">
+                     {[10, 50, 100].map(val => (
+                       <button 
+                          key={val}
+                          onClick={() => setSlippage(val)}
+                          className={`text-xs px-2 py-1 rounded transition-colors ${slippage === val ? 'bg-blue-500/20 text-blue-400' : 'bg-[#1E293B] text-slate-400 hover:text-white'}`}
+                       >
+                         {val / 100}%
+                       </button>
+                     ))}
+                     <div className="flex items-center bg-[#1E293B] rounded px-2 w-16">
+                       <input 
+                          type="number" 
+                          value={slippage / 100} 
+                          onChange={e => setSlippage(parseFloat(e.target.value) * 100)}
+                          className="bg-transparent text-xs text-white w-full outline-none text-right"
+                       />
+                       <span className="text-xs text-slate-400 ml-1">%</span>
+                     </div>
+                  </div>
+               </div>
+               
+               {targetPool.platform.includes('V3') && (
+                 <div className="bg-[#0A0D14] p-3 rounded-lg border border-[#1E293B] flex flex-col gap-2">
+                    <span className="text-xs text-slate-400">V3 Position Price Range (Ticks)</span>
+                    <div className="flex items-center gap-3">
+                       <div className="flex-1 flex flex-col">
+                          <label className="text-[10px] text-slate-500 mb-1">Min Tick</label>
+                          <input 
+                            type="number" 
+                            value={tickLower} 
+                            onChange={e => setTickLower(parseInt(e.target.value) || 0)}
+                            className="bg-[#1E293B] rounded p-1.5 text-xs text-white w-full outline-none" 
+                          />
+                       </div>
+                       <div className="flex-1 flex flex-col">
+                          <label className="text-[10px] text-slate-500 mb-1">Max Tick</label>
+                          <input 
+                            type="number" 
+                            value={tickUpper} 
+                            onChange={e => setTickUpper(parseInt(e.target.value) || 0)}
+                            className="bg-[#1E293B] rounded p-1.5 text-xs text-white w-full outline-none" 
+                          />
+                       </div>
+                    </div>
+                 </div>
+               )}
+             </div>
+          )}
+          
+          {tab === 'IN' ? (
+             <button 
+               onClick={() => { if (!initialPool) alert("Please close and select a vault from the Vaults list") }}
+               className={`w-full flex items-center justify-between bg-[#1E293B]/50 p-3 rounded-lg border border-transparent ${!initialPool ? 'hover:bg-[#1E293B] hover:border-slate-600 cursor-pointer' : 'cursor-default'} transition-colors`}
+             >
+               <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2">
+                    <div className="w-7 h-7 rounded-full bg-slate-800 border-2 border-[#1E293B] z-10 flex items-center justify-center text-[9px] font-bold">1</div>
+                    <div className="w-7 h-7 rounded-full bg-slate-700 border-2 border-[#1E293B] z-0 flex items-center justify-center text-[9px] font-bold">2</div>
+                  </div>
+                  <div className="text-left">
+                     <p className="text-white font-medium">{targetPool.name}</p>
+                     <p className="text-xs text-slate-400">{targetPool.dex || targetPool.platform} • {targetPool.fee}</p>
+                  </div>
+               </div>
+               {!initialPool && <span className="text-slate-500 text-sm">Change</span>}
+             </button>
+          ) : (
+             <div className="flex justify-between items-center gap-3">
+               <div className="text-[32px] font-medium text-slate-500 font-mono">
+                 {getExpectedOutOutputText()}
+               </div>
+               <button 
+                 onClick={() => {
+                   const currentIndex = SUPPORTED_TOKENS.findIndex(t => t.symbol === tokenOut.symbol);
+                   setTokenOut(SUPPORTED_TOKENS[(currentIndex + 1) % SUPPORTED_TOKENS.length]);
+                 }}
+                 className="flex items-center gap-2 bg-[#1E293B] hover:bg-[#273549] text-white px-3 py-1.5 rounded-full font-medium text-sm transition-colors shrink-0"
+               >
+                 <img src={tokenOut.logoUrl} className="w-5 h-5 rounded-full" alt="" />
+                 {tokenOut.symbol}
+               </button>
+             </div>
+          )}
+        </div>
+
+        {/* Route Status Box */}
+        {((tab === 'IN' && amount && Number(amount) > 0) || (tab === 'OUT' && nftPositionId)) && (
+          <div className="mt-4 p-3 bg-[#0A0D14] rounded-lg border border-[#1E293B] text-sm">
+             {loading ? (
+                <div className="animate-pulse flex items-center justify-center gap-2 text-slate-400 py-2">
+                  <div className="w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full animate-spin" />
+                  Finding optimal route...
+                </div>
+             ) : error ? (
+                <div className="space-y-2 p-1 text-left">
+                  <div className="flex gap-2 text-red-400 items-start">
+                    <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+                    <span className="text-xs leading-normal font-medium">{error}</span>
+                  </div>
+                  <div className="bg-blue-500/10 border border-blue-500/20 p-2.5 rounded-lg text-[11px] text-blue-300 leading-normal mt-2">
+                    <strong className="block mb-0.5 font-bold">💡 Mainnet Execution</strong>
+                    Confirm your wallet is connected to BSC Mainnet. Any trade or withdrawal will be executed on-chain with real assets.
+                  </div>
+                </div>
+             ) : route ? (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-slate-300">
+                     <span className="flex items-center gap-1.5"><Info size={14} className="text-slate-500"/> Route Gas Estimate</span>
+                     <span className="font-mono text-white">{getGasEstimateText()}</span>
+                  </div>
+                  {tab === 'IN' && (
+                     <div className="flex justify-between items-center text-slate-300">
+                        <span className="text-slate-400">Expected Output</span>
+                        <span className="font-mono text-white">{getExpectedInOutputText()}</span>
+                     </div>
+                  )}
+                  {tab === 'OUT' && (
+                     <div className="flex justify-between items-center text-slate-300">
+                        <span className="text-slate-400">Expected Output</span>
+                        <span className="font-mono text-white">{getExpectedOutOutputText()} {tokenOut.symbol}</span>
+                     </div>
+                  )}
+                  <div className="flex justify-between items-center text-slate-300">
+                     <span className="text-slate-400">Router</span>
+                     <span className="text-blue-400 flex items-center gap-1">Kyber ZaaS <ExternalLink size={12}/></span>
+                  </div>
+                </div>
+             ) : null}
+          </div>
+        )}
+
+        {/* Call to action */}
+        <div className="pt-2">
+          <button
+            onClick={handleAction}
+            disabled={!wallet || (tab === 'IN' ? (!amount || Number(amount) <= 0) : !nftPositionId) || loading || !!error}
+            className="w-full py-4 rounded-xl font-bold text-lg transition-all
+                     bg-blue-600 hover:bg-blue-500 text-white disabled:bg-[#1E293B] disabled:text-slate-500 disabled:cursor-not-allowed
+                     flex justify-center items-center gap-2"
+          >
+            {!wallet 
+              ? 'Connect Wallet'
+              : tab === 'IN' && (!amount || Number(amount) <= 0) 
+                ? 'Enter Amount'
+                : tab === 'OUT' && !nftPositionId
+                  ? 'Select NFT Position'
+                  : loading
+                    ? 'Calculating...'
+                    : error
+                      ? 'No Route Available'
+                      : `Zap ${tab}`}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
