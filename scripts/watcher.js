@@ -18,7 +18,7 @@ const REAL_TREASURY_WALLET =
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed1.binance.org/",
+	process.env.RPC_URL || "https://bsc.drpc.org",
 );
 // FEATURE 2: Nessun limite minimo richiesto.
 const SAFE_FACTOR = 0.73;
