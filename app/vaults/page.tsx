@@ -11,9 +11,9 @@ export default function VaultsPage() {
       <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "110px 20px 40px" }}>
         <div style={{ textAlign: "center" }}>
           <h1 style={{ fontSize: "42px", fontWeight: 900, marginBottom: "16px" }}>🏗️ Vaults</h1>
-          <p style={{ color: "#94a3b8", fontSize: "18px" }}>Work in Progress — Coming Soon</p>
+          <p style={{ color: "#94a3b8", fontSize: "18px" }}>Vault-based yield strategies on BNB Chain</p>
           <p style={{ color: "#64748b", marginTop: "12px", fontSize: "15px" }}>
-            We are integrating the best vaults on BNB Chain.
+            Discover and manage passive DeFi positions with optimized vaults. Protocol fees: 0.5%.
           </p>
         </div>
 

@@ -34,7 +34,7 @@ const ACCUMULATOR_WALLET = "0x4c1caA917FD012b285Ba35E93535675e5B59806C";
 const SWAP_LINK = `/swap-all?tokenOut=${CONTRACT_ADDRESS}`;
 const TOKEN_SNIFFER_LINK = `https://tokensniffer.com/token/bsc/${CONTRACT_ADDRESS}`;
 const ALL_POOLS_LINK = `https://pancakeswap.finance/info/tokens/${CONTRACT_ADDRESS}`;
-const volume30d = 27863;
+const volume30d = 206000;
 
 const HomePageClient = () => {
 	const [mounted, setMounted] = useState(false);
@@ -143,7 +143,7 @@ const HomePageClient = () => {
 								fontWeight: "bold",
 							}}
 						>
-							<FaExchangeAlt /> 0.1% DEX Fee
+							<FaExchangeAlt /> 0.5% DEX Fee
 						</div>
 						<div
 							style={{
@@ -580,7 +580,7 @@ const HomePageClient = () => {
 								<h3>Trade & Farm</h3>
 							</div>
 							<p>
-								Stack points with every action (<strong>0.1% DEX fee</strong>):{" "}
+								Stack points with every action (<strong>0.5% DEX fee</strong>):{" "}
 								<strong>Swap (100), Zap (150)</strong> or{" "}
 								<strong>Limit Orders (200)</strong>. Every trade fuels the
 								treasury.
@@ -650,7 +650,7 @@ const HomePageClient = () => {
 						<p>
 							The Treasury is fueled by 3 distinct streams: a{" "}
 							<strong>4% Token Tax</strong> (Buy/Sell), a highly competitive{" "}
-							<strong>0.1% DEX Fee</strong>, and{" "}
+							<strong>0.5% DEX Fee</strong>, and{" "}
 							<strong>Free Tasks Income</strong>.
 						</p>
 					</S.FeatureCard>
