@@ -81,7 +81,7 @@ main,
 /* Forza i widget esterni a non superare lo schermo */
 iframe,
 .widget-container,
-#lifi-widget {
+#mayan_widget {
 	max-width: 100% !important;
 }
 

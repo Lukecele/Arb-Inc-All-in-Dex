@@ -29,7 +29,7 @@ flowchart TD
     
     subgraph ExecutionEngine ["Liquidity & Routing Protocols"]
         Connectors --> Kyber["KyberSwap Aggregator & Split Routing\n(PancakeSwap, Uniswap V3, Biswap)"]
-        Connectors --> LiFi["LI.FI Cross-Chain Bridge Engine\n(EVM & Non-EVM Ecosystems)"]
+        Connectors --> Mayan["Mayan Finance Cross-Chain Bridge\n(Solana, EVM & Wormhole Swift Protocol)"]
         Connectors --> LimitOrders["On-Chain Non-Custodial Limit Engine"]
         Connectors --> Beefy["Automated Compounding Vaults"]
     end
@@ -54,7 +54,7 @@ flowchart TD
 - Smart order splitting algorithms reduce gas overhead and prevent front-running / MEV sandwich attacks.
 
 ### 2. Cross-Chain Bridge Integration (`/bridge`)
-- Powered by the **LI.FI Cross-Chain Widget**, allowing users to transfer and swap assets seamlessly across 15+ EVM and non-EVM blockchains (Ethereum, Arbitrum, Optimism, Polygon, Base, Avalanche, and Solana) directly into BNB Smart Chain.
+- Powered by **Mayan Finance** and the **Mayan Swift Protocol** (via Wormhole), allowing users to execute fast, high-liquidity cross-chain swaps between Solana, Ethereum, Arbitrum, Polygon, Avalanche, Optimism, Base, and BNB Smart Chain at optimal rates.
 
 ### 3. Non-Custodial Limit Orders (`/limit-orders`)
 - Decentralized conditional trade execution on-chain without requiring deposits into centralized orderbooks or third-party custody.
@@ -104,7 +104,7 @@ The ARB Inc token contract ownership has been **permanently renounced** to the z
 | :--- | :--- |
 | **Framework** | Next.js 15 (App Router), React 19, TypeScript |
 | **Styling & Animation** | Tailwind CSS, Framer Motion, Styled-Components |
-| **Web3 & Blockchain** | Viem 2, Wagmi 3, Ethers 5, Web3-Onboard, KyberSwap Widgets, LI.FI Widget |
+| **Web3 & Blockchain** | Viem 2, Wagmi 3, Ethers 5, Web3-Onboard, KyberSwap Widgets, Mayan Finance SDK |
 | **Infrastructure** | Node.js 22 LTS, Upstash Redis, Vercel Edge Network |
 | **Testing & CI** | Playwright E2E Test Runner, Biome Linter |
 | **Monitoring** | Custom RPC Watcher Daemons, DeFiLlama Dimension Adapters |

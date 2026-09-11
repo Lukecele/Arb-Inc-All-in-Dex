@@ -15,6 +15,10 @@ out/
 data/
 *.mp4
 scripts/.env
+scripts/log.txt
+*.bak
+*.backup
 .env.local
 .env*.local
 tsconfig.tsbuildinfo
+

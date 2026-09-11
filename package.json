@@ -15,7 +15,6 @@
 		"@kyberswap/liquidity-widgets": "^1.1.29",
 		"@kyberswap/pancake-liquidity-widgets": "^2.0.6",
 		"@kyberswap/widgets": "^2.3.0",
-		"@lifi/widget": "^3.40.12",
 		"@metamask/sdk": "^0.34.0",
 		"@mysten/dapp-kit": "^1.0.4",
 		"@mysten/sui": "^2.13.2",
