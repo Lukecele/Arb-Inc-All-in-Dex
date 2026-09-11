@@ -1,6 +1,6 @@
 # Arbitrage Inc: All-in-Dex Suite
 
-An institutional-grade decentralized exchange aggregator, cross-chain bridge, limit order protocol, and automated real-yield distribution engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
+A production-ready decentralized exchange aggregator, cross-chain bridge, limit order protocol, and deterministic real-yield distribution engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
 **Live Application:** [https://arbitrage-inc.exchange](https://arbitrage-inc.exchange)  
 **DeFiLlama Protocol:** [https://defillama.com/protocol/arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)  
@@ -34,7 +34,7 @@ flowchart TD
         Connectors --> Beefy["Automated Compounding Vaults"]
     end
     
-    subgraph DaemonSecurity ["Autonomous Daemons & On-Chain Security"]
+    subgraph DaemonSecurity ["Background Telemetry & On-Chain Security Daemons"]
         Watcher["Security & Solvency Watcher Daemon\n(scripts/watcher.js - SAFE_FACTOR 0.73)"]
         HealthCheck["Real-Time Health Auditor\n(scripts/health_check.js - <=80% SECURE)"]
         YieldDistributor["Automated 12-Hour Yield Engine\n(100% BNB Distribution to Holders)"]
