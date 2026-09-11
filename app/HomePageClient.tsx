@@ -64,10 +64,10 @@ const HomePageClient = () => {
 	if (!isNaN(debtNum) && !isNaN(treasuryNum) && treasuryNum > 0) {
 		const ratio = (debtNum / treasuryNum) * 100;
 		ratioStr = ratio.toFixed(2) + "%";
-		if (ratio <= 55) {
+		if (ratio <= 80) {
 			statusStr = "✅ SECURE";
 			statusColor = "#22c55e";
-		} else if (ratio <= 90) {
+		} else if (ratio <= 95) {
 			statusStr = "⚠️ WARNING";
 			statusColor = "#facc15";
 		} else {

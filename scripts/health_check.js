@@ -34,9 +34,9 @@ async function run() {
 	console.log(`📊 Percentuale di Utilizzo: ${ratio.toFixed(2)}%`);
 	console.log("-----------------------------------");
 
-	if (ratio <= 55) {
+	if (ratio <= 80) {
 		console.log("✅ STATO: SICURO. Il protocollo è ampiamente solvibile.\n");
-	} else if (ratio > 55 && ratio <= 90) {
+	} else if (ratio > 80 && ratio <= 95) {
 		console.log("⚠️ STATO: ATTENZIONE. Margine di sicurezza in riduzione.\n");
 	} else {
 		console.log("🚨 STATO: PERICOLO! Rischio default imminente.\n");
