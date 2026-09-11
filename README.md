@@ -17,16 +17,15 @@ behind this project — it is autonomous open-source software.
 
 ## Tokenomics
 
-- **20% burn on every distribution** — tokens permanently removed from circulation
-- **50% of DEX revenue** converted to BNB and sent to distribution wallet
+- **100% of DEX revenue** converted to BNB and sent directly to the distribution wallet
 - **Every 12 hours:**
   - **100% of BNB rewards** distributed directly to token holders
-  - **Separate buyback mechanism** funded by protocol revenue
+- **Zero team cuts, zero burn mechanisms** — 100% of generated revenue flows directly to holders
 
 ## Key Features
 
-- Sustainable, deflationary reward system
-- Automatic buyback and burn mechanism
+- 100% direct community yield distribution (all DEX revenue and BNB rewards to holders)
+- Automated 12-hour reward distribution cycle
 - Fully open-source frontend (MIT License)
 - Transparent on-chain tokenomics
 - No team, no admin keys, no custodians
