@@ -5,7 +5,7 @@ An institutional-grade decentralized exchange aggregator, cross-chain bridge, li
 **Live Application:** [https://arbitrage-inc.exchange](https://arbitrage-inc.exchange)  
 **DeFiLlama Protocol:** [https://defillama.com/protocol/arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)  
 **Smart Contract:** [0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BscScan)](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)  
-**Community:** [Telegram](https://t.me/ArbitrageInception) | **License:** MIT
+**Community:** [Telegram](https://t.me/ArbitrageInception) | **PWA:** Installable on iOS & Android | **License:** MIT
 
 ---
 
@@ -75,9 +75,11 @@ flowchart TD
 - Officially verified and listed on **DeFiLlama** ([arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)).
 - Open-source dimension adapter tracking daily on-chain protocol revenue and fees.
 
-### 8. Progressive Web App (PWA) & Institutional Dark UI
-- Fully responsive, mobile-first design built with Tailwind CSS and Framer Motion.
-- PWA manifest and service worker configuration enable 1-tap installation on iOS and Android devices for native app-like performance.
+### 8. Mobile-First Progressive Web App (PWA)
+- **Instant 1-Tap Installation:** Configured with a full PWA manifest (`public/manifest.json`) in `"display": "standalone"` mode, eliminating browser address bars for a true native mobile app experience on iOS and Android.
+- **Cross-Platform OS Integration:** Dedicated metadata and assets configured for **iOS Safari** (`apple-touch-icon`, customized `Viewport` and `#8B5CF6` theme colors), **Android Chrome** (192x192 & 512x512 maskable icons), and **Windows** (`browserconfig.xml`).
+- **Decentralized Mobile Distribution:** Bypasses centralized mobile app store censorship, arbitrary delistings, and 30% fees, giving users direct non-custodial trading on any mobile browser.
+- **Responsive Institutional Dark UI:** Styled with Tailwind CSS and Framer Motion for high-contrast mobile responsiveness and fluid touch interactions.
 
 ### 9. Multi-Chain Wallet Connectors
 - Universal Web3 authentication supporting MetaMask, Coinbase Wallet, WalletConnect v2, Phantom, OKX, and emerging multi-chain ecosystems (Solana Wallet Adapter, Sui dApp Kit).
