@@ -6,6 +6,9 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
+		"test": "node --experimental-strip-types --test tests/financial-math.test.mjs",
+		"test:unit": "node --experimental-strip-types --test tests/financial-math.test.mjs",
+		"test:e2e": "node scripts/maintenance/test-pages.mjs",
 		"postinstall": "patch-package"
 	},
 	"dependencies": {
