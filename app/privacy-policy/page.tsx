@@ -60,12 +60,11 @@ export default function PrivacyPolicyPage() {
 						(GDPR) and D.Lgs. 196/2003 as amended by D.Lgs. 101/2018
 					</p>
 
-					<h2>1. Data Controller</h2>
+					<h2>1. Data Controller & Open-Source Architecture</h2>
 					<p>
-						This platform is operated by <strong>Arbitrage Inception</strong>,
-						an anonymous, community-driven open-source project (MIT License)
-						with no registered legal entity. For privacy-related requests, reach
-						us via:{" "}
+						This website is a decentralized, non-custodial client interface published under the MIT License
+						by independent open-source software contributors, with no centralized corporate ownership or custodial control.
+						For technical or privacy-related requests, reach the contributors via:{" "}
 						<a
 							href="https://t.me/ArbitrageInception"
 							target="_blank"

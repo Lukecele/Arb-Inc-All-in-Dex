@@ -142,18 +142,19 @@ node scripts/maintenance/test-pages.mjs
 
 ---
 
-## ⚖️ Legal & Regulatory Compliance (MiCA Notice)
+## ⚖️ Open-Source Architecture & Regulatory Notice (MiCA Recital 22)
 
-This interface is an open-source, non-custodial graphical user interface (GUI) for interacting with decentralized smart contracts on BNB Smart Chain. 
+This repository contains free, open-source client software (MIT License) developed and maintained by independent open-source software engineers and researchers.
 
-- Under **Regulation (EU) 2023/1114 (Markets in Crypto-Assets - MiCA)**, this software does not constitute a Virtual Asset Service Provider (VASP), financial intermediary, custodian, or investment advisory service.
-- All transactions are executed peer-to-peer directly between the user's non-custodial wallet and autonomous decentralized smart contracts.
-- Users are solely responsible for their wallet security and on-chain interactions.
+- **Non-Custodial Client:** This software functions strictly as a graphical user interface (GUI) and computational reference implementation for interacting with autonomous public smart contracts on BNB Smart Chain. It does not constitute a centralized exchange, broker, investment service, or custodial institution.
+- **MiCA Exemption (Recital 22):** Under **Regulation (EU) 2023/1114 (Markets in Crypto-Assets - MiCA)**, fully decentralized peer-to-peer crypto-asset services provided without intermediaries fall outside the scope of crypto-asset service regulations.
+- **Immutable Smart Contracts:** The token and distribution logic operate on immutable, renounced smart contracts (`0x000...dEaD`) with zero administrative backdoors, minting capabilities, or developer custody.
+- **Self-Custodial Operation:** All transactions are executed peer-to-peer directly between the user's non-custodial wallet and autonomous decentralized liquidity pools. Contributors do not hold, manage, or access user funds.
 
 For detailed documentation, see:
 - [Privacy Policy](https://arbitrage-inc.exchange/privacy-policy)
 - [Terms of Service](https://arbitrage-inc.exchange/terms-of-service)
-- [Cookie Policy](https://arbitrage-inc.exchange/cookie-policy)
+- [Italian Legal Disclaimer](./DISCLAIMER_IT.md)
 
 ---
 

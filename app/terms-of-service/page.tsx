@@ -55,12 +55,12 @@ export default function TermsOfServicePage() {
 
 					<h2>1. Acceptance of Terms</h2>
 					<p>
-						By accessing or using the Arbitrage Inception Platform
+						By accessing or using the Arbitrage Inception Interface
 						(https://arbitrage-inc.exchange), you agree to be bound by these
-						Terms of Service. If you do not agree, please do not use the
-						Platform. For users residing in Italy, the provisions of D.Lgs.
-						206/2005 (Codice del Consumo) and D.Lgs. 70/2003 (Commercio
-						Elettronico) also apply.
+						Terms of Service. If you do not agree, do not access or use the
+						Interface. This interface is provided as an open-source software client
+						under the MIT License for self-custodial, peer-to-peer interaction with
+						public decentralized blockchain protocols.
 					</p>
 
 					<h2>2. Nature of the Service</h2>
@@ -84,7 +84,7 @@ export default function TermsOfServicePage() {
 					</p>
 					<ul>
 						<li>
-							A Virtual Asset Service Provider (VASP) under Reg. EU 2023/1114
+							A Virtual Asset Service Provider (VASP) or Crypto-Asset Service Provider (CASP) under Reg. EU 2023/1114
 							(MiCA)
 						</li>
 						<li>A cryptocurrency exchange, broker, or financial institution</li>
@@ -101,16 +101,22 @@ export default function TermsOfServicePage() {
 					<p>
 						No individual or entity behind this project custodies, holds, or
 						controls user funds. All transactions are executed directly on-chain
-						via the user&apos;s own wallet.
+						via the user&apos;s own wallet. Pursuant to Recital 22 of Regulation (EU) 2023/1114 (MiCA),
+						fully decentralized peer-to-peer interactions without intermediaries fall outside the scope
+						of crypto-asset service regulations.
 					</p>
 
-					<h2>3. Anonymous and Decentralized Project</h2>
+					<h2>3. Decentralized Architecture & Open-Source Contributors</h2>
 					<p>
-						Arbitrage Inception is an anonymous, community-driven open-source
-						project. There is no identifiable team, company, or legal entity
-						operating it. The project exists as permissionless software under
-						the MIT License. Contributors are anonymous and make no warranties
-						of any kind beyond what is stated in this document.
+						Arbitrage Inception operates as an autonomous, decentralized protocol on the BNB Smart Chain.
+						The smart contracts are self-executing and immutable, with ownership permanently renounced
+						to the null address (<code>0x000000000000000000000000000000000000dEaD</code>). There are zero
+						administrative backdoors, mint functions, or operator privileges.
+					</p>
+					<p>
+						The frontend client interface is developed, maintained, and published as free, open-source
+						software (MIT License) by independent software engineers and researchers. No contributor or
+						developer operates a centralized custodial exchange, provides investment advice, or acts as a financial counterparty.
 					</p>
 
 					<h2>4. Eligibility</h2>
