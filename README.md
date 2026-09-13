@@ -1,5 +1,12 @@
 # Arbitrage Inc: All-in-Dex Suite
 
+[![CI](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Network: BSC](https://img.shields.io/badge/Network-BNB_Smart_Chain-F0B90B?logo=binance&logoColor=white)](https://bscscan.com)
+[![Next.js](https://img.shields.io/badge/Next.js-15_App_Router-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![DeFiLlama](https://img.shields.io/badge/DeFiLlama-Listed-brightgreen)](https://defillama.com/protocol/arbitrage-inc)
+[![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
+
 A production-ready decentralized exchange aggregator, cross-chain bridge, limit order protocol, and deterministic real-yield distribution engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
 **Live Application:** [https://arbitrage-inc.exchange](https://arbitrage-inc.exchange)  
