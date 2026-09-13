@@ -7,12 +7,12 @@
 [![DeFiLlama](https://img.shields.io/badge/DeFiLlama-Listed-brightgreen)](https://defillama.com/protocol/arbitrage-inc)
 [![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
 
-A production-ready decentralized exchange aggregator, cross-chain bridge, limit order protocol, and deterministic real-yield distribution engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
+An open-source, non-custodial decentralized exchange aggregator, cross-chain bridge, limit order client, and real-yield telemetry engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
 **Live Application:** [https://arbitrage-inc.exchange](https://arbitrage-inc.exchange)  
 **DeFiLlama Protocol:** [https://defillama.com/protocol/arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)  
 **Smart Contract:** [0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BscScan)](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)  
-**Community:** [Telegram](https://t.me/ArbitrageInception) | **PWA:** Installable on iOS & Android | **License:** MIT
+**Audit & Transparency:** [AUDIT.md](./AUDIT.md) | **Community:** [Telegram](https://t.me/ArbitrageInception) | **License:** MIT
 
 ---
 
@@ -78,15 +78,15 @@ flowchart TD
 - **Solvency & Contract Watcher (`scripts/watcher.js`):** Continuously monitors RPC nodes, liquidity pool ratios, and reserve solvency using an algorithmic risk factor (`SAFE_FACTOR = 0.73`).
 - **Live Health Status (`scripts/health_check.js`):** Verifies wallet balances, gas reserve health, and system safety thresholds (`<= 80% SECURE`), streaming real-time status directly to the frontend header.
 
-### 7. Verified DeFiLlama Protocol & Fee Adapter
-- Officially verified and listed on **DeFiLlama** ([arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)).
-- Open-source dimension adapter tracking daily on-chain protocol revenue and fees.
+### 7. Verified DeFiLlama Protocol & Fee Telemetry
+- Officially verified and tracked on **DeFiLlama** ([arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)) for DEX aggregator volume and protocol revenue.
+- Open-source dimension adapter ([DefiLlama/dimension-adapters #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275)) providing transparent, public on-chain fee accounting.
 
 ### 8. Mobile-First Progressive Web App (PWA)
-- **Instant 1-Tap Installation:** Configured with a full PWA manifest (`public/manifest.json`) in `"display": "standalone"` mode, eliminating browser address bars for a true native mobile app experience on iOS and Android.
+- **Instant 1-Tap Installation:** Configured with a full PWA manifest (`public/manifest.json`) in `"display": "standalone"` mode, eliminating browser address bars for a clean mobile app experience on iOS and Android.
 - **Cross-Platform OS Integration:** Dedicated metadata and assets configured for **iOS Safari** (`apple-touch-icon`, customized `Viewport` and `#8B5CF6` theme colors), **Android Chrome** (192x192 & 512x512 maskable icons), and **Windows** (`browserconfig.xml`).
 - **Decentralized Mobile Distribution:** Bypasses centralized mobile app store censorship, arbitrary delistings, and 30% fees, giving users direct non-custodial trading on any mobile browser.
-- **Responsive Institutional Dark UI:** Styled with Tailwind CSS and Framer Motion for high-contrast mobile responsiveness and fluid touch interactions.
+- **High-Contrast Dark Interface:** Styled with Tailwind CSS and Framer Motion for responsive mobile navigation, high contrast readability, and fluid touch interactions.
 
 ### 9. Multi-Chain Wallet Connectors
 - Universal Web3 authentication supporting MetaMask, Coinbase Wallet, WalletConnect v2, Phantom, OKX, and emerging multi-chain ecosystems (Solana Wallet Adapter, Sui dApp Kit).
@@ -96,7 +96,7 @@ flowchart TD
 
 ---
 
-## 🔒 Smart Contract Verification & Renouncement
+## 🔒 Smart Contract Verification & Technical Disclosures
 
 The ARB Inc token contract ownership has been **permanently renounced** to the zero address (`0x000...dEaD`).
 
@@ -104,6 +104,7 @@ The ARB Inc token contract ownership has been **permanently renounced** to the z
 - **Network:** BNB Smart Chain (BSC)
 - **Explorer Verification:** [BscScan Read Contract](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)
 - **Immutable Guarantee:** `owner()` returns `0x000000000000000000000000000000000000dEaD`. No entity can mint new tokens, modify tax parameters, pause trading, or alter contract rules.
+- **Full Transparency & Disclosures:** See [AUDIT.md](./AUDIT.md) for immutable contract parameters and architecture disclosures.
 
 ---
 
