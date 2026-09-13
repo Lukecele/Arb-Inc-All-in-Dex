@@ -38,8 +38,8 @@ export function applyPaperHandPenalty(currentPoints: number, penaltyRate = PAPER
  * Computes holding reward points gained based on raw token balance (9 decimals).
  */
 export function computeHoldingPointsGain(rawHoldingWei: bigint, multiplier = HOLDING_MULTIPLIER): number {
-  if (rawHoldingWei <= 0n) return 0;
-  const tokenCount = Number(rawHoldingWei / 10n ** 9n);
+  if (rawHoldingWei <= BigInt(0)) return 0;
+  const tokenCount = Number(rawHoldingWei / (BigInt(10) ** BigInt(9)));
   return (tokenCount / 1_000_000) * multiplier;
 }
 

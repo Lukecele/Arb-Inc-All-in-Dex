@@ -74,7 +74,7 @@ export function sanitizeTokenAmount(
   decimals: number = 18
 ): ValidationResult<bigint> {
   if (typeof amount === 'bigint') {
-    if (amount <= 0n) return { isValid: false, error: 'Amount must be greater than zero' };
+    if (amount <= BigInt(0)) return { isValid: false, error: 'Amount must be greater than zero' };
     return { isValid: true, value: amount };
   }
 
@@ -92,8 +92,8 @@ export function sanitizeTokenAmount(
   const frac = (parts[1] || '').slice(0, decimals).padEnd(decimals, '0');
 
   try {
-    const rawUnits = BigInt(whole) * (10n ** BigInt(decimals)) + BigInt(frac);
-    if (rawUnits <= 0n) {
+    const rawUnits = BigInt(whole) * (BigInt(10) ** BigInt(decimals)) + BigInt(frac);
+    if (rawUnits <= BigInt(0)) {
       return { isValid: false, error: 'Parsed amount evaluates to zero' };
     }
     return { isValid: true, value: rawUnits };
