@@ -129,8 +129,9 @@ export default function ContactPage() {
 				<MainContent>
 					<PageTitle>Contact &amp; Support</PageTitle>
 					<PageSubtitle>
-						Arbitrage Inception is an anonymous, open-source project with no
-						central team. All support is handled through community channels
+						Arbitrage Inception is a decentralized, open-source client interface
+						maintained by independent community contributors. All support and
+						protocol discussions are conducted through the community channels
 						below.
 					</PageSubtitle>
 
@@ -201,8 +202,9 @@ export default function ContactPage() {
 					<OpenSourceNote>
 						<h3>🔓 Open Source by Design</h3>
 						<p>
-							This project has no identifiable developers, no company, and no
-							central authority. The code is released under the{" "}
+							This project operates as independent, non-custodial open-source software
+							with no corporate custody or central financial authority. The client code is
+							released under the{" "}
 							<a
 								href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
 								target="_blank"
@@ -210,8 +212,9 @@ export default function ContactPage() {
 							>
 								MIT License
 							</a>
-							, meaning anyone can inspect, fork, deploy, or improve it freely.
-							Transparency is the only accountability — read the code.
+							, meaning anyone can audit, fork, deploy, or contribute freely.
+							Transparency and smart contract immutability are the foundation of
+							this protocol — inspect the code on GitHub.
 						</p>
 					</OpenSourceNote>
 				</MainContent>
