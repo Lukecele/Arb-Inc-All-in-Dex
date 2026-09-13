@@ -572,7 +572,7 @@ const HomePageClient = () => {
 				</S.LivePulseSection>
 
 				<S.YieldEngineSection>
-					<h2>The Ultimate Yield Engine</h2>
+					<h2>The Ultimate Rewards Engine</h2>
 					<div className="grid-3">
 						<div className="yield-card">
 							<div className="icon-head">
