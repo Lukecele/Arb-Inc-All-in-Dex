@@ -4,7 +4,7 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaCheckCircle, FaCopy, FaExclamationTriangle } from "react-icons/fa";
+import { FaCheckCircle, FaCopy } from "react-icons/fa";
 import styled, { createGlobalStyle } from "styled-components";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
@@ -58,19 +58,37 @@ const SwapWrapper = styled.div`
 const PointsBadge = styled.div`
   background: rgba(40, 224, 185, 0.1); color: #28E0B9; border: 1px solid rgba(40, 224, 185, 0.2); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 12px; text-transform: uppercase; width: 100%;
 `;
-const WarningBadge = styled.div`
-  background: rgba(255, 153, 0, 0.1); color: #FF9900; border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; width: 100%;
+const PancakeBox = styled.div`
+  background: linear-gradient(135deg, rgba(243, 186, 47, 0.08) 0%, rgba(32, 184, 205, 0.08) 100%);
+  border: 1px solid rgba(243, 186, 47, 0.3); border-radius: 16px; padding: 14px 16px; margin-bottom: 15px; width: 100%;
+  display: flex; flex-direction: column; gap: 8px;
+`;
+const PancakeTitle = styled.div`
+  font-size: 13px; font-weight: 700; color: #F3BA2F; display: flex; align-items: center; gap: 6px;
+`;
+const PancakeText = styled.div`
+  font-size: 12px; line-height: 1.45; color: #d1d5db;
+`;
+const PancakeButton = styled.a`
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 16px;
+  background: linear-gradient(135deg, #F3BA2F 0%, #20B8CD 100%); border: none; border-radius: 12px;
+  color: #030014; font-size: 14px; font-weight: 700; text-decoration: none;
+  box-shadow: 0 4px 14px rgba(243, 186, 47, 0.25); transition: all 0.2s ease; margin-top: 2px;
+  &:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(32, 184, 205, 0.35); filter: brightness(1.05); }
+`;
+const SlippageNote = styled.div`
+  font-size: 11px; color: #94a3b8; text-align: center;
+`;
+const Separator = styled.div`
+  display: flex; align-items: center; width: 100%; margin: 12px 0 16px 0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  &::before, &::after { content: ""; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  &::before { margin-right: 12px; }
+  &::after { margin-left: 12px; }
 `;
 const ContractBox = styled.div`
   background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(168, 85, 247, 0.2); padding: 10px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%;
   .addr { font-family: monospace; color: #a855f7; font-size: 12px; }
   button { background: none; border: none; color: #64748b; cursor: pointer; &:hover { color: white; } }
-`;
-const DirectPoolBtn = styled.a`
-  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px 15px; margin-bottom: 15px;
-  background: rgba(32, 184, 205, 0.08); border: 1px solid rgba(32, 184, 205, 0.25); border-radius: 12px;
-  color: #20B8CD; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;
-  &:hover { background: rgba(32, 184, 205, 0.16); border-color: #20B8CD; color: #ffffff; }
 `;
 
 const kyberTheme = {
@@ -226,17 +244,24 @@ export default function ClientWrapper() {
 
 					<SwapWrapper>
 						<PointsBadge>🚀 +100 Points per Swap</PointsBadge>
-						<WarningBadge>
-							<FaExclamationTriangle
-								style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
-							/>
-							<div>
-								<strong>Tax Token Notice:</strong> When swapping Arbitrage
-								Inception (ARB INC), please set your slippage to{" "}
-								<strong>8%</strong> to ensure the transaction processes
-								successfully due to tokenomics.
-							</div>
-						</WarningBadge>
+						<PancakeBox>
+							<PancakeTitle>
+								🥞 Selling or Buying $ARB INC?
+							</PancakeTitle>
+							<PancakeText>
+								While our official KyberSwap partner routing is finalizing, please use our primary verified PancakeSwap V2 pool for <strong>selling or buying $ARB INC</strong> with instant liquidity.
+							</PancakeText>
+							<PancakeButton
+								href={`https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=${ARB_CONTRACT}`}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								🥞 Sell / Buy $ARB INC on PancakeSwap ↗
+							</PancakeButton>
+							<SlippageNote>
+								⚙️ <strong>Slippage:</strong> Set slippage to <strong>8%+</strong> due to the 4% reward tax.
+							</SlippageNote>
+						</PancakeBox>
 
 						<ContractBox>
 							<span className="addr">
@@ -251,13 +276,7 @@ export default function ClientWrapper() {
 							</button>
 						</ContractBox>
 
-						<DirectPoolBtn
-							href={`https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=${ARB_CONTRACT}`}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							🥞 PancakeSwap V2 Direct Pool (ARB INC / BNB) ↗
-						</DirectPoolBtn>
+						<Separator>Or Swap Other Tokens via Aggregator</Separator>
 
 						{/* FIX: Usiamo la variabile di stato per la larghezza */}
 						<div
