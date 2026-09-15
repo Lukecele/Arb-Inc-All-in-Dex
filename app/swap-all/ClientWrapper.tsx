@@ -66,6 +66,12 @@ const ContractBox = styled.div`
   .addr { font-family: monospace; color: #a855f7; font-size: 12px; }
   button { background: none; border: none; color: #64748b; cursor: pointer; &:hover { color: white; } }
 `;
+const DirectPoolBtn = styled.a`
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px 15px; margin-bottom: 15px;
+  background: rgba(32, 184, 205, 0.08); border: 1px solid rgba(32, 184, 205, 0.25); border-radius: 12px;
+  color: #20B8CD; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;
+  &:hover { background: rgba(32, 184, 205, 0.16); border-color: #20B8CD; color: #ffffff; }
+`;
 
 const kyberTheme = {
 	text: "#FFFFFF",
@@ -244,6 +250,14 @@ export default function ClientWrapper() {
 								)}
 							</button>
 						</ContractBox>
+
+						<DirectPoolBtn
+							href={`https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=${ARB_CONTRACT}`}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							🥞 PancakeSwap V2 Direct Pool (ARB INC / BNB) ↗
+						</DirectPoolBtn>
 
 						{/* FIX: Usiamo la variabile di stato per la larghezza */}
 						<div
