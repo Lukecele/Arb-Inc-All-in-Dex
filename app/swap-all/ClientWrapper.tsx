@@ -225,10 +225,10 @@ export default function ClientWrapper() {
 								style={{ fontSize: "18px", flexShrink: 0, marginTop: "2px" }}
 							/>
 							<div>
-								<strong>Tax Token Notice:</strong> Set slippage to <strong>8%+</strong> when swapping ARB INC.{" "}
-								Selling <strong>more than ~500 tokens?</strong> KyberSwap has a liquidity cap — use{" "}
-								<a href={`https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=${ARB_CONTRACT}`} target="_blank" rel="noopener noreferrer" style={{ color: "#20B8CD", textDecoration: "underline", fontWeight: 700 }}>PancakeSwap</a>{" "}
-								directly for larger sells.
+								<strong>Tax Token Notice:</strong> When swapping Arbitrage
+								Inception (ARB INC), please set your slippage to{" "}
+								<strong>8%</strong> to ensure the transaction processes
+								successfully due to tokenomics.
 							</div>
 						</WarningBadge>
 
