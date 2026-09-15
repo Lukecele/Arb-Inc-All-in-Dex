@@ -531,7 +531,7 @@ export default function ClientWrapper() {
           <ModalInner onClick={(e) => e.stopPropagation()}>
             <ModalTitle>Select Token <button onClick={() => { setShowTokenModal(null); setImportAddress(""); setImportError(""); }} style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 20, cursor: "pointer" }}>×</button></ModalTitle>
             <div style={{ padding: "12px 16px", borderBottom: "1px solid #27272a" }}>
-              <div style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 6 }}>Import custom token (incolla contract address)</div>
+              <div style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 6 }}>Import custom token (paste contract address)</div>
               <div style={{ display: "flex", gap: 8 }}>
                 <input type="text" placeholder="0x..." value={importAddress} onChange={(e) => { setImportAddress(e.target.value); setImportError(""); }} style={{ flex: 1, padding: "8px 10px", background: "#27272a", border: `1px solid ${importError ? "#ef4444" : "#3f3f46"}`, borderRadius: 8, color: "#fff", fontSize: 13, outline: "none" }} />
                 <button onClick={handleImportToken} disabled={importLoading} style={{ padding: "8px 14px", background: "#20B8CD", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap", opacity: importLoading ? 0.6 : 1 }}>{importLoading ? "..." : "Import"}</button>

@@ -693,10 +693,10 @@ const HomePageClient = () => {
 						</S.AuditCard>
 						<S.AuditCard>
 							<FaLock className="icon" />
-							<h4>Zero-Contract Risk</h4>
+							<h4>Minimal Attack Surface</h4>
 							<p>
-								By avoiding custom swap contracts, we eliminate the primary
-								entry point for hacks.
+								By routing via battle-tested aggregators, we eliminate custom
+								custodial vulnerabilities.
 							</p>
 						</S.AuditCard>
 						<S.AuditCard>

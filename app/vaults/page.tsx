@@ -10,10 +10,10 @@ export default function VaultsPage() {
 
       <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "110px 20px 40px" }}>
         <div style={{ textAlign: "center" }}>
-          <h1 style={{ fontSize: "42px", fontWeight: 900, marginBottom: "16px" }}>🏗️ Vaults</h1>
-          <p style={{ color: "#94a3b8", fontSize: "18px" }}>Vault-based yield strategies on BNB Chain</p>
+          <h1 style={{ fontSize: "42px", fontWeight: 900, marginBottom: "16px" }}>🏗️ Non-Custodial Vaults</h1>
+          <p style={{ color: "#94a3b8", fontSize: "18px" }}>Single-Transaction Yield Routing on BNB Chain</p>
           <p style={{ color: "#64748b", marginTop: "12px", fontSize: "15px" }}>
-            Discover and manage passive DeFi positions with optimized vaults. Protocol fees: 0.5%.
+            Direct peer-to-contract routing into premier DeFi primitives (Venus Protocol & Lista DAO).
           </p>
         </div>
 
@@ -27,10 +27,10 @@ export default function VaultsPage() {
           }}
         >
           <h2 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "14px", color: "#fff" }}>
-            Visit Arbitrage Inc Earn
+            Visit Arbitrage Inception Earn
           </h2>
           <p style={{ color: "#cbd5e1", lineHeight: 1.8, marginBottom: "16px" }}>
-            Arbitrage Inc Earn is a dedicated companion site for vault-based yield strategies on BNB Chain. It helps you discover and manage passive DeFi positions, track earning opportunities, and explore optimized vaults for long-term returns.
+            Arbitrage Inception Earn is a dedicated companion interface for non-custodial yield strategies on BNB Smart Chain. It provides direct, permissionless access to verified money markets and liquid staking without intermediary custody or centralized fund management.
           </p>
           <a
             href="https://arbitrage-inc-earn.vercel.app/"
