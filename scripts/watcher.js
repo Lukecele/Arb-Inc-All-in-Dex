@@ -17,9 +17,32 @@ const REAL_TREASURY_WALLET =
 	"0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
-const provider = new ethers.JsonRpcProvider(
-	process.env.RPC_URL || "https://bsc.drpc.org",
-);
+// RPC con fallback automatico — bsc.drpc.org è in rate limit sul piano free
+const RPC_URLS = [
+	process.env.RPC_URL,
+	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
+	"https://bsc.meowrpc.com",
+].filter(Boolean);
+
+function makeProvider(url) {
+	return new ethers.JsonRpcProvider(url);
+}
+
+let provider = makeProvider(RPC_URLS[0]);
+
+async function getWorkingProvider() {
+	for (const url of RPC_URLS) {
+		try {
+			const p = makeProvider(url);
+			await p.getBlockNumber();
+			return p;
+		} catch (e) {
+			// prova prossimo
+		}
+	}
+	throw new Error("Nessun RPC disponibile");
+}
 // FEATURE 2: Nessun limite minimo richiesto.
 const SAFE_FACTOR = 0.73;
 
@@ -28,6 +51,7 @@ async function watch() {
 		`\n🕒 [${new Date().toLocaleTimeString()}] Avvio Ciclo Motore Centrale (No Min Limit)...`,
 	);
 	try {
+		provider = await getWorkingProvider();
 		const balance = await provider.getBalance(
 			ethers.getAddress(REAL_TREASURY_WALLET),
 		);
