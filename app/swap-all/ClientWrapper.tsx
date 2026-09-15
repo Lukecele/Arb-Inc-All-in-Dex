@@ -246,17 +246,17 @@ export default function ClientWrapper() {
 						<PointsBadge>🚀 +100 Points per Swap</PointsBadge>
 						<PancakeBox>
 							<PancakeTitle>
-								🥞 Selling or Buying $ARB INC?
+								🥞 Need to Sell $ARB INC?
 							</PancakeTitle>
 							<PancakeText>
-								While our official KyberSwap partner routing is finalizing, please use our primary verified PancakeSwap V2 pool for <strong>selling or buying $ARB INC</strong> with instant liquidity.
+								While our official KyberSwap partner routing is finalizing, please use our primary verified PancakeSwap V2 pool for instant selling. <em>(Buys work seamlessly on both KyberSwap and PancakeSwap!)</em>
 							</PancakeText>
 							<PancakeButton
 								href={`https://pancakeswap.finance/swap?outputCurrency=BNB&inputCurrency=${ARB_CONTRACT}`}
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								🥞 Sell / Buy $ARB INC on PancakeSwap ↗
+								🥞 Sell $ARB INC on PancakeSwap ↗
 							</PancakeButton>
 							<SlippageNote>
 								⚙️ <strong>Slippage:</strong> Set slippage to <strong>8%+</strong> due to the 4% reward tax.
