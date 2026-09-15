@@ -1,6 +1,16 @@
 const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "..", ".env.local") });
-require("dotenv").config({ path: path.resolve(__dirname, "..", ".env") });
+[
+	path.resolve(__dirname, "../../../.env.local"),
+	path.resolve(__dirname, "../../../.env"),
+	path.resolve(__dirname, "..", ".env.local"),
+	path.resolve(__dirname, "..", ".env"),
+	"/home/luca/progetti/arb-inc/.env.local",
+	"/home/luca/Scrivania/progetti/arb-inc/.env.local",
+].forEach((p) => {
+	try {
+		require("dotenv").config({ path: p });
+	} catch (e) {}
+});
 const { Redis } = require("@upstash/redis");
 
 const redis = new Redis({
@@ -33,6 +43,7 @@ async function puliziaSicura() {
 
 		// 3. Eseguiamo il batch di comandi in un'unica richiesta
 		await pipeline.exec();
+		await redis.set("leaderboard:total_points_sum:global", "0");
 
 		console.log("✅ Successo! Tutti i punti della classifica sono stati azzerati a 0.");
 		console.log("💡 I wallet sono ancora presenti nel tabellone (nessuna smemorizzazione). I fondi sono al sicuro.");
