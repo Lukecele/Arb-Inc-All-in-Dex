@@ -90,8 +90,8 @@ const HomePageClient = () => {
 						DeFi Yields
 					</S.Title>
 					<S.Subtitle>
-						Powered by 3 sustainable revenue streams. 100% of generated fees
-						flow directly into the Treasury: 100% distributed to holders via the protocol treasury.
+						Powered by 3 sustainable revenue streams. 100% non-custodial
+						and programmatically allocated to community rewards and ecosystem growth.
 					</S.Subtitle>
 					<S.ButtonGroup>
 						<S.PrimaryButton href={SWAP_LINK}>
@@ -593,8 +593,8 @@ const HomePageClient = () => {
 							</div>
 							<p>
 								No minimum holding. Every token generates points every 15
-								minutes. Our engine distributes <strong>Real BNB</strong> from
-								protocol fees directly to all holders.
+								minutes. Our engine distributes <strong>Real BNB</strong> rewards
+								from protocol fees to active community leaderboard participants.
 							</p>
 						</div>
 						<div className="yield-card">
@@ -621,9 +621,9 @@ const HomePageClient = () => {
 						<S.SpecCard>
 							<FaChartPie className="icon" />
 							<span className="label">Revenue Routing</span>
-							<span className="value">100%</span>
+							<span className="value">100% On-Chain</span>
 							<span className="desc">
-								To Treasury (100% to Holders)
+								Community Rewards & Ecosystem
 							</span>
 						</S.SpecCard>
 						<S.SpecCard>

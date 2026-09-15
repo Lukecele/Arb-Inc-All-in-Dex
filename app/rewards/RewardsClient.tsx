@@ -299,7 +299,7 @@ export default function RewardsClient() {
 					The Treasury is fueled by 3 powerful streams:{" "}
 					<b>4% Token Tax (Buy/Sell)</b>, <b>0.5% DEX Fees</b>, and{" "}
 					<b>Free Tasks Income</b>.<br />
-					<b>100%</b> of this revenue goes to the Treasury: <b>100%</b> distributed directly to Holders.
+					<b>100% On-Chain</b>: Programmatically routed to community leaderboard rewards and protocol development.
 					<br />
 					<br />
 					<b>
