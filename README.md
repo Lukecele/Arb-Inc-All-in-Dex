@@ -22,6 +22,9 @@ An open-source decentralized exchange aggregator, cross-chain bridge, limit orde
 **Smart Contract:** [0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BscScan)](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)  
 **Audit & Disclosures:** [AUDIT.md](./AUDIT.md) | **Community:** [Telegram](https://t.me/ArbitrageInception) · [X / Twitter](https://x.com/Arbitrageincept) | **License:** MIT
 
+> [!TIP]
+> **Developer & Research Community:** If this codebase saves you development time or helps your Web3 / bot research, please consider leaving a **[Star on GitHub](https://github.com/Lukecele/Arb-Inc-All-in-Dex)**! It directly helps maintain open-source indexing across BNB Chain catalogs.
+
 ---
 
 ## ⚖️ Architecture Separation: Non-Custodial Trading vs Hosted Reward Service
