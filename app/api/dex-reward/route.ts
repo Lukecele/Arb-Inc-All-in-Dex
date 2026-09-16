@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { Redis } from "@upstash/redis";
 
-const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-dataseed.binance.org").replace(/\/$/, "");
+const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,

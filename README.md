@@ -11,14 +11,37 @@
 [![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
 [![GitHub stars](https://img.shields.io/github/stars/Lukecele/Arb-Inc-All-in-Dex?style=social)](https://github.com/Lukecele/Arb-Inc-All-in-Dex)
 
-An open-source, non-custodial decentralized exchange aggregator, cross-chain bridge, limit order client, and real-yield telemetry engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
+An open-source decentralized exchange aggregator, cross-chain bridge, limit order client, and real-yield telemetry engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
 **Live Application:** [https://arbitrage-inc.exchange](https://arbitrage-inc.exchange)  
+**Public API Docs:** [docs/API.md](./docs/API.md)  
 **DeFiLlama Protocol:** [https://defillama.com/protocol/arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)  
 **Awesome-Web3 Directory:** [Open Source Projects (Line 409)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L409) ([Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796))  
-**BNB Chain Security Audit:** [Hashdit Bot Cleared (PR #98)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)  
+**BNB Chain Security Audit:** [Hashdit Bot Cleared - Zero Issues Detected (PR #98)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)  
 **Smart Contract:** [0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BscScan)](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)  
 **Audit & Transparency:** [AUDIT.md](./AUDIT.md) | **Community:** [Telegram](https://t.me/ArbitrageInception) · [X / Twitter](https://x.com/Arbitrageincept) | **License:** MIT
+
+---
+
+## ⚖️ Architecture Separation: Non-Custodial Trading vs Hosted Reward Service
+
+To ensure technical transparency, the platform explicitly decouples trading execution from community reward accounting:
+
+1. **Non-Custodial, Wallet-Based Trading (Swaps & Bridge):**
+   - **100% Non-Custodial:** Token swaps (via KyberSwap Aggregator and PancakeSwap V2/V3) and cross-chain bridging (via Mayan Finance & Wormhole Swift) execute directly between the user's Web3 wallet and on-chain decentralized smart contracts.
+   - The platform never custodies, routes, or holds user trading capital or private keys.
+2. **Hosted Community Loyalty & Rewards Service (Optional Program):**
+   - Off-chain point accounting and leaderboard tracking are handled via an Upstash Redis database.
+   - Eligible BNB reward payouts from the community treasury reserve are signed and dispatched on-chain via an automated server-held hot signer wallet upon user claim, governed by deterministic solvency boundaries (`SAFE_FACTOR = 0.73`).
+
+---
+
+## 💰 Fee Disclosures & Economics
+
+* **DEX Aggregator Fee:** 0.5% protocol execution fee applied to supported aggregated swaps.
+* **ARB INC Token Transfer Tax:** 4% on-chain tax on native `ARB INC` token buys/sells (routed to liquidity pool, protocol reserve, and community BNB reward distributions).
+* **Cross-Chain Bridge Fees:** Standard bridge routing fees and source/destination gas apply.
+* **Open Source License:** The frontend client and scripts are 100% free and open-source under the permissive MIT License.
 
 ---
 
