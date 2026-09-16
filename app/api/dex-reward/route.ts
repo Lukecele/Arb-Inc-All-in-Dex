@@ -15,7 +15,10 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        let { txHash, userWallet, type } = body;
+        let { txHash, userWallet, type, actionType } = body;
+        if (!type && actionType) {
+            type = actionType === "limit-order" ? "limit" : actionType === "swap" ? "swap" : null;
+        }
 
         if (!txHash || !userWallet || !type) {
             return NextResponse.json({ success: false, error: "Parametri mancanti" }, { status: 400 });
@@ -83,7 +86,17 @@ export async function POST(req: Request) {
 
         await redis.zincrby("leaderboard:points", points, userWallet);
 
-        const parent = await redis.get(`ref:parent:${userWallet}`);
+        let parent = await redis.get(`ref:parent:${userWallet}`);
+        if (!parent && body.referrerWallet && ethers.utils.isAddress(body.referrerWallet)) {
+            const refCandidate = body.referrerWallet.toLowerCase();
+            if (refCandidate !== userWallet) {
+                await redis.set(`ref:parent:${userWallet}`, refCandidate);
+                await redis.sadd(`ref:children:${refCandidate}`, userWallet);
+                parent = refCandidate;
+                console.log(`🔗 Referral auto-linked from dex-reward: ${userWallet} -> ${refCandidate}`);
+            }
+        }
+
         if (parent) {
             const bonus = points * 0.1;
             await redis.zincrby("leaderboard:points", bonus, parent as string);

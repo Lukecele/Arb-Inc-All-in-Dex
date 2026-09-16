@@ -9,6 +9,7 @@ import ClientWeb3Provider from "../components/ClientWeb3Provider";
 import CookieConsent from '../components/CookieConsent';
 import EEADisclaimer from '../components/EEADisclaimer';
 import ErrorBoundary from "../components/ErrorBoundary";
+import ReferralTracker from "../components/ReferralTracker";
 import StyledComponentsRegistry from "../lib/registry";
 
 const inter = Inter({
@@ -70,6 +71,7 @@ export default function RootLayout({
 
 				<StyledComponentsRegistry>
 					<ClientWeb3Provider>
+						<ReferralTracker />
 						<ErrorBoundary>{children}</ErrorBoundary>
 					</ClientWeb3Provider>
 				</StyledComponentsRegistry>

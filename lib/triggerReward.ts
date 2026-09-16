@@ -19,6 +19,7 @@ export async function triggerDexReward(
 			body: JSON.stringify({
 				userWallet,
 				referrerWallet: referrer,
+				type: actionType === "limit-order" ? "limit" : "swap",
 				actionType,
 				txHash,
 			}),

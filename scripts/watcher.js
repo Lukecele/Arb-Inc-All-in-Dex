@@ -17,12 +17,13 @@ const REAL_TREASURY_WALLET =
 	"0x66BB01F14229E2179bAD84D52A69C0e4628dE63f".toLowerCase();
 const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 
-// RPC con fallback automatico — bsc.drpc.org è in rate limit sul piano free
+// RPC con fallback automatico calibrato su stress-test (40 req concorrenti a 0 throttling)
 const RPC_URLS = [
 	process.env.RPC_URL,
-	"https://bsc-dataseed.binance.org/",
 	"https://bsc-rpc.publicnode.com",
-	"https://bsc.meowrpc.com",
+	"https://rpc.ankr.com/bsc",
+	"https://bsc-dataseed.binance.org/",
+	"https://binance.nodereal.io",
 ].filter(Boolean);
 
 function makeProvider(url) {
