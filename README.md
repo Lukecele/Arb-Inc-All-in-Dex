@@ -1,5 +1,9 @@
 # Arbitrage Inc: All-in-Dex Suite
 
+<p align="center">
+  <img src="./public/social-preview.png" alt="Arbitrage Inception - BNB Chain DEX Aggregator & Bridge" width="100%" />
+</p>
+
 [![CI](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Network: BSC](https://img.shields.io/badge/Network-BNB_Smart_Chain-F0B90B?logo=binance&logoColor=white)](https://bscscan.com)

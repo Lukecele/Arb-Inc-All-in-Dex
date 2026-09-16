@@ -1,0 +1,24 @@
+# Arbitrage Inception (Arb-Inc)
+> Open-source, non-custodial decentralized exchange aggregator, limit order client, and cross-chain bridge on BNB Smart Chain.
+
+## Canonical Resources
+- Website: https://arbitrage-inc.exchange
+- GitHub: https://github.com/Lukecele/Arb-Inc-All-in-Dex
+- DefiLlama Protocol Registry: https://defillama.com/protocol/arbitrage-inc (Protocol ID: 7591)
+- License: MIT License
+
+## Verified On-Chain Specifications
+- Blockchain Network: BNB Smart Chain (BSC, Chain ID: 56)
+- Native Token Contract: 0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BEP-20, Immutable, Renounced ownership to 0x000000000000000000000000000000000000dEaD)
+- Native Token Transfer Tax: 4.0% on-chain transfer tax
+- DEX Aggregator Routing Fee: 0.50% (50 bps) via KyberSwap Aggregator API v1
+- Cross-Chain Bridge Routing Fee: 0.30% (30 bps) via Mayan Finance Protocol
+- Protocol Fee Recipient Address: 0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7
+
+## Security & Architectural Disclosures
+- Custody Model: Non-custodial, peer-to-contract. Users retain sole custody of their private keys.
+- Regulatory Classification: Excluded under MiCA Regulation (EU) 2023/1114 Recital 22 (decentralized peer-to-peer services without intermediaries).
+- Static Security Audit: HashDit Bot - Zero Issues Detected (BNB Chain Tools List PR #98).
+- Security Policy: https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md
+- Machine-Readable DApp Metadata: https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/dapp-metadata.json
+- Official Contacts: luca.celebrano1@gmail.com | Telegram: https://t.me/ArbitrageInception

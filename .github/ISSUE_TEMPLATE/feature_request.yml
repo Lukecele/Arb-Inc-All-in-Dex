@@ -1,0 +1,24 @@
+name: 💡 Feature Request & Protocol Proposal
+description: Suggest a new DEX route integration, bridge chain, or user interface improvement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to improve Arbitrage Inception? Let us know below!
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Feature or Integration
+      description: What would you like to see added?
+      placeholder: Describe the feature or integration (e.g. New token pair, UI improvement)...
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale & Ecosystem Benefit
+      description: Why would this be beneficial to DEX users and liquidity providers?
+      placeholder: Explain why this is useful...
+    validations:
+      required: false

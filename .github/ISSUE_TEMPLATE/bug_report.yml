@@ -1,0 +1,59 @@
+name: 🐛 Bug Report
+description: Report an unexpected behavior, swap routing issue, or interface error
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please provide detailed technical context below.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened...
+    validations:
+      required: true
+  - type: input
+    id: bscscan_tx
+    attributes:
+      label: BscScan Transaction Hash (if applicable)
+      description: Transaction hash for failed swaps, limit orders, or bridge execution.
+      placeholder: "0x..."
+    validations:
+      required: false
+  - type: dropdown
+    id: wallet_type
+    attributes:
+      label: Wallet Provider
+      description: Which Web3 wallet was connected?
+      options:
+        - MetaMask
+        - Rabby Wallet
+        - Trust Wallet
+        - Binance Web3 Wallet
+        - Coinbase Wallet
+        - WalletConnect (Mobile)
+        - Other Injected
+    validations:
+      required: true
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '/' or '/swap-all'
+        2. Connect wallet
+        3. Attempt route quote
+        4. See error message...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser & Operating System
+      description: e.g. Chrome 128 / Linux, Safari / iOS, Brave / Android
+      placeholder: "Chrome / Android"
+    validations:
+      required: false
