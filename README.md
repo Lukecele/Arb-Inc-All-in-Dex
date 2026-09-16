@@ -9,6 +9,7 @@
 [![BNB Chain Audit](https://img.shields.io/badge/BNB_Chain_Tools-Hashdit_Passed-F0B90B?logo=binance)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)
 [![X / Twitter](https://img.shields.io/badge/X-@Arbitrageincept-black?logo=x)](https://x.com/Arbitrageincept)
 [![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
+[![GitHub stars](https://img.shields.io/github/stars/Lukecele/Arb-Inc-All-in-Dex?style=social)](https://github.com/Lukecele/Arb-Inc-All-in-Dex)
 
 An open-source, non-custodial decentralized exchange aggregator, cross-chain bridge, limit order client, and real-yield telemetry engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
@@ -162,6 +163,14 @@ node scripts/maintenance/test-pages.mjs
 - **[DefiLlama Protocol Analytics](https://defillama.com/protocol/arbitrage-inc):** Live protocol metrics, DEX volume, and platform revenue tracking (Adapter: [PR #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275)).
 - **[Awesome-Web3 Directory](https://github.com/ahmet/awesome-web3):** Officially reviewed and indexed under [Open Source Projects (Line 409)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L409) via [Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796).
 - **[BNB Chain Developer Tooling](https://github.com/bnb-chain/developer-tools-list/pull/98):** Ecosystem catalog submission, [security audit passed via Hashdit Bot (Zero issues detected)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720).
+
+---
+
+## ⭐ Support the Project
+
+If you find this open-source suite or any part of the codebase useful for your research, trading bots, or DeFi development, please consider dropping a **Star** on GitHub. It directly supports continuous open-source maintenance, community visibility, and decentralized ecosystem indexing!
+
+[![GitHub stars](https://img.shields.io/github/stars/Lukecele/Arb-Inc-All-in-Dex?style=social)](https://github.com/Lukecele/Arb-Inc-All-in-Dex)
 
 ---
 
