@@ -22,7 +22,6 @@ const RPC_URLS = [
 	process.env.RPC_URL,
 	"https://bsc-rpc.publicnode.com",
 	"https://rpc.ankr.com/bsc",
-	"https://bsc-dataseed.binance.org/",
 	"https://binance.nodereal.io",
 ].filter(Boolean);
 

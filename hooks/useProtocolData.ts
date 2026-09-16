@@ -37,7 +37,7 @@ export const useProtocolData = (
 					);
 				}
 
-				const rpcUrl = "https://bsc-dataseed.binance.org/";
+				const rpcUrl = "https://bsc-rpc.publicnode.com";
 				const rpcBody = (method: string, params: any[]) =>
 					JSON.stringify({ jsonrpc: "2.0", method, params, id: 1 });
 

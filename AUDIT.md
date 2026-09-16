@@ -25,11 +25,23 @@ alter contract behavior. Verify this by reading the ABI on BSCScan.
 | Total Supply | 1,000,000,000 (9 decimals) |
 | Tax Percentage | 4% (buy and sell) |
 | Tax Wallet | 0x66BB01F14229E2179bAD84D52A69C0e4628dE63f |
-## No Professional Audit
-This contract has not undergone a paid audit. It is a simple BEP-20
-implementation with tax-on-transfer logic — no complex DeFi mechanics.
-Source code is fully public on BSCScan.
+## Security Reviews & Audit Status
+
+### Automated Static Analysis (HashDit Bot)
+- **BNB Chain Developer Tools:** Cleared automated static review by **HashDit Bot** (BNB Chain official partner) with zero vulnerabilities detected ([PR #98](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)).
+- **BNB Chain Awesome Catalog:** Cleared automated review with zero vulnerabilities ([PR #16](https://github.com/bnb-chain/awesome/pull/16#issuecomment-5686496121)).
+- *Note:* Automated static bot scans evaluate common security patterns and do not replace a manual human security audit.
+
+### Continuous Mathematical Testing
+- 13/13 passing automated invariant tests in `tests/financial-math.test.mjs` verifying protocol reserve solvency (`SAFE_FACTOR = 0.73`) and Treasury utilization boundaries (<= 80%).
+
+### Manual Audit Disclosure
+- The smart contract has **not undergone a third-party paid manual audit**. It is a standard BEP-20 implementation with immutable parameters (ownership renounced, fixed supply, no mint, no blacklist) and verified source code on BSCScan.
+
+For detailed security disclosures, CSP specifications, and RPC architecture, see [`docs/SECURITY.md`](docs/SECURITY.md).
+
 ## Third-Party Integrations (Frontend Only)
-- KyberSwap Liquidity Widgets
-- Mayan Finance Bridge
+- KyberSwap Aggregator API
+- Mayan Finance Bridge (Wormhole)
 - PancakeSwap Router
+

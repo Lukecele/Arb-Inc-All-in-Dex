@@ -7,7 +7,7 @@ const redis = new Redis({
 	token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const RPC_URL = "https://bsc-dataseed.binance.org/";
+const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
 
 export default async function handler(
 	req: NextApiRequest,

@@ -1,8 +1,7 @@
 const { ethers } = require("ethers");
 
 // Risolve la compatibilità tra Ethers v5 ed v6 automaticamente
-const JsonRpcProvider = ethers.JsonRpcProvider || ethers.providers.JsonRpcProvider;
-const provider = new JsonRpcProvider("https://bsc-dataseed.binance.org/");
+const provider = new JsonRpcProvider(process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com");
 
 // Factory Addresses ufficiali su BSC (v3)
 const PANCAKE_FACTORY = "0x0BFbCF9fa4f9C56B0F40a671Ad45E095e263d95D";

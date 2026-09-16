@@ -47,9 +47,8 @@ export async function POST(request: Request) {
 			);
 		}
 
-		const provider = new (ethers as any).providers.JsonRpcProvider(
-			"https://bsc-dataseed.binance.org/",
-		);
+		const rpcUrl = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
+		const provider = new (ethers as any).providers.JsonRpcProvider(rpcUrl);
 		const privKey = process.env.PRIVATE_KEY;
 		if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 

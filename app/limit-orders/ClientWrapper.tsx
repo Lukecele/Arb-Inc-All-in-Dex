@@ -36,7 +36,7 @@ const ERC20_ABI = [
   "function allowance(address owner, address spender) view returns (uint256)",
 ];
 
-const DEFAULT_RPC = "https://bsc-dataseed.binance.org/";
+const DEFAULT_RPC = "https://bsc-rpc.publicnode.com";
 
 const normalizeDecimal = (value: string) => value.replace(',', '.');
 
