@@ -27,30 +27,32 @@ An open-source, non-custodial decentralized exchange aggregator, cross-chain bri
 flowchart TD
     User(["User Wallet / Client (PWA)"]) --> Router{"Client App Router (Next.js 15)"}
     
-    subgraph Frontend ["Frontend & User Experience"]
+    subgraph Frontend["Frontend and User Experience"]
         Router --> SwapUI["DEX Aggregator UI (/swap)"]
         Router --> BridgeUI["Cross-Chain Bridge UI (/bridge)"]
         Router --> LimitUI["Decentralized Limit Orders (/limit-orders)"]
-        Router --> VaultsUI["Yield Vaults & Pools (/vaults)"]
-        Router --> DashUI["Yield & Health Dashboard (/)"]
+        Router --> VaultsUI["Yield Vaults and Pools (/vaults)"]
+        Router --> DashUI["Yield and Health Dashboard (/)"]
     end
     
-    subgraph Web3Core ["Web3 Multi-Chain Connectors"]
-        SwapUI & BridgeUI & LimitUI --> Connectors["Wagmi / Viem / Ethers / Web3-Onboard\n(MetaMask, Coinbase, WalletConnect, Solana, Sui)"]
+    subgraph Web3Core["Web3 Multi-Chain Connectors"]
+        SwapUI --> Connectors["Wagmi / Viem / Ethers / Web3-Onboard<br/>(MetaMask, Coinbase, WalletConnect, Solana, Sui)"]
+        BridgeUI --> Connectors
+        LimitUI --> Connectors
     end
     
-    subgraph ExecutionEngine ["Liquidity & Routing Protocols"]
-        Connectors --> Kyber["KyberSwap Aggregator & Split Routing\n(PancakeSwap, Uniswap V3, Biswap)"]
-        Connectors --> Mayan["Mayan Finance Cross-Chain Bridge\n(Solana, EVM & Wormhole Swift Protocol)"]
+    subgraph ExecutionEngine["Liquidity and Routing Protocols"]
+        Connectors --> Kyber["KyberSwap Aggregator and Split Routing<br/>(PancakeSwap, Uniswap V3, Biswap)"]
+        Connectors --> Mayan["Mayan Finance Cross-Chain Bridge<br/>(Solana, EVM and Wormhole Swift Protocol)"]
         Connectors --> LimitOrders["On-Chain Non-Custodial Limit Engine"]
         Connectors --> Beefy["Automated Compounding Vaults"]
     end
     
-    subgraph DaemonSecurity ["Background Telemetry & On-Chain Security Daemons"]
-        Watcher["Security & Solvency Watcher Daemon\n(scripts/watcher.js - SAFE_FACTOR 0.73)"]
-        HealthCheck["Real-Time Health Auditor\n(scripts/health_check.js - <=80% SECURE)"]
-        YieldDistributor["Automated 12-Hour Yield Engine\n(100% BNB Distribution to Holders)"]
-        DefiLlama["DefiLlama Verified Fee & TVL Adapters\n(fees/arbitrage-inc.ts)"]
+    subgraph DaemonSecurity["Background Telemetry and On-Chain Security Daemons"]
+        Watcher["Security and Solvency Watcher Daemon<br/>(scripts/watcher.js - SAFE_FACTOR 0.73)"]
+        HealthCheck["Real-Time Health Auditor<br/>(scripts/health_check.js - Max 80% SECURE)"]
+        YieldDistributor["Automated 12-Hour Yield Engine<br/>(100% BNB Distribution to Holders)"]
+        DefiLlama["DefiLlama Verified Fee and TVL Adapters<br/>(fees/arbitrage-inc.ts)"]
         Watcher -.-> DashUI
         HealthCheck -.-> DashUI
         YieldDistributor --> Holders["ARB Inc Token Holders"]
