@@ -30,7 +30,7 @@ L'utente riconosce e accetta che:
 
 ## 4. Privacy e Dati Personali (GDPR)
 
-La piattaforma non effettua tracciamento a fini commerciali né profilazione degli utenti. I dati tecnici di navigazione strettamente necessari per la sicurezza e la prevenzione di abusi informatici sono trattati in conformità al Regolamento (UE) 2016/679 (GDPR). Per richieste tecniche o di sicurezza è disponibile il canale dedicato: security@arbitrage-inc.exchange o tramite GitHub Issues.
+La piattaforma non effettua tracciamento a fini commerciali né profilazione degli utenti. I dati tecnici di navigazione strettamente necessari per la sicurezza e la prevenzione di abusi informatici sono trattati in conformità al Regolamento (UE) 2016/679 (GDPR). Per richieste tecniche o di sicurezza è disponibile il canale dedicato: luca.celebrano1@gmail.com o tramite GitHub Issues.
 
 ## 5. Licenza Open Source
 

@@ -75,7 +75,7 @@ We are generating real trading volume on BSC through our interface and want to b
 ## Contact Information
 
 - **Website**: https://arbitrage-inc.exchange
-- **Email**: support@arbitrage-inc.exchange
+- **Email**: luca.celebrano1@gmail.com
 - **Twitter**: @Arbitrageincept
 - **Telegram**: https://t.me/ArbitrageInception
 
