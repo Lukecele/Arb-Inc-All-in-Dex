@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const PORTALS_API_BASE = 'https://api.portals.fi/v2';
 const PORTALS_API_KEY = process.env.PORTALS_API_KEY ?? '';
-const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261f193f5FED6BDF04E7';
+const FEE_RECIPIENT = '0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7';
 const WITHDRAW_FEE_BPS = 50; // 0.5% fee sul prelievo
 
 export async function POST(req: NextRequest) {
