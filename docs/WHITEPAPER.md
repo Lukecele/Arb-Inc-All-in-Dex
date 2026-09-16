@@ -83,8 +83,8 @@ The protocol incorporates real-time health-check telemetry monitoring pool reser
 
 1. **Zero Custodial Risk:** Arbitrage Inception never takes custody of user assets. All swaps, bridges, deposits, and claims execute strictly peer-to-contract between the user's connected Web3 wallet and the underlying smart contracts.
 2. **EU MiCA Non-Custodial Compliance:** In accordance with **Recital 22 of the EU Markets in Crypto-Assets (MiCA) Regulation**, the software operates exclusively as an open-source decentralized interface without intermediary custody, centralized brokerage, or discretionary fund management.
-3. **Independent Security Clearance:**
-   * **Hashdit Security Audit:** Evaluated with **zero vulnerabilities detected** by Hashdit Bot on the official BNB Chain Developer Tools List ([PR #98](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)).
+3. **Automated Security Analysis & Ecosystem Listings:**
+   * **HashDit Automated Static Review:** Evaluated with **zero vulnerabilities detected** by HashDit Bot on the official BNB Chain Developer Tools List ([PR #98](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)). As disclosed, automated scanning does not substitute an independent manual audit; see [docs/SECURITY.md](./SECURITY.md) and [AUDIT.md](../AUDIT.md).
    * **DefiLlama Production Merge:** Officially integrated into DefiLlama's production codebase under [PR #9453](https://github.com/DefiLlama/dimension-adapters/pull/9453).
 
 ---

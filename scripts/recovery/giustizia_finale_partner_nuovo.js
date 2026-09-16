@@ -8,7 +8,7 @@ const { ethers } = require("ethers");
 const tokenAddress = "0x5ee54869ecd5e752c31af095187326d4a4d50e1c";
 const abi = ["function balanceOf(address) view returns (uint256)"];
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
 

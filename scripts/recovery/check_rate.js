@@ -4,7 +4,7 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env.local") });
 const ethers = require("ethers");
 
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 // Indirizzi convertiti in minuscolo per evitare il Checksum Error
 const TOKEN_ADDRESS =

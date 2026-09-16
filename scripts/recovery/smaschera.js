@@ -9,7 +9,7 @@ const redis = new Redis({
 	token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const TOKEN_CONTRACT =
 	"0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c".toLowerCase();

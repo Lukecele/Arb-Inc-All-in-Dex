@@ -1,6 +1,6 @@
 const { ethers } = require("ethers");
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 
 // L'indirizzo del token che hai messo nel watcher

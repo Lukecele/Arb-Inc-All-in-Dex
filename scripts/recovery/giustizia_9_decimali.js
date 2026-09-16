@@ -4,7 +4,7 @@ const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env.local") });
 
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const tokenAddress = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c";
 const abi = [

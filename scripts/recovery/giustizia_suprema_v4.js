@@ -10,7 +10,7 @@ const CYCLES = 40; // 10 ore con cicli da 15 minuti = 40 cicli
 const abi = ["function balanceOf(address) view returns (uint256)"];
 
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed1.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
 

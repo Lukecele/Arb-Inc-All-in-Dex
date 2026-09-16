@@ -10,7 +10,7 @@ const abi = ["function balanceOf(address) view returns (uint256)"];
 
 // RPC Ufficiale Binance (più stabile)
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed1.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
 

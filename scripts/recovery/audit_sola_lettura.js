@@ -6,7 +6,7 @@ const ethers = require("ethers");
 
 // 🛡️ TRUCCO: Specifichiamo la rete (56 = BSC) per evitare il loop di rilevamento
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 	56,
 	{ staticNetwork: true },
 );

@@ -8,7 +8,7 @@ const tokenAddress = "0x5EE54869Ecd5E752C31aF095187326D4A4D50e1c";
 const abi = ["function balanceOf(address) view returns (uint256)"];
 
 const provider = new ethers.JsonRpcProvider(
-	"https://bsc-dataseed.binance.org/",
+	"https://bsc-rpc.publicnode.com",
 );
 const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
 
