@@ -119,6 +119,27 @@ export default function TermsOfServicePage() {
 						developer operates a centralized custodial exchange, provides investment advice, or acts as a financial counterparty.
 					</p>
 
+					<h2>3.1 Community Rewards, Referral Points & Regulatory Exclusion</h2>
+					<p>
+						The Platform features an autonomous, non-custodial community reward and referral mechanism.
+						Points and leaderboard scores are non-monetary software gamification metrics calculated through
+						open telemetry and self-executing smart contracts. Programmatic rewards claimable in native BNB
+						are distributed autonomously from on-chain fee reflections without human discretion, custody,
+						or escrow management.
+					</p>
+					<p>
+						Users sharing referral links act solely as independent peer participants sharing open-source web
+						interface hyperlinks. They do not act as commercial brokers, financial agents (<em>agenti o mediatori creditizi ex D.Lgs. 141/2010</em>),
+						or representatives of any entity. Referral bonuses are internal protocol points and do not represent
+						commissions, dividends, securities, or commercial revenue-sharing agreements.
+					</p>
+					<p>
+						Pursuant to <strong>Recital 22 of Regulation (EU) 2023/1114 (MiCA)</strong> and Italian regulations on virtual asset
+						service providers (<em>D.Lgs. 231/2007 - Registro OAM</em>), fully decentralized, peer-to-peer software interactions
+						conducted without centralized financial intermediation, order custody, or discretionary control remain excluded from
+						financial licensing, CASP, and VASP registration requirements.
+					</p>
+
 					<h2>4. Eligibility</h2>
 					<p>To use the Platform, you must:</p>
 					<ul>
