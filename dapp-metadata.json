@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Arbitrage Inception",
+  "short_name": "Arb-Inc",
+  "version": "1.1.0",
+  "description": "Open-source, non-custodial decentralized exchange aggregator and cross-chain bridge suite on BNB Smart Chain.",
+  "license": "MIT",
+  "homepage": "https://arbitrage-inc.exchange",
+  "repository": "https://github.com/Lukecele/Arb-Inc-All-in-Dex",
+  "network": {
+    "name": "BNB Smart Chain",
+    "short_name": "BSC",
+    "chainId": 56,
+    "nativeCurrency": {
+      "name": "BNB",
+      "symbol": "BNB",
+      "decimals": 18
+    }
+  },
+  "architecture": {
+    "custody_model": "Non-custodial (peer-to-contract)",
+    "regulatory_framework": "MiCA Regulation (EU) 2023/1114 Recital 22 exemption",
+    "swap_aggregator": "KyberSwap Aggregator API v1",
+    "swap_routing_fee_bps": 50,
+    "cross_chain_bridge": "Mayan Finance Protocol",
+    "bridge_routing_fee_bps": 30,
+    "protocol_fee_recipient": "0xafF5340ECFaf7ce049261cff193f5FED6BDF04E7"
+  },
+  "contracts": {
+    "token": {
+      "address": "0x5ee54869ecd5e752c31af095187326d4a4d50e1c",
+      "symbol": "ARB INC",
+      "decimals": 9,
+      "transfer_tax_pct": 4.0,
+      "ownership": "Renounced (0x000000000000000000000000000000000000dEaD)"
+    }
+  },
+  "verification": {
+    "defillama": {
+      "slug": "arbitrage-inc",
+      "protocol_id": 7591,
+      "url": "https://defillama.com/protocol/arbitrage-inc",
+      "adapter_pr": "https://github.com/DefiLlama/dimension-adapters/pull/9453"
+    },
+    "static_analysis": {
+      "scanner": "HashDit Bot",
+      "issues_detected": 0,
+      "reference": "https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720"
+    }
+  },
+  "documentation": {
+    "api": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/API.md",
+    "security": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md",
+    "whitepaper": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/WHITEPAPER.md",
+    "audit_disclosures": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/AUDIT.md"
+  },
+  "community": {
+    "telegram": "https://t.me/ArbitrageInception",
+    "twitter": "https://x.com/Arbitrageincept",
+    "security_contact": "luca.celebrano1@gmail.com"
+  }
+}
