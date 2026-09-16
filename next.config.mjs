@@ -35,6 +35,30 @@ const nextConfig = {
 					}],
 			}];
 	},
+	async redirects() {
+		return [
+			{
+				source: "/swap",
+				destination: "/",
+				permanent: true,
+			},
+			{
+				source: "/dex",
+				destination: "/",
+				permanent: true,
+			},
+			{
+				source: "/zap",
+				destination: "/swap-all",
+				permanent: true,
+			},
+			{
+				source: "/about",
+				destination: "/",
+				permanent: true,
+			},
+		];
+	},
 	poweredByHeader: false,
 };
 
