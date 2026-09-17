@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
 						</a>{" "}
 						or{" "}
 						<a
-							href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/issues"
+							href="https://github.com/arbincept/Arb-Inc-All-in-Dex/issues"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -183,7 +183,7 @@ export default function PrivacyPolicyPage() {
 						</a>{" "}
 						or{" "}
 						<a
-							href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/issues"
+							href="https://github.com/arbincept/Arb-Inc-All-in-Dex/issues"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -237,7 +237,7 @@ export default function PrivacyPolicyPage() {
 						</a>{" "}
 						or{" "}
 						<a
-							href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/issues"
+							href="https://github.com/arbincept/Arb-Inc-All-in-Dex/issues"
 							target="_blank"
 							rel="noopener noreferrer"
 						>

@@ -71,7 +71,7 @@ export default function TermsOfServicePage() {
 						protocols on BNB Smart Chain, including KyberSwap, Mayan Finance,
 						and PancakeSwap. The full source code is publicly available at{" "}
 						<a
-							href="https://github.com/Lukecele/Arb-Inc-All-in-Dex"
+							href="https://github.com/arbincept/Arb-Inc-All-in-Dex"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -222,7 +222,7 @@ export default function TermsOfServicePage() {
 					<p>
 						The source code of this interface is released under the{" "}
 						<a
-							href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
+							href="https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/LICENSE"
 							target="_blank"
 							rel="noopener noreferrer"
 						>

@@ -126,7 +126,7 @@ export default function Footer() {
 						<FaTwitter />
 					</SocialIcon>
 					<SocialIcon
-						href="https://github.com/Lukecele/Arb-Inc-All-in-Dex"
+						href="https://github.com/arbincept/Arb-Inc-All-in-Dex"
 						aria-label="Open Source on GitHub (MIT)"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -175,7 +175,7 @@ export default function Footer() {
             Privacy Policy</a>
 				<a href="/cookie-policy">Cookie Policy</a>
 				<a
-					href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
+					href="https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/LICENSE"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -186,7 +186,7 @@ export default function Footer() {
 			<Copyright>
 				© {new Date().getFullYear()} Arbitrage Inception Contributors —{" "}
 				<a
-					href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
+					href="https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/LICENSE"
 					target="_blank"
 					rel="noopener noreferrer"
 					style={{ color: "#a855f7" }}

@@ -169,14 +169,14 @@ export default function ContactPage() {
 						</p>
 						<SocialGrid>
 							<a
-								href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/issues"
+								href="https://github.com/arbincept/Arb-Inc-All-in-Dex/issues"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
 								GitHub Issues
 							</a>
 							<a
-								href="https://github.com/Lukecele/Arb-Inc-All-in-Dex"
+								href="https://github.com/arbincept/Arb-Inc-All-in-Dex"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
@@ -188,9 +188,19 @@ export default function ContactPage() {
 					<ContactCard>
 						<h2>🔒 Security Disclosures</h2>
 						<p>
-							For responsible disclosure of security vulnerabilities, open a
-							confidential issue on GitHub or reach out privately via Telegram
-							to community moderators.
+							For responsible disclosure of security vulnerabilities, please email{" "}
+							<a href="mailto:security@arbitrage-inc.exchange" style={{ color: "#a855f7" }}>
+								security@arbitrage-inc.exchange
+							</a>{" "}
+							or submit a private advisory through GitHub Security pursuant to our{" "}
+							<a
+								href="https://github.com/arbincept/.github/blob/main/SECURITY.md"
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{ color: "#a855f7" }}
+							>
+								SECURITY.md policy
+							</a>.
 						</p>
 						<p style={{ color: "#ef4444", marginBottom: 0 }}>
 							<strong>Warning:</strong> Arbitrage Inception will never ask for
@@ -206,7 +216,7 @@ export default function ContactPage() {
 							with no corporate custody or central financial authority. The client code is
 							released under the{" "}
 							<a
-								href="https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/LICENSE"
+								href="https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/LICENSE"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
