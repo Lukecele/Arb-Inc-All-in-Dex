@@ -7,10 +7,13 @@ const redis = new Redis({
 	token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
 });
 
+export const maxDuration = 30;
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
 	try {
         const body = await request.json();
-		const wallet = body?.wallet;
+		const wallet = body?.wallet || body?.walletAddress;
 
         // 1. Controllo base che ci sia un wallet fornito
         if (!wallet || typeof wallet !== "string") {
@@ -23,9 +26,9 @@ export async function POST(request: Request) {
         }
         const walletLower = (ethers as any).utils.getAddress(wallet).toLowerCase();
 
-        // 3. Lock atomico per wallet: impedisce richieste parallele/concorrenti da script
+        // 3. Lock atomico per wallet: impedisce richieste parallele/concorrenti da script (TTL 45s di margine)
         const lockKey = `lock:claim:${walletLower}`;
-        const acquired = await redis.set(lockKey, "locked", { nx: true, ex: 60 });
+        const acquired = await redis.set(lockKey, "locked", { nx: true, ex: 45 });
         if (!acquired) {
             return NextResponse.json(
                 { error: "Richiesta di claim già in elaborazione per questo wallet. Riprova tra poco." },
@@ -79,7 +82,7 @@ export async function POST(request: Request) {
                 globalIndex.toString(),
             );
 
-            return NextResponse.json({ success: true, txHash: tx.hash });
+            return NextResponse.json({ success: true, txHash: tx.hash, hash: tx.hash });
         } finally {
             // Rilascio atomico del lock
             await redis.del(lockKey);

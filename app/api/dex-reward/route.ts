@@ -12,6 +12,9 @@ const redis = new Redis({
 // Funzione helper per mettere in pausa l'esecuzione
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export const maxDuration = 30;
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
@@ -35,41 +38,48 @@ export async function POST(req: Request) {
         else if (type === "limit") points = 200;
         else return NextResponse.json({ success: false, error: "Invalid type" }, { status: 400 });
 
-        // 1. Lock atomico immediato: prenota l'hash per 120s con NX. Blocca all'istante chiamate concorrenti/duplicate.
+        // 1. Lock atomico immediato: prenota l'hash per 45s con NX. Margine ideale rispetto all'esecuzione di 6s.
         const claimKey = `claim_tx:${cleanTxHash}`;
-        const lockAcquired = await redis.set(claimKey, "pending", { nx: true, ex: 120 });
+        const lockAcquired = await redis.set(claimKey, "pending", { nx: true, ex: 45 });
         if (!lockAcquired) {
             return NextResponse.json({ success: false, error: "Transazione già riscattata o in elaborazione" }, { status: 400 });
         }
 
         try {
-            // --- 🚨 FIX RACE CONDITION: SMART POLLING 🚨 ---
+            // --- 🚨 SMART POLLING RICEVUTA BLOCKCHAIN CON TIMEOUT E MARGINI SICURI 🚨 ---
             let receipt = null;
             const maxRetries = 4; // Fino a 4 tentativi
-            const delayMs = 3000; // 3 secondi di pausa tra i tentativi (totale ~12 secondi)
+            const delayMs = 1500; // 1.5s di pausa (totale max ~4.5s di attesa, ottimizzato per Vercel)
 
             for (let i = 0; i < maxRetries; i++) {
-                const rpcResponse = await fetch(RPC_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: "2.0",
-                        id: 1,
-                        method: "eth_getTransactionReceipt",
-                        params: [cleanTxHash]
-                    })
-                });
-                
-                const rpcData = await rpcResponse.json();
-                receipt = rpcData.result;
-
-                if (receipt) {
-                    break; // La ricevuta esiste, il blocco è stato propagato!
+                try {
+                    const rpcResponse = await fetch(RPC_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: AbortSignal.timeout(3500), // Timeout 3.5s per evitare hanging di rete
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            id: 1,
+                            method: "eth_getTransactionReceipt",
+                            params: [cleanTxHash]
+                        })
+                    });
+                    
+                    if (rpcResponse.ok) {
+                        const rpcData = await rpcResponse.json();
+                        receipt = rpcData.result;
+                        if (receipt) {
+                            break; // Ricevuta confermata on-chain!
+                        }
+                    }
+                } catch (rpcErr) {
+                    console.warn(`[Attempt ${i + 1}] RPC polling warning:`, rpcErr);
                 }
                 
-                // Se non esiste ancora, aspettiamo prima del prossimo ciclo
-                console.log(`[Attempt ${i + 1}] Transazione non ancora trovata sulla BSC, attendo...`);
-                await sleep(delayMs);
+                // Attende solo se non siamo all'ultimo tentativo
+                if (i < maxRetries - 1) {
+                    await sleep(delayMs);
+                }
             }
 
             if (!receipt || parseInt(receipt.status, 16) !== 1) {

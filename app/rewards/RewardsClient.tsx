@@ -112,20 +112,28 @@ export default function RewardsClient() {
 		setClaimLoading(true);
 		setClaimStatus("Processing...");
 		try {
-			const res = await fetch("/api/claim", {
+			const res = await fetch("/api/rewards/claim", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ walletAddress: address }),
+				signal: AbortSignal.timeout(28000),
+				body: JSON.stringify({ wallet: address, walletAddress: address }),
 			});
-			const resData = await res.json();
-			if (resData.success) {
-				setClaimStatus(`✅ Hash: ${resData.hash.substring(0, 10)}...`);
+			const resData = await res.json().catch(() => ({}));
+			if (res.ok && resData.success) {
+				const txIdentifier = resData.txHash || resData.hash || "";
+				setClaimStatus(`✅ Confirmed: ${txIdentifier.substring(0, 10)}...`);
 				fetchRewardsData();
+			} else if (res.status === 429) {
+				setClaimStatus("⏳ In elaborazione. Riprova tra 30s.");
 			} else {
-				setClaimStatus(`❌ ${resData.error}`);
+				setClaimStatus(`❌ ${resData.error || "Claim failed"}`);
 			}
-		} catch (e) {
-			setClaimStatus("❌ Error");
+		} catch (e: any) {
+			if (e?.name === "TimeoutError") {
+				setClaimStatus("⏳ Attesa blocco... verifica su BscScan tra poco");
+			} else {
+				setClaimStatus("❌ Errore di connessione");
+			}
 		}
 		setClaimLoading(false);
 	};

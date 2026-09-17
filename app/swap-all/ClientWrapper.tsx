@@ -164,7 +164,16 @@ export default function ClientWrapper() {
 					txHash: tx.hash,
 					referrerWallet: referrer,
 				}),
-			}).then(() => alert("🎉 Swap Successful! +100 Points added!"));
+			})
+				.then(async (res) => {
+					const data = await res.json().catch(() => ({}));
+					if (res.ok && data.success) {
+						alert("🎉 Swap Confirmed! +100 Points added to your Leaderboard!");
+					} else {
+						console.log("Reward status:", data.error || res.status);
+					}
+				})
+				.catch((err) => console.warn("Dex reward notification error:", err));
 			return tx.hash;
 		},
 		[wallet, walletAddress],
