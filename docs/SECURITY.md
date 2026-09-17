@@ -79,11 +79,11 @@ The protocol prioritizes enterprise-grade, high-throughput RPC endpoints on BNB 
 
 | Endpoint | Provider | Role | Rate / Performance |
 |---|---|---|---|
-| `https://bsc-rpc.publicnode.com` | PublicNode | Primary Public RPC | High-capacity distributed cluster |
-| `https://rpc.ankr.com/bsc` | Ankr Network | Fallback RPC | Global geo-distributed routing |
-| `https://binance.nodereal.io` | NodeReal / MegaNode | Secondary RPC | Enterprise BSC node provider |
+| `https://binance.nodereal.io` | NodeReal / MegaNode | Primary Node | Official BSC infrastructure, instant receipt indexing |
+| `https://bsc-rpc.publicnode.com` | PublicNode | Distributed Cluster | High-capacity read & call node cluster |
+| `https://1rpc.io/bnb` | Automata Network | Resilient Fallback | Privacy-preserving, multi-region fallback RPC |
 
-Custom private RPCs can be injected via the `BSC_RPC_URL` environment variable.
+Custom private RPCs can be injected via the `BSC_RPC_URL` environment variable. Unauthenticated `rpc.ankr.com` was deprecated due to mandatory API key requirements.
 
 ---
 

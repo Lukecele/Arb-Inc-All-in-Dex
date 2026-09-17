@@ -37,36 +37,43 @@ export const useProtocolData = (
 					);
 				}
 
-				const rpcUrl = "https://bsc-rpc.publicnode.com";
-				const rpcBody = (method: string, params: any[]) =>
-					JSON.stringify({ jsonrpc: "2.0", method, params, id: 1 });
+				const fetchRpcWithFallback = async (method: string, params: any[]) => {
+					const endpoints = [
+						"https://binance.nodereal.io",
+						"https://bsc-rpc.publicnode.com",
+					];
+					for (const url of endpoints) {
+						try {
+							const res = await fetch(url, {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								signal: AbortSignal.timeout(4000),
+								body: JSON.stringify({ jsonrpc: "2.0", method, params, id: 1 }),
+							});
+							if (res.ok) {
+								const data = await res.json();
+								if (data.result !== undefined) return data;
+							}
+						} catch (e) {
+							// fallback al prossimo endpoint
+						}
+					}
+					return { result: "0x0" };
+				};
 
-				const [resT, resAB, resAT] = await Promise.all([
-					fetch(rpcUrl, {
-						method: "POST",
-						body: rpcBody("eth_getBalance", [TREASURY_WALLET, "latest"]),
-					}),
-					fetch(rpcUrl, {
-						method: "POST",
-						body: rpcBody("eth_getBalance", [ACCUMULATOR_WALLET, "latest"]),
-					}),
-					fetch(rpcUrl, {
-						method: "POST",
-						body: rpcBody("eth_call", [
-							{
-								to: CONTRACT_ADDRESS,
-								data:
-									"0x70a08231" +
-									ACCUMULATOR_WALLET.substring(2).padStart(64, "0"),
-							},
-							"latest",
-						]),
-					}),
+				const [dT, dAB, dAT] = await Promise.all([
+					fetchRpcWithFallback("eth_getBalance", [TREASURY_WALLET, "latest"]),
+					fetchRpcWithFallback("eth_getBalance", [ACCUMULATOR_WALLET, "latest"]),
+					fetchRpcWithFallback("eth_call", [
+						{
+							to: CONTRACT_ADDRESS,
+							data:
+								"0x70a08231" +
+								ACCUMULATOR_WALLET.substring(2).padStart(64, "0"),
+						},
+						"latest",
+					]),
 				]);
-
-				const dT = await resT.json();
-				const dAB = await resAB.json();
-				const dAT = await resAT.json();
 				const [statsRes, aprRes] = await Promise.all([
 					fetch("/api/stats"),
 					fetch("/api/apr"),

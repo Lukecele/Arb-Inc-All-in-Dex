@@ -7,6 +7,30 @@ const redis = new Redis({
 	token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
 });
 
+const RPC_URLS = [
+    process.env.BSC_RPC_URL,
+    process.env.RPC_URL,
+    "https://binance.nodereal.io",
+    "https://bsc-rpc.publicnode.com",
+    "https://1rpc.io/bnb",
+].filter(Boolean) as string[];
+
+async function getWorkingProvider() {
+    for (const url of RPC_URLS) {
+        try {
+            const p = new (ethers as any).providers.JsonRpcProvider(url);
+            await Promise.race([
+                p.getBlockNumber(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error("RPC Timeout")), 2500))
+            ]);
+            return p;
+        } catch (e) {
+            console.warn(`[Claim API] Fallback triggered from RPC ${url}`);
+        }
+    }
+    return new (ethers as any).providers.JsonRpcProvider(RPC_URLS[0]);
+}
+
 export const maxDuration = 30;
 export const dynamic = "force-dynamic";
 
@@ -61,8 +85,7 @@ export async function POST(request: Request) {
                 );
             }
 
-            const rpcUrl = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
-            const provider = new (ethers as any).providers.JsonRpcProvider(rpcUrl);
+            const provider = await getWorkingProvider();
             const privKey = process.env.PRIVATE_KEY;
             if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 

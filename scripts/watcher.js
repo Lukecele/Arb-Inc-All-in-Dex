@@ -20,9 +20,9 @@ const CEO_WALLET = "0xaff5340ecfaf7ce049261cff193f5fed6bdf04e7".toLowerCase();
 // RPC con fallback automatico calibrato su stress-test (40 req concorrenti a 0 throttling)
 const RPC_URLS = [
 	process.env.RPC_URL,
-	"https://bsc-rpc.publicnode.com",
-	"https://rpc.ankr.com/bsc",
 	"https://binance.nodereal.io",
+	"https://bsc-rpc.publicnode.com",
+	"https://1rpc.io/bnb",
 ].filter(Boolean);
 
 function makeProvider(url) {

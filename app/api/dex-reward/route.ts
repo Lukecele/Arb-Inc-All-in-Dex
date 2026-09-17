@@ -2,7 +2,14 @@ import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { Redis } from "@upstash/redis";
 
-const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
+// Cluster RPC resiliente allineato con le buone pratiche del watcher (NodeReal prioritario per indicizzazione istantanea delle ricevute)
+const RPC_URLS = [
+    process.env.BSC_RPC_URL,
+    process.env.RPC_URL,
+    "https://binance.nodereal.io",
+    "https://bsc-rpc.publicnode.com",
+    "https://1rpc.io/bnb",
+].filter(Boolean) as string[];
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -46,14 +53,15 @@ export async function POST(req: Request) {
         }
 
         try {
-            // --- 🚨 SMART POLLING RICEVUTA BLOCKCHAIN CON TIMEOUT E MARGINI SICURI 🚨 ---
+            // --- 🚨 SMART POLLING MULTI-RPC CON TIMEOUT E FAILOVER DINAMICO 🚨 ---
             let receipt = null;
-            const maxRetries = 4; // Fino a 4 tentativi
-            const delayMs = 1500; // 1.5s di pausa (totale max ~4.5s di attesa, ottimizzato per Vercel)
+            const maxRetries = 4; // Fino a 4 tentativi (ruota tra nodi sani)
+            const delayMs = 1500; // 1.5s di pausa
 
             for (let i = 0; i < maxRetries; i++) {
+                const targetRpc = RPC_URLS[i % RPC_URLS.length];
                 try {
-                    const rpcResponse = await fetch(RPC_URL, {
+                    const rpcResponse = await fetch(targetRpc, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         signal: AbortSignal.timeout(3500), // Timeout 3.5s per evitare hanging di rete
@@ -73,7 +81,7 @@ export async function POST(req: Request) {
                         }
                     }
                 } catch (rpcErr) {
-                    console.warn(`[Attempt ${i + 1}] RPC polling warning:`, rpcErr);
+                    console.warn(`[Attempt ${i + 1}] RPC failover (${targetRpc}):`, rpcErr);
                 }
                 
                 // Attende solo se non siamo all'ultimo tentativo
