@@ -10,7 +10,7 @@
 [![Network: BSC](https://img.shields.io/badge/Network-BNB_Smart_Chain-F0B90B?logo=binance&logoColor=white)](https://bscscan.com)
 [![Next.js](https://img.shields.io/badge/Next.js-15_App_Router-black?logo=next.js&logoColor=white)](https://nextjs.org)
 [![DeFiLlama](https://img.shields.io/badge/DeFiLlama-Listed-brightgreen)](https://defillama.com/protocol/arbitrage-inc)
-[![Awesome-Web3](https://awesome.re/mentioned-badge.svg)](https://github.com/ahmet/awesome-web3#open-source-projects)
+[![Awesome-Web3](https://awesome.re/mentioned-badge.svg)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L407)
 [![BNB Chain Tools](https://img.shields.io/badge/BNB_Chain_Tools-HashDit_0_Issues-F0B90B?logo=binance)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)
 [![X / Twitter](https://img.shields.io/badge/X-@Arbitrageincept-black?logo=x)](https://x.com/Arbitrageincept)
 [![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
@@ -22,7 +22,7 @@
 **Public API Docs:** [docs/API.md](./docs/API.md)  
 **Security & CSP Policy:** [docs/SECURITY.md](./docs/SECURITY.md)  
 **DeFiLlama Protocol:** [https://defillama.com/protocol/arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)  
-**Awesome-Web3 Directory:** [Listed in Open Source Projects](https://github.com/ahmet/awesome-web3#open-source-projects) ([Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796))  
+**Awesome-Web3 Directory:** [Listed in Open Source Project (Line 407)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L407) ([Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796))  
 **Automated Security Scan:** [HashDit Bot - Zero Issues Detected (BNB Chain PR #98)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)  
 **Smart Contract:** [0x5ee54869ecd5e752c31af095187326d4a4d50e1c (BscScan)](https://bscscan.com/address/0x5ee54869ecd5e752c31af095187326d4a4d50e1c#readContract)  
 **Audit & Disclosures:** [AUDIT.md](./AUDIT.md) | **Community:** [Telegram](https://t.me/ArbitrageInception) · [X / Twitter](https://x.com/Arbitrageincept) | **License:** MIT
@@ -191,7 +191,7 @@ node scripts/maintenance/test-pages.mjs
 ## 🌐 Ecosystem Integrations & Directory Listings
 
 - **[DefiLlama Protocol Analytics](https://defillama.com/protocol/arbitrage-inc):** Live protocol metrics, DEX volume, and platform revenue tracking (Adapter: [PR #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275)).
-- **[Awesome-Web3 Directory](https://github.com/ahmet/awesome-web3):** Officially reviewed and indexed under [Open Source Projects (Line 409)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L409) via [Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796).
+- **[Awesome-Web3 Directory](https://github.com/ahmet/awesome-web3):** Officially reviewed and indexed under [Open Source Project (Line 407)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L407) via [Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796).
 - **[BNB Chain Developer Tooling](https://github.com/bnb-chain/developer-tools-list/pull/98):** Ecosystem catalog submission, [automated static scan cleared via HashDit Bot (0 issues detected)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720).
 
 ---
