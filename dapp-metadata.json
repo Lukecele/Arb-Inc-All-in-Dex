@@ -6,7 +6,7 @@
   "description": "Open-source, non-custodial decentralized exchange aggregator and cross-chain bridge suite on BNB Smart Chain.",
   "license": "MIT",
   "homepage": "https://arbitrage-inc.exchange",
-  "repository": "https://github.com/Lukecele/Arb-Inc-All-in-Dex",
+  "repository": "https://github.com/arbincept/Arb-Inc-All-in-Dex",
   "network": {
     "name": "BNB Smart Chain",
     "short_name": "BSC",
@@ -49,10 +49,10 @@
     }
   },
   "documentation": {
-    "api": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/API.md",
-    "security": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md",
-    "whitepaper": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/WHITEPAPER.md",
-    "audit_disclosures": "https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/AUDIT.md"
+    "api": "https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/docs/API.md",
+    "security": "https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md",
+    "whitepaper": "https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/docs/WHITEPAPER.md",
+    "audit_disclosures": "https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/AUDIT.md"
   },
   "community": {
     "telegram": "https://t.me/ArbitrageInception",

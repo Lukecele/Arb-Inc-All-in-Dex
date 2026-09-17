@@ -35,4 +35,4 @@ La piattaforma non effettua tracciamento a fini commerciali né profilazione deg
 ## 5. Licenza Open Source
 
 Codice sorgente pubblico rilasciato sotto Licenza MIT:  
-https://github.com/Lukecele/Arb-Inc-All-in-Dex
+https://github.com/arbincept/Arb-Inc-All-in-Dex

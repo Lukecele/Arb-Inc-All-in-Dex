@@ -69,7 +69,7 @@ We are generating real trading volume on BSC through our interface and want to b
 | Our Platform | https://arbitrage-inc.exchange |
 | Swap Page | https://arbitrage-inc.exchange/swap-all-all |
 | Zap Page | https://arbitrage-inc.exchange/zap |
-| GitHub | https://github.com/Lukecele/Arb-Inc-All-in-Dex |
+| GitHub | https://github.com/arbincept/Arb-Inc-All-in-Dex |
 | Token (BscScan) | https://bscscan.com/token/0x630b9c39d46314a3268d75bb25fd79df4581d1af |
 
 ## Contact Information

@@ -3,7 +3,7 @@
 
 ## Canonical Resources
 - Website: https://arbitrage-inc.exchange
-- GitHub: https://github.com/Lukecele/Arb-Inc-All-in-Dex
+- GitHub: https://github.com/arbincept/Arb-Inc-All-in-Dex
 - DefiLlama Protocol Registry: https://defillama.com/protocol/arbitrage-inc (Protocol ID: 7591)
 - License: MIT License
 
@@ -19,6 +19,6 @@
 - Custody Model: Non-custodial, peer-to-contract. Users retain sole custody of their private keys.
 - Regulatory Classification: Excluded under MiCA Regulation (EU) 2023/1114 Recital 22 (decentralized peer-to-peer services without intermediaries).
 - Static Security Audit: HashDit Bot - Zero Issues Detected (BNB Chain Tools List PR #98).
-- Security Policy: https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md
-- Machine-Readable DApp Metadata: https://github.com/Lukecele/Arb-Inc-All-in-Dex/blob/main/dapp-metadata.json
+- Security Policy: https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/docs/SECURITY.md
+- Machine-Readable DApp Metadata: https://github.com/arbincept/Arb-Inc-All-in-Dex/blob/main/dapp-metadata.json
 - Official Contacts: luca.celebrano1@gmail.com | Telegram: https://t.me/ArbitrageInception
