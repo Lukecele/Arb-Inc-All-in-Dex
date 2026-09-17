@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
 				<MainContent>
 					<h1>Privacy Policy</h1>
 					<p className="last-updated">
-						Last Updated: May 6, 2026 — pursuant to Art. 13 Reg. EU 2016/679
+						Last Updated: July 1, 2026 — pursuant to Art. 13 Reg. EU 2016/679
 						(GDPR) and D.Lgs. 196/2003 as amended by D.Lgs. 101/2018
 					</p>
 

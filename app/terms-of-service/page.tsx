@@ -51,7 +51,7 @@ export default function TermsOfServicePage() {
 
 				<MainContent>
 					<h1>Terms of Service</h1>
-					<p className="last-updated">Last Updated: May 6, 2026</p>
+					<p className="last-updated">Last Updated: July 1, 2026</p>
 
 					<h2>1. Acceptance of Terms</h2>
 					<p>
