@@ -84,10 +84,9 @@ export default function TermsOfServicePage() {
 					</p>
 					<ul>
 						<li>
-							A Virtual Asset Service Provider (VASP) or Crypto-Asset Service Provider (CASP) under Reg. EU 2023/1114
-							(MiCA)
+							A Crypto-Asset Service Provider (CASP) under Regulation (EU) 2023/1114 (MiCA) or Italian D.Lgs. 129/2024
 						</li>
-						<li>A cryptocurrency exchange, broker, or financial institution</li>
+						<li>A cryptocurrency exchange, custodian, broker, or financial institution</li>
 						<li>
 							An investment service under D.Lgs. 58/1998 (TUF — Italian
 							Financial Act)
@@ -134,10 +133,7 @@ export default function TermsOfServicePage() {
 						commissions, dividends, securities, or commercial revenue-sharing agreements.
 					</p>
 					<p>
-						Pursuant to <strong>Recital 22 of Regulation (EU) 2023/1114 (MiCA)</strong> and Italian regulations on virtual asset
-						service providers (<em>D.Lgs. 231/2007 - Registro OAM</em>), fully decentralized, peer-to-peer software interactions
-						conducted without centralized financial intermediation, order custody, or discretionary control remain excluded from
-						financial licensing, CASP, and VASP registration requirements.
+						Pursuant to <strong>Recital 22 of Regulation (EU) 2023/1114 (MiCA)</strong> and Italian transposing legislation (<em>Decreto Legislativo 5 settembre 2024, n. 129</em> adapting the national legal framework to MiCA and transitioning supervision from the legacy OAM VASP register to CONSOB / Banca d&apos;Italia CASP oversight), fully decentralized, peer-to-peer software interactions conducted without centralized financial intermediation, order custody, or discretionary control remain excluded from financial licensing, CASP authorization, and VASP registration requirements.
 					</p>
 
 					<h2>4. Eligibility</h2>

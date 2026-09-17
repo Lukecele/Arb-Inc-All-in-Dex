@@ -19,7 +19,7 @@
   },
   "architecture": {
     "custody_model": "Non-custodial (peer-to-contract)",
-    "regulatory_framework": "MiCA Regulation (EU) 2023/1114 Recital 22 exemption",
+    "regulatory_framework": "MiCA Regulation (EU) 2023/1114 Recital 22 & Italian D.Lgs. 129/2024 non-custodial exemption",
     "swap_aggregator": "KyberSwap Aggregator API v1",
     "swap_routing_fee_bps": 50,
     "cross_chain_bridge": "Mayan Finance Protocol",

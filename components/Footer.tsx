@@ -163,8 +163,8 @@ export default function Footer() {
 				interacting with any decentralized protocol.
 				<br />
 				<br />
-				<strong>MiCA Notice (Reg. EU 2023/1114):</strong> This interface is not
-				a Virtual Asset Service Provider (VASP), broker, or regulated financial
+				<strong>MiCA Notice (Reg. EU 2023/1114 & D.Lgs. 129/2024):</strong> This interface is not
+				a Crypto-Asset Service Provider (CASP), broker, or regulated financial
 				entity. It is permissionless open-source software. Use is at the
 				user&apos;s sole risk and responsibility.
 			</DisclaimerBox>

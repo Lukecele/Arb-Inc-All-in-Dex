@@ -6,11 +6,11 @@ Arbitrage Inception è un'interfaccia client open-source distribuita sotto licen
 
 L'interfaccia e il relativo codice sorgente **NON costituiscono**:
 - Un servizio o attività di investimento ai sensi del D.Lgs. 58/1998 (Testo Unico della Finanza - TUF);
-- Un prestatore di servizi per le cripto-attività (CASP/VASP) ai sensi del Regolamento (UE) 2023/1114 (MiCA);
+- Un prestatore di servizi per le cripto-attività (CASP) soggetto ad autorizzazione ai sensi del Regolamento (UE) 2023/1114 (MiCA) e del Decreto Legislativo 5 settembre 2024, n. 129 (che ha adeguato l'ordinamento nazionale sostituendo il previgente registro VASP OAM con la vigilanza CONSOB e Banca d'Italia);
 - Un istituto bancario o di pagamento ai sensi del D.Lgs. 385/1993 (TUB) o D.Lgs. 11/2010 (PSD2);
-- Un'attività soggetta ad autorizzazione, vigilanza o registrazione presso Banca d'Italia, CONSOB o altre autorità di regolamentazione finanziaria.
+- Un'attività soggetta ad autorizzazione, vigilanza o registrazione presso Banca d'Italia, CONSOB o OAM.
 
-Ai sensi del Considerando 22 del Regolamento (UE) 2023/1114 (MiCA), le interazioni peer-to-peer con smart contract interamente decentralizzati e privi di intermediari non ricadono nell'ambito di applicazione della disciplina dei prestatori di servizi finanziari.
+Ai sensi del Considerando 22 del Regolamento (UE) 2023/1114 (MiCA) e delle disposizioni di raccordo del D.Lgs. 129/2024, le interazioni peer-to-peer con smart contract interamente decentralizzati e privi di intermediari non ricadono nell'ambito di applicazione della disciplina dei prestatori di servizi finanziari (CASP).
 
 ## 2. Autonomia degli Smart Contract e Ruolo dei Contributori
 

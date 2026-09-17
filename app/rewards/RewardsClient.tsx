@@ -472,7 +472,7 @@ export default function RewardsClient() {
 								maxWidth: "700px",
 							}}
 						>
-							⚖️ <b>Regulatory Notice (MiCA Recital 22 & OAM Exclusion):</b> This referral mechanism is an autonomous, non-custodial software gamification and community incentive program. Community points are non-monetary, non-transferable protocol metrics used by self-executing smart contracts to calculate proportional community reward distribution. They do not constitute financial instruments, investment contracts, dividends, commercial revenue-shares, or brokerage commissions under Regulation (EU) 2023/1114 (MiCA) or Italian D.Lgs. 231/2007 (OAM). The protocol operates strictly peer-to-peer without central counterparty, custody, or financial intermediation.
+							⚖️ <b>Regulatory Notice (MiCA Recital 22 & D.Lgs. 129/2024 Compliance):</b> This referral mechanism is an autonomous, non-custodial software gamification and community incentive program. Community points are non-monetary, non-transferable protocol metrics used by self-executing smart contracts to calculate proportional community reward distribution. They do not constitute financial instruments, investment contracts, dividends, commercial revenue-shares, or brokerage commissions under Regulation (EU) 2023/1114 (MiCA) or Italian D.Lgs. 129/2024 (transposing MiCA and replacing the legacy OAM regime with CONSOB/Banca d&apos;Italia oversight). The protocol operates strictly peer-to-peer without central counterparty, custody, or financial intermediation.
 						</div>
 					</div>
 				)}
