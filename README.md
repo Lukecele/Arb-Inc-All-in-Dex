@@ -118,7 +118,7 @@ flowchart TD
 
 ### 7. Verified DeFiLlama Protocol & Fee Telemetry
 - Officially verified and tracked on **DeFiLlama** ([arbitrage-inc](https://defillama.com/protocol/arbitrage-inc)) for DEX aggregator volume and protocol revenue.
-- Open-source dimension adapter ([DefiLlama/dimension-adapters #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275)) providing transparent, public on-chain fee accounting.
+- Open-source dimension adapter ([DefiLlama/dimension-adapters #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275) & [#9453](https://github.com/DefiLlama/dimension-adapters/pull/9453)) providing transparent, public on-chain fee and real-yield accounting.
 
 ### 8. Mobile-First Progressive Web App (PWA)
 - **Instant 1-Tap Installation:** Configured with a full PWA manifest (`public/manifest.json`) in `"display": "standalone"` mode, eliminating browser address bars for a clean mobile app experience on iOS and Android.
@@ -190,9 +190,10 @@ node scripts/maintenance/test-pages.mjs
 
 ## 🌐 Ecosystem Integrations & Directory Listings
 
-- **[DefiLlama Protocol Analytics](https://defillama.com/protocol/arbitrage-inc):** Live protocol metrics, DEX volume, and platform revenue tracking (Adapter: [PR #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275)).
+- **[DefiLlama Protocol Analytics](https://defillama.com/protocol/arbitrage-inc):** Live protocol metrics, DEX volume, and platform revenue tracking (Dimension Adapters: [PR #6275](https://github.com/DefiLlama/dimension-adapters/pull/6275) & [PR #9453](https://github.com/DefiLlama/dimension-adapters/pull/9453)).
 - **[Awesome-Web3 Directory](https://github.com/ahmet/awesome-web3):** Officially reviewed and indexed under [Open Source Project (Line 407)](https://github.com/ahmet/awesome-web3/blob/main/README.md#L407) via [Merged PR #796](https://github.com/ahmet/awesome-web3/pull/796).
 - **[BNB Chain Developer Tooling](https://github.com/bnb-chain/developer-tools-list/pull/98):** Ecosystem catalog submission, [automated static scan cleared via HashDit Bot (0 issues detected)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720).
+- **[BNB Chain Awesome Catalog](https://github.com/bnb-chain/awesome/pull/16):** Ecosystem catalog submission ([PR #16](https://github.com/bnb-chain/awesome/pull/16), [automated scan cleared via HashDit Bot](https://github.com/bnb-chain/awesome/pull/16#issuecomment-5686496121)).
 
 ---
 
