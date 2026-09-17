@@ -5,7 +5,7 @@
   <img src="./public/social-preview.png" alt="Arbitrage Inception - BNB Chain DEX Aggregator & Bridge" width="100%" />
 </p>
 
-[![CI](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukecele/Arb-Inc-All-in-Dex/actions)
+[![CI](https://github.com/arbincept/Arb-Inc-All-in-Dex/actions/workflows/ci.yml/badge.svg)](https://github.com/arbincept/Arb-Inc-All-in-Dex/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Network: BSC](https://img.shields.io/badge/Network-BNB_Smart_Chain-F0B90B?logo=binance&logoColor=white)](https://bscscan.com)
 [![Next.js](https://img.shields.io/badge/Next.js-15_App_Router-black?logo=next.js&logoColor=white)](https://nextjs.org)
@@ -14,7 +14,7 @@
 [![BNB Chain Tools](https://img.shields.io/badge/BNB_Chain_Tools-HashDit_0_Issues-F0B90B?logo=binance)](https://github.com/bnb-chain/developer-tools-list/pull/98#issuecomment-5652788720)
 [![X / Twitter](https://img.shields.io/badge/X-@Arbitrageincept-black?logo=x)](https://x.com/Arbitrageincept)
 [![PWA](https://img.shields.io/badge/PWA-Ready-9B51E0?logo=pwa&logoColor=white)](#)
-[![GitHub stars](https://img.shields.io/github/stars/Lukecele/Arb-Inc-All-in-Dex?style=social)](https://github.com/Lukecele/Arb-Inc-All-in-Dex)
+[![GitHub stars](https://img.shields.io/github/stars/arbincept/Arb-Inc-All-in-Dex?style=social)](https://github.com/arbincept/Arb-Inc-All-in-Dex)
 
 **Arbitrage Inc: All-in-Dex** is a production-grade, open-source **BSC DEX Aggregator**, cross-chain bridge, limit order client, and real-yield telemetry engine on **BNB Smart Chain (BSC)**. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **PWA (Progressive Web App)** capabilities.
 
@@ -28,7 +28,7 @@
 **Audit & Disclosures:** [AUDIT.md](./AUDIT.md) | **Community:** [Telegram](https://t.me/ArbitrageInception) · [X / Twitter](https://x.com/Arbitrageincept) | **License:** MIT
 
 > [!TIP]
-> **Developer & Research Community:** If this codebase saves you development time or helps your Web3 / bot research, please consider leaving a **[Star on GitHub](https://github.com/Lukecele/Arb-Inc-All-in-Dex)**! It directly helps maintain open-source indexing across BNB Chain catalogs.
+> **Developer & Research Community:** If this codebase saves you development time or helps your Web3 / bot research, please consider leaving a **[Star on GitHub](https://github.com/arbincept/Arb-Inc-All-in-Dex)**! It directly helps maintain open-source indexing across BNB Chain catalogs.
 
 ---
 
@@ -168,7 +168,7 @@ The ARB Inc token contract ownership has been **permanently renounced** to the z
 ### Local Setup
 ```bash
 # Clone repository
-git clone https://github.com/Lukecele/Arb-Inc-All-in-Dex.git
+git clone https://github.com/arbincept/Arb-Inc-All-in-Dex.git
 cd Arb-Inc-All-in-Dex
 
 # Install dependencies
@@ -200,7 +200,7 @@ node scripts/maintenance/test-pages.mjs
 
 If you find this open-source suite or any part of the codebase useful for your research, trading bots, or DeFi development, please consider dropping a **Star** on GitHub. It directly supports continuous open-source maintenance, community visibility, and decentralized ecosystem indexing!
 
-[![GitHub stars](https://img.shields.io/github/stars/Lukecele/Arb-Inc-All-in-Dex?style=social)](https://github.com/Lukecele/Arb-Inc-All-in-Dex)
+[![GitHub stars](https://img.shields.io/github/stars/arbincept/Arb-Inc-All-in-Dex?style=social)](https://github.com/arbincept/Arb-Inc-All-in-Dex)
 
 ---
 
