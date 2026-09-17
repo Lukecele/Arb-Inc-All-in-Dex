@@ -188,11 +188,17 @@ export default function ContactPage() {
 					<ContactCard>
 						<h2>🔒 Security Disclosures</h2>
 						<p>
-							For responsible disclosure of security vulnerabilities, please email{" "}
-							<a href="mailto:security@arbitrage-inc.exchange" style={{ color: "#a855f7" }}>
-								security@arbitrage-inc.exchange
+							For responsible disclosure of security vulnerabilities, please submit a
+							private report through{" "}
+							<a
+								href="https://github.com/arbincept/Arb-Inc-All-in-Dex/security/advisories/new"
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{ color: "#a855f7" }}
+							>
+								GitHub Security Advisories
 							</a>{" "}
-							or submit a private advisory through GitHub Security pursuant to our{" "}
+							pursuant to our{" "}
 							<a
 								href="https://github.com/arbincept/.github/blob/main/SECURITY.md"
 								target="_blank"
@@ -200,7 +206,8 @@ export default function ContactPage() {
 								style={{ color: "#a855f7" }}
 							>
 								SECURITY.md policy
-							</a>.
+							</a>
+							, or reach out privately via Telegram to community moderators.
 						</p>
 						<p style={{ color: "#ef4444", marginBottom: 0 }}>
 							<strong>Warning:</strong> Arbitrage Inception will never ask for
