@@ -23,52 +23,67 @@ export async function POST(request: Request) {
         }
         const walletLower = (ethers as any).utils.getAddress(wallet).toLowerCase();
 
-		const MIN_CLAIM = 0.001;
+        // 3. Lock atomico per wallet: impedisce richieste parallele/concorrenti da script
+        const lockKey = `lock:claim:${walletLower}`;
+        const acquired = await redis.set(lockKey, "locked", { nx: true, ex: 60 });
+        if (!acquired) {
+            return NextResponse.json(
+                { error: "Richiesta di claim già in elaborazione per questo wallet. Riprova tra poco." },
+                { status: 429 },
+            );
+        }
 
-		const points = parseFloat(
-			String((await redis.zscore("leaderboard:points", walletLower)) || "0"),
-		);
-		const globalIndex = parseFloat(
-			String((await redis.get("rewards:global_index")) || "0"),
-		);
-		const userIndexStr = await redis.get(`rewards:user_index:${walletLower}`);
-		const userIndex = userIndexStr !== null ? parseFloat(String(userIndexStr)) : globalIndex;
-		const pendingBnb = parseFloat(
-			String((await redis.get(`rewards:pending:${walletLower}`)) || "0"),
-		);
+        try {
+            const MIN_CLAIM = 0.001;
 
-		const currentClaimable = points * (globalIndex - userIndex);
-		const totalToPay = pendingBnb + Math.max(0, currentClaimable);
+            const points = parseFloat(
+                String((await redis.zscore("leaderboard:points", walletLower)) || "0"),
+            );
+            const globalIndex = parseFloat(
+                String((await redis.get("rewards:global_index")) || "0"),
+            );
+            const userIndexStr = await redis.get(`rewards:user_index:${walletLower}`);
+            const userIndex = userIndexStr !== null ? parseFloat(String(userIndexStr)) : globalIndex;
+            const pendingBnb = parseFloat(
+                String((await redis.get(`rewards:pending:${walletLower}`)) || "0"),
+            );
 
-		if (totalToPay < MIN_CLAIM) {
-			return NextResponse.json(
-				{ error: `Sotto soglia: ${totalToPay.toFixed(6)}` },
-				{ status: 400 },
-			);
-		}
+            const currentClaimable = points * (globalIndex - userIndex);
+            const totalToPay = pendingBnb + Math.max(0, currentClaimable);
 
-		const rpcUrl = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
-		const provider = new (ethers as any).providers.JsonRpcProvider(rpcUrl);
-		const privKey = process.env.PRIVATE_KEY;
-		if (!privKey) throw new Error("Errore configurazione server (Key missing)");
+            if (totalToPay < MIN_CLAIM) {
+                return NextResponse.json(
+                    { error: `Sotto soglia: ${totalToPay.toFixed(6)}` },
+                    { status: 400 },
+                );
+            }
 
-		const signer = new (ethers as any).Wallet(privKey, provider);
+            const rpcUrl = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
+            const provider = new (ethers as any).providers.JsonRpcProvider(rpcUrl);
+            const privKey = process.env.PRIVATE_KEY;
+            if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 
-		const tx = await signer.sendTransaction({
-			to: walletLower,
-			value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
-		});
+            const signer = new (ethers as any).Wallet(privKey, provider);
 
-		await tx.wait();
+            const tx = await signer.sendTransaction({
+                to: walletLower,
+                value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
+            });
 
-		// Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
-		await redis.set(`rewards:pending:${walletLower}`, "0");
-		await redis.set(
-			`rewards:user_index:${walletLower}`,
-			globalIndex.toString(),
-		);
+            await tx.wait();
 
-		return NextResponse.json({ success: true, txHash: tx.hash });
+            // Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
+            await redis.set(`rewards:pending:${walletLower}`, "0");
+            await redis.set(
+                `rewards:user_index:${walletLower}`,
+                globalIndex.toString(),
+            );
+
+            return NextResponse.json({ success: true, txHash: tx.hash });
+        } finally {
+            // Rilascio atomico del lock
+            await redis.del(lockKey);
+        }
 	} catch (error: any) {
 		return NextResponse.json(
 			{ error: error.message || "Errore interno al server" },

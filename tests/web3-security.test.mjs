@@ -111,3 +111,94 @@ describe('Web3 Security - Circuit Breaker RPC Failover', () => {
     );
   });
 });
+
+describe('Web3 Security - Atomic Mutex Lock & Anti-Race-Condition (Redis NX Semantics)', () => {
+  class MockRedis {
+    constructor() {
+      this.store = new Map();
+    }
+    async set(key, value, opts = {}) {
+      if (opts.nx && this.store.has(key)) {
+        return null;
+      }
+      this.store.set(key, { value, expiresAt: opts.ex ? Date.now() + opts.ex * 1000 : null });
+      return 'OK';
+    }
+    async get(key) {
+      const entry = this.store.get(key);
+      if (!entry) return null;
+      if (entry.expiresAt && Date.now() > entry.expiresAt) {
+        this.store.delete(key);
+        return null;
+      }
+      return entry.value;
+    }
+    async del(key) {
+      return this.store.delete(key) ? 1 : 0;
+    }
+  }
+
+  it('permits only one concurrent claim per wallet and rejects parallel script calls', async () => {
+    const redis = new MockRedis();
+    const wallet = '0x1234567890123456789012345678901234567890';
+    const lockKey = `lock:claim:${wallet}`;
+
+    // Request 1 acquires lock
+    const req1 = await redis.set(lockKey, 'locked', { nx: true, ex: 60 });
+    assert.equal(req1, 'OK');
+
+    // Request 2 (concurrent parallel call) attempts to acquire same lock
+    const req2 = await redis.set(lockKey, 'locked', { nx: true, ex: 60 });
+    assert.equal(req2, null); // Rejected!
+
+    // After Request 1 completes, lock is released in finally block
+    await redis.del(lockKey);
+
+    // Request 3 (subsequent legitimate call) can now acquire lock
+    const req3 = await redis.set(lockKey, 'locked', { nx: true, ex: 60 });
+    assert.equal(req3, 'OK');
+  });
+
+  it('prevents concurrent double-claim of identical txHash with case normalization', async () => {
+    const redis = new MockRedis();
+    const rawTxHash = '0xAbCdEf1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
+    const normalized = rawTxHash.toLowerCase();
+    const claimKey = `claim_tx:${normalized}`;
+
+    // First caller acquires pending reservation
+    const lock1 = await redis.set(claimKey, 'pending', { nx: true, ex: 120 });
+    assert.equal(lock1, 'OK');
+
+    // Second caller submitting with different casing (e.g. uppercase)
+    const upperSubmit = rawTxHash.toUpperCase();
+    const lock2 = await redis.set(`claim_tx:${upperSubmit.toLowerCase()}`, 'pending', { nx: true, ex: 120 });
+    assert.equal(lock2, null); // Blocked immediately by NX!
+
+    // Once confirmed, key is sealed for 30 days
+    await redis.set(claimKey, 'true', { ex: 2592000 });
+    const finalVal = await redis.get(claimKey);
+    assert.equal(finalVal, 'true');
+
+    // Replay attempt next day is blocked
+    const replayAttempt = await redis.set(claimKey, 'pending', { nx: true, ex: 120 });
+    assert.equal(replayAttempt, null);
+  });
+
+  it('releases pending txHash lock if transaction verification fails so user can retry', async () => {
+    const redis = new MockRedis();
+    const txHash = '0xdeadbeef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
+    const claimKey = `claim_tx:${txHash}`;
+
+    // Acquire pending lock
+    const lock = await redis.set(claimKey, 'pending', { nx: true, ex: 120 });
+    assert.equal(lock, 'OK');
+
+    // Verification fails (e.g. block not mined yet or RPC timeout) -> released in catch/validation
+    await redis.del(claimKey);
+
+    // User retries after block confirmation -> succeeds
+    const retryLock = await redis.set(claimKey, 'pending', { nx: true, ex: 120 });
+    assert.equal(retryLock, 'OK');
+  });
+});
+

@@ -11,8 +11,8 @@
 		"dev": "node -e \"console.log('\\x1b[35m\\n⚡ Arb-Inc All-in-Dex | Open-Source Web3 Suite\\x1b[0m\\x1b[33m\\n⭐ Support on GitHub: https://github.com/arbincept/Arb-Inc-All-in-Dex\\x1b[0m\\n')\" && next dev",
 		"build": "next build",
 		"start": "next start",
-		"test": "node --experimental-strip-types --test tests/financial-math.test.mjs",
-		"test:unit": "node --experimental-strip-types --test tests/financial-math.test.mjs",
+		"test": "node --experimental-strip-types --test tests/financial-math.test.mjs tests/web3-security.test.mjs",
+		"test:unit": "node --experimental-strip-types --test tests/financial-math.test.mjs tests/web3-security.test.mjs",
 		"test:e2e": "node scripts/maintenance/test-pages.mjs",
 		"postinstall": "patch-package && node -e \"console.log('\\x1b[36m\\n⭐ Thank you for using Arb-Inc All-in-Dex! If this codebase helps you, please consider starring it on GitHub: https://github.com/arbincept/Arb-Inc-All-in-Dex\\x1b[0m\\n')\""
 	},
