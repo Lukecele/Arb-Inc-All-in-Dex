@@ -205,12 +205,12 @@ If you find this open-source suite or any part of the codebase useful for your r
 
 ---
 
-## ⚖️ Open-Source Architecture & Regulatory Notice (MiCA Recital 22 & D.Lgs. 129/2024)
+## ⚖️ Open-Source Architecture & Regulatory Notice (MiCA Recital 22 & July 2026 CASP Framework)
 
 This repository contains free, open-source client software (MIT License) developed and maintained by independent open-source software engineers and researchers.
 
 - **Non-Custodial Client:** This software functions strictly as a graphical user interface (GUI) and computational reference implementation for interacting with autonomous public smart contracts on BNB Smart Chain. It does not constitute a centralized exchange, broker, investment service, or custodial institution.
-- **MiCA & D.Lgs. 129/2024 Exemption (Recital 22):** Under **Regulation (EU) 2023/1114 (Markets in Crypto-Assets - MiCA)** and national transposing legislation (**Italian D.Lgs. 129/2024** transitioning from the legacy OAM VASP register to CONSOB / Banca d'Italia CASP oversight), fully decentralized peer-to-peer crypto-asset services provided without intermediaries fall outside the scope of crypto-asset service provider (CASP) regulations.
+- **MiCA & D.Lgs. 129/2024 Exemption (Recital 22):** Under **Regulation (EU) 2023/1114 (Markets in Crypto-Assets - MiCA)** and national transposing legislation (**Italian D.Lgs. 129/2024**, following the definitive cessation of the national OAM transitional register on **1 July 2026** under CONSOB / Banca d'Italia oversight), fully decentralized, self-custodial peer-to-contract services provided without intermediaries fall outside the scope of regulated crypto-asset service provider (CASP) licensing requirements.
 - **Immutable Smart Contracts:** The token and distribution logic operate on immutable, renounced smart contracts (`0x000...dEaD`) with zero administrative backdoors, minting capabilities, or developer custody.
 - **Self-Custodial Operation:** All transactions are executed peer-to-peer directly between the user's non-custodial wallet and autonomous decentralized liquidity pools. Contributors do not hold, manage, or access user funds.
 

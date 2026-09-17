@@ -133,7 +133,7 @@ export default function TermsOfServicePage() {
 						commissions, dividends, securities, or commercial revenue-sharing agreements.
 					</p>
 					<p>
-						Pursuant to <strong>Recital 22 of Regulation (EU) 2023/1114 (MiCA)</strong> and Italian transposing legislation (<em>Decreto Legislativo 5 settembre 2024, n. 129</em> adapting the national legal framework to MiCA and transitioning supervision from the legacy OAM VASP register to CONSOB / Banca d&apos;Italia CASP oversight), fully decentralized, peer-to-peer software interactions conducted without centralized financial intermediation, order custody, or discretionary control remain excluded from financial licensing, CASP authorization, and VASP registration requirements.
+						Pursuant to <strong>Recital 22 of Regulation (EU) 2023/1114 (MiCA)</strong> and Italian transposing legislation (<em>Decreto Legislativo 5 settembre 2024, n. 129</em>, following the definitive expiration of the national OAM transitional regime on <strong>1 July 2026</strong> as confirmed by CONSOB and Banca d&apos;Italia), the provision of crypto-asset services in Italy and the EU is reserved exclusively to authorized CASPs registered with ESMA. This project is not a CASP, custodian, or financial intermediary. Fully decentralized, self-custodial peer-to-contract software interactions conducted without centralized custody or discretionary fund management remain excluded from CASP authorization requirements.
 					</p>
 
 					<h2>4. Eligibility</h2>
