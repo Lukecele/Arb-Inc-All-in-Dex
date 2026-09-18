@@ -108,8 +108,8 @@ export const useProtocolData = (
 		fetchData();
 		const interval = setInterval(fetchData, 60000);
 
-		const ANCHOR_TIME = new Date("2026-04-28T10:03:00-03:00").getTime();
-		const INTERVAL = 6 * 60 * 60 * 1000;
+		const ANCHOR_TIME = new Date("2026-09-17T04:35:00-03:00").getTime();
+		const INTERVAL = 24 * 60 * 60 * 1000;
 
 		const tInterval = setInterval(() => {
 			const now = new Date().getTime();
