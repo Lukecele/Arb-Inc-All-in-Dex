@@ -10,25 +10,36 @@ const redis = new Redis({
 const RPC_URLS = [
     process.env.BSC_RPC_URL,
     process.env.RPC_URL,
-    "https://binance.nodereal.io",
     "https://bsc-rpc.publicnode.com",
+    "https://binance.nodereal.io",
+    "https://bsc-dataseed.binance.org/",
     "https://1rpc.io/bnb",
 ].filter(Boolean) as string[];
+
+const BSC_NETWORK = {
+    name: "binance",
+    chainId: 56,
+};
+
+function createProvider(url: string) {
+    const ProviderClass = (ethers as any).providers?.StaticJsonRpcProvider || (ethers as any).providers?.JsonRpcProvider;
+    return new ProviderClass(url, BSC_NETWORK);
+}
 
 async function getWorkingProvider() {
     for (const url of RPC_URLS) {
         try {
-            const p = new (ethers as any).providers.JsonRpcProvider(url);
+            const p = createProvider(url);
             await Promise.race([
                 p.getBlockNumber(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("RPC Timeout")), 2500))
+                new Promise((_, reject) => setTimeout(() => reject(new Error("RPC Timeout")), 3500))
             ]);
             return p;
         } catch (e) {
             console.warn(`[Claim API] Fallback triggered from RPC ${url}`);
         }
     }
-    return new (ethers as any).providers.JsonRpcProvider(RPC_URLS[0]);
+    return createProvider(RPC_URLS[0]);
 }
 
 export const maxDuration = 30;
@@ -91,12 +102,22 @@ export async function POST(request: Request) {
 
             const signer = new (ethers as any).Wallet(privKey, provider);
 
+            console.log(`[Claim API] Processing claim of ${totalToPay.toFixed(6)} BNB from ${signer.address} to ${walletLower}`);
+
+            const gasPrice = await provider.getGasPrice().catch(() => (ethers as any).utils.parseUnits("1", "gwei"));
+            const gasLimit = await signer.estimateGas({
+                to: walletLower,
+                value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
+            }).catch(() => (ethers as any).BigNumber.from(25000));
+
             const tx = await signer.sendTransaction({
                 to: walletLower,
                 value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
+                gasPrice,
+                gasLimit,
             });
 
-            await tx.wait();
+            await tx.wait(1);
 
             // Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
             await redis.set(`rewards:pending:${walletLower}`, "0");
