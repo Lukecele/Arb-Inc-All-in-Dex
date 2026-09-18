@@ -7,7 +7,19 @@ const redis = new Redis({
 	token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const RPC_URL = (process.env.BSC_RPC_URL || "https://bsc-rpc.publicnode.com").replace(/\/$/, "");
+const RPC_URLS = [
+    "https://binance.nodereal.io",
+    "https://bsc-dataseed.binance.org/",
+    "https://bsc-dataseed1.binance.org/",
+    "https://1rpc.io/bnb",
+    process.env.BSC_RPC_URL,
+    process.env.RPC_URL,
+].filter(Boolean) as string[];
+
+const BSC_NETWORK = {
+    name: "binance",
+    chainId: 56,
+};
 
 export default async function handler(
 	req: NextApiRequest,
@@ -15,7 +27,6 @@ export default async function handler(
 ) {
 	if (req.method !== "POST") return res.status(405).send("Method not allowed");
 
-	// Recupero super-robusto del body (come avevi tu in originale)
 	let body = req.body;
 	if (typeof body === "string") {
 		try {
@@ -23,53 +34,73 @@ export default async function handler(
 		} catch (e) {}
 	}
 
-	// Cerca l'indirizzo in tutte le varianti possibili del frontend
 	const address =
 		body?.address || body?.wallet || body?.account || body?.walletAddress;
-	if (!address) return res.status(400).json({ error: "Missing address" });
+	if (!address || typeof address !== "string" || !ethers.utils.isAddress(address)) {
+        return res.status(400).json({ error: "Missing or invalid address" });
+    }
 
-	const walletLower = address.toLowerCase();
+	const walletLower = ethers.utils.getAddress(address).toLowerCase();
 
 	try {
 		const pendingBalance = parseFloat(
 			String((await redis.get(`rewards:pending:${walletLower}`)) || "0"),
 		);
 
-		// Se provi a claimare meno di 0.0005 BNB, restituisce errore 400
 		if (pendingBalance < 0.0005) {
 			return res
 				.status(400)
 				.json({ error: "Saldo insufficiente per il claim" });
 		}
 
-		const provider = new ethers.providers.StaticJsonRpcProvider(
-			{ url: RPC_URL, timeout: 15000 },
-			{ chainId: 56, name: "binance" },
-		);
-		const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+        const privKey = process.env.PRIVATE_KEY;
+        if (!privKey) return res.status(500).json({ error: "Server configuration error" });
 
-		console.log(
-			`🚀 Claim for ${address}: ${pendingBalance} BNB (Points preserved)`,
-		);
+        const value = ethers.utils.parseEther(pendingBalance.toFixed(18));
+        const gasLimit = ethers.BigNumber.from(35000);
 
-		const tx = await signer.sendTransaction({
-			to: address,
-			value: ethers.utils.parseEther(pendingBalance.toFixed(18)),
-		});
+        let sentTx: any = null;
+        let lastRpcError: any = null;
 
-		await tx
-			.wait()
-			.then(() => {
-				console.log(`✅ Transaction confirmed: ${tx.hash}`);
-			})
-			.catch(async (e) => {
-				console.error("❌ Error sending transaction");
-			});
+        for (const rpcUrl of RPC_URLS) {
+            try {
+                const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrl, BSC_NETWORK);
+                const signer = new ethers.Wallet(privKey, provider);
+                const gasPrice = await provider.getGasPrice().catch(() => ethers.utils.parseUnits("1", "gwei"));
+
+                sentTx = await signer.sendTransaction({
+                    to: walletLower,
+                    value,
+                    gasPrice,
+                    gasLimit,
+                });
+
+                if (sentTx && sentTx.hash) {
+                    break;
+                }
+            } catch (rpcErr: any) {
+                console.warn(`[Legacy Claim API] RPC failure on ${rpcUrl}:`, rpcErr?.message || rpcErr);
+                lastRpcError = rpcErr;
+            }
+        }
+
+        if (!sentTx || !sentTx.hash) {
+            throw new Error(lastRpcError?.message || "Failed to broadcast transaction via all RPC endpoints");
+        }
+
+        try {
+            await Promise.race([
+                sentTx.wait(1),
+                new Promise((_, reject) => setTimeout(() => reject(new Error("wait_timeout")), 8000)),
+            ]);
+        } catch (e) {
+            console.warn("[Legacy Claim API] Confirmation wait timed out, but tx broadcast confirmed:", sentTx.hash);
+        }
 
 		// --- Reset pending only — preserve leaderboard points ---
 		await redis.set(`rewards:pending:${walletLower}`, "0");
 
-		return res.status(200).json({ success: true, hash: tx.hash });
+		return res.status(200).json({ success: true, hash: sentTx.hash });
 	} catch (error: any) {
 		console.error("❌ Errore critico API Claim:", error);
 		return res.status(500).json({ error: error.message || "Errore interno" });

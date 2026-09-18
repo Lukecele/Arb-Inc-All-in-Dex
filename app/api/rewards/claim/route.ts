@@ -8,12 +8,12 @@ const redis = new Redis({
 });
 
 const RPC_URLS = [
-    process.env.BSC_RPC_URL,
-    process.env.RPC_URL,
-    "https://bsc-rpc.publicnode.com",
     "https://binance.nodereal.io",
     "https://bsc-dataseed.binance.org/",
+    "https://bsc-dataseed1.binance.org/",
     "https://1rpc.io/bnb",
+    process.env.BSC_RPC_URL,
+    process.env.RPC_URL,
 ].filter(Boolean) as string[];
 
 const BSC_NETWORK = {
@@ -24,22 +24,6 @@ const BSC_NETWORK = {
 function createProvider(url: string) {
     const ProviderClass = (ethers as any).providers?.StaticJsonRpcProvider || (ethers as any).providers?.JsonRpcProvider;
     return new ProviderClass(url, BSC_NETWORK);
-}
-
-async function getWorkingProvider() {
-    for (const url of RPC_URLS) {
-        try {
-            const p = createProvider(url);
-            await Promise.race([
-                p.getBlockNumber(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("RPC Timeout")), 3500))
-            ]);
-            return p;
-        } catch (e) {
-            console.warn(`[Claim API] Fallback triggered from RPC ${url}`);
-        }
-    }
-    return createProvider(RPC_URLS[0]);
 }
 
 export const maxDuration = 30;
@@ -96,28 +80,53 @@ export async function POST(request: Request) {
                 );
             }
 
-            const provider = await getWorkingProvider();
             const privKey = process.env.PRIVATE_KEY;
             if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 
-            const signer = new (ethers as any).Wallet(privKey, provider);
+            const value = (ethers as any).utils.parseEther(totalToPay.toFixed(18));
+            const gasLimit = (ethers as any).BigNumber.from(35000);
 
-            console.log(`[Claim API] Processing claim of ${totalToPay.toFixed(6)} BNB from ${signer.address} to ${walletLower}`);
+            let sentTx: any = null;
+            let lastRpcError: any = null;
 
-            const gasPrice = await provider.getGasPrice().catch(() => (ethers as any).utils.parseUnits("1", "gwei"));
-            const gasLimit = await signer.estimateGas({
-                to: walletLower,
-                value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
-            }).catch(() => (ethers as any).BigNumber.from(25000));
+            for (const rpcUrl of RPC_URLS) {
+                try {
+                    console.log(`[Claim API] Attempting payout via RPC: ${rpcUrl}`);
+                    const provider = createProvider(rpcUrl);
+                    const signer = new (ethers as any).Wallet(privKey, provider);
 
-            const tx = await signer.sendTransaction({
-                to: walletLower,
-                value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
-                gasPrice,
-                gasLimit,
-            });
+                    const gasPrice = await provider.getGasPrice().catch(() => (ethers as any).utils.parseUnits("1", "gwei"));
 
-            await tx.wait(1);
+                    sentTx = await signer.sendTransaction({
+                        to: walletLower,
+                        value,
+                        gasPrice,
+                        gasLimit,
+                    });
+
+                    if (sentTx && sentTx.hash) {
+                        console.log(`[Claim API] Tx successfully broadcast: ${sentTx.hash} via ${rpcUrl}`);
+                        break;
+                    }
+                } catch (rpcErr: any) {
+                    console.warn(`[Claim API] Broadcast failed on ${rpcUrl}:`, rpcErr?.message || rpcErr);
+                    lastRpcError = rpcErr;
+                }
+            }
+
+            if (!sentTx || !sentTx.hash) {
+                throw new Error(lastRpcError?.message || "Failed to broadcast transaction via all RPC endpoints");
+            }
+
+            // Attendiamo 1 conferma (3s su BSC), con fallback non bloccante
+            try {
+                await Promise.race([
+                    sentTx.wait(1),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error("wait_timeout")), 8000)),
+                ]);
+            } catch (waitErr) {
+                console.warn("[Claim API] Confirmation wait timed out, but tx broadcast confirmed:", sentTx.hash);
+            }
 
             // Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
             await redis.set(`rewards:pending:${walletLower}`, "0");
@@ -126,7 +135,7 @@ export async function POST(request: Request) {
                 globalIndex.toString(),
             );
 
-            return NextResponse.json({ success: true, txHash: tx.hash, hash: tx.hash });
+            return NextResponse.json({ success: true, txHash: sentTx.hash, hash: sentTx.hash });
         } finally {
             // Rilascio atomico del lock
             await redis.del(lockKey);
