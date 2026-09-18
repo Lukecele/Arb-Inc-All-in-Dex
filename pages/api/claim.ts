@@ -11,15 +11,36 @@ const RPC_URLS = [
     "https://binance.nodereal.io",
     "https://bsc-dataseed.binance.org/",
     "https://bsc-dataseed1.binance.org/",
+    "https://bsc-dataseed2.binance.org/",
     "https://1rpc.io/bnb",
     process.env.BSC_RPC_URL,
     process.env.RPC_URL,
 ].filter(Boolean) as string[];
 
-const BSC_NETWORK = {
-    name: "binance",
-    chainId: 56,
-};
+async function callRpc(method: string, params: any[]): Promise<any> {
+    let lastErr: any = null;
+    for (const url of RPC_URLS) {
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
+                signal: AbortSignal.timeout(5000),
+            });
+            if (!res.ok) continue;
+            const data = await res.json();
+            if (data?.error) {
+                throw new Error(data.error.message || JSON.stringify(data.error));
+            }
+            if (data?.result !== undefined) {
+                return data.result;
+            }
+        } catch (e: any) {
+            lastErr = e;
+        }
+    }
+    throw new Error(lastErr?.message || `RPC call ${method} failed on all endpoints`);
+}
 
 export default async function handler(
 	req: NextApiRequest,
@@ -56,51 +77,54 @@ export default async function handler(
         const privKey = process.env.PRIVATE_KEY;
         if (!privKey) return res.status(500).json({ error: "Server configuration error" });
 
-        const value = ethers.utils.parseEther(pendingBalance.toFixed(18));
-        const gasLimit = ethers.BigNumber.from(35000);
+        const signer = new ethers.Wallet(privKey);
 
-        let sentTx: any = null;
-        let lastRpcError: any = null;
+        const nonceHex = await callRpc("eth_getTransactionCount", [signer.address, "latest"]);
+        const nonce = parseInt(nonceHex, 16);
 
-        for (const rpcUrl of RPC_URLS) {
-            try {
-                const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrl, BSC_NETWORK);
-                const signer = new ethers.Wallet(privKey, provider);
-                const gasPrice = await provider.getGasPrice().catch(() => ethers.utils.parseUnits("1", "gwei"));
-
-                sentTx = await signer.sendTransaction({
-                    to: walletLower,
-                    value,
-                    gasPrice,
-                    gasLimit,
-                });
-
-                if (sentTx && sentTx.hash) {
-                    break;
-                }
-            } catch (rpcErr: any) {
-                console.warn(`[Legacy Claim API] RPC failure on ${rpcUrl}:`, rpcErr?.message || rpcErr);
-                lastRpcError = rpcErr;
-            }
-        }
-
-        if (!sentTx || !sentTx.hash) {
-            throw new Error(lastRpcError?.message || "Failed to broadcast transaction via all RPC endpoints");
-        }
-
+        let gasPrice = ethers.utils.parseUnits("1", "gwei");
         try {
-            await Promise.race([
-                sentTx.wait(1),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("wait_timeout")), 8000)),
-            ]);
-        } catch (e) {
-            console.warn("[Legacy Claim API] Confirmation wait timed out, but tx broadcast confirmed:", sentTx.hash);
+            const gasPriceHex = await callRpc("eth_gasPrice", []);
+            const networkPrice = ethers.BigNumber.from(gasPriceHex);
+            if (networkPrice.gt(gasPrice)) {
+                gasPrice = networkPrice;
+            }
+        } catch (gpErr) {
+            console.warn("[Legacy Claim API] Failed to fetch gas price, defaulting to 1 gwei:", gpErr);
+        }
+
+        const txData = {
+            to: walletLower,
+            value: ethers.utils.parseEther(pendingBalance.toFixed(18)),
+            gasLimit: ethers.BigNumber.from(35000),
+            gasPrice,
+            nonce,
+            chainId: 56,
+            type: 0,
+        };
+
+        const signedTx = await signer.signTransaction(txData);
+        const localHash = ethers.utils.keccak256(signedTx);
+
+        let txHash = localHash;
+        try {
+            const remoteHash = await callRpc("eth_sendRawTransaction", [signedTx]);
+            if (remoteHash && typeof remoteHash === "string") {
+                txHash = remoteHash;
+            }
+        } catch (broadcastErr: any) {
+            const msg = broadcastErr?.message || "";
+            if (msg.includes("already known") || msg.includes("already in pool")) {
+                console.log(`[Legacy Claim API] Tx already in mempool, using verified hash: ${localHash}`);
+            } else {
+                throw broadcastErr;
+            }
         }
 
 		// --- Reset pending only — preserve leaderboard points ---
 		await redis.set(`rewards:pending:${walletLower}`, "0");
 
-		return res.status(200).json({ success: true, hash: sentTx.hash });
+		return res.status(200).json({ success: true, hash: txHash });
 	} catch (error: any) {
 		console.error("❌ Errore critico API Claim:", error);
 		return res.status(500).json({ error: error.message || "Errore interno" });

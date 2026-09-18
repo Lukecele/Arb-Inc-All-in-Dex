@@ -11,19 +11,36 @@ const RPC_URLS = [
     "https://binance.nodereal.io",
     "https://bsc-dataseed.binance.org/",
     "https://bsc-dataseed1.binance.org/",
+    "https://bsc-dataseed2.binance.org/",
     "https://1rpc.io/bnb",
     process.env.BSC_RPC_URL,
     process.env.RPC_URL,
 ].filter(Boolean) as string[];
 
-const BSC_NETWORK = {
-    name: "binance",
-    chainId: 56,
-};
-
-function createProvider(url: string) {
-    const ProviderClass = (ethers as any).providers?.StaticJsonRpcProvider || (ethers as any).providers?.JsonRpcProvider;
-    return new ProviderClass(url, BSC_NETWORK);
+async function callRpc(method: string, params: any[]): Promise<any> {
+    let lastErr: any = null;
+    for (const url of RPC_URLS) {
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
+                signal: AbortSignal.timeout(5000),
+            });
+            if (!res.ok) continue;
+            const data = await res.json();
+            if (data?.error) {
+                throw new Error(data.error.message || JSON.stringify(data.error));
+            }
+            if (data?.result !== undefined) {
+                return data.result;
+            }
+        } catch (e: any) {
+            console.warn(`[Claim API] RPC ${url} ${method} failed:`, e?.message || e);
+            lastErr = e;
+        }
+    }
+    throw new Error(lastErr?.message || `RPC call ${method} failed on all endpoints`);
 }
 
 export const maxDuration = 30;
@@ -83,64 +100,72 @@ export async function POST(request: Request) {
             const privKey = process.env.PRIVATE_KEY;
             if (!privKey) throw new Error("Errore configurazione server (Key missing)");
 
-            const value = (ethers as any).utils.parseEther(totalToPay.toFixed(18));
-            const gasLimit = (ethers as any).BigNumber.from(35000);
+            // Offline signer - Zero dipendenze di rete per la firma!
+            const signer = new (ethers as any).Wallet(privKey);
 
-            let sentTx: any = null;
-            let lastRpcError: any = null;
+            // 1. Recupero Nonce
+            const nonceHex = await callRpc("eth_getTransactionCount", [signer.address, "latest"]);
+            const nonce = parseInt(nonceHex, 16);
 
-            for (const rpcUrl of RPC_URLS) {
-                try {
-                    console.log(`[Claim API] Attempting payout via RPC: ${rpcUrl}`);
-                    const provider = createProvider(rpcUrl);
-                    const signer = new (ethers as any).Wallet(privKey, provider);
+            // 2. Recupero Gas Price (minimo garantito 1 gwei su BSC)
+            let gasPrice = (ethers as any).utils.parseUnits("1", "gwei");
+            try {
+                const gasPriceHex = await callRpc("eth_gasPrice", []);
+                const networkPrice = (ethers as any).BigNumber.from(gasPriceHex);
+                if (networkPrice.gt(gasPrice)) {
+                    gasPrice = networkPrice;
+                }
+            } catch (gpErr) {
+                console.warn("[Claim API] Failed to fetch gas price, defaulting to 1 gwei:", gpErr);
+            }
 
-                    const gasPrice = await provider.getGasPrice().catch(() => (ethers as any).utils.parseUnits("1", "gwei"));
+            // 3. Costruzione e firma offline (100% in memoria, pura crittografia locale ECDSA)
+            const txData = {
+                to: walletLower,
+                value: (ethers as any).utils.parseEther(totalToPay.toFixed(18)),
+                gasLimit: (ethers as any).BigNumber.from(35000),
+                gasPrice,
+                nonce,
+                chainId: 56,
+                type: 0,
+            };
 
-                    sentTx = await signer.sendTransaction({
-                        to: walletLower,
-                        value,
-                        gasPrice,
-                        gasLimit,
-                    });
+            const signedTx = await signer.signTransaction(txData);
+            const localHash = (ethers as any).utils.keccak256(signedTx);
 
-                    if (sentTx && sentTx.hash) {
-                        console.log(`[Claim API] Tx successfully broadcast: ${sentTx.hash} via ${rpcUrl}`);
-                        break;
-                    }
-                } catch (rpcErr: any) {
-                    console.warn(`[Claim API] Broadcast failed on ${rpcUrl}:`, rpcErr?.message || rpcErr);
-                    lastRpcError = rpcErr;
+            // 4. Broadcast transazione tramite nodi BSC ridondati
+            console.log(`[Claim API] Broadcasting tx for ${walletLower} (amount: ${totalToPay.toFixed(6)} BNB, nonce: ${nonce})`);
+            let txHash = localHash;
+            try {
+                const remoteHash = await callRpc("eth_sendRawTransaction", [signedTx]);
+                if (remoteHash && typeof remoteHash === "string") {
+                    txHash = remoteHash;
+                }
+            } catch (broadcastErr: any) {
+                const msg = broadcastErr?.message || "";
+                if (msg.includes("already known") || msg.includes("already in pool")) {
+                    console.log(`[Claim API] Tx already in mempool, using verified hash: ${localHash}`);
+                } else {
+                    throw broadcastErr;
                 }
             }
 
-            if (!sentTx || !sentTx.hash) {
-                throw new Error(lastRpcError?.message || "Failed to broadcast transaction via all RPC endpoints");
-            }
+            console.log(`[Claim API] Tx successfully broadcast! Hash: ${txHash}`);
 
-            // Attendiamo 1 conferma (3s su BSC), con fallback non bloccante
-            try {
-                await Promise.race([
-                    sentTx.wait(1),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error("wait_timeout")), 8000)),
-                ]);
-            } catch (waitErr) {
-                console.warn("[Claim API] Confirmation wait timed out, but tx broadcast confirmed:", sentTx.hash);
-            }
-
-            // Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
+            // 5. Azzeriamo solo il saldo BNB reale e sincronizziamo l'indice
             await redis.set(`rewards:pending:${walletLower}`, "0");
             await redis.set(
                 `rewards:user_index:${walletLower}`,
                 globalIndex.toString(),
             );
 
-            return NextResponse.json({ success: true, txHash: sentTx.hash, hash: sentTx.hash });
+            return NextResponse.json({ success: true, txHash, hash: txHash });
         } finally {
             // Rilascio atomico del lock
             await redis.del(lockKey);
         }
 	} catch (error: any) {
+        console.error("[Claim API Critical Error]:", error);
 		return NextResponse.json(
 			{ error: error.message || "Errore interno al server" },
 			{ status: 500 },
